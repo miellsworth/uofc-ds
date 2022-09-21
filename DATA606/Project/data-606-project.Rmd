@@ -1,0 +1,369 @@
+---
+title: 'Data 606 - Final Project'
+author: ""
+date: "January 19, 2020"
+output: html_notebook
+---
+
+Proposed project schedule
+ 1. Data cleaning - Mark - Jan 24
+    - read the data
+    - fill in the missing values using the text file that comes with the data set explaining the meaning of each variable
+ 2. Data Imputing - Mark - Jan 24
+    - a few of the numerical fields are missing values, I will impute these using either mean or median
+ 3. Write a short introduction for final report - Mark - Jan 24 (not likely, but I will start something)
+ 4. Desribe the data for the final report - Mark - Jan 24 (I will be able to copy most of this from the text file)
+ 5. Exploratory Data Analysis - Dustin, Mike - Jan 27 (let's try to not duplicate effort - I might take a look at some too)
+    - https://briatte.github.io/ggcorr/
+    - start to make a few graphs and try and identify what are key predictors are
+    - histograms, correlation plots, ggpairs (maybe need to do a few of these to make them more legible rather than a massive useless one)
+    - all plots should have labeled axis' and titles
+    - normality plots for target variable to show that it is non-linear can be done here
+    - look for other non-linear relationships
+    - a little text about what we find - identifying target variable and high candidate predictors and what we are doing at each step
+ 6. Sampling and Sampling analysis - Ray - Jan 27 (if someone wants to trade obviously that's cool.)
+    - we need to include some discussion of sampling
+    - are we goign to simple random sample or cluster or stratified sampling?
+    - I think we probably want to stratify, but I haven't looked at the data much yet - maybe there is osmething obvious like neighbourhood that we can use
+    - what else?
+    - we want to split our data set into two sets - a training set and a test set - we should have a test set that is 25% of the entire data set
+    - whatever method we use we need to analyse it - so, for instance, if we stratify sample we should run an ANOVA showing that it meets the criteria. Additonally, we should prove that we get a better prediction
+        - don't let the titles of the csv's confuse you (one is train.csv, one is test.csv) - the test.csv file can't be used as it doesn't have any values in the sale_price as it is meant to be used with your algorithm to submit to the competition to see how good you score
+  7. Feature engineering - Mark, Mike, Ray, Dustin - Jan 27
+    - maybe we can have a quick meeting after class monday to discuss the progress above and then discuss this
+    - I quickly talke to Mike about this today
+    - there are a number of fields that we can combine / elinate before we even vif or do any model building
+      - for example there are like 6 garage fields, we can probably make it just one or two (garage_no_garage, size_of_garage) - maybe this can just be number of cars 0->N categorical and it's just a single field?
+    - this is the discussion I want to have monday as we should all be a bit more familiar with the data set then
+    - we can divvy up this feature engineering at this step then
+    
+Future work:
+  build linear regression models - everyone
+  maybe we cross validate?
+  maybe we build a non-linear algorithm like a random forest or xgboost?
+  any other suggestions?
+  
+
+
+I've started working on some of the cleaning below. I am not finished and the code needs to be "tidied", but you can see where I am at for the moment.
+
+
+## 1. Introduction
+
+Our team has chosen the [Ames Housing dataset](http://jse.amstat.org/v19n3/decock.pdf) for our Data 606 final project. This is an extremely interesting dataset with many features, which makes it well suited for anlysis. We intend to apply regression analysis in addition to utilizing sampling techniques and data imputation methods during our project.
+
+The primary question that we intend to answer with this project is: Can we accurately predict the sales price of a house given variables describing the house? This is of interest to us as understanding what factors affect a home price is useful when purchasing and selling a home, which, most people will do at some time in their life and it is a major purchase. The specific data set is for the city of Ames, Iowa, so in that respect it is not especially interesting as we will probably never purchase or sell a home in Ames, but the techniques and methods we employ during our project will be useful in the future.
+
+We will conduct a number of steps in this report including:<br>
+
+1. Exploratory data analysis 
+2. Data cleaning
+3. Imputation
+4. Sampling and Sampling Analysis
+5. Feature Engineering - combining and / or deriving variables from the existing data
+6. Regression Analysis
+
+## 2.  Data Set Description
+
+In this report we intend to explore this data set looking for relationships between the target variable and the predictors. We have a large number of initial features (80), with some categorical data as well as numerical data. Below we detail out each of the individual variables that comprise our data set.
+
+** Note to ourselves - need to make this into a table like in the previous project and read it in as a csv.
+
+MSSubClass: Identifies the type of dwelling involved in the sale.	
+
+MSZoning: Identifies the general zoning classification of the sale.
+			
+LotFrontage: Linear feet of street connected to property
+
+LotArea: Lot size in square feet
+
+Street: Type of road access to property
+       	
+Alley: Type of alley access to property
+		
+LotShape: General shape of property
+
+LandContour: Flatness of the property
+	
+Utilities: Type of utilities available
+		
+LotConfig: Lot configuration
+
+LandSlope: Slope of property	
+	
+Neighborhood: Physical locations within Ames city limits
+			
+Condition1: Proximity to various conditions
+	
+Condition2: Proximity to various conditions (if more than one is present)
+	
+BldgType: Type of dwelling
+		
+HouseStyle: Style of dwelling
+	
+OverallQual: Rates the overall material and finish of the house
+	
+OverallCond: Rates the overall condition of the house
+		
+YearBuilt: Original construction date
+
+YearRemodAdd: Remodel date (same as construction date if no remodeling or additions)
+
+RoofStyle: Type of roof
+
+RoofMatl: Roof material
+
+Exterior1st: Exterior covering on house
+	
+Exterior2nd: Exterior covering on house (if more than one material)
+	
+MasVnrType: Masonry veneer type
+	
+MasVnrArea: Masonry veneer area in square feet
+
+ExterQual: Evaluates the quality of the material on the exterior 
+		
+ExterCond: Evaluates the present condition of the material on the exterior
+		
+Foundation: Type of foundation
+			
+BsmtQual: Evaluates the height of the basement
+		
+BsmtCond: Evaluates the general condition of the basement
+
+BsmtExposure: Refers to walkout or garden level walls
+	
+BsmtFinType1: Rating of basement finished area
+		
+BsmtFinSF1: Type 1 finished square feet
+
+BsmtFinType2: Rating of basement finished area (if multiple types)
+BsmtFinSF2: Type 2 finished square feet
+
+BsmtUnfSF: Unfinished square feet of basement area
+
+TotalBsmtSF: Total square feet of basement area
+
+Heating: Type of heating
+		
+HeatingQC: Heating quality and condition
+		
+CentralAir: Central air conditioning
+	
+Electrical: Electrical system
+		
+1stFlrSF: First Floor square feet
+ 
+2ndFlrSF: Second floor square feet
+
+LowQualFinSF: Low quality finished square feet (all floors)
+
+GrLivArea: Above grade (ground) living area square feet
+
+BsmtFullBath: Basement full bathrooms
+
+BsmtHalfBath: Basement half bathrooms
+
+FullBath: Full bathrooms above grade
+
+HalfBath: Half baths above grade
+
+Bedroom: Bedrooms above grade (does NOT include basement bedrooms)
+
+Kitchen: Kitchens above grade
+
+KitchenQual: Kitchen quality
+    	
+TotRmsAbvGrd: Total rooms above grade (does not include bathrooms)
+
+Functional: Home functionality (Assume typical unless deductions are warranted)
+	
+Fireplaces: Number of fireplaces
+
+FireplaceQu: Fireplace quality
+		
+GarageType: Garage location
+				
+GarageYrBlt: Year garage was built
+		
+GarageFinish: Interior finish of the garage
+		
+GarageCars: Size of garage in car capacity
+
+GarageArea: Size of garage in square feet
+
+GarageQual: Garage quality
+		
+GarageCond: Garage condition
+		
+PavedDrive: Paved driveway
+		
+WoodDeckSF: Wood deck area in square feet
+
+OpenPorchSF: Open porch area in square feet
+
+EnclosedPorch: Enclosed porch area in square feet
+
+3SsnPorch: Three season porch area in square feet
+
+ScreenPorch: Screen porch area in square feet
+
+PoolArea: Pool area in square feet
+
+PoolQC: Pool quality
+				
+Fence: Fence quality
+			
+MiscFeature: Miscellaneous feature not covered in other categories
+			
+MiscVal: $Value of miscellaneous feature
+
+MoSold: Month Sold (MM)
+
+YrSold: Year Sold (YYYY)
+
+SaleType: Type of sale
+		
+SaleCondition: Condition of sale
+
+
+
+
+## 3. Data Cleaning and Imputation
+
+We will begin by simply taking a look at the data and computing some descriptive statistics for each of hte features of our data set. This will also give us a preliminary indication of which columns have missing data elements.
+
+```{r load libraries, results='hide', message=FALSE, warning=FALSE}
+library(survey)
+library(sampling)
+library(tidyverse)
+library(mosaic)
+library(kableExtra)
+library(mice)
+```
+
+```{r Read Data and Inspect Summary Stats}
+house.orig = read_csv('train.csv')
+summary(house.orig)
+```
+
+Now we can look at just the features that have missing values and impute the data that we need for future analysis.
+
+```{r Create a Function to Count NAs}
+count_na = function(df) {
+  x = df %>% 
+    summarise_all(funs(sum(is.na(.)))) %>%
+    gather(key = "Feature", value = "NAs") %>% 
+    filter(NAs > 0)
+  return(x)
+}
+
+count_na(house.orig)
+```
+
+From the description of the data set we know that for a number of these features "NA" is actually a true category that we can simply fill in.
+
+```{r Replace the data using definitions}
+replacements = list(Alley = "NoAlley", 
+                    BsmtCond = "NoBase",
+                    BsmtQual = "NoBase",
+                    BsmtExposure = "NoBase",
+                    BsmtFinType1 = "NoBase",
+                    BsmtFinType2 = "NoBase",
+                    FireplaceQu = "NoFirePlace",
+                    GarageType = "NoGarage",
+                    GarageYrBlt = "NoGarage",
+                    GarageFinish = "NoGarage",
+                    GarageQual = "NoGarage",
+                    GarageCond = "NoGarage",
+                    PoolQC =  "NoPool",
+                    Fence = "NoFence"
+                    )
+
+house.clean = house.orig %>% replace_na(replacements)
+count_na(house.clean)
+```
+
+We are left with 5 features that we need to explore further.
+
+`MiscFeature` is missing 96.3% of the values, and upon reviewing the description of this category we have deemed it safe to simply remove this feature.
+
+```{r Count Electrical Types}
+table(house.clean$Electrical)
+```
+For `Electrical` we see that one of the categories completey dominates the other categories and we have decided to choose the dominant category to impute into the one missing value.
+
+```{r Impute Electrical and Drop MiscFeature}
+house.clean = house.clean %>%
+  select(-MiscFeature) %>%
+  mutate(Electrical = replace(Electrical, is.na(Electrical), 'SBrkr'))
+count_na(house.clean)
+```
+
+We can look `MasVnrType` in a bit more detail and see if there is an obvious way to impute these 8 missing values.
+
+```{r Count MasVnrTypes}
+table(house.clean$MasVnrType)
+```
+
+From the above table there is no clear way to grab values from these, but maybe we can stratify sample 8 and impute these randomly. 
+
+```{r Randomly impute the 8 categories}
+# get 8 values, randomly sampled from the MasVnrType column
+MasVnrType_sample = house.clean %>%
+  filter(!is.na(MasVnrType)) %>%
+  sample_n(8, replace = TRUE) %>%
+  select(MasVnrType)
+
+# make a copy of the data frame at this step in case we make a mistake
+house.impute = data.frame(house.clean)
+
+# set the missing values (8) equal to the randly selected sample above
+house.impute[is.na(house.impute$MasVnrType), "MasVnrType"] = MasVnrType_sample$MasVnrType
+count_na(house.impute)
+```
+
+
+```{r Impute values for MasVnrArea and LotFrontage using MICE package, message=FALSE}
+tempData <- mice(house.impute, m=5, maxit=5, meth='pmm', seed=500)
+tempComplete = complete(tempData, 1)
+house.impute = house.impute %>% mutate(MasVnrArea = tempComplete$MasVnrArea,
+                                       LotFrontage = tempComplete$LotFrontage)
+count_na(house.impute)
+```
+
+
+```{r}
+ggplot(house.clean %>% filter(MasVnrType != 'None'), aes(y = MasVnrArea, x = SalePrice, color = MasVnrType)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+```
+
+```{r Plot Distribution of House Sale Prices}
+house.clean %>%
+  ggplot(aes(x = SalePrice / 1000)) +
+  geom_histogram() +
+  xlab("Sale Price (Thousands of Dollars)") +
+  ylab("Number of Homes") +
+  scale_x_continuous(labels = scales::dollar) +
+  ggtitle("Distribution of Home Sale Prices")
+```
+
+```{r Plot Distribution of House Sale Prices for different categories}
+house.clean %>%
+  group_by(YrSold) %>%
+  ggplot(aes(x = SalePrice / 1000)) +
+  geom_histogram() +
+  facet_grid(~YrSold) +
+  xlab("Sale Price (Thousands of Dollars)") +
+  ylab("Number of Homes") +
+  scale_x_continuous(labels = scales::dollar) +
+  ggtitle("Distribution of Home Sale Prices")
+```
+
+## References
+
+Cook, D. (2011, June). Ames, Iowa: Alternative to Boston Housing Data as an End of Semester Regression Project[Online].
+Available at: https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data (Retrieved January 20, 2020)
+
+

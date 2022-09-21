@@ -1,0 +1,645 @@
+---
+title: "DATA 603 - Lecture Notes Unit 1 Part 2"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+```
+
+# MULTIPLE LINEAR REGRESSION
+# PART II: MODEL BUILDING IN MULTIPLE REGRESSION
+
+
+## An Interaction Model with Quantitative Predictors
+Consider the standard linear regression model with two variables,
+$$
+\begin{aligned}
+Y=\beta_0+\beta_1X_1 + \beta_2X_2+\epsilon
+\end{aligned}
+$$
+According to this model, if we increase $X_1$ by one unit, then $Y$ will increase by an average of $\beta_1$ units. Notice that the presence of $X_2$ does not alter this statement-that is, regardless of the value of $X_2$, a one-unit increase in $X_1$ will lead to a $\beta_1$-unit increase in $Y$. The above equation is also known as additive model, investigating only the main effects of predictors. It assumes that the relationship between a given predictor variable and the response is independent of the other predictor variable.
+
+If the relationship between $E(Y)$ and $X_1$ depends on the values of the remaining $X$'s held fixed, then the first-order model is not appropriate for predicting $Y$. Interaction occurs whenever the effect of an independent variable on a dependent variable is not constant over all of the values of the other independent variables. In this case, we need another model that will take into account this dependence. Such a model includes the cross products of two or more $X$'s. Hence, the interaction model is
+
+$$
+\begin{aligned}
+Y=\beta_0+\beta_1X_1 + \beta_2X_2+\beta_3X_1X_2+\epsilon
+\end{aligned}
+$$
+__For example__, suppose that the mean value $E(Y)$ of a response $Y$ is related to two quantitative independent variables, $X_1$ and $X_2$, by the model
+$$
+\begin{aligned}
+E(Y) = 1 + 2X_1 - X_2 + X_1X_2
+\end{aligned}
+$$
+
+<insert image here>
+
+Note that the graph shows three nonparallel straight lines. You can verify that the slopes of the lines differ by substituting each of the values $X_2$ = 0, 1, and 2 into the equation. 
+
+For $X_2 = 0$:
+
+$E(Y)=1+2X_1-(0)+X_1(0)=1+2X_1(slope = 2)$
+
+For $X_2 = 1$:
+
+$E(Y)=1+2X_1-(1)+X_1(1)=3X_1(slope = 3)$
+
+For $X_2 = 2$:
+
+$E(Y)=1+2X_1-(2)+X_1(2)=-1+4X_1(slope = 4)$
+
+
+Note that the slope of each line is represented by slope=$\beta_1 + \beta_3x_2 = 2 + x_2.$ Thus, the effect on $E(Y)$ of a change in $X_1$ (i.e., the slope) now depends on the value of $X_2$. When this situation occurs, we say that $X_1$ and $X_2$ interact. Otherwise, the graph for 3 lines would be parallel. The cross-product term, $X_1X_2$, is called an interaction term, and the model $Y=\beta_0+\beta_1X_1 + \beta_2X_2+\beta_3X_1X_2+\epsilon$
+is called __an interaction model with two quantitative variables.__
+
+
+## Testing for Interaction in Multiple Regression 
+For testing an interaction term in regression model, we use the Individual Coefficients Test (t-test) method.
+$$
+\begin{aligned}
+H_0&:\beta_i=0\\
+H_a&:\beta_i\neq0\mbox{    (i=1,2,...,p)}\\\\\\
+t_{cal}&= \frac{\hat{\beta_i}-\beta_i}{SE(\hat{\beta_i})} \mbox{      which has df=n-p degree of freedom}
+\end{aligned}
+$$
+where $p$ is the total number of independent variables (including interaction terms). 
+
+Considering our advertising example, let's test the interation term.
+```{r}
+Advertising <- read_delim("/Users/Ellsworth/Documents/School/DATA603/Lectures/Advertising.txt", delim ="\t" )
+interacmodel <- lm(sale ~ tv + radio + tv * radio, data = Advertising)
+summary(interacmodel)
+```
+
+As you can see from the output, $t_{cal}$= 20.727 with the p-value< 0.0001, indicating that we should clearly reject the null hypothesis which means that we should definetely add the interaction term to the model at $\alpha=0.05$. Moreover, $R^2_{adj}$=0.9673, means that 96.73% of the variation of the response variable is explained by the interation model compared to only 0.8962 for the additive model that predicts sales using TV and radio without an interaction term. 
+
+Note that from the additive model assume that the effect on sales of TV advertising is independent of the effect of radio advertising. This assumption might not be true. For example, spending money on TV advertising may increase the effectiveness of radio advertising on sale. In marketing, this is known as __a synergy effect__, in statistics it is referred to as __an interaction effect__. 
+
+## Interpreting Coefficients of Predictor Varibales
+Notice that the model also can be rewritten as
+
+$$
+\begin{aligned}
+Y&=\beta_0+(\beta_1+\beta_3X_2)X_1 + \beta_2X_2+\epsilon\\
+&=\beta_0+\phi X_1 + \beta_2X_2+\epsilon\\
+where\\
+\phi&=\beta_1+\beta_3X_2.
+\end{aligned}
+$$
+
+Since $\phi$ changes with $X_2$, the effect of $X_1$ on $Y$ is no longer constant: adjusting $X_2$ will change the impact of $X_1$ on $Y$. The model also can be rewritten as
+
+$$
+\begin{aligned}
+Y&=\beta_0+\beta_1X_1+(\beta_2+\beta_3X_1)X_2+\epsilon\\
+&=\beta_0+\beta_1X_1+\phi X_2+\epsilon\\
+where\\
+\phi&=\beta_2+\beta_3X_1
+\end{aligned}
+$$
+__For example,__ suppose that we are interested in studying the productivity of a factory. We wish to predict the number of units produced on the basis of the number of production lines and the total number of workers. It seems likely that the effect of increasing the number of production lines will depend on the number of workers, since if no workers are available to operate the lines, then increasing the number of lines will not increase production. This suggests that it would be appropriate to include an interaction term between lines and workers in a linear model to predict units. Suppose that when we fit the model, we obtain
+
+$$
+\begin{aligned}
+\hat{units}&=1.2 + 3.4*lines + 0.22*workers + 1.4*(lines*workers)\\
+&=1.2 + (3.4 + 1.4*workers)*lines + 0.22*workers
+\end{aligned}
+$$
+In other words, adding an additional line will increase the number of units produced by 3.4 + 1.4*workers. Hence, the more workers we have, the stronger will be the effect of lines.
+Let's return to the Advertising example. A linear model that uses radio, TV, and an interaction between the two to predict sales takes the form
+$$
+\begin{aligned}
+Sale&=\beta_0+\beta_1TV + \beta_2radio+\beta_3(TV*radio)+\epsilon\\
+&=\beta_0+(\beta_1+\beta_3radio)*TV + \beta_2radio+\epsilon
+\end{aligned}
+$$
+We can interpret the coefficient $\beta_1+\beta_3radio$ as: spending additional 1,000 dollars on TV advertising leads to an _increase_ in sales by approximately $\beta_1+\beta_3radio$ units.
+
+The results from the output strongly suggest that the model that includes the interaction term is superior to the model that contains only main effects
+
+The coefficient estimates in the output suggest that an increase in TV advertising of 1,000 dollars is associated with increased sales of ($\beta_1+\beta_3xradio$)x 1,000 = 19+1.1xradio units. And an increase in radio advertising of 1,000 dollars will be associated with an increase in sales of ($\beta_2+\beta_3 TV$)x1,000 = 29 + 1.1xTV units.
+
+In this example, the p-values associated with TV, radio, and the interaction term all are statistically significant and so it is obvious that all three variables should be included in the model. However, it is sometimes the case that an interaction term has a very small p-value, but the associated main effects (in this case, TV and radio) do not. 
+
+*The hierarchical principle states that if we include an interaction in a model, we should also include the main effects,even if the p-values associated with principle their coefficients are not significant.*
+
+__Caution__ That is, if the interaction between $X_1$ and $X_2$ seems important, then we should include both $X_1$ and $X_2$ in the model even if their coefficient estimates have large p-values.
+
+The rationale for this principle is that if $X_1\times X_2$ is related to the response,then whether or not the coefficients of X~1~ or X~2~ are exactly zero is of little interest. Also $X_1\times X_2$ is typically correlated with $X_1$ and $X_2$, and so leaving them out tends to alter the meaning of the interaction.
+
+### Inclass Pratice Problem 1 - Interaction Term
+From the condominium problem, do the data provide sufficient evidence to indicate that the interation term need to be added in the model? If you had to compare additive models with the interaction model, which model would you choose? Explain
+
+```{r Interaction Term Condominium}
+condominium <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/condominium.csv")
+reducedmodel <- lm(listprice ~ livingarea + floors + baths, data = condo) 
+summary(reducedmodel)
+#interactmodel<-lm(listprice~(livingarea+floors+baths)^2,data = condominium)
+interactmodel <- lm(listprice~ livingarea + floors + baths + livingarea * baths + livingarea * floors + floors * baths, data = condominium)
+
+summary(interactmodel)
+```
+### Inclass Practice Problem 2
+
+Data on last year's sale (Y in 100,000s dollars) in 40 sales districts are given in the sales.csv file. This file also contains 
+  - promotional expenditures (X1: in 1,000s dollars), 
+  - the number of active accounts (X2), 
+  - the number of competing brands (X3), and
+  - the district potential (X4,coded) for each of the district
+Find the best fitted model (interaction term might be included) to predict sales. Which model would you choose? Explain.
+
+```{r Interaction Sale}
+sale <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/sales.csv")
+fullmodel < -lm(Y ~ X1 + X2 + X3 + X4, data = sale) 
+summary(fullmodel)
+reducedmodel<-lm(Y~X2+X3,data=sale) 
+intmodel<-lm(Y~X2+X3+X2*X3,data=sale) 
+summary(reducedmodel)
+summary(intmodel)
+```
+
+
+## Multiple Regression with Qualitative (Dummy) Variable Models
+
+Multiple regression models can also be written to include qualitative (or categorical) independent variables. Qualitative variables, unlike quantitative variables, cannot be measured on a numerical scale. Therefore, we must code the values of the qualitative variable (called levels) as numbers before we can fit in the model. These coded qualitative variables are called  __dummy variables__ or  __categorical predictor variables__, since the number assigned to the various levels are arbitrarily selected.
+
+__Dummy Coding__ 
+
+Because categorical predictor variables cannot be entered directly into a regression model and be meaningfully interpreted, some other methods of dealing with information of this type must be developed. In general, a categorical variable with $k$ levels will be transformed into $k-1$ variables each with two levels. For example, if a categorical variable had six levels, then five dichotomous variables could be constructed that would contain the same information as the single categorical variable. The process of creating dichotomous variables from categorical variables is called **dummy coding**.
+
+
+__Dummy Coding with two levels__
+The simplest case of dummy coding is when a categorical variable has two levels by assigning zero and one to the variable.
+
+
+
+__For example,__ the Credit data set records balance (average credit card debt for a number of individuals) as well as several quantitative predictors: age, cards (number of credit cards), education (years of education), income (in thousands of dollars), limit (credit limit), and rating (credit rating). In addition to these quantitative variables, we also have four qualitative variables: gender, student (student status), status (marital status), and ethnicity (Caucasian, African American or Asian). Data are provided in __credit.csv___ file. Suppose that we wish to investigate differences in credit card balance between males and females. Based on the gender variable, we can create a dummy variable with 0 as male and 1 as female.
+
+
+```{r Summary Credit Dummy Model}
+credit <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/credit.csv")
+dummymodel<-lm(Balance~factor(Gender),data=credit)
+summary(dummymodel)
+```
+
+*Rfunction*
+
+*factor() : command will make sure that R knows that your variable is categorical. This is especially useful if your categories are indicated by integers, otherwise function lm() might interpret the variable as continuous.*
+
+$$
+\begin{aligned}
+Y_i&=\beta_0+\beta_1X_i+\epsilon\\
+balance_i&=
+\begin{cases} 
+\beta_0+\beta_1+\epsilon & \mbox{if } i^{th}\mbox{ person is female} \\
+ \beta_0+\epsilon & \mbox{if } i^{th}\mbox{ person is male}
+\end{cases}
+\end{aligned}
+$$
+
+## Interpreting Coefficients of Predictor Variables
+
+$\beta_0$ can be interpreted as the average credit card balance among males, 
+
+$\beta_1$ as the average difference in credit card balance between females and males. 
+
+$\beta_0+\beta_1$ can be interpreted as the average credit card balance among females.
+
+
+$$
+\begin{aligned}
+\hat{Y_i}&=509.80+19.73X_i\\
+balance_i&=
+\begin{cases} 
+509.80+19.73=529.53 & \mbox{if } i^{th}\mbox{ person is female} \\
+509.80 & \mbox{if } i^{th}\mbox{ person is male}
+\end{cases}
+\end{aligned}
+$$
+
+From the output, the coeffcient estimates and other information associated with the model are provided. The average credit card debt for males is estimated to be 509.80 dollars whereas females are estimated to carry 19.73 in additional debt for a total of 509.80 + 19.73 = 529.53 dollars. However, we notice that the p-value for the dummy variable is very high. This indicates that there is no statistical evidence of a difference in average credit card balance between the genders. 
+
+### Inclass Practice Problem 3 - Dummy Model
+Suppose that we wish to investigate differences in credit card balance between marital status. Based on the Married variable, we can create a dummy variable which 0 is NO and 1 is Yes. How do you interpret the regression coefficients?
+
+```{r Summary Dummy Model Credit}
+credit=read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/credit.csv")
+dummymodel<-lm(Balance~factor(Married),data=credit)
+summary(dummymodel)
+```
+
+__Dummy Coding with three levels__
+When the categorical variable has three levels, it is converted to two dichotomous (dummy) variables.
+
+__For example,__ there is always a certain curiosity and controversy surrounding professor' salaries and whether they are overpaid or not paid enough. A university would like to study the effects of ranks and department on the salaries. 30 observations were randomly chosen from 3 different departments. The data are provided in __salary.csv__ data file.
+
+
+gender= (0=Male, 1=Female)
+
+rank= (1=Assistant, 2=Associate, 3=Full)
+
+Dept= Department (1=Family Studies, 2=Biology, 3=Business)
+
+year=Years since making Rank
+
+merit=Average Merit Ranking
+
+ The variable *Dept* has three levels: 1=Family Studies, 2=Biology, and 3=Business.   Variable *Dept* could be dummy coded into two variables, one called Biology and one called Business. The variable *rank* has also three levels and will be also coded into two dummy variables: Assistant Prof and Full Prof. The dummy coding is represented below.
+
+
+<insert image here>
+
+Before considering both predictors, let practice how to interpret the regression coefficients for each categorical variable. 
+
+__For example,__ considering only rank variable with three levels
+
+```{r}
+salary <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/salary.csv")
+dummymodel<-lm(salary~factor(rank),data=salary)
+summary(dummymodel)
+```
+$$
+\begin{aligned}
+Y_i&=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\epsilon\\
+balance_i&=
+\begin{cases} 
+\beta_0+\beta_1+\epsilon & \mbox{if } i^{th}\mbox{ person is ranked as Associate Prof} \\
+\beta_0+\beta_2+\epsilon & \mbox{if } i^{th}\mbox{ person is ranked as Full Prof} \\
+\beta_0+\epsilon & \mbox{if } i^{th}\mbox{ person is ranked as Assistant Prof}
+\end{cases}
+\end{aligned}
+$$
+
+```{r}
+dummymodel<-lm(salary~factor(rank),data=salary)
+summary(dummymodel)
+```
+
+## Interpreting Coefficients of Predictor Varibales
+
+$\beta_0$ can be interpreted as the average salary for Assistant Professor position , 
+
+$\beta_1$ as the difference in average salary between Associate Professor and Assistant Professor. 
+
+$\beta_2$ as the difference in average salary between Full Professor and Assistant Professor. 
+
+$\beta_0+\beta_1$ can be interpreted as the average salary for Associate Professor position .
+
+$\beta_0+\beta_2$ can be interpreted as the average salary for Full Professor position .
+
+## Inclass Practice Problem 4 - Interpret Department Variable
+Instead of the rank variable, practice how to interpret the dept variable.
+```{r, include=FALSE}
+salary <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/salary.csv")
+dummymodel<-lm(salary~factor(dept),data=salary)
+summary(dummymodel)
+```
+
+__Example:__ There is always a certain curiosity and controversy surrounding professor'salaries and whether they are overpaid or not paid enough. A university would like to study the effects of ranks and dept on the salaries (thousands of dollars). 30 observations were randomly chosen from 3 different departments. The data are provided in __salary.csv__ data file.
+
+```{r}
+dummymodel<-lm(salary~factor(rank)+factor(dept),data=salary)
+summary(dummymodel)
+```
+
+*Rfunction*
+
+*factor() : command will make sure that R knows that your variable is categorical. This is especially useful if your categories are indicated by integers, otherwise function lm() will interpret the variable as continuous.*
+$$
+Y_i=\beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\beta_3X_{i3}+\beta_4X_{i4}+\epsilon
+$$
+
+$$
+salary_i= 
+\begin{cases} 
+\beta_0+\beta_1+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Associate Prof  and is from Family Studies dept} \\
+\beta_0+\beta_2+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Full Prof  and is from Family Studies dept} \\
+\beta_0+\beta_3+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Assistant Prof  and is from Biology Dept} \\
+\beta_0+\beta_4+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Assistant Prof  and is from Business Dept} \\
+\beta_0+\beta_1+\beta_3+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Associate Prof  and is from Biology dept} \\
+\beta_0+\beta_1+\beta_4+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Associate Prof  and is from Business dept} \\
+\beta_0+\beta_2+\beta_3+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Full Prof  and is from Biology dept} \\
+\beta_0+\beta_2+\beta_4+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Full Prof  and is from Business dept} \\
+\beta_0+\epsilon & \mbox{if } i^{th}\mbox{person is ranked as Assistant Prof  and is from Family Studies dept} \\
+\end{cases}
+$$
+
+## Interpreting Coefficients of Predictor Variable
+
+$\beta_0$ can be interpreted as the average salary of an Assistant Prof from Family Studies dept.
+
+$\beta_1$ can be interpreted as the average difference in salary between an Assistant Prof from Family Studies dept and an Associate Prof and is from Family Studies dept
+
+$\beta_2$ can be interpreted as the average difference in salary between an Assistant Prof from Family Studies dept and a Full Prof  and is from Family Studies dept
+.
+
+.
+
+.
+
+
+
+# Interaction Effect in Multiple Regression with both Quantitative and Qualitative (Dummy) Variable Models
+
+In previous topics, we considered Multiple Regression models for both quantitative and qualitative variables. We also discussed an interaction in Multiple Regression for quantitative variables. However, the concept of interactions applies just as well to qualitative variables, or to a combination of quantitative and qualitative variables. In fact, an interaction between a qualitative variable and a quantitative variable has a particularly nice interpretation. 
+
+
+
+Consider the Credit data set example and suppose that we wish to predict balance using the income (quantitative) and student (qualitative) variables. In the absence of an interaction term, the model takes the form
+$$
+\begin{aligned}
+Y_i=\beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\epsilon
+\end{aligned}
+$$
+$$
+\begin{aligned}
+balance_i= \beta_0 + \beta_1Income_i + 
+\begin{cases} 
+\beta_2 & \mbox{if } i^{th}\mbox{person is a student} \\
+ 0  & \mbox{if } i^{th}\mbox{person is not a student}
+\end{cases}
+\end{aligned}
+$$
+
+$$
+balance_i= \beta_1Income_i + 
+\begin{cases} 
+\beta_0+ \beta_2  & \mbox{if } i^{th}\mbox{person is a student} \\
+ \beta_0  & \mbox{if } i^{th}\mbox{person is not a student}
+\end{cases}
+$$
+
+```{r}
+credit <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/credit.csv")
+mixmodel<-lm(Balance~Income+factor(Student), data=credit)
+summary(mixmodel)
+```
+$$
+\begin{aligned}
+balance_i= 5.9843Income_i + 
+\begin{cases} 
+211.1430+ 382.6705=593.8135  & \mbox{if } i^{th}\mbox{person is a student} \\
+211.1430  & \mbox{if } i^{th}\mbox{person is not a student}\\\\
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\\balance_i=
+\begin{cases} 
+593.8135 + 5.9843Income_i& \mbox{if } i^{th}\mbox{ person is a student} \\
+211.1430 + 5.9843Income_i  & \mbox{if } i^{th}\mbox{ person is not a student}
+\end{cases}
+\end{aligned}
+$$
+
+Notice that this amounts to fitting two parallel lines to the data, one for students and one for non-students. The lines for students and non-students have different intercepts, $\beta_0$ + $\beta_2$ versus $\beta_0$, but the same slope, $\beta_1$. This is illustrated in the plot below. The fact that the lines are parallel means that the average effect on balance of a one-unit increase in income does not depend on whether or not the individual is a student. __This represents a potentially serious limitation of the model, since in fact a change in income may have a very different effect on the credit card balance__
+
+
+```{r}
+library(ggplot2) 
+mixmodel<- lm(Balance~Income+factor(Student),data=credit)
+#For student y=593.8135+5.9843Income
+#For nonstudent  y=211.1430+5.9843 Income
+nonstudent=function(x){coef(mixmodel)[2]*x+coef(mixmodel)[1]}
+student=function(x){coef(mixmodel)[2]*x+coef(mixmodel)[1]+coef(mixmodel)[3]}
+ggplot(data=credit,mapping= aes(x=Income,y=Balance,colour=Student))+geom_point()+ 
+  stat_function(fun=nonstudent,geom="line",color=scales::hue_pal()(2)[1])+
+  stat_function(fun=student,geom="line",color=scales::hue_pal()(2)[2])
+```
+
+This limitation can be addressed by adding an interaction variable, created by multiplying income with the dummy variable for student. Our model now becomes
+
+$$
+\begin{aligned}
+Y_i&=\beta_0+\beta_1X_{i1}+\beta_2X_{i2}+\beta_3X_{i1}X_{i2}+\epsilon\\\\
+\\\\balance_i&= \beta_0 + \beta_1 x Income_i + 
+\begin{cases} 
+\beta_2+\beta_3xIncome_i & \mbox{if } i^{th}\mbox{ person is a student} \\
+ 0 & \mbox{if } i^{th}\mbox{ person is not a student}
+\end{cases} 
+\\\\\\balance_i&=
+\begin{cases} 
+(\beta_0+ \beta_2)+(\beta_1+ \beta_3)xIncome_i & \mbox{if } i^{th}\mbox{ person is a student} \\
+ \beta_0 + \beta_1 x Income_i & \mbox{if } i^{th}\mbox{ person is not a student}
+\end{cases}
+\end{aligned}
+$$
+```{r}
+mixmodel<- lm(Balance~Income+factor(Student)+Income*factor(Student),data=credit)
+summary(mixmodel)
+```
+
+$$
+\begin{aligned}
+Y_i&=200.6232+6.2182X_{i1}+476.6758 X_{i2}-1.9992 X_{i1}X_{i2}+\epsilon
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\\\\balance_i&= 200.6232 + 6.2182 Income_i + 
+\begin{cases} 
+476.6758 -1.9992 Income_i & \mbox{if } i^{th}\mbox{person is a student} \\
+ 0 & \mbox{if } i^{th}\mbox{person is not a student}
+\end{cases} 
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+balance_i&=
+\begin{cases} 
+(200.6232+ 476.67582)+(6.2182 -1.9992 )Income_i & \mbox{if } i^{th}\mbox{ person is a student} \\
+ 200.6232 + 6.2182 Income_i & \mbox{if } i^{th}\mbox{ person is not a student}
+\end{cases}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+balance_i&=
+\begin{cases} 
+677.29902+4.219Income_i & \mbox{if } i^{th}\mbox{ person is a student} \\
+ 200.6232 + 6.2182 Income_i & \mbox{if } i^{th}\mbox{ person is not a student}
+\end{cases}
+\end{aligned}
+$$
+
+```{r}
+library(ggplot2) 
+mixmodel<- lm(Balance~Income+factor(Student),data=credit)
+#For student y=677.2992+4.219Income
+#For nonstudent  y=200.6232+6.2182Income
+student=function(x){4.219*x+677.2992}
+nonstudent=function(x){coef(mixmodel)[2]*x+coef(mixmodel)[1]}
+ggplot(data=credit,mapping= aes(x=Income,y=Balance,colour=Student))+geom_point()+ 
+  stat_function(fun=nonstudent,geom="line",color=scales::hue_pal()(2)[1])+
+  stat_function(fun=student,geom="line",color=scales::hue_pal()(2)[2])
+```
+
+Disregard the p-value for the interaction term, we have two different regression lines for the students and the non-students. But now those regression lines have different intercepts, $\beta_0+\beta_2$ versus $\beta_1$, as well as different slopes, $\beta_1+\beta_3$ versus $\beta_1$. This allows for the possibility that changes in income may affect the credit card balances of students and non-students differently. The output shows the estimated relationships between income and balance for students and non-students in the model. We note that the slope for students (4.219) is lower than the slope for non-students (6.218). This suggests that increases in income are associated with smaller increases in credit card balance among students as compared to non-students.
+
+## Inclass Practice Problem 5 - 
+
+From the credit card example, use the lm() function to perform the best fitted model. How would you interpret the regression coeffients (if possible)? Would you recommend this model for predictive purpose?
+
+
+```{r Full Model Credi}
+fullmodel<-lm(Balance~Income+Limit+Rating+Cards+Age+Education+factor(Gender)+factor(Ethnicity)+factor(Married)+factor(Student),data=credit)
+
+summary(fullmodel)
+
+interactmodel<-lm(Balance~Income+Limit+Rating+Cards+Age+Income*Limit+Income*Rating+Income*Cards+Income*Age+Income*factor(Student)+
+             Limit*Cards+Limit*Age+Limit*factor(Student)+
+             Rating*Limit+Rating*Cards+Rating*Age+Rating*factor(Student)+
+             Cards*Age+Cards*factor(Student)+
+             Age*factor(Student),data=credit)
+
+summary(interactmodel)            
+```
+
+```{r Best Fit Model Credit}
+bestinteractmodel<-lm(Balance~Income+Rating+Age+Limit+Cards+Income*Limit+Income*Rating+Income*Age+Income*factor(Student)+
+           Limit*Age+Limit*factor(Student)+
+             Rating*Limit ,data=credit)
+summary(bestinteractmodel)
+```
+
+From the inclass practice problem, you can see that it is quite complicated (possible) to interpret regression coefficients as there are so many predictors in the model. However, let's practice the example below.
+
+```{r}
+mixmodel2<-lm(Balance~Rating+Income+factor(Student)+factor(Student)*Rating+factor(Student)*Income+Rating*Income,data=credit)
+summary(mixmodel2)
+```
+
+$$
+\begin{aligned}
+balance&=\beta_0+\beta_1Rating+\beta_2Income+\beta_3Student\\
+&+\beta_4Rating*Student+\beta_5Income*Student+\beta_6Rating*Income+\epsilon
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+&\mbox{if a person is a student}\\
+&balance_i=\beta_0+\beta_1Rating+\beta_2Income+\beta_3(1)+\beta_4Rating*(1)\\
+&+\beta_5Income*(1)+\beta_6Rating*Income+\epsilon 
+\end{aligned}
+$$
+$$
+\begin{aligned}
+&\mbox{if a person is  not a student}\\
+&balance_i=\beta_0+\beta_1Rating+\beta_2Income\\
+& +\beta_6Rating*Income+\epsilon
+\end{aligned}
+$$
+
+
+# A Quadratic (Second-Order) Model with Quantitative Predictors
+
+All of the models discussed in the previous sections proposed straight-line relationships between $E(y)$ and each of the independent variables in the model. In this section, we consider a model that allows for curvature in the relationship. This model is a second-order model because it will include an $X^2$ term. Here, we consider a model that includes only one independent variable $X$. The form of this model, called the *quadratic model*, is 
+
+
+$$
+\begin{aligned}
+Y=&\beta_0+\beta_1X_1+\beta_2X^2_2+\epsilon\\
+\hat{y}&=\hat{\beta_0}+\hat{\beta_1}X_1+\hat{\beta_2}X^2_1
+\end{aligned}
+$$
+
+The term involving $X_1^2$, called a quadratic term (or second-order term), enables us to hypothesize curvature in the graph of the response model relating $Y$ to $X_1$. Graphs of the quadratic model for two different values of $\beta_2$ are shown in the figure below. When the curve opens upward, the sign of $\beta_2$ is positive (see Figure 2 (a); when the curve opens downward, the sign of $\beta_2$ is negative (see Figure 2 (b)).
+
+<insert image here>
+
+## Interpretation of the regression coefficients Quadratic Model
+
+The interpretation of the estimated coefficients in a quadratic model must be under taken cautiously.
+
+$\hat{\beta_0}$ can be meaningfully interpreted only if the range of the independent variable includes zero-that is, if $X_1=0$ is included in the sampled range of $X_1$. 
+
+$\hat{\beta_1}$  no longer represents a slope in the presence of the quadratic term $X_1^2$. The estimated coefficient of the first-order term $X_1$ will not, in general, have a meaningful interpretation in the quadratic model. 
+
+$\hat{\beta_2}$, the sign of the coefficients, $\hat{\beta_2}$, of the quadratic term, $X_1^2$, is the indicator of whether the curve is concave downward (mound-shaped) or concave upward (bowl-shaped). A negative $\hat{\beta_2}$ implies downward concavity, as in this example (Figure 2), and a positive $\hat{\beta_2}$ implies upward concavity. Rather than interpreting the numerical value of $\hat{\beta_2}$ itself.
+
+__Example__ A physiologist wants to investigate the impact of exercise on the human immune system. The physiologist theorizes that the amount of immunoglobulin $Y$ in blood (called IgG, an indicator of long-term immunity, milligrams) is related to the maximal oxygen uptake $x$ (a measure of aerobic fittness level, milliliters per kilogram). The data file is provided in __AEROBIC.CSV__ file.  Construct a scatterplot for the data. Is there evidence to support the use of a quadratic model? What is the best model to fit the data.
+
+```{r}
+library(ggplot2)  #using ggplot2 for data visualization
+aerobicdata <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/AEROBIC.csv")
+ggplot(data=aerobicdata,mapping= aes(x=MAXOXY,y=IGG))+geom_point(color='red')+ 
+  geom_smooth()
+simplemodel=lm(IGG~MAXOXY,data=aerobicdata)
+summary(simplemodel)
+quadmodel=lm(IGG~MAXOXY+I(MAXOXY^2),data=aerobicdata)
+
+summary(quadmodel)
+```
+*R function*
+
+*I(X^2) :add quadratic term to the model*
+
+From the output, considering the scatterplot between $y$ and $X$, we found that the best model to fit the data is 
+
+$$
+\begin{aligned}
+\hat{Y}&=1270.41137-18.10744X_1+0.45082X^2_1
+\end{aligned}
+$$
+
+moreover, $R^2_{adj}=0.805$ and RMSE=178.6,comparing to the simple linear model, we can conclude that the quadratic model fits the data better than the simple linear regression model.
+
+Note!
+
+Model interpretations are not meaningful outside the range of the independent variable. Although the model appears to support the data. To make a prediction for $Y$, value of $X$ should be inside the range of the independent variable. Otherwise the prediction will not be meaningful.   
+
+### Inclass Practice Problem 6 - Quadratic
+
+Suppose you wanted to model the quality, $y$, of a product as a function of the pressure pounds per square inch (psi), at which it is produced. Four inspectors independently assign a quality score between 0 and 100 to each product, and then the quality, $y$, is calculated by averaging the four scores. An experiment is conducted by varying temperature in F. Fit a second-order model to the data and sketch the scatterplot. The data are provided in __PROQUAL.csv__ file
+
+
+```{r Quadratic PRODQUAL}
+quality <- read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/PRODQUAL.csv")
+ggplot(data=quality,mapping= aes(x=PRESSURE,y=QUALITY))+geom_point(color='red')+ 
+  geom_smooth()
+simplemodel=lm(QUALITY~PRESSURE,data=quality)
+summary(simplemodel)
+quadmodel=lm(QUALITY~PRESSURE+I(PRESSURE^2),data=quality)
+summary(quadmodel)
+```
+## Exercise 2
+
+The amount of water used by the production facilities of a plant varies. Observations on water usage and other,possibility related,variables were collected for 250 months. The data are given in __water.csv file__ The explanatory variables are 
+
+TEMP= average monthly temperature(degree celsius)
+
+PROD=amount of production(in hundreds of cubic)
+
+DAYS=number of operationing day in the month (days)
+
+HOUR=number of hours shut down for maintenance (hours)
+
+The response variable is USAGE=monthly water usage (gallons/minute)
+
+From the best model that you analysed in Exercise 1, build an interaction model to fit the multiple regression model. From the output, which model would you recommend for predictive purposes? Interpret the regression coefficients.
+
+```{r}
+waterdata <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/water.csv")
+reducedmodel=lm(USAGE~PROD+TEMP+HOUR,data=waterdata) # adj R^2 =0.8869 & RMSE 1.766
+summary(reducedmodel)
+
+intermodel=lm(USAGE~PROD+TEMP+HOUR+PROD*HOUR+PROD*TEMP+TEMP*HOUR,data=waterdata)
+summary(intermodel) #adj R^2 =0.9221 & RMSE 0.9867
+intermodel1=lm(USAGE~PROD+TEMP+HOUR+PROD*HOUR+TEMP*HOUR,data=waterdata) # adj R^2 =0.9221 & RMSE 1.466
+summary(intermodel1)
+intermodel2=lm(USAGE~PROD+TEMP+HOUR+PROD*HOUR+PROD*TEMP,data=waterdata) # best adj R^2 =0.9647 & RMSE 0.9866
+
+intermodel3=lm(USAGE~PROD+TEMP+HOUR+PROD*TEMP+TEMP*HOUR,data=waterdata) # adj R^2 =0.9505 & RMSE 1.168
+summary(intermodel3)
+```
+

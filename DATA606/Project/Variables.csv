@@ -1,0 +1,81 @@
+Name,Description,Type
+SalePrice,The property's sale price in dollars. This is the target variable that you're trying to predict.,Numeric
+MSSubClass,Identifies the type of dwelling involved in the sale.,Category - Nominal
+MSZoning,Identifies the general zoning classification of the sale.,Category - Nominal
+LotFrontage,Linear feet of street connected to property,Numeric
+LotArea,Lot size in square feet,Numeric
+Street,Type of road access,Category - Nominal
+Alley,Type of alley access,Category - Nominal
+LotShape,General shape of property,Category - Nominal
+LandContour,Flatness of the property,Category - Nominal
+Utilities,Type of utilities available,Category - Nominal
+LotConfig,Lot configuration,Category - Nominal
+LandSlope,Slope of property,Category - Nominal
+Neighborhood,Physical locations within Ames city limits,Category - Nominal
+Condition1,Proximity to main road or railroad,Category - Nominal
+Condition2,Proximity to main road or railroad (if a second is present),Category - Nominal
+BldgType,Type of dwelling,Category - Nominal
+HouseStyle,Style of dwelling,Category - Nominal
+OverallQual,Overall material and finish quality,Category - Ordinal
+OverallCond,Overall condition rating,Category - Ordinal
+YearBuilt,Original construction date,Date
+YearRemodAdd,Remodel date,Date
+RoofStyle,Type of roof,Category - Nominal
+RoofMatl,Roof material,Category - Nominal
+Exterior1st,Exterior covering on house,Category - Nominal
+Exterior2nd,Exterior covering on house (if more than one material),Category - Nominal
+MasVnrType,Masonry veneer type,Category - Nominal
+MasVnrArea,Masonry veneer area in square feet,Numeric
+ExterQual,Exterior material quality,Category - Nominal
+ExterCond,Present condition of the material on the exterior,Category - Nominal
+Foundation,Type of foundation,Category - Nominal
+BsmtQual,Height of the basement,Category - Nominal
+BsmtCond,General condition of the basement,Category - Nominal
+BsmtExposure,Walkout or garden level basement walls,Category - Nominal
+BsmtFinType1,Quality of basement finished area,Category - Nominal
+BsmtFinSF1,Type 1 finished square feet,Numeric
+BsmtFinType2,Quality of second finished area (if present),Category - Nominal
+BsmtFinSF2,Type 2 finished square feet,Numeric
+BsmtUnfSF,Unfinished square feet of basement area,Numeric
+TotalBsmtSF,Total square feet of basement area,Numeric
+Heating,Type of heating,Category - Nominal
+HeatingQC,Heating quality and condition,Category - Nominal
+CentralAir,Central air conditioning,Category - Nominal
+Electrical,Electrical system,Category - Nominal
+1stFlrSF,First Floor square feet,Numeric
+2ndFlrSF,Second floor square feet,Numeric
+LowQualFinSF,Low quality finished square feet (all floors),Numeric
+GrLivArea,Above grade (ground) living area square feet,Numeric
+BsmtFullBath,Basement full bathrooms,Numeric
+BsmtHalfBath,Basement half bathrooms,Numeric
+FullBath,Full bathrooms above grade,Numeric
+HalfBath,Half baths above grade,Numeric
+Bedroom,Number of bedrooms above basement level,Numeric
+Kitchen,Number of kitchens,Numeric
+KitchenQual,Kitchen quality,Category - Nominal
+TotRmsAbvGrd,Total rooms above grade (does not include bathrooms),Numeric
+Functional,Home functionality rating,Category - Nominal
+Fireplaces,Number of fireplaces,Numeric
+FireplaceQu,Fireplace quality,Category - Nominal
+GarageType,Garage location,Category - Nominal
+GarageYrBlt,Year garage was built,Date
+GarageFinish,Interior finish of the garage,Category - Nominal
+GarageCars,Size of garage in car capacity,Numeric
+GarageArea,Size of garage in square feet,Numeric
+GarageQual,Garage quality,Category - Nominal
+GarageCond,Garage condition,Category - Nominal
+PavedDrive,Paved driveway,Category - Nominal
+WoodDeckSF,Wood deck area in square feet,Numeric
+OpenPorchSF,Open porch area in square feet,Numeric
+EnclosedPorch,Enclosed porch area in square feet,Numeric
+3SsnPorch,Three season porch area in square feet,Numeric
+ScreenPorch,Screen porch area in square feet,Numeric
+PoolArea,Pool area in square feet,Numeric
+PoolQC,Pool quality,Category - Nominal
+Fence,Fence quality,Category - Nominal
+MiscFeature,Miscellaneous feature not covered in other categories,Category - Nominal
+MiscVal,$Value of miscellaneous feature,Category - Nominal
+MoSold,Month Sold,Category - Nominal
+YrSold,Year Sold,Category - Nominal
+SaleType,Type of sale,Category - Nominal
+SaleCondition,Condition of sale,Category - Nominal

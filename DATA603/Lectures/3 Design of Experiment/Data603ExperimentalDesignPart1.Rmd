@@ -1,0 +1,105 @@
+---
+title: "Unit 3 Part 1"
+author: "Michael Ellsworth"
+date: '2019-11-28'
+output: html_document
+---
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+```{r}
+blood_pressure <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/bloodpressure.csv")
+glimpse(blood_pressure)
+blood_pressure$treatment <- as.factor(blood_pressure$treatment)
+```
+
+```{r}
+CRD <- aov(bloodpressure ~ treatment, data = blood_pressure)
+blood_pressure %>%
+  ggplot(aes(x = treatment, y = bloodpressure)) +
+  geom_boxplot()
+```
+
+```{r}
+MVPC <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/MVPC.csv")
+glimpse(MVPC)
+MVPC$Treatment <- as.factor(MVPC$Treatment)
+MVPC %>%
+  ggplot(aes(x = Treatment, y = Score)) +
+  geom_boxplot()
+```
+
+```{r}
+lifetime <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/lifetime.csv")
+glimpse(lifetime)
+lifetime$device <- as.factor(lifetime$device)
+CRD <- aov(hrs ~ device, data = lifetime)
+lifetime %>%
+  ggplot(aes(x = device, y = hrs)) +
+  geom_boxplot()
+summary(CRD)
+```
+
+Response variable: lifetime
+Treatment (factor) = Devices (8 levels)
+Experimental Unit: Battery
+
+$$ \begin{aligned}
+H_0:& \mu_1 = \mu_2 = \mu_3 = \mu_4 = \mu_5 = \mu_6 = \mu_7 = \mu_8 \\
+H_1:& \text{ at least one } \mu \text{ is different}
+\end{aligned}$$
+
+
+```{r}
+broker_study <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/brokerstudy.csv")
+glimpse(broker_study)
+broker_study$broker <- as.factor(broker_study$broker)
+CRD <- aov(price ~ broker, data = broker_study)
+summary(CRD)
+broker_study %>%
+  ggplot(aes(x = broker, y = price)) +
+  geom_boxplot(aes(fill = broker))
+```
+
+Response variable = stock price
+Experimental unit = stock
+Treatment / factor = brokers (5 levels)
+
+
+```{r}
+pairwise.t.test(broker_study$price, broker_study$broker, p.adj = 'none')
+broker_study %>%
+  group_by(broker) %>%
+  summarise(mean = mean(price))
+```
+
+```{r}
+pairwise.t.test(broker_study$price, broker_study$broker, p.adj = 'bonferroni')
+```
+
+```{r}
+pairwise.t.test(broker_study$price, broker_study$broker, p.adj = 'holm')
+```
+
+```{r}
+MVPC %>%
+  group_by(Treatment) %>%
+  summarise(mean = mean(Score))
+pairwise.t.test(MVPC$Score, MVPC$Treatment, p.adj = "none")
+pairwise.t.test(MVPC$Score, MVPC$Treatment, p.adj = "bonferroni")
+pairwise.t.test(MVPC$Score, MVPC$Treatment, p.adj = "holm")
+```
+
+```{r}
+CRD <- aov(Score ~ Treatment, data = MVPC)
+TukeyHSD(CRD, conf.level = 0.95)
+plot(TukeyHSD(CRD, conf.level = 0.95), las = 1, col = "red")
+library(agricolae)
+LSD.test(CRD, trt = "Treatment")
+```
+

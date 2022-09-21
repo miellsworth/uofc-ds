@@ -1,0 +1,283 @@
+---
+title: "DATA 603 Assignment 3"
+author: "Michael Ellsworth"
+date: "November 29th, 2019"
+output:
+  html_document:
+    df_print: paged
+---
+```{r Load Packages, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(aod)
+library(lmtest)
+library(ROCR)
+library(pROC)
+```
+
+# Problem 1
+*A study investigated characteristics associated with y = whether a cancer patient achieved remission (1=yes, 0=no). An important explanatory variable was a labeling index (LI=percentage of “labeled” cells) that measures proliferative activity of cells after a patient receives an injection of tritiated thymidine. Fit a logistic regression model in order to answer the following questions. The data is provided in remission.scv file.*
+
+```{r Load Data 1, include=FALSE}
+remission <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/3/remission.csv")
+glimpse(remission)
+remission$y <- as.factor(remission$y)
+contrasts(remission$y)
+```
+
+## a
+*Estimate the probabilities of a cancer patient achieved remission when LI=15 and LI=37. Comment on your results.*
+```{r}
+remission_model_a <- glm(data = remission, y ~ LI, family = "binomial")
+summary(remission_model_a)
+predict(remission_model_a, data.frame(LI = 15), type = "response")
+predict(remission_model_a, data.frame(LI = 37), type = "response")
+```
+Based on the P-value of the summary of the logistic regression model where LI is a predictor of remission, we can say with confidence that LI is a predictor of remission as the P-value is less than 0.05.
+
+If the percentage of "labeled" cells is 15%, the probability that the cancer patient has achieved remission is 0.096. If the percentage is 37%, the probability of remission is 0.992.
+
+## b
+*Interpret the effect of LI in terms of the odds.*
+```{r}
+coefficients(remission_model_a)
+```
+
+$$e^{\beta_0 + \beta_1*LI} = e^{-7.015 + 0.318*LI}$$
+
+```{r}
+exp(0.3183759)
+```
+
+For every 1% increase in LI, the odds of remission is multiplied by 1.375 or, there is an increase of 37.5% of the odds of remission.
+
+## c
+*Compute 95% confidence intervals for the logistic regression coefficient and its associated odds. Give an interpretation.*
+```{r}
+confint(remission_model_a)
+```
+
+The 95% confidence interval for $\beta_1$ is 0.2626 and 0.3831. This suggests that an increase in LI by 1% would increase the log odds of remission between 0.2626 and 0.3831.
+
+```{r}
+exp(0.2626089)
+exp(0.3831168)
+exp(confint(remission_model_a))
+```
+
+The 95% confidence interval for $e^{\widehat{\beta_1}}$ is 1.3003 and 1.4668. This suggests that the relationship between LI and remission is positive as the confidence interval covers a range greater than 1. An increase in LI by 1% would increase the odds of remission between 30% and 47%.
+
+## d
+*Use the Wald Z test and Likelihood ratio test to confirm that the LI predictor is associated with remission of cancer at alpha = 0.05.*
+```{r}
+wald.test(b = coef(remission_model_a), Sigma = vcov(remission_model_a), Terms = 2)
+remission_model_intercept <- glm(data = remission, y ~ 1, family = "binomial")
+lrtest(remission_model_intercept, remission_model_a)
+```
+
+Based on a P-value less than 0.05 for both the Wald Z test and the Likelihood Ratio test, we can confirm that LI is a predictor of remission.
+
+# Problem 2
+*The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean in the early morning hours of 15 April 1912, after it collided with an iceberg during its maiden voyage from Southampton to New York City. The RMS Titanic was the largest ship a float at the time it entered service and was the second of three Olympic-class ocean liners operated by the White Star Line. The Titanic was built by the Harland and Wolff shipyard in Belfast. Thomas Andrews, her architect, died in the disaster. The training-dataset with 891 examples is provided in titanic.csv file and the list of Variables with a short description is provided:*
+
+  - *Survived: Survival*
+  - *PassengerId: Unique Id of a passenger. pclass: Ticket class*
+  - *Pclass: Ticket class*
+  - *sex: Sex*
+  - *Age: Age in years*
+
+```{r Load Data 2, include=FALSE}
+titanic <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/3/titanic.csv")
+glimpse(titanic)
+titanic$Sex <- as.factor(titanic$Sex)
+titanic$Pclass <- as.factor(titanic$Pclass)
+titanic$Survived <- as.factor(titanic$Survived)
+```
+ 
+## a
+*Test if the chances of survival of passengers in Titanic depends on those variables at alpha = 0.05*
+```{r}
+titanic_model <- glm(data = titanic, Survived ~ PassengerId + Pclass + Sex + Age, family = "binomial")
+summary(titanic_model)
+```
+
+Age and PassengerId are not predictors of survival as they are insignificant as shown by the summary above.
+
+To confirm that survival is dependent on passenger class and sex, we can use the wald z test.
+
+```{r}
+titanic_model_reduced <- glm(data = titanic, Survived ~ Pclass + Sex, family = "binomial")
+wald.test(b = coef(titanic_model_reduced), Sigma = vcov(titanic_model_reduced), Terms = 2:3)
+```
+
+Since the P-value is less than 0.05, we can confirm that survival is dependent on passenger class and sex.
+
+## b
+*From part a), use the likelihood ratio test to check whether the variable age should be in the full model.*
+```{r}
+lrtest(titanic_model_reduced, titanic_model)
+```
+Since the P-value calculated from the likelihood ratio test is above 0.05, we can say that the larger model does not perform better than the reduced model, or we failed to reject $H_0$. In other words, the model without Age performs better than the model with Age. Age should not be in the full model.
+
+## c
+*Write the logit and logistic regression model for predicting the chances of survival of passengers in Titanic.*
+```{r}
+titanic_model_reduced_c <- glm(data = titanic, Survived ~ Pclass + Sex, family = "binomial")
+coefficients(titanic_model_reduced_c)
+summary(titanic_model_reduced_c)
+```
+
+Logit:
+
+$$
+\begin{aligned}
+\widehat{logit} = \begin{cases} &2.297 - 2.642 &\text{ if Passenger Class is 1 and Sex is Male} \\
+&2.297 - 0.838 - 2.642 &\text{ if Passenger Class is 2 and Sex is Male} \\
+&2.297 - 1.905 - 2.642 &\text{ if Passenger Class is 3 and Sex is Male} \\
+&2.297 &\text{ if Passenger Class is 1 and Sex is Female} \\
+&2.297 - 0.838 &\text{ if Passenger Class is 2 and Sex is Female} \\
+&2.297 - 1.905 &\text{ if Passenger Class is 3 and Sex is Female} \end{cases}\\
+\end{aligned}
+$$
+
+Logistic:
+
+$$
+\begin{aligned}
+\widehat{\pi} = \begin{cases} &\frac{e^{2.297 - 2.642}}{1 + e^{2.297 - 2.642}} &\text{ if Passenger Class is 1 and Sex is Male} \\
+&\frac{e^{2.297 - 0.838 - 2.642}}{1 + e^{2.297 - 0.838 - 2.642}} &\text{ if Passenger Class is 2 and Sex is Male} \\
+&\frac{e^{2.297 - 1.905 - 2.642}}{1 + e^{2.297 - 1.905 - 2.642}} &\text{ if Passenger Class is 3 and Sex is Male} \\
+&\frac{e^{2.297}}{1 + e^{2.297}} &\text{ if Passenger Class is 1 and Sex is Female} \\
+&\frac{e^{2.297 - 0.838}}{1 + e^{2.297 - 0.838}} &\text{ if Passenger Class is 2 and Sex is Female} \\
+&\frac{e^{2.297 - 1.905}}{1 + e^{2.297 - 1.905}} &\text{ if Passenger Class is 3 and Sex is Female} \end{cases}\\
+\end{aligned}
+$$
+
+## d
+*Interpret the effect of Class and Sex in terms of the odds ratio from the logistic regression model in part c)*
+```{r}
+exp(coefficients(titanic_model_reduced_c))
+```
+
+If all other variables are held constant:
+
+  - The odds of survival of passengers in class 2 are 0.432 times the odds for passengers in class 1
+  - The odds of survival of passengers in class 3 are 0.149 times the odds for passengers in class 1
+  - The odds of survival of passengers in class 3 are 0.344 times the odds for passengers in class 2
+  - The odds of survival of male passengers are 0.071 times the odds for female passengers
+
+## e
+*Report Deviance, AIC, ROC with AUC (the model fit) from the model in part c)*
+
+The deviance of the model from part c is 826.89.
+
+The AIC of the model from part c is 834.89.
+
+```{r}
+prob_e <- predict(titanic_model_reduced_c, type = c("response"))
+pred_e <- prediction(prob_e, titanic$Survived)
+perf_e <- performance(pred_e, measure = "tpr", x.measure = "fpr")
+plot(perf_e, col = 2, main = "ROC CURVE ", xlab = "False Positive Rate (1-Specificity)", ylab = "True Positive Rate(Sensitivity)")
+abline(0,1)
+```
+
+```{r}
+auc(roc(titanic$Survived, prob_e))
+```
+
+AUC is 0.8328
+
+## f
+*Build the logistic regression with interation terms and write the logit model. Use the likelihood ratio test to confirm your result.*
+```{r}
+titanic_model_interact <- glm(data = titanic, Survived ~ (Pclass + Sex)**2, family = "binomial")
+summary(titanic_model_interact)
+```
+
+Based on the summary of the interaction model, we can say that the interaction term of passenger class and sex is significant.
+
+```{r}
+lrtest(titanic_model_reduced_c, titanic_model_interact)
+```
+
+Based on the P-value of the likelihood ratio, our assumption that the full model with the interaction term performs better than the reduced model without the interaction term is confirmed.
+
+```{r}
+coefficients(titanic_model_interact)
+```
+
+Logit:
+
+$$
+\begin{aligned}
+\widehat{logit} = 
+\begin{cases}
+&3.412 - 3.949 &\text{ if Passenger Class is 1 and Sex is Male} \\
+&3.412 - 0.956 - 3.949 - 0.185 &\text{ if Passenger Class is 2 and Sex is Male} \\
+&3.412 - 3.412 - 3.949 + 2.096 &\text{ if Passenger Class is 3 and Sex is Male} \\
+&3.412 &\text{ if Passenger Class is 1 and Sex is Female} \\
+&3.412 - 0.956 &\text{ if Passenger Class is 2 and Sex is Female} \\
+&3.412 - 3.412 &\text{ if Passenger Class is 2 and Sex is Female} \\
+\end{cases}
+\end{aligned}
+$$
+
+## g
+*Report Deviance, AIC, ROC with AUC (the model fit) from the model in part e) and compare the result with the model in part c).*
+
+Deviance: 798.1
+
+AIC: 810.1
+
+```{r}
+prob_g <- predict(titanic_model_interact, type = c("response"))
+pred_g <- prediction(prob_g, titanic$Survived)
+perf_g <- performance(pred_g, measure = "tpr", x.measure = "fpr")
+plot(perf_g, col = 2, main = "ROC CURVE ", xlab = "False Positive Rate (1-Specificity)", ylab = "True Positive Rate(Sensitivity)")
+abline(0,1)
+```
+
+```{r}
+auc(roc(titanic$Survived, prob_g))
+```
+
+AUC is 0.8328.
+
+Since the AIC is lower in the interaction model when compared to the model from part c, we can say that the interaction model is a better fit.
+
+## h
+*From the model in part e), predict the probability of survival for a 35 years old man who got the third class ticket. Show your work by substituting the effect values and use R command to confirm your result. Comment on your result.*
+
+```{r}
+coefficients(titanic_model_interact)
+```
+
+Using the coefficients for Male and Passenger Class 3:
+```{r}
+(exp(3.4122472 - 3.4122472 - 3.9493901 + 2.0957553)) / (1 + exp(3.4122472 - 3.4122472 - 3.9493901 + 2.0957553))
+```
+
+Using the predict function to confirm the result:
+```{r}
+newdata_h = data.frame(Sex = "male", Pclass = "3")
+predict(titanic_model_interact, newdata_h, type = "response")
+```
+
+From this result, we can say the probability of survivial for a 35 year old man with a third class ticket is 0.135. This model does not include age and hence, it does not change the probability of survival.
+
+## i
+*From the model in part e), predict the probability of survival for a 20 years old man who got the first class ticket. Show your work by substituting the effect values and use R command to confirm your result. Comment on your result.*
+
+Using the coefficients for Male and Passenger Class 1:
+```{r}
+(exp(3.4122472 - 3.9493901)) / (1 + exp(3.4122472 - 3.9493901))
+```
+
+Using the predict function to confirm the result:
+```{r}
+newdata_i = data.frame(Sex = "male", Pclass = "1")
+predict(titanic_model_interact, newdata_i, type = "response")
+```
+
+From this result, we can say the probability of survivial for a 20 year old man with a first class ticket is 0.369. This model does not include age and hence, it does not change the probability of survival.

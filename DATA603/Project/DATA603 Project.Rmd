@@ -1,0 +1,111 @@
+---
+title: "DATA 603 Project Presentation"
+author: "Mark Dodd, Michael Ellsworth, Dustin Tang, Raymond Wong"
+date: '2019-12-03'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Load Libraries, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(readxl)
+library(car)
+library(stringr)
+library(olsrr)
+```
+
+```{r Load Data Season Summaries 2017 to 2019, include = FALSE}
+season_stats_2017 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_stats_2016.csv", skip = 1)
+season_stats_2018 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_stats_2017.csv", skip = 1)
+season_stats_2019 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_stats_2018.csv", skip = 1)
+season_advstats_2017 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_advanced_stats_2016.csv", skip = 1)
+season_advstats_2018 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_advanced_stats_2017.csv", skip = 1)
+season_advstats_2019 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/season_advanced_stats_2018.csv", skip = 1)
+season_joined_2017 <- full_join(season_stats_2017, season_advstats_2017, by = "X2")
+season_joined_2018 <- full_join(season_stats_2018, season_advstats_2018, by = "X2")
+season_joined_2019 <- full_join(season_stats_2019, season_advstats_2019, by = "X2")
+season_joined_2017 <- season_joined_2017[-31,]
+season_joined_2018 <- season_joined_2018[-32,]
+season_joined_2019 <- season_joined_2019[-32,]
+season_joined_2017 <- season_joined_2017 %>%
+  mutate(season = 2017)
+season_joined_2018 <- season_joined_2018 %>%
+  mutate(season = 2018)
+season_joined_2019 <- season_joined_2019 %>%
+  mutate(season = 2019)
+seasons_joined <- rbind(season_joined_2017, season_joined_2018, season_joined_2019)
+names(seasons_joined)[2] <- "TEAM"
+seasons_joined$TEAM <- str_remove(seasons_joined$TEAM, "\\*")
+seaons_joined <- seasons_joined %>%
+```
+
+```{r}
+seasons <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/seasons_summary.csv")
+seasons <- seasons %>%
+  filter(!is.na(FUTURE_PTS)) %>%
+  mutate(GD = GF - GA) %>%
+  mutate(SD = S - SA) %>%
+  mutate(PD = `PIM/G` - `oPIM/G`)
+```
+
+
+```{r Single Linear Regression for Seasons Points}
+CF_model <- lm(data = seasons_joined, PTS ~ `CF%`)
+FF_model <- lm(data = seasons_joined, PTS ~ `FF%`)
+SCF_model <- lm(data = seasons_joined, PTS ~ `SCF%`)
+HDF_model <- lm(data = seasons_joined, PTS ~ `HDF%`)
+summary(CF_model)$r.squared
+summary(FF_model)$r.squared
+summary(SCF_model)$r.squared
+summary(HDF_model)$r.squared
+```
+
+```{r}
+season_points_model_full_BIG <- lm(data = seasons, FUTURE_PTS ~ AvAge + W + L + OL + PTS + GF + GA + GD + SOW + SOL + SRS + SOS + `TG/G` + EVGF + EVGA + PD + SD + PDO + `CF%` + `FF%` + xGF + xGA + `SCF%` + `HDF%`)
+stepw <- ols_step_both_p(season_points_model_full_BIG, pent = 0.1, prem = 0.3)
+vif(stepw$model)
+pairs(~`SCF%` + `TG/G` + xGF + EVGA, data = seasons)
+model_we_dont_know_at_this_point <- lm(data = seasons, FUTURE_PTS ~ `SCF%` + `TG/G` + xGF + EVGA)
+summary(model_we_dont_know_at_this_point)
+```
+
+
+
+```{r Multiple Linear Regression for Season Points}
+season_points_model_full <- lm(data = seasons, FUTURE_PTS ~ PTS + GF + GD + SD + `CF%` + `FF%` + `SCF%` + `HDF%` + PDO + PD)
+summary(season_points_model_full)
+season_points_model_reduced <- lm(data = seasons, FUTURE_PTS ~ `CF%`)
+summary(season_points_model_reduced)
+```
+
+```{r Stepwise}
+stepw = ols_step_both_p(season_points_model_full, pent = 0.2, prem = 0.4)
+```
+
+```{r}
+seasons_points_model_stepwise <- lm(data = seasons, FUTURE_PTS ~ `SCF%` + `CF%` + SD)
+summary(seasons_points_model_stepwise)
+vif(seasons_points_model_stepwise)
+pairs(~`SCF%` + `CF%` + SD, data = seasons)
+```
+
+
+```{r Load Marginal Stats}
+marginal_stats_2016 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/natstat2016_marg.csv")
+marginal_stats_2016 <- marginal_stats_2016 %>%
+  select(hoa, result_bool, `CF%_avg`, `FF%_avg`, `SF%_avg`, `GF%_avg`, `xGF%_avg`, `SCF%_avg`, `HDCF%_avg`) %>%
+  mutate(hoa = as.factor(hoa), result_bool = as.factor(result_bool)) %>%
+  mutate(result_bool = as.factor(result_bool))
+marginal_stats_2016 <- marginal_stats_2016[-c(1:123),]
+marginal_model_2016 <- glm(data = marginal_stats_2016, result_bool ~ , family = "binomial")
+summary(marginal_model_2016)
+```
+
+
+
+

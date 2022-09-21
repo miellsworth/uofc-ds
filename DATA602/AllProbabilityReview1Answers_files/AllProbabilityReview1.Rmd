@@ -1,0 +1,265 @@
+---
+title: "DATA 602 - Review of Probability Theory"
+output: html_notebook
+---
+&copy; Jim Stallard 2019
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+```
+
+# Review of Modules 1 through 5
+
+The purpose of this class is to provide many different examples of computing probabilities using the various principle of probability covered in the Probability Modules posted on D2L. In each instance, you will be given an opportunity to work with others to solve each problem. 
+
+
+
+**Time to Play Exercise 1:** A random experiment consists of tossing a fair die (with sides 1 through 6) and observing the upper-most face. The following events are defined:
+</br>
+$$
+A - \:\: \text{the upper-most face is less than or equal to 3} \\
+B - \:\: \text{the upper-most face is equally divisible by 2}
+$$
+Compute the probabilities below. 
+
+(a) $P(A \cup B)$
+<div style="margin-bottom:30px;">
+</div>
+
+(b) $P(A \cap B)$ 
+<div style="margin-bottom:30px;">
+</div>
+
+(c) $P(A^{c} \cap B^{c})$
+
+---------------------------
+
+**Time to Play Exercise 2:** A room consists of five persons. Assume each person was born in a non-leap year (in a year with 365 days). Compute the probability of the following events:
+</br>
+</br>
+
+(a) exactly two have the same birthday.
+<div style="margin-bottom:30px;">
+</div>
+
+(b) at least two have the same birthday. 
+<div style="margin-bottom:30px;">
+</div>
+
+----------------------------
+
+**Time to Play Exercise 3A:** Data collected from delegates attending a one-day national data science conference produced the following percentages: Sixty-percent (60%) of all delegates attended the breakfast forum, seventy-percent (70%) attended the dinner banquet, and forty-percent (40%) attended both. 
+</br>
+</br>
+One of the delegates attending the data science conference was chosen at random. Define the events $BF$ as the delegate attended the breakfast forum and $DB$ as the delegate attended the dinner banquet. Compute the probabilty that this delegate
+
+(a) attended the breakfast forum or the dinner banquet.
+<div style="margin-bottom:30px;">
+</div>
+
+(b) *only* attended the breakfast forum. 
+<div style="margin-bottom:30px;">
+</div>
+
+(c) attended neither the breakfast forum nor the dinner banquet. 
+<div style="margin-bottom:30px;">
+</div>
+
+(d) did not attend the breakfast forum or did not attend the dinner banquet.
+<div style="margin-bottom:30px;">
+</div>
+
+(e) Consider the statement: A delegate attending the breakfast forum and a delegate attending the dinner banquet are mutually exclusive events. Is this statement true or false? 
+<div style="margin-bottom:30px;">
+</div>
+
+------------------------------
+
+**Time to Play Exercise 3B:** Returning to the previous Time to Play Exercise: It turns out that the randomly chosen delegate did attend the dinner banquet - the event $DB$ has occurred. 
+</br>
+</br>
+Compute the probability that this person
+
+(a) did attend the breakfast forum.
+<div style="margin-bottom:30px;">
+</div>
+
+
+(b) did not attend the breakfast forum. 
+<div style="margin-bottom:30px;">
+</div>
+
+(c) If the randomly chosen delegate did not attend the dinner banquet, compute the probability that they did not attend the breakfast forum.
+<div style="margin-bottom:30px;">
+</div>
+
+(d) Can you infer from these data that the events $DB$ and $BF$ are independent events? Why or why not? 
+
+</br>
+</br>
+----------------------------
+
+**Time to Play Exercise 4:** A medical test to determine the presence of a certain illness correctly detects the illness in a patient ninety-six percent (96%) of the time, but provides a *false positive* ten-percent of the time. Assume that one-percent (1%) of a population of patients carry this illness. 
+</br>
+
+(a) A person from this population of patients is randomly chosen and tested for the illness. The test produces a positive result. Compute the probability that this particular patient has the illness.
+
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Suppose the test on the person in part (a) produced a negative result. Compute the probability that the person has the illness.
+<div style="margin-bottom:10px;">
+</div>
+
+</br>
+</br>
+
+-------------------------------------
+
+**Time to Play Exercise 5:** A person purchases one Lotto Max ticket, then picks seven numbers out of 49 (without replacement) that they believe will be the seven winning number combination. A random variable $X$ is defined to count the how many of this person's numbers match the winning seven numbers of the Lotto Max lottery.
+
+(a) What possible values can $X$ assume? List all possible outcomes for $X$. 
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Come up with a probability distribution function of $X$, the formula that will enable you to compute $P(X = x)$. When you have done so, create a function in R called `ex5pdf`.
+<div style="margin-bottom:30px;">
+</div>
+
+(c) Use the `plot` command and the probability distribution function/formula in (b) to visualize the probability distribution of $X$.
+<div style="margin-bottom:30px;">
+</div>
+
+(d) In order to win any $, the person must match *at least three* of the seven winning numbers. Compute the probability that this person wins any money from their lottery ticket purchase.
+<div style="margin-bottom:30px;">
+</div>
+
+(e) How many numbers would you expect this person to match? Compute this value. Attempt to use R Studio in your computation. 
+<div style="margin-bottom:30px;">
+</div>
+
+(f) Use R Studio to compute the standard deviation, $\sigma_{X}$ or $SD(X)$. 
+<div style="margin-bottom:30px;">
+</div>
+
+------------------------------------
+
+**Time to Play Exericse 6:** A recent poll[^1] suggested that approximately 37% of decided Canadian voters would vote for the Conservative Party in the upcoming federal election (Liberal Party 31%, NDP 18%, 5% for Bloc Quebecois, etc.). A random selection of 100 decided Canadian voters is taken. 
+</br>
+</br>
+Consider a random variable $X$ that counts how many, out of the 100, that will vote for their Liberal Party candidate.  
+
+(a) Compute the probability that 30 of the 100 decided voters will vote for their Liberal Party candidate in the next federal election.
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Compute the probabilty that more than 50 of the 100 decided voters will vote for their Liberal Party candidate in the next federal election.
+<div style="margin-bottom:30px;">
+</div>
+
+(c) What can be said about the distribution shape of $X$? 
+<div style="margin-bottom:30px;">
+</div>
+
+(d) How many of the 100 randomly chosen decided voters would you expect to vote for their Liberal Party candidate in the next federal election? Compute this value.
+<div style="margin-bottom:30px;">
+</div>
+
+(e) Compute the standard deviation of the random variable $X$, $\sigma_{X}$ or $SD(X)$. 
+<div style="margin-bottom:30px;">
+</div>
+
+[^1]: https://www.ipsos.com/en-ca/news-polls/Federal-Conservatives-Liberals-Locked-in-Holding-Pattern
+
+--------------------------------------
+
+**Time to Play Exercise 7:** A continuous random variable $X$ has the probability *density* function 
+$$
+f(x) = \left(\frac{200}{99}\right)x^{-3} \hspace{0.3in} \text{for}\: \: 1 \leq x \leq 10
+$$
+
+A function called `pdfex7` has been created below.
+```{r}
+pdfex7 = function(x)
+{
+  (200/99)*(1/x^{3})
+}
+```
+The graph of this probability density function is also provided below.
+```{r}
+curve(pdfex7, 1, 10, xlim=c(0,12), ylim=c(0, 2), xlab = "X", ylab="f(x)", main="Probability Distribution of X", type="l", col='red')
+axis(1, at=c(1, 10), labels=c(1,10))
+x.cor = c(1, seq(1, 10, 0.01), 10)
+y.cor = c(0, pdfex7(seq(1, 10, 0.01)), 0)
+polygon(x.cor, y.cor,col='skyblue')
+```
+
+Using the function provided along with the `integrate` command, compute
+
+(a) $P(2 \leq X \leq 3)
+<div style="margin-bottom:30px;">
+</div>
+
+(b) $P(X > 8)$
+<div style="margin-bottom:30px;">
+</div>
+
+(c) $P(X > 4 | X > 3)$
+<div style="margin-bottom:30px;">
+</div>
+
+(d) Compute the expected value/mean of $X$, or $E(X) = \mu_{X}$. 
+<div style="margin-bottom:30px;">
+</div>
+
+(e) Compute the standard deviation of $X$, $\sigma_{X} = SD(X)$. 
+<div style="margin-bottom:30px;">
+</div>
+
+------------------------------------------------
+
+**Time to Play Exercise 8:** The customer service desk at a large electronics store services, on average, six customers per hour.  
+
+(a) Compute the probabiity that the customer service desk will service more than 5 customers in any given hour.
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Consider the random variable $Y$, which measures the amount of time passing between successive persons served at the customer service desk. This random variable can be modeled by th Exponential distribution, with a mean time passing of 
+$$
+\beta = \frac{1}{\lambda} = \frac{1}{6} \:\: \text{of an hour} = 10 \:\: \text{minutes}
+$$
+Therefore the probabilty density function of $Y$ is
+$$
+f(y) = \left(\frac{1}{10}\right)e^{-y/10} \hspace{0.2in} y \geq 0
+$$
+This probabilty density function is provided below.
+```{r}
+pdfex8 = function(x)
+{
+  (1/10)*exp(-x/10)
+}
+curve(pdfex8, 0, 30, xlab="Minutes Between Successive Customers", ylab="Density", main="Probability Distribution", type="l", col='red')
+```
+
+Compute the probability that between 5 and 15 minutes pass between successive customers.
+<div style="margin-bottom:30px;">
+</div>
+
+(c) Compute the probabilty that more than 20 minutes pass between successive customers.
+<div style="margin-bottom:30px;">
+</div>
+
+(d) If 15 minutes have passed since the last customer was served, compute the probability that at most 25 minutes will have passed in total until the next customer is served. 
+<div style="margin-bottom:30px;">
+</div>
+
+(e) The cumulative distribution function of $Y$ is provided below.
+$$
+F(y) = 1 - e^{-y/10} \:\: \text{for} \:\: y \geq 0
+$$
+Compute the (i) 25th percentile $y_{25}$ and the seventy-fifth percentile $y_{75}$. 
+<div style="margin-bottom:30px;">
+</div>
+-------------------------

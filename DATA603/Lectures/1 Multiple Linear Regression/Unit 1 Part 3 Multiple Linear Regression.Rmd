@@ -1,0 +1,119 @@
+---
+title: "DATA 603 - Lecture Notes Unit 1 Part 3"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(olsrr)
+library(leaps)
+library(GGally)
+```
+
+
+
+#### Inclass Practice Problem 6
+
+Clerical staff work hours. In any production process in which one or more workers are engaged in a variety of tasks, the total time spent in production varies as a function of the size of the work pool and the level of output of the various activities. For example, in a large metropolitan department store, the number of hours worked (Y) per day by the clerical staff may depend on the following variables:
+  - X1 = Number of pieces of mail processed (open, sort, etc.)
+  - X2 = Number of money orders and gift certificates sold,
+  - X3 = Number of window payments (customer charge accounts) transacted ,
+  - X4 = Number of change order transactions processed ,
+  - X5 = Number of checks cashed ,
+  - X6 = Number of pieces of miscellaneous mail processed on an ‘’as available’’ basis , and
+  - X7 = Number of bus tickets sold
+The data are provided in CLERICAL.csv file count for these activities on each of 52 working
+days. Conduct a Stepwise Regression Procedure and All-Possible-Regressions procedure of
+the data using R software package.
+
+```{r Clerical Individual t test}
+clerical <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/CLERICAL.csv")
+clerical <- clerical[, -c(1, 2)]
+clerical_full <- lm(data = clerical, Y ~.)
+summary(clerical_full)
+```
+
+Y ~ X2 + X4 + X5
+
+```{r Clerical Stepwise}
+stepw_clerical <- ols_step_both_p(clerical_full, pent = 0.1, prem = 0.3, details = TRUE)
+```
+
+Y ~ X2 + X4 + X5 + X6
+
+```{r Clerical Best Subset}
+# need to install the package leaps for best.subset() function
+clerical_best_subset <- regsubsets(Y ~., data = clerical, nv = 10)
+summary(clerical_best_subset)
+clerical_reg_summary <- summary(clerical_best_subset)
+# for the output interpretation
+rsquare <- c(clerical_reg_summary$rsq)
+cp <- c(clerical_reg_summary$cp)
+AdjustedR<-c(clerical_reg_summary$adjr2)
+RMSE<-c(clerical_reg_summary$rss)
+cbind(rsquare,cp,RMSE,AdjustedR)
+```
+
+Y ~ X1 + X2 + X3 + X4 + X5 + X6
+
+```{r Clerical Interaction Individual t test}
+clerical_interaction <- lm(Y ~ (X2 + X4 + X5)**2, data = clerical)
+summary(clerical_interaction)
+```
+
+Y ~ X2 + X4 + X5
+
+```{r Clerical Interaction Stepwise}
+clerical_interaction_stepwise <- lm(Y ~ (X2 + X4 + X5 + X6)**2, data = clerical)
+summary(clerical_interaction_stepwise)
+```
+
+Y ~ X2 + X4 + X5 + X2*X6
+
+```{r Clerical Interaction Best Subset}
+clerical_interaction_best_subset <- lm(Y ~ (X1 + X2 + X3 + X4 + X5 + X6)**2, data = clerical)
+summary(clerical_interaction_best_subset)
+```
+
+Y ~ X1 + X2 + X3 + X4 + X5 + X6 + X1 * X6 + X2 * X6
+
+```{r GGPairs}
+#considering high order model between Xs and Y to improve the model
+# need to install the GGally package for ggpairs function
+
+#option 1: using function ggpairs()
+clericaldata <- data.frame(clerical$Y, clerical$X1, clerical$X2, clerical$X3,
+                         clerical$X4, clerical$X5, clerical$X6, clerical$X7)
+#ggpairs(salarydata)
+#LOESS or LOWESS: LOcally WEighted Scatter-plot Smoother
+ggpairs(clericaldata, lower = list(continuous = "smooth_loess", combo =
+ "facethist", discrete = "facetbar", na = "na"))
+```
+
+Improve individual t test model
+```{r}
+best_model_t_test <- lm(Y ~ X2 + I(X2^2) + X4 + X5, data = clerical)
+summary(best_model_t_test)
+best_model_t_test1 <- lm(Y ~ X2 + I(X2^2) + I(X2^3) + X4 + X5, data = clerical)
+summary(best_model_t_test1)
+# X2^2 is the best
+```
+
+Y ~ X2 + X2^2 + X4 + X5
+
+Improve stepwise model
+```{r}
+
+```
+
+Y ~ X2 + X2^2 + X4 + X5
+
+Improve best subset model
+```{r}
+
+```
+
+Y ~ X1 + X2 + X3 + X4 + X5 + X6 + X1 x X6 + X2 x X6
+

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)https://d2l.ucalgary.ca/d2l/le/content/283684/fullscreen/3765724/View -->
+<html lang="en-ca" data-lang-default="en-ca" data-intl-overrides="{&quot;number&quot;:{&quot;patterns&quot;:{&quot;decimal&quot;:{&quot;negativePattern&quot;:&quot;-{number}&quot;},&quot;percent&quot;:{&quot;positivePattern&quot;:&quot;{number} %&quot;,&quot;negativePattern&quot;:&quot;-{number} %&quot;}},&quot;symbols&quot;:{&quot;decimal&quot;:&quot;.&quot;,&quot;group&quot;:&quot;,&quot;,&quot;negative&quot;:&quot;-&quot;,&quot;percent&quot;:&quot;%&quot;},&quot;groupSize&quot;:[3]},&quot;date&quot;:{&quot;hour24&quot;:false,&quot;calendar&quot;:{&quot;firstDayOfWeek&quot;:0,&quot;dayPeriods&quot;:{&quot;am&quot;:&quot;AM&quot;,&quot;pm&quot;:&quot;PM&quot;},&quot;months&quot;:{&quot;short&quot;:[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;,&quot;Oct&quot;,&quot;Nov&quot;,&quot;Dec&quot;,&quot;&quot;],&quot;long&quot;:[&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;,&quot;August&quot;,&quot;September&quot;,&quot;October&quot;,&quot;November&quot;,&quot;December&quot;,&quot;&quot;]},&quot;days&quot;:{&quot;short&quot;:[&quot;Sun&quot;,&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;,&quot;Sat&quot;]}},&quot;formats&quot;:{&quot;dateFormats&quot;:{&quot;short&quot;:&quot;M/d/yyyy&quot;},&quot;timeFormats&quot;:{&quot;short&quot;:&quot;h:mm tt&quot;,&quot;medium&quot;:&quot;h:mm tt&quot;,&quot;full&quot;:&quot;h:mm tt ZZZ&quot;}}}}" data-timezone="{&quot;name&quot;:&quot;Canada - Calgary&quot;,&quot;identifier&quot;:&quot;America/Edmonton&quot;}" data-app-version="20.19.12" dir="ltr" data-telemetry-endpoint="https://prd.telemetryservice.brightspace.com/api/events/" data-css-vars="{&quot;--d2l-branding-primary-color&quot;:&quot;#000000&quot;}"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data</title>
+		<script async="" src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/adrum-ext.js"></script><script>
+		//<![CDATA[
+			(function(){if('PerformanceLongTaskTiming' in window) {var g = window.__tti = {e:[]};g.o = new PerformanceObserver( function( l ){ g.e = g.e.concat( l.getEntries() ) });g.o.observe({ entryTypes:['longtask']})}})();
+			(function(){document.addEventListener('WebComponentsReady', function() { window.d2lWCRDispatched = true; if(window.D2L && window.D2L.WCRDispatched !== undefined) { window.D2L.WCRDispatched(); }});})();
+		//]]>
+		</script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/regenerator-runtime.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/babel-helpers.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/esm-amd-loader.min.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/webcomponents-loader.js"></script>
+		<script>
+		//<![CDATA[
+			(function(){try { localStorage.setItem('XSRF.Token','DvVPxmpvMvKb6W13jLIG50svvDeuk0wL');localStorage.setItem('Session.UserId','197092');} catch(e) {}})();
+			(function(){if(window['FontFace'] === undefined) { return; }new FontFace('Lato','url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-400.woff2) format("woff2"), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-400.woff) format("woff")',{style:'normal',weight:'400'}).load();new FontFace('Lato','url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-700.woff2) format("woff2"), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-700.woff) format("woff")',{style:'normal',weight:'700'}).load();})();
+			(function(){D2L = window.D2L || {};  D2L.LP = D2L.LP || {}; D2L.LP.Web = D2L.LP.Web || {}; D2L.LP.Web.UI = D2L.LP.Web.UI || {};
+D2L.LP.Web.UI.Flags = {
+    Flag: function(feature, defaultValue) {
+		const listedFlags ={"polymer-form-submit":true,"chrome-80-xhr-unload":true,"f-13154-remove-confirmations-start-submit-quiz":true,"de34809-chrome-75-frame-src-fix":true};
+		return ( listedFlags[feature] !== undefined ) ? listedFlags[feature] : defaultValue;
+	}
+};})();
+		//]]>
+		</script>
+		<script>define2(['https://s.brightspace.com/lib/bsi/20.19.12-30/es6-bundled/web-components/bsi.js']);</script>
+		<link rel="icon" href="https://s.brightspace.com/lib/favicon/1.0.0/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/bsi.min.css">
+		<link rel="stylesheet" type="text/css" href="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/reset.css">
+		<link rel="stylesheet" type="text/css" href="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/D2L.LP.Web.Desktop.default.css">
+		<link rel="stylesheet" type="text/css" href="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/D2L.LE.ToolIntegration.Content.default.css">
+		<link rel="stylesheet" type="text/css" href="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/D2L.LP.Web.Desktop.Print.default.css" media="print">
+		<style>
+			html { font-size:20px; }
+			.d2l_1_0_878 {float:right;}
+			.d2l_1_1_674 {margin:10px;}
+			.d2l_1_2_437 {margin-bottom:10px;}
+			.d2l_1_4_63 {width:100%;}
+			.d2l_1_5_659 {height:580px;}
+		</style>
+		<script>(function() {})();</script><style id="d2l-colors">html {
+  --d2l-color-regolith: #f9fbff;
+			--d2l-color-sylvite: #f1f5fb;
+			--d2l-color-gypsum: #e3e9f1;
+			--d2l-color-mica: #cdd5dc;
+			--d2l-color-corundum: #b5bdc2;
+			--d2l-color-chromite: #9ea5a9;
+			--d2l-color-galena: #868c8f;
+			--d2l-color-tungsten: #6e7376;
+			--d2l-color-ferrite: #494c4e;
+
+			
+			--d2l-color-zircon-plus-2: #bbf1fa;
+			--d2l-color-zircon-plus-1: #00bddd;
+			--d2l-color-zircon: #00849c;
+			--d2l-color-zircon-minus-1: #005b6b;
+
+			
+			--d2l-color-celestine-plus-2: #e8f2f9;
+			--d2l-color-celestine-plus-1: #29a6ff;
+			--d2l-color-celestine: #006fbf;
+			--d2l-color-celestine-minus-1: #005694;
+
+			
+			--d2l-color-amethyst-plus-2: #e9e6ff;
+			--d2l-color-amethyst-plus-1: #afa1ff;
+			--d2l-color-amethyst: #7862f0;
+			--d2l-color-amethyst-minus-1: #4c3f99;
+
+			
+			--d2l-color-fluorite-plus-2: #f6e1fa;
+			--d2l-color-fluorite-plus-1: #ea82ff;
+			--d2l-color-fluorite: #b24ac7;
+			--d2l-color-fluorite-minus-1: #7e358c;
+
+			
+			--d2l-color-tourmaline-plus-2: #fae1ed;
+			--d2l-color-tourmaline-plus-1: #ff389b;
+			--d2l-color-tourmaline: #bf2a75;
+			--d2l-color-tourmaline-minus-1: #96215c;
+
+			
+			--d2l-color-cinnabar-plus-2: #fae1e2;
+			--d2l-color-cinnabar-plus-1: #ff6b70;
+			--d2l-color-cinnabar: #cd2026;
+			--d2l-color-cinnabar-minus-1: #a1191d;
+
+			
+			--d2l-color-carnelian-plus-1: #fae3cf;
+			--d2l-color-carnelian: #e87511;
+			--d2l-color-carnelian-minus-1: #a6540d;
+			--d2l-color-carnelian-minus-2: #804008;
+
+			
+			--d2l-color-citrine-plus-1: #fae5c8;
+			--d2l-color-citrine: #ffba59;
+			--d2l-color-citrine-minus-1: #a87b3b;
+			--d2l-color-citrine-minus-2: #694b25;
+
+			
+			--d2l-color-topaz-plus-1: #fffbb2;
+			--d2l-color-topaz: #f5ec5a;
+			--d2l-color-topaz-minus-1: #a69f21;
+			--d2l-color-topaz-minus-2: #635f15;
+
+			
+			--d2l-color-peridot-plus-1: #cdf2b1;
+			--d2l-color-peridot: #8ccd5a;
+			--d2l-color-peridot-minus-1: #59823a;
+			--d2l-color-peridot-minus-2: #3d5926;
+
+			
+			--d2l-color-olivine-plus-1: #a5fabd;
+			--d2l-color-olivine: #46a661;
+			--d2l-color-olivine-minus-1: #327846;
+			--d2l-color-olivine-minus-2: #275c36;
+
+			
+			--d2l-color-malachite-plus-1: #a1f7f4;
+			--d2l-color-malachite: #00afaa;
+			--d2l-color-malachite-minus-1: #017d79;
+			--d2l-color-malachite-minus-2: #005e5b;
+
+			
+			--d2l-color-primary-accent-action: var(--d2l-color-celestine);
+			--d2l-color-primary-accent-indicator: var(--d2l-color-carnelian);
+
+			
+			--d2l-color-feedback-error: var(--d2l-color-cinnabar);
+			--d2l-color-feedback-warning: var(--d2l-color-citrine);
+			--d2l-color-feedback-success: var(--d2l-color-olivine);
+			--d2l-color-feedback-action: var(--d2l-color-celestine-plus-1);
+}
+
+</style><custom-style>
+	<style is="custom-style">html {
+  --d2l-color-white: #fff;
+			--d2l-color-woolonardo: var(--d2l-color-sylvite);
+			--d2l-color-titanius: var(--d2l-color-mica);
+			--d2l-color-pressicus: var(--d2l-color-corundum);
+			--d2l-color-violettine: var(--d2l-color-amethyst-minus-1);
+			--d2l-color-panthera: var(--d2l-color-tourmaline-plus-1);
+			--d2l-color-koolaudica: var(--d2l-color-peridot);
+			--d2l-color-deephonica: var(--d2l-color-malachite);
+			--d2l-color-lurite: var(--d2l-color-topaz);
+			--d2l-color-buttonic: linear-gradient(to bottom, var(--d2l-color-regolith) 0%, var(--d2l-color-gypsum) 100%);
+			--d2l-color-meglor: linear-gradient(to bottom, var(--d2l-color-corundum) 0%, var(--d2l-color-tungsten) 100%);
+			--d2l-color-trancition: linear-gradient(to bottom, #fff 0%, var(--d2l-color-regolith) 100%);
+			--d2l-color-trixon: linear-gradient(to bottom, var(--d2l-color-regolith) 0%, var(--d2l-color-sylvite) 100%);
+			--d2l-color-azurite: var(--d2l-color-zircon-plus-1);
+			--d2l-color-celestuba: var(--d2l-color-celestine-minus-1);
+			--d2l-color-gravah: var(--d2l-color-amethyst-minus-1);
+			--d2l-color-saphirella: var(--d2l-color-zircon-plus-1);
+			--d2l-color-chartronic: var(--d2l-color-topaz);
+			--d2l-color-celestine-light-1: var(--d2l-color-celestine-plus-2);
+			--d2l-color-celestine-light-2: var(--d2l-color-celestine-plus-1);
+			--d2l-color-olivine-light-1: var(--d2l-color-olivine-plus-1);
+			--d2l-color-olivine-light-2: var(--d2l-color-olivine);
+			--d2l-color-zircon-light-1: var(--d2l-color-zircon-plus-2);
+			--d2l-color-zircon-light-2: var(--d2l-color-zircon-plus-2);
+}
+
+</style>
+</custom-style><dom-module id="d2l-switch">
+	<template strip-whitespace=""></template>
+
+
+</dom-module>
+<custom-style>
+  <style is="custom-style">[hidden] {
+  display: none !important;
+}
+
+</style>
+</custom-style>
+<custom-style>
+  <style is="custom-style">html {
+  --layout_-_display:  flex;;
+
+      --layout-inline_-_display:  inline-flex;;
+
+      --layout-horizontal_-_display:  var(--layout_-_display); --layout-horizontal_-_-ms-flex-direction:  row; --layout-horizontal_-_-webkit-flex-direction:  row; --layout-horizontal_-_flex-direction:  row;;
+
+      --layout-horizontal-reverse_-_display:  var(--layout_-_display); --layout-horizontal-reverse_-_-ms-flex-direction:  row-reverse; --layout-horizontal-reverse_-_-webkit-flex-direction:  row-reverse; --layout-horizontal-reverse_-_flex-direction:  row-reverse;;
+
+      --layout-vertical_-_display:  var(--layout_-_display); --layout-vertical_-_-ms-flex-direction:  column; --layout-vertical_-_-webkit-flex-direction:  column; --layout-vertical_-_flex-direction:  column;;
+
+      --layout-vertical-reverse_-_display:  var(--layout_-_display); --layout-vertical-reverse_-_-ms-flex-direction:  column-reverse; --layout-vertical-reverse_-_-webkit-flex-direction:  column-reverse; --layout-vertical-reverse_-_flex-direction:  column-reverse;;
+
+      --layout-wrap_-_-ms-flex-wrap:  wrap; --layout-wrap_-_-webkit-flex-wrap:  wrap; --layout-wrap_-_flex-wrap:  wrap;;
+
+      --layout-wrap-reverse_-_-ms-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_-webkit-flex-wrap:  wrap-reverse; --layout-wrap-reverse_-_flex-wrap:  wrap-reverse;;
+
+      --layout-flex-auto_-_-ms-flex:  1 1 auto; --layout-flex-auto_-_-webkit-flex:  1 1 auto; --layout-flex-auto_-_flex:  1 1 auto;;
+
+      --layout-flex-none_-_-ms-flex:  none; --layout-flex-none_-_-webkit-flex:  none; --layout-flex-none_-_flex:  none;;
+
+      --layout-flex_-_-ms-flex:  1 1 0.000000001px; --layout-flex_-_-webkit-flex:  1; --layout-flex_-_flex:  1; --layout-flex_-_-webkit-flex-basis:  0.000000001px; --layout-flex_-_flex-basis:  0.000000001px;;
+
+      --layout-flex-2_-_-ms-flex:  2; --layout-flex-2_-_-webkit-flex:  2; --layout-flex-2_-_flex:  2;;
+
+      --layout-flex-3_-_-ms-flex:  3; --layout-flex-3_-_-webkit-flex:  3; --layout-flex-3_-_flex:  3;;
+
+      --layout-flex-4_-_-ms-flex:  4; --layout-flex-4_-_-webkit-flex:  4; --layout-flex-4_-_flex:  4;;
+
+      --layout-flex-5_-_-ms-flex:  5; --layout-flex-5_-_-webkit-flex:  5; --layout-flex-5_-_flex:  5;;
+
+      --layout-flex-6_-_-ms-flex:  6; --layout-flex-6_-_-webkit-flex:  6; --layout-flex-6_-_flex:  6;;
+
+      --layout-flex-7_-_-ms-flex:  7; --layout-flex-7_-_-webkit-flex:  7; --layout-flex-7_-_flex:  7;;
+
+      --layout-flex-8_-_-ms-flex:  8; --layout-flex-8_-_-webkit-flex:  8; --layout-flex-8_-_flex:  8;;
+
+      --layout-flex-9_-_-ms-flex:  9; --layout-flex-9_-_-webkit-flex:  9; --layout-flex-9_-_flex:  9;;
+
+      --layout-flex-10_-_-ms-flex:  10; --layout-flex-10_-_-webkit-flex:  10; --layout-flex-10_-_flex:  10;;
+
+      --layout-flex-11_-_-ms-flex:  11; --layout-flex-11_-_-webkit-flex:  11; --layout-flex-11_-_flex:  11;;
+
+      --layout-flex-12_-_-ms-flex:  12; --layout-flex-12_-_-webkit-flex:  12; --layout-flex-12_-_flex:  12;;
+
+      
+
+      --layout-start_-_-ms-flex-align:  start; --layout-start_-_-webkit-align-items:  flex-start; --layout-start_-_align-items:  flex-start;;
+
+      --layout-center_-_-ms-flex-align:  center; --layout-center_-_-webkit-align-items:  center; --layout-center_-_align-items:  center;;
+
+      --layout-end_-_-ms-flex-align:  end; --layout-end_-_-webkit-align-items:  flex-end; --layout-end_-_align-items:  flex-end;;
+
+      --layout-baseline_-_-ms-flex-align:  baseline; --layout-baseline_-_-webkit-align-items:  baseline; --layout-baseline_-_align-items:  baseline;;
+
+      
+
+      --layout-start-justified_-_-ms-flex-pack:  start; --layout-start-justified_-_-webkit-justify-content:  flex-start; --layout-start-justified_-_justify-content:  flex-start;;
+
+      --layout-center-justified_-_-ms-flex-pack:  center; --layout-center-justified_-_-webkit-justify-content:  center; --layout-center-justified_-_justify-content:  center;;
+
+      --layout-end-justified_-_-ms-flex-pack:  end; --layout-end-justified_-_-webkit-justify-content:  flex-end; --layout-end-justified_-_justify-content:  flex-end;;
+
+      --layout-around-justified_-_-ms-flex-pack:  distribute; --layout-around-justified_-_-webkit-justify-content:  space-around; --layout-around-justified_-_justify-content:  space-around;;
+
+      --layout-justified_-_-ms-flex-pack:  justify; --layout-justified_-_-webkit-justify-content:  space-between; --layout-justified_-_justify-content:  space-between;;
+
+      --layout-center-center_-_-ms-flex-align:  var(--layout-center_-_-ms-flex-align); --layout-center-center_-_-webkit-align-items:  var(--layout-center_-_-webkit-align-items); --layout-center-center_-_align-items:  var(--layout-center_-_align-items); --layout-center-center_-_-ms-flex-pack:  var(--layout-center-justified_-_-ms-flex-pack); --layout-center-center_-_-webkit-justify-content:  var(--layout-center-justified_-_-webkit-justify-content); --layout-center-center_-_justify-content:  var(--layout-center-justified_-_justify-content);;
+
+      
+
+      --layout-self-start_-_-ms-align-self:  flex-start; --layout-self-start_-_-webkit-align-self:  flex-start; --layout-self-start_-_align-self:  flex-start;;
+
+      --layout-self-center_-_-ms-align-self:  center; --layout-self-center_-_-webkit-align-self:  center; --layout-self-center_-_align-self:  center;;
+
+      --layout-self-end_-_-ms-align-self:  flex-end; --layout-self-end_-_-webkit-align-self:  flex-end; --layout-self-end_-_align-self:  flex-end;;
+
+      --layout-self-stretch_-_-ms-align-self:  stretch; --layout-self-stretch_-_-webkit-align-self:  stretch; --layout-self-stretch_-_align-self:  stretch;;
+
+      --layout-self-baseline_-_-ms-align-self:  baseline; --layout-self-baseline_-_-webkit-align-self:  baseline; --layout-self-baseline_-_align-self:  baseline;;
+
+      
+
+      --layout-start-aligned_-_-ms-flex-line-pack:  start; --layout-start-aligned_-_-ms-align-content:  flex-start; --layout-start-aligned_-_-webkit-align-content:  flex-start; --layout-start-aligned_-_align-content:  flex-start;;
+
+      --layout-end-aligned_-_-ms-flex-line-pack:  end; --layout-end-aligned_-_-ms-align-content:  flex-end; --layout-end-aligned_-_-webkit-align-content:  flex-end; --layout-end-aligned_-_align-content:  flex-end;;
+
+      --layout-center-aligned_-_-ms-flex-line-pack:  center; --layout-center-aligned_-_-ms-align-content:  center; --layout-center-aligned_-_-webkit-align-content:  center; --layout-center-aligned_-_align-content:  center;;
+
+      --layout-between-aligned_-_-ms-flex-line-pack:  justify; --layout-between-aligned_-_-ms-align-content:  space-between; --layout-between-aligned_-_-webkit-align-content:  space-between; --layout-between-aligned_-_align-content:  space-between;;
+
+      --layout-around-aligned_-_-ms-flex-line-pack:  distribute; --layout-around-aligned_-_-ms-align-content:  space-around; --layout-around-aligned_-_-webkit-align-content:  space-around; --layout-around-aligned_-_align-content:  space-around;;
+
+      
+
+      --layout-block_-_display:  block;;
+
+      --layout-invisible_-_visibility:  hidden !important;;
+
+      --layout-relative_-_position:  relative;;
+
+      --layout-fit_-_position:  absolute; --layout-fit_-_top:  0; --layout-fit_-_right:  0; --layout-fit_-_bottom:  0; --layout-fit_-_left:  0;;
+
+      --layout-scroll_-_-webkit-overflow-scrolling:  touch; --layout-scroll_-_overflow:  auto;;
+
+      --layout-fullbleed_-_margin:  0; --layout-fullbleed_-_height:  100vh;;
+
+      
+
+      --layout-fixed-top_-_position:  fixed; --layout-fixed-top_-_top:  0; --layout-fixed-top_-_left:  0; --layout-fixed-top_-_right:  0;;
+
+      --layout-fixed-right_-_position:  fixed; --layout-fixed-right_-_top:  0; --layout-fixed-right_-_right:  0; --layout-fixed-right_-_bottom:  0;;
+
+      --layout-fixed-bottom_-_position:  fixed; --layout-fixed-bottom_-_right:  0; --layout-fixed-bottom_-_bottom:  0; --layout-fixed-bottom_-_left:  0;;
+
+      --layout-fixed-left_-_position:  fixed; --layout-fixed-left_-_top:  0; --layout-fixed-left_-_bottom:  0; --layout-fixed-left_-_left:  0;;
+}
+
+</style>
+</custom-style><style>[hidden] { display: none !important; }</style><dom-module id="d2l-accordion-collapse">
+	<template strip-whitespace=""></template>
+</dom-module><custom-style>
+	<style is="custom-style">html {
+  --d2l-body-standard-text_-_font-size:  0.95rem; --d2l-body-standard-text_-_font-weight:  400; --d2l-body-standard-text_-_line-height:  1.4rem;;
+
+			--d2l-body-compact-text_-_font-size:  0.8rem; --d2l-body-compact-text_-_font-weight:  400; --d2l-body-compact-text_-_line-height:  1.2rem;;
+
+			--d2l-body-small-text_-_color:  var(--d2l-color-tungsten); --d2l-body-small-text_-_font-size:  0.7rem; --d2l-body-small-text_-_font-weight:  400; --d2l-body-small-text_-_line-height:  1rem; --d2l-body-small-text_-_margin:  auto;;
+
+			--d2l-heading-1_-_font-size:  2rem; --d2l-heading-1_-_font-weight:  400; --d2l-heading-1_-_line-height:  2.4rem; --d2l-heading-1_-_margin:  1.5rem 0 1.5rem 0;;
+
+			--d2l-heading-2_-_font-size:  1.5rem; --d2l-heading-2_-_font-weight:  400; --d2l-heading-2_-_line-height:  1.8rem; --d2l-heading-2_-_margin:  1.5rem 0 1.5rem 0;;
+
+			--d2l-heading-3_-_font-size:  1rem; --d2l-heading-3_-_font-weight:  700; --d2l-heading-3_-_line-height:  1.5rem; --d2l-heading-3_-_margin:  1.5rem 0 1.5rem 0;;
+
+			--d2l-heading-4_-_font-size:  0.8rem; --d2l-heading-4_-_font-weight:  700; --d2l-heading-4_-_line-height:  1.2rem; --d2l-heading-4_-_margin:  1.5rem 0 1.5rem 0;;
+
+			--d2l-label-text_-_font-size:  0.7rem; --d2l-label-text_-_line-height:  1rem; --d2l-label-text_-_font-weight:  700; --d2l-label-text_-_letter-spacing:  0.2px;;
+}
+
+</style>
+</custom-style><dom-module id="d2l-tooltip">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-multi-select-list-item">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-multi-select-list">
+	<template strip-whitespace=""></template>
+</dom-module><custom-style>
+	<style is="custom-style">html {
+  --d2l-alert-critical-color: var(--d2l-color-cinnabar);
+			--d2l-alert-warning-color: var(--d2l-color-citrine);
+			--d2l-alert-default-color: var(--d2l-color-celestine-plus-1);
+			--d2l-alert-success-color: var(--d2l-color-olivine);
+}
+
+</style>
+</custom-style><dom-module id="d2l-alert">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-loading-spinner">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="siren-entity-loading">
+	<template strip-whitespace=""></template>
+
+	
+</dom-module><dom-module id="s-html">
+<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-outcome">
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-alignment-intent">
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-input-checkbox">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-alignment-update">
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-select-outcomes">
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-alert-toast">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-card-content-meta">
+
+	<template strip-whitespace=""></template>
+
+
+
+</dom-module><dom-module id="d2l-offscreen-shared-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-card-footer-link">
+
+	<template strip-whitespace=""></template>
+
+
+
+</dom-module><dom-module id="d2l-card">
+
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-course-image">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-dropdown-opener-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-dropdown-button-subtle">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-dropdown-content-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-dropdown-content">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-hierarchical-view-styles">
+	<template strip-whitespace=""></template>
+</dom-module><dom-module id="d2l-menu-item-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-menu-item">
+
+	<template strip-whitespace=""></template>
+
+	
+
+</dom-module><dom-module id="d2l-menu-item-return">
+
+	<template strip-whitespace=""></template>
+
+	
+
+</dom-module><dom-module id="d2l-menu-item-separator">
+
+	<template strip-whitespace=""></template>
+
+
+
+</dom-module><dom-module id="d2l-menu">
+
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-dropdown-menu">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-visible-on-ancestor-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-dropdown-more">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-dropdown">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-menu-item-link">
+
+	<template strip-whitespace=""></template>
+
+	
+
+</dom-module><dom-module id="d2l-status-indicator">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-insertstuff-styles">
+  <template></template>
+</dom-module><dom-module id="d2l-placeholder-styles">
+  <template></template>
+</dom-module><dom-module id="d2l-html-editor">
+
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-input-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-input-search">
+
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-search-widget">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-image-selector-tile-styles">
+	<template strip-whitespace=""></template>
+</dom-module><dom-module id="d2l-image-selector-tile">
+	<template strip-whitespace=""></template>
+
+
+</dom-module><dom-module id="d2l-image-tile-grid">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-basic-image-selector">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-input-text">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-input-textarea">
+	<template strip-whitespace=""></template>
+</dom-module><dom-module id="d2l-menu-item-selectable-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-menu-item-radio">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-squishy-button-selector">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-squishy-button">
+<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-outcomes-level-of-achievements">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-rubric-feedback">
+	<template strip-whitespace=""></template>
+
+	
+</dom-module><dom-module id="d2l-rubric-loading">
+	<template strip-whitespace=""></template>
+
+	
+</dom-module><dom-module id="d2l-save-status">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-simple-overlay-close-button">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-simple-overlay-styles">
+	<template strip-whitespace=""></template>
+</dom-module><dom-module id="d2l-simple-overlay">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-sticky-element">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-table-circle-button">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-scroll-wrapper">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-table-col-sort">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-table-col-sort-button">
+	<template strip-whitespace=""></template>
+	
+</dom-module><custom-style>
+	<style is="custom-style">html {
+  --d2l-table-border-color: var(--d2l-color-mica);
+			--d2l-table-border: 1px solid var(--d2l-table-border-color);
+			--d2l-table-border-radius: 0.3rem;
+			--d2l-table-header-background-color: var(--d2l-color-regolith);
+
+			--d2l-table-light-border-color: var(--d2l-color-gypsum);
+			--d2l-table-light-border: 1px solid var(--d2l-table-light-border-color);
+			--d2l-table-light-header-background-color: #fff;
+
+			--d2l-table-body-background-color: #fff;
+			--d2l-table-row-background-color-active: var(--d2l-color-celestine-plus-2);
+			--d2l-table-row-border-color-active-selected: var(--d2l-color-celestine-plus-1);
+			--d2l-table-row-background-color-active-selected: #EBF5FC;
+			--d2l-table-row-border-color-selected: var(--d2l-color-celestine-plus-1);
+			--d2l-table-row-background-color-selected: var(--d2l-color-celestine-plus-2);
+
+			--d2l-table-cell_-_display: table-cell; --d2l-table-cell_-_vertical-align: middle; --d2l-table-cell_-_padding:  0.5rem 1rem; --d2l-table-cell_-_height:  41px;
+			--d2l-table-light-cell_-_display:  table-cell; --d2l-table-light-cell_-_vertical-align:  middle; --d2l-table-light-cell_-_padding:  0.6rem; --d2l-table-light-cell_-_height:  1.15rem;
+
+			--d2l-table-header_-_color: var(--d2l-color-ferrite); --d2l-table-header_-_font-size: .7rem; --d2l-table-header_-_line-height: 1rem; --d2l-table-header_-_margin: 1rem 0; --d2l-table-header_-_padding:  0.5rem 1rem; --d2l-table-header_-_height:  27px;
+			--d2l-table-light-header_-_color:  var(--d2l-color-ferrite); --d2l-table-light-header_-_font-size:  0.7rem; --d2l-table-light-header_-_font-weight:  normal; --d2l-table-light-header_-_line-height:  1rem; --d2l-table-light-header_-_padding:  0.6rem; --d2l-table-light-header_-_height:  1.15rem;
+
+			--d2l-table_-_background-color: transparent; --d2l-table_-_border-collapse: separate!important; --d2l-table_-_border-spacing: 0; --d2l-table_-_display: table; --d2l-table_-_font-size:  0.8rem; --d2l-table_-_font-weight:  400; --d2l-table_-_width: 100%;
+			--d2l-table-head_-_display: table-header-group;
+			--d2l-table-foot_-_display: table-footer-group;
+			--d2l-table-body_-_display:  table-row-group;
+			--d2l-table-row_-_display: table-row;
+}
+
+</style>
+</custom-style><dom-module id="d2l-table-style">
+	<template></template>
+</dom-module><dom-module id="d2l-table-wrapper">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-tbody">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-td">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-tfoot">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-th">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-thead">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-tr">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-tspan">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-table">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-tab-panel-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-tab-panel">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-tab">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-tabs">
+	<template strip-whitespace=""></template>
+
+</dom-module><style id="d2l-typography-font-face">
+	@font-face {
+		font-family: 'Lato';
+		font-style: normal;
+		font-weight: 400;
+		src: local('Lato Regular'), local('Lato-Regular'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-400.woff2) format('woff2'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-400.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-400.ttf) format('truetype');
+	}
+	@font-face {
+		font-family: 'Lato';
+		font-style: normal;
+		font-weight: 700;
+		src: local('Lato Bold'), local('Lato-Bold'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-700.woff2) format('woff2'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-700.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/Lato-700.ttf) format('truetype');
+	}
+	@font-face {
+		font-family: 'Open Dyslexic';
+		font-style: normal;
+		font-weight: 400;
+		src: local('Open Dyslexic Regular'), local('OpenDyslexic-Regular'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic.ttf) format('truetype');
+	}
+	@font-face {
+		font-family: 'Open Dyslexic';
+		font-style: italic;
+		font-weight: 400;
+		src: local('Open Dyslexic Italic'), local('OpenDyslexic-Italic'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-Italic.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-Italic.ttf) format('truetype');
+	}
+	@font-face {
+		font-family: 'Open Dyslexic';
+		font-style: normal;
+		font-weight: 700;
+		src: local('Open Dyslexic Bold'), local('OpenDyslexic-Bold'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-700.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-700.ttf) format('truetype');
+	}
+	@font-face {
+		font-family: 'Open Dyslexic';
+		font-style: italic;
+		font-weight: 700;
+		src: local('Open Dyslexic Bold Italic'), local('OpenDyslexic-BoldItalic'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-700-Italic.woff) format('woff'), url(https://s.brightspace.com/lib/fonts/0.5.0/assets/OpenDyslexic-700-Italic.ttf) format('truetype');
+	}</style><dom-module id="d2l-typography">
+	<template></template>
+</dom-module><dom-module id="d2l-profile-image-shared-styles">
+	<template strip-whitespace=""></template>
+</dom-module><dom-module id="d2l-profile-image-base">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-profile-image">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-button-group-styles">
+	<template></template>
+</dom-module><dom-module id="d2l-action-button-group">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-button-group">
+	<template strip-whitespace=""></template>
+	
+</dom-module><dom-module id="d2l-dropdown-button">
+	<template strip-whitespace=""></template>
+
+</dom-module><dom-module id="d2l-dropdown-context-menu">
+	<template strip-whitespace=""></template>
+
+</dom-module></head>
+	<body class="d2l-body d2l-typography vui-typography d2l-popup-page daylight">
+		<custom-style><style>html {
+  --d2l-branding-primary-color: #000000;
+}
+
+</style></custom-style>
+		<div class="d2l-popup d2l-popup-nopadding">
+			<div class="d2l-popup-title">
+				<div class="d2l_1_0_878 d2l_1_1_674 d2l-hidden" id="d2l-popup-nav">
+					<div class="d2l-iterator">
+						<a class="d2l-iterator-button d2l-iterator-button-prev d2l-iterator-button-notext" role="button" href="https://d2l.ucalgary.ca/d2l/le/content/283684/navigateContent/379/Previous?pId=3687243" title="Previous "><d2l-icon icon="d2l-tier1:chevron-left" dir="ltr"></d2l-icon><span class="d2l-offscreen">Previous </span>&nbsp;</a><a class="d2l-iterator-button d2l-iterator-button-next d2l-iterator-button-notext" role="button" href="https://d2l.ucalgary.ca/d2l/le/content/283684/navigateContent/379/Next?pId=3687243" title="Next"><span class="d2l-offscreen">Next</span>&nbsp;<d2l-icon icon="d2l-tier1:chevron-right" dir="ltr"></d2l-icon></a></div>
+				</div>
+				<h2 class="d2l-heading vui-heading-1">Data603Assignment3Solution</h2>
+			</div>
+			<div class="d2l-popup-body" style="height: 588px;">
+				<div class="d2l-messagearea d2l_1_2_437" id="d2l_messagearea" role="alert" tabindex="0"></div><div>
+					<div id="d2l_le_content_printcontainer">
+						<div class="d2l-fileviewer"><div class="d2l-fileviewer-text" data-location="/content/enforced/283684-F2019DATA603L02/Data603Assignment3Solution.html?d2lSessionVal=UE0KyRxpNqcYcdTkgyMUVdvw8&amp;ou=283684" data-title="Data603Assignment3Solution.html" data-isprintable="True" style="min-height: 10032px;"><div class="d2l-iframe-loading-container d2l_1_4_63 d2l_1_5_659" style="display: none;">
+							</div>
+							<iframe class="d2l-iframe d2l-iframe-fit-user-content d2l_1_4_63 d2l_1_5_659" id="d2l_1_3_941" name="d2l_1_3_941" src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/Data603Assignment3Solution.html" title="Data603Assignment3Solution.html" frameborder="0" scrolling="auto" allowfullscreen="" allow="microphone *; camera *" onload="this.m_loaded=true;" data-default-height="580" style="height: 10032px;"></iframe>
+							</div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/jquery.min.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/jquery-ui.min.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/bsi.min.js"></script>
+		<script>
+		//<![CDATA[
+			window.__ttiOnload = function() {ttiPolyfill.getFirstConsistentlyInteractive().then(function(tti) {if (tti) {document.dispatchEvent(new CustomEvent('d2l-performance-measure', {bubbles: true,detail: { name: 'd2l.page.tti', value: {name: 'd2l.page.tti', entryType: 'tti-polyfill', duration: tti, startTime: 0} }}));}});};
+		//]]>
+		</script>
+		<script async="async" onload="window.__ttiOnload()" src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/tti-polyfill-global.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/D2L.LP.Web.Desktop.default.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/D2L.LE.ToolIntegration.Content.default.js"></script>
+		<script>
+		//<![CDATA[
+			window['adrum-app-key'] = 'AD-AAB-AAM-AYG';window['adrum-ext-url'] = 'https://s.brightspace.com/lib/adrum-ext/4.2.10-0/adrum-ext.js';window['adrum-xd-url'] = '';window['adrum-start-time'] = Date.now();
+			function addD2LDataToAdrum() {if( typeof ADRUM.command === 'function' ) {ADRUM.command('addUserData','isDaylightEnabled','True');ADRUM.command('addUserData','productVersion','20.19.12.19472');}}
+		//]]>
+		</script>
+		<script async="async" onload="addD2LDataToAdrum()" src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/adrum.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/d2l-nav-host-base.js"></script>
+		<script src="./Data603Assignment3Solution - DATA 603 L02 - (Fall 2019) - Statistical Modelling with Data_files/d2l-nav-undocked-host.js"></script>
+		<script>
+		//<![CDATA[
+			D2L.LP.Web.UI.Events.OnInit.AddListener( function() {
+D2L.O("__g1",0)();
+D2L.O("__g1",1)();
+D2L.O("__g1",2)();
+D2L.O("__g1",3)();
+D2L.O("__g1",4)();
+D2L.O("__g1",5)();
+D2L.O("__g1",6)();
+D2L.O("__g1",7)();
+} );
+
+			D2L.LP.Web.UI.Events.OnLoad.AddListener( function() {
+D2L.O("__g1",8)();
+} );
+
+			D2L.OR={
+"__g1":{"0":"{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.Init\",\"P\":[\"197092\",180,5,{\"_type\":\"id\",\"Value\":\"d2l_sessionExpiryWarning\"},\"d2l_sessionExpiryAlert\",\"d2l_sessionExpiryCheck\",{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectObject\",\"P\":[\"POST\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/extend\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=0&isUsernamePasswordLogin=0\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=1&isUsernamePasswordLogin=0\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.InlineDialog\",\"P\":[null,{\"_type\":\"id\",\"Value\":\"d2l_1_6_22\"},\"Warning\",\"New User Session\",\"The current user session has changed, so the links and content on this page may not behave as expected.\",\"OK\",\"\",\"Close this Dialog\",\"d2l-dialog-inline-body-warning\",true,false,false],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Inline.Abort\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_6_22\"}]}]}",
+"1":"{\"_type\":\"func\",\"N\":\"D2LMathML.DesktopInit\",\"P\":[\"https:\/\/s.brightspace.com\/lib\/mathjax\/2.6.1\/MathJax.js?config=MML_HTMLorMML\",\"https:\/\/s.brightspace.com\/lib\/mathjax\/2.6.1\/MathJax.js?config=TeX-AMS-MML_HTMLorMML%2cSafe\"]}",
+"2":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.Authentication.Xsrf.Init\",\"P\":[\"d2l_referrer\",\"DvVPxmpvMvKb6W13jLIG50svvDeuk0wL\",-692056516]}",
+"3":"{\"_type\":\"func\",\"N\":\"D2L.LP.ActivityBar.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/activityFeed\/checkForNewAlerts\"},120,\"alert_bucket_{0}\",\"ab_status_{0}\"]}",
+"4":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Common.Controls.MessageArea.Init\",\"P\":[\"d2l_messagearea\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/validation\/errors\"}]}",
+"5":"{\"_type\":\"func\",\"N\":\"D2L.LP.Globalization.Locale.Init\",\"P\":[0,{\"_type\":\"anon\",\"DecimalSeparator\":\".\",\"GroupSeparator\":\",\",\"NumberNegativePattern\":1,\"PercentPositivePattern\":0,\"PercentNegativePattern\":0,\"PercentSymbol\":\"%\",\"NegativeSign\":\"-\",\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"GroupSizes\":[3],\"IntegerRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)?))[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]+[\\\\)-]*)$\",\"DecimalRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)))(\\\\.[01234567890123456789]+)?[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]*\\\\.?[01234567890123456789]+[\\\\)-]*)$\"},{\"_type\":\"anon\",\"InputDateFormat\":\"M\/d\/yyyy\",\"Is24HourClock\":false,\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"TimeFormat\":\"h:mm tt\",\"AmDesignator\":\"AM\",\"PmDesignator\":\"PM\",\"FirstDayOfWeek\":0,\"ShortMonthNames\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\",\"\"],\"LongMonthNames\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\",\"\"],\"ShortDayOfWeekNames\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},{\"_type\":\"anon\",\"TextDirection\":1},{\"_type\":\"anon\",\"Culture\":\"en-ca\"},{\"_type\":\"anon\",\"JustNow\":\"just now\",\"OneMinuteAgo\":\"1 minute ago\",\"TwoMinutesAgo\":\"2 minutes ago\",\"MinutesAgoMany\":\"[0] minutes ago\",\"OneHourAgo\":\"1 hour ago\",\"TwoHoursAgo\":\"2 hours ago\",\"ManyHoursAgo\":\"[0] hours ago\",\"YesterdayTime\":\"yesterday at [0]\",\"DayOfWeekTime\":\"[0] at [1]\",\"MonthDayTime\":\"[0] at [1]\",\"Now\":{\"_type\":\"D2L.LocalDateTime\",\"Year\":2020,\"Month\":1,\"Day\":5,\"Hour\":21,\"Minute\":51,\"Second\":56}}]}",
+"6":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.Initialize\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/login?target=%2fd2l%2fle%2fcontent%2f283684%2ffullscreen%2f3765724%2fView&sessionExpired=1\"},\"Error: unable to complete your request.\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"flash\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.FlashMessages.RpcReceivePayloadProvider\"},\"session\":{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.RpcReceivePayloadProvider\"},\"messageArea\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Common.Controls.MessageArea.RpcReceivePayloadProvider\"},\"OR\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.ObjectRepository.RpcReceivePayloadProvider\"},\"JS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveJsPayloadProvider\"},\"CSS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveCssPayloadProvider\"},\"ariaMessages\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Aria.RpcReceivePayloadProvider\"}}]}",
+"7":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.InlineHelp.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/inlineHelp\/283684\/help\"}]}",
+"8":"{\"_type\":\"func\",\"N\":\"D2L.LE.ToolIntegration.Content.FullScreen.OnLoad\",\"P\":[283684,3765724]}"}
+
+};
+
+		//]]>
+		</script>
+	
+</body></html>

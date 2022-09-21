@@ -1,0 +1,446 @@
+---
+title: 'Data 606 - Feature Engineering Plots'
+author: ""
+date: "February 8th, 2020"
+output: html_notebook
+---
+
+## 3. Data Cleaning and Imputation
+
+We will begin by simply taking a look at the data and computing some descriptive statistics for each of hte features of our data set. This will also give us a preliminary indication of which columns have missing data elements.
+
+```{r load libraries, results='hide', message=FALSE, warning=FALSE}
+library(survey)
+library(sampling)
+library(tidyverse)
+library(mosaic)
+library(kableExtra)
+library(mice)
+library(cowplot)
+```
+
+```{r Read Data and Inspect Summary Stats, include=FALSE}
+house.orig = read_csv('train.csv')
+```
+
+Now we can look at just the features that have missing values and impute the data that we need for future analysis.
+
+```{r Create a Function to Count NAs}
+count_na = function(df) {
+  x = df %>% 
+    summarise_all(funs(sum(is.na(.)))) %>%
+    gather(key = "Feature", value = "NAs") %>% 
+    filter(NAs > 0)
+  return(x)
+}
+count_na(house.orig)
+```
+
+From the description of the data set we know that for a number of these features "NA" is actually a true category that we can simply fill in.
+
+```{r Replace the data using definitions}
+replacements = list(Alley = "NoAlley", 
+                    BsmtCond = "NoBase",
+                    BsmtQual = "NoBase",
+                    BsmtExposure = "NoBase",
+                    BsmtFinType1 = "NoBase",
+                    BsmtFinType2 = "NoBase",
+                    FireplaceQu = "NoFirePlace",
+                    GarageType = "NoGarage",
+                    GarageYrBlt = "NoGarage",
+                    GarageFinish = "NoGarage",
+                    GarageQual = "NoGarage",
+                    GarageCond = "NoGarage",
+                    PoolQC =  "NoPool",
+                    Fence = "NoFence"
+                    )
+house.clean = house.orig %>% replace_na(replacements)
+count_na(house.clean)
+```
+
+We are left with 5 features that we need to explore further.
+
+`MiscFeature` is missing 96.3% of the values, and upon reviewing the description of this category we have deemed it safe to simply remove this feature.
+
+```{r Count Electrical Types}
+table(house.clean$Electrical)
+```
+For `Electrical` we see that one of the categories completey dominates the other categories and we have decided to choose the dominant category to impute into the one missing value.
+
+```{r Impute Electrical and Drop MiscFeature}
+house.clean = house.clean %>%
+  select(-MiscFeature) %>%
+  mutate(Electrical = replace(Electrical, is.na(Electrical), 'SBrkr'))
+count_na(house.clean)
+```
+
+We can look `MasVnrType` in a bit more detail and see if there is an obvious way to impute these 8 missing values.
+
+```{r Count MasVnrTypes}
+table(house.clean$MasVnrType)
+```
+
+From the above table there is no clear way to grab values from these, but maybe we can stratify sample 8 and impute these randomly. 
+
+```{r Randomly impute the 8 categories}
+# get 8 values, randomly sampled from the MasVnrType column
+MasVnrType_sample = house.clean %>%
+  filter(!is.na(MasVnrType)) %>%
+  sample_n(8, replace = TRUE) %>%
+  select(MasVnrType)
+
+# make a copy of the data frame at this step in case we make a mistake
+house.impute = data.frame(house.clean)
+
+# set the missing values (8) equal to the randly selected sample above
+house.impute[is.na(house.impute$MasVnrType), "MasVnrType"] = MasVnrType_sample$MasVnrType
+count_na(house.impute)
+```
+
+
+```{r Impute values for MasVnrArea and LotFrontage using MICE package, message=FALSE}
+tempData <- mice(house.impute, m=5, maxit=5, meth='pmm', seed=500)
+tempComplete = complete(tempData, 1)
+house.impute = house.impute %>% mutate(MasVnrArea = tempComplete$MasVnrArea,
+                                       LotFrontage = tempComplete$LotFrontage)
+count_na(house.impute)
+```
+
+
+```{r}
+ggplot(house.clean %>% filter(MasVnrType != 'None'), aes(y = MasVnrArea, x = SalePrice, color = MasVnrType)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+```
+
+```{r Plot Distribution of House Sale Prices}
+house.clean %>%
+  ggplot(aes(x = SalePrice / 1000)) +
+  geom_histogram() +
+  xlab("Sale Price (Thousands of Dollars)") +
+  ylab("Number of Homes") +
+  scale_x_continuous(labels = scales::dollar) +
+  ggtitle("Distribution of Home Sale Prices")
+```
+
+```{r Plot Distribution of House Sale Prices for different categories}
+house.clean %>%
+  group_by(YrSold) %>%
+  ggplot(aes(x = SalePrice / 1000)) +
+  geom_histogram() +
+  facet_grid(~YrSold) +
+  xlab("Sale Price (Thousands of Dollars)") +
+  ylab("Number of Homes") +
+  scale_x_continuous(labels = scales::dollar) +
+  ggtitle("Distribution of Home Sale Prices")
+```
+
+```{r}
+house.clean %>%
+  group_by(Neighborhood) %>%
+  summarise(SalePriceAvg = mean(SalePrice)) %>%
+  arrange(SalePriceAvg) %>%
+  ggplot(aes(x = reorder(Neighborhood, SalePriceAvg), y = SalePriceAvg / 1000)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Sale Price (Thousands of Dollars)") +
+  xlab("Neighborhood") +
+  scale_y_continuous(labels = scales::dollar)
+
+house.clean %>%
+  ggplot(aes(x = reorder(Neighborhood, SalePrice), y = SalePrice / 1000)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Sale Price (Thousands of Dollars)") +
+  xlab("Neighborhood") +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+```{r}
+house.clean %>%
+  group_by(YearBuilt) %>%
+  summarise(SalePriceAvg = mean(SalePrice)) %>%
+  filter(!(YearBuilt < 1900 & SalePriceAvg > 250)) %>% # Important to note
+  filter(YearBuilt > 1950) %>%
+  arrange(SalePriceAvg) %>%
+  ggplot(aes(x = YearBuilt, y = SalePriceAvg / 1000)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Sale Price (Thousands of Dollars)") +
+  xlab("Year Built") +
+  scale_y_continuous(labels = scales::dollar, limits = c(100, 400)) +
+  geom_smooth(method = 'lm')
+
+house.clean %>%
+  group_by(YearBuilt) %>%
+  summarise(SalePriceAvg = mean(SalePrice)) %>%
+  filter(!(YearBuilt < 1900 & SalePriceAvg > 250)) %>% # Important to note
+  filter(YearBuilt < 1950) %>%
+  arrange(SalePriceAvg) %>%
+  ggplot(aes(x = YearBuilt, y = SalePriceAvg / 1000)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ylab("Sale Price (Thousands of Dollars)") +
+  xlab("Year Built") +
+  scale_y_continuous(labels = scales::dollar, limits = c(100, 400)) +
+  geom_smooth(method = 'lm')
+```
+
+```{r Feature Engineering SaleType Original}
+house.clean %>%
+  ggplot(aes(x = SaleType, y = SalePrice)) +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+```{r Feature Engineering SaleType Reduced}
+house.clean %>%
+  mutate(SaleType = ifelse(SaleType == 'New',
+                     "New",
+                     ifelse(SaleType %in% c("WD", "CWD", "VWD", "COD"),
+                            "Deed",
+                            "Other"))) %>%
+  ggplot(aes(x = SaleType, y = SalePrice)) +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+```{r Feature Engineer SaleCondition Original}
+house.clean %>%
+  ggplot(aes(x = SaleCondition, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+```{r Feature Engineer SaleCondition Reduced}
+house.clean %>%
+  mutate(SaleCondition = ifelse(SaleCondition %in% c("Partial"),"Good", "Poor")) %>%
+  ggplot(aes(x = SaleCondition, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+```{r}
+OverallCond_hist <- house.clean %>%
+  ggplot(aes(x = OverallCond)) +
+  geom_bar()
+OverallCond_box <- house.clean %>%
+  ggplot(aes(y = SalePrice, x = OverallCond)) + 
+  geom_boxplot()
+
+plot_grid(OverallCond_hist, OverallCond_box, ncol = 1)
+```
+
+```{r Feature Engineer OverallCond Original}
+house.clean %>%
+  ggplot(aes(y = SalePrice, x = factor(OverallCond))) + 
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+```{r Feature Engineer OverallCond Reduced}
+house.clean %>%
+  mutate(OverallCond = ifelse(OverallCond >= 5, "Good", "Bad")) %>%
+  ggplot(aes(y = SalePrice, x = OverallCond)) + 
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+```{r}
+house.clean %>%
+  ggplot(aes(x = Foundation, y = SalePrice)) +
+  stat_boxplot() +
+  scale_y_continuous(limits = c(0, 300000), labels = scales::dollar) +
+  geom_point(position = 'jitter', alpha = 0.2)
+
+house.clean %>%
+  ggplot(aes(x = Foundation)) +
+  geom_bar()
+
+Foundation_hist <- house.clean %>%
+  mutate(Foundation = ifelse(Foundation == "PConc", Foundation, "Other")) %>%
+  ggplot(aes(x = Foundation)) +
+  geom_bar()
+
+Foundation_box <- house.clean %>%
+  mutate(Foundation = ifelse(Foundation == "PConc", Foundation, "Other")) %>%
+  ggplot(aes(x = Foundation, y = SalePrice)) +
+  stat_boxplot() +
+  scale_y_continuous(limits = c(0, 300000))
+
+plot_grid(Foundation_hist, Foundation_box, ncol = 1)
+```
+
+```{r Feature Engineering Original}
+house.clean %>%
+  ggplot(aes(x = Foundation, y = SalePrice)) +
+  stat_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+```{r Feature Engineering Foundation}
+house.clean %>%
+  mutate(Foundation = ifelse(Foundation == "PConc", Foundation, "Other")) %>%
+  ggplot(aes(x = Foundation, y = SalePrice)) +
+  stat_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+```{r}
+house.clean %>%
+  ggplot(aes(x = MSZoning)) +
+  geom_bar()
+
+house.clean %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot()
+
+MSZoning_hist <- house.clean %>%
+  mutate(MSZoning = ifelse(MSZoning == "RL", MSZoning, "Other")) %>%
+  ggplot(aes(x = MSZoning)) +
+  geom_bar()
+
+MSZoning_box <- house.clean %>%
+  mutate(MSZoning = ifelse(MSZoning == "RL", MSZoning, "Other")) %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0, 300000))
+
+plot_grid(MSZoning_hist, MSZoning_box, ncol = 1)
+```
+
+```{r Feature Engineering MSZoning Original}
+house.clean %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+```{r Feature Engineering MSZoning Reduced}
+house.clean %>%
+  mutate(MSZoning = ifelse(MSZoning == "RL", MSZoning, "Other")) %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+```{r}
+house.clean %>%
+  ggplot(aes(x = as.factor(MSSubClass), y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+```{r Feature Engineering TotRmsAbvGrd Original}
+house.clean %>%
+  ggplot(aes(x = factor(TotRmsAbvGrd), y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.1) +
+  scale_y_continuous(labels = scales::dollar) +
+  xlab("Total Rooms Above Grade")
+```
+
+```{r Feature Engineering TotRmsAbvGrd Reduced}
+house.clean %>%
+  mutate(TotRmsAbvGrd = ifelse(TotRmsAbvGrd >= 7, "High", "Low")) %>%
+  ggplot(aes(x = reorder(TotRmsAbvGrd, SalePrice), y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.1) +
+  scale_y_continuous(labels = scales::dollar) +
+  xlab("Total Rooms Above Grade")
+```
+
+```{r}
+# Remove this trash!!
+house.clean %>%
+  filter(PoolArea > 0) %>%
+  ggplot(aes(x = PoolArea, y = SalePrice)) +
+  geom_point() + geom_smooth(method = 'lm')
+
+house.clean %>%
+  mutate(Pool = PoolArea > 0) %>%
+  ggplot(aes(x = Pool, y = SalePrice)) +
+  geom_boxplot()
+
+house.clean %>%
+  group_by(Fence) %>%
+  ggplot(aes(x = Fence, y = SalePrice)) +
+  geom_boxplot() + geom_point(position = 'jitter', alpha = 0.2) + scale_y_continuous(labels = scales::dollar)
+
+house.clean %>%
+  filter(MiscVal > 0, MiscVal < 2500) %>%
+  ggplot(aes(x = MiscVal, y = SalePrice)) +
+  geom_point()
+
+house.clean %>%
+  group_by(Electrical) %>%
+  ggplot(aes(x = Electrical, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+
+house.clean %>%
+  mutate(Screen = ScreenPorch > 0) %>%
+  ggplot(aes(x = Screen, y = SalePrice)) +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  geom_boxplot()
+
+house.clean %>%
+  filter(LotArea < 20000) %>%
+  ggplot(aes(x = LotArea, y = SalePrice)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+house.clean %>%
+  filter(LotArea < 50000) %>%
+  ggplot(aes(x = LotArea)) +
+  geom_histogram()
+
+house.clean %>%
+  ggplot(aes(x = as.factor(BedroomAbvGr), y = SalePrice)) +
+  geom_boxplot()
+
+house.clean %>%
+  ggplot(aes(x = reorder(HouseStyle, SalePrice), y = SalePrice)) +
+  geom_boxplot()
+
+house.clean %>%
+  ggplot(aes(x = HouseStyle)) +
+  geom_bar()
+
+house.clean %>%
+  mutate(HouseStyle = ifelse(HouseStyle %in% c("2.5Fin", "2Story", "2.5Unf"), "Finished", "Other")) %>%
+  ggplot(aes(x = reorder(HouseStyle, SalePrice), y = SalePrice)) +
+  geom_boxplot()
+```
+
+```{r echo = FALSE}
+kable(count_na(house.orig), "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(count_na(house.orig)), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(count_na(house.orig)), by = 2), color = "black", background = "#FFFFFF")
+
+kable(data.frame(table(house.clean$Electrical)), "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(data.frame(table(house.clean$Electrical))), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(data.frame(table(house.clean$Electrical))), by = 2), color = "black", background = "#FFFFFF")
+
+```
+
+
+## References
+
+Cook, D. (2011, June). Ames, Iowa: Alternative to Boston Housing Data as an End of Semester Regression Project[Online].
+Available at: https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data (Retrieved January 20, 2020)

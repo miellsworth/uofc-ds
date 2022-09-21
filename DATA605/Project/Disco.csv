@@ -1,0 +1,753 @@
+name,playlist_name,danceability,energy,key,loudness,mode,speechiness,instrumentalness,valence,tempo,time_signature,track.album.id,track.name,track.popularity,track.album.name,track.album.release_date,key_name,mode_name,key_mode,track.duration_ms
+A Taste Of Honey,Disco,0.791,0.569,2,-10.372,0,0.0553,3.5e-4,0.889,123.977,4,4QJA3YXQdpLhuIztkSgrpo,Boogie Oogie Oogie - Remastered 2004,46,A Taste Of Honey,1978,D,minor,D minor,338320
+A Taste Of Honey,Disco,0.806,0.741,5,-7.351,0,0.0494,5.24e-5,0.881,106.817,4,1mcETo27dXibXub2zWh8LS,Rescue Me - Remastered,17,Twice As Sweet,2006-01-01,F,minor,F minor,203000
+A Taste Of Honey,Disco,0.735,0.857,5,-5.533,1,0.0434,3.38e-4,0.883,126.37,4,1mcETo27dXibXub2zWh8LS,Ain't Nothin' But A Party - Remastered,21,Twice As Sweet,2006-01-01,F,major,F major,295266
+Ace Spectrum,Disco,0.639,0.695,0,-6.795,1,0.0311,9.96e-4,0.93,118.45,4,4Zpx9jduQUX75uMkzyVlDw,Don't Send Nobody Else,16,Inner Spectrum,1974-06-12,C,major,C major,242991
+Ace Spectrum,Disco,0.683,0.685,6,-9.306,0,0.0637,1.09e-6,0.792,118.978,4,4Zpx9jduQUX75uMkzyVlDw,If You Were There,8,Inner Spectrum,1974-06-12,F#,minor,F# minor,243226
+Afrique,Disco,0.657,0.763,7,-10.266,1,0.049,2.4e-4,0.84,113.764,4,0a7rPIWi6LSVXV4weYH6DR,Soul Makossa,16,Soul Makossa,1973-05-08,G,major,G major,284571
+Afrique,Disco,0.681,0.859,2,-9.693,1,0.0727,0.703,0.85,122.816,4,0a7rPIWi6LSVXV4weYH6DR,Slow Motion,3,Soul Makossa,1973-05-08,D,major,D major,258238
+Alma Faye Brooks,Disco,0.716,0.953,1,-5.909,1,0.0921,8.85e-4,0.486,130.269,4,5PUUXwh7xQuuNw98oVA1vW,Don't Fall In Love,6,Doin' It,2013-12-17,C#,major,C# major,456977
+Alma Faye Brooks,Disco,0.653,0.89,11,-6.631,0,0.0467,8.26e-5,0.596,129.767,4,5PUUXwh7xQuuNw98oVA1vW,Gimme Your Love,3,Doin' It,2013-12-17,B,minor,B minor,442860
+Alma Faye Brooks,Disco,0.628,0.686,5,-5.82,1,0.0448,0,0.917,118.697,4,5PUUXwh7xQuuNw98oVA1vW,Here's to Life,0,Doin' It,2013-12-17,F,major,F major,185768
+Alma Faye Brooks,Disco,0.692,0.707,5,-6.47,0,0.0379,0,0.898,124.271,4,5PUUXwh7xQuuNw98oVA1vW,I Believed,2,Doin' It,2013-12-17,F,minor,F minor,263787
+Alma Faye Brooks,Disco,0.657,0.802,2,-7.206,1,0.0681,0,0.719,120.62,4,5PUUXwh7xQuuNw98oVA1vW,It's Over,3,Doin' It,2013-12-17,D,major,D major,345522
+Alma Faye Brooks,Disco,0.739,0.633,5,-7.281,1,0.0503,0,0.875,124.815,4,5PUUXwh7xQuuNw98oVA1vW,Brother Dan,0,Doin' It,2013-12-17,F,major,F major,242982
+Alma Faye Brooks,Disco,0.456,0.811,2,-6.802,1,0.0637,0,0.544,91.088,4,5PUUXwh7xQuuNw98oVA1vW,Thank You,5,Doin' It,2013-12-17,D,major,D major,261558
+Andrea True Connection,Disco,0.63,0.737,8,-10.217,1,0.0273,0.188,0.648,110.121,4,2yXMiLm8OaW9PyWJQEY4XY,Party Line,8,"More, More, More",2015-10-02,G#,major,G# major,406933
+Andrea True Connection,Disco,0.67,0.696,7,-11.006,1,0.0362,0.768,0.696,122.654,4,2yXMiLm8OaW9PyWJQEY4XY,Keep It Up Longer,8,"More, More, More",2015-10-02,G,major,G major,273893
+Andrea True Connection,Disco,0.719,0.647,9,-11.639,0,0.0298,0.0467,0.881,103.119,4,2yXMiLm8OaW9PyWJQEY4XY,"More, More, More",24,"More, More, More",2015-10-02,A,minor,A minor,376866
+Andrea True Connection,Disco,0.646,0.724,0,-11.24,1,0.0307,0.285,0.946,96.631,4,2yXMiLm8OaW9PyWJQEY4XY,Fill Me Up (Heart to Heart),5,"More, More, More",2015-10-02,C,major,C major,622426
+Andrea True Connection,Disco,0.617,0.741,7,-11.497,1,0.029,0.891,0.905,118.938,4,2yXMiLm8OaW9PyWJQEY4XY,Call Me,9,"More, More, More",2015-10-02,G,major,G major,445306
+Andy Gibb,Disco,0.74,0.598,7,-9.658,0,0.0321,0,0.952,101.933,4,3Ru1PEQBFI88kBIWcPGGS8,Shadow Dancing,44,Shadow Dancing,1978-04-04,G,minor,G minor,276000
+Andy Gibb,Disco,0.652,0.76,11,-8.283,0,0.0382,0,0.868,118.652,4,3Ru1PEQBFI88kBIWcPGGS8,Why,22,Shadow Dancing,1978-04-04,B,minor,B minor,271533
+Anita Ward,Disco,0.781,0.556,5,-13.067,0,0.0611,0.0907,0.968,125.999,4,5G7Hry7SFLrdsvPu12EUyV,Ring My Bell,59,Ring My Bell,2005-09-26,F,minor,F minor,491933
+Anita Ward,Disco,0.701,0.391,0,-13.06,1,0.0859,0.00255,0.868,116.664,4,5G7Hry7SFLrdsvPu12EUyV,Make Believe Lovers,15,Ring My Bell,2005-09-26,C,major,C major,424733
+Anita Ward,Disco,0.81,0.611,0,-11.408,0,0.0286,0.00715,0.965,124.503,4,5G7Hry7SFLrdsvPu12EUyV,Don't Drop My Love,11,Ring My Bell,2005-09-26,C,minor,C minor,241160
+Anthony White,Disco,0.813,0.665,1,-10.082,1,0.0776,0.927,0.625,128.715,4,0FnoaQncQypOhm3qPo9VME,Block Party,0,"A Collection of Rare 12"" Singles from the Salsoul Vault, Vol. 3",2004,C#,major,C# major,349333
+Arcade Fire,Disco,0.548,0.865,0,-5.325,1,0.0302,4.49e-4,0.61,116.046,4,1DNojVW079FU9YnAMk3Cgr,Everything Now,64,Everything Now,2017-07-28,C,major,C major,303013
+Area Code 615,Disco,0.64,0.708,4,-12.591,0,0.0894,0.835,0.63,103.864,4,7v8Ui1EkKXOkK8AcMF5BLQ,Stone Fox Chase,20,Trip In The Country,2014,E,minor,E minor,205760
+Arthur Adams,Disco,0.758,0.737,11,-7.987,1,0.044,0.044,0.924,115.88,4,5ttjBpSkvIv1fF3OGTB9yV,You've Got the Floor,7,You've Got the Floor - Single,1981-07-01,B,major,B major,357457
+Asha Puthli,Disco,0.67,0.438,0,-17.469,1,0.0883,0.0301,0.674,98.41,4,5mJTbtsiGKBkIqpgNTjlHW,Space Talk,4,Late Night Tales Presents After Dark,2013-05-03,C,major,C major,339320
+Azoto,Disco,0.747,0.722,7,-9.061,1,0.0425,0.69,0.906,126.019,4,7Bq1EVEcBfVDP7rUQn10gk,Anytime Or Place,17,Disco Fizz (Expanded Edition),1979-08-24,G,major,G major,373782
+Bab,Disco,0.708,0.723,4,-9.699,0,0.147,0.0425,0.633,108.65,4,4FW3OX9LVGMolu06HTUVhd,Party & Get on Down - Full Length Mix,2,Party & Get on Down,2017-02-10,E,minor,E minor,342706
+Banbarra,Disco,0.902,0.624,9,-9.325,1,0.0604,0.713,0.961,111.547,4,4FqPQYylzMeAPqZMziIs80,Shack Up,28,We Came To Funk You Out: Disco From The United Artists Label,2009-01-09,A,major,A major,179600
+Barbara Mason,Disco,0.237,0.377,5,-8.798,1,0.0287,0,0.479,173.142,3,7ujKaJ1E5N76H4y9hyhTdj,Yes. I'm Ready,50,Yes I'm Ready,1965-01-01,F,major,F major,184333
+Barrabas,Disco,0.717,0.585,4,-14.466,0,0.06,0.189,0.793,118.6,4,1BBX809SQ27pjFs1uieLqu,Hi-Jack,12,Barrabas. Sus Primeras Grabaciones (1972-1975) [Remastered],2005,E,minor,E minor,343160
+Barrabas,Disco,0.668,0.562,10,-14.834,0,0.0668,0.0781,0.921,109.947,4,1BBX809SQ27pjFs1uieLqu,Wild Safari,26,Barrabas. Sus Primeras Grabaciones (1972-1975) [Remastered],2005,A#,minor,A# minor,299826
+Barrabas,Disco,0.703,0.595,7,-13.707,1,0.1,0.0128,0.838,124.14,4,1BBX809SQ27pjFs1uieLqu,Woman,28,Barrabas. Sus Primeras Grabaciones (1972-1975) [Remastered],2005,G,major,G major,304040
+Barry White,Disco,0.781,0.816,11,-10.697,1,0.0762,0.0147,0.781,114.592,4,6fPii3RUZhVIX3qINgHPzR,"Honey Please, Can't Ya See",25,Stone Gon',1973-01-01,B,major,B major,315533
+Barry White,Disco,0.441,0.533,2,-13.239,0,0.0347,0.0418,0.303,111.512,4,0ldkrsBFHXhKHlynq8tJVI,Standing In The Shadows Of Love,25,I've Got So Much To Give,1973-01-01,D,minor,D minor,486133
+Barry White,Disco,0.625,0.869,2,-9.467,0,0.0293,0.0626,0.89,114.223,4,6IrwV1l7aNrX3QgBqfoj9U,What Am I Gonna Do With You,49,Just Another Way To Say I Love You,1975-03-25,D,minor,D minor,219440
+Barry White,Disco,0.678,0.571,5,-9.51,1,0.0353,0.0862,0.765,130.285,4,42Si9RbdXYGWQsfNTzjlnG,"You're The First, The Last, My Everything",52,Can't Get Enough,1974-02-15,F,major,F major,276466
+Barry White,Disco,0.729,0.78,5,-7.604,1,0.0631,0.106,0.795,111.833,4,42Si9RbdXYGWQsfNTzjlnG,"Can't Get Enough Of Your Love, Babe",65,Can't Get Enough,1974-02-15,F,major,F major,274000
+Belle Epoque,Disco,0.853,0.367,8,-13.155,0,0.0402,0.0136,0.952,109.289,4,6kPNdXGufv1totLvXOinmY,Miss Broadway,3,The Best Of,2015-10-16,G#,minor,G# minor,439106
+Belle Epoque,Disco,0.687,0.574,5,-11.434,1,0.0708,0.0095,0.961,133.205,4,0PJL7tRKWqRT3iLq5a44qX,Black Is Black,32,Disco Hits 70,2007-05-04,F,major,F major,175119
+Belle Epoque,Disco,0.757,0.742,5,-15.713,1,0.0626,0.0411,0.869,133.755,4,6kPNdXGufv1totLvXOinmY,Bamalama / Taste of Chains / Good Golly Miss Molly / Whole Lotta Shake / Taste of Chains / Let Men Be / Drink Me / Memphis Tennessee,1,The Best Of,2015-10-16,F,major,F major,685066
+Belle Epoque,Disco,0.708,0.966,4,-8.187,1,0.0647,0.301,0.607,129.331,4,0PJL7tRKWqRT3iLq5a44qX,Let Me Be,9,Disco Hits 70,2007-05-04,E,major,E major,282865
+Betty Wright,Disco,0.776,0.768,2,-5.019,1,0.0502,2.4e-6,0.838,101.591,4,5hWEUNz3lwNFyfhG82gqXC,Tonight Is the Night (Pts. 1&2),40,The Essentials: Betty Wright,2002-07-02,D,major,D major,499400
+Bettye LaVette,Disco,0.702,0.728,1,-11.525,1,0.063,0.501,0.926,126.274,4,5bYi0lm8inqOHBgx5bWpwd,Doin' The Best That I Can - 2012 - Remaster,3,"The West End Story, Vol. 2 (2012 - Remaster)",1993-01-01,C#,major,C# major,667040
+Gladys Knight,Disco,0.673,0.783,10,-10.139,0,0.0588,0.00188,0.801,119.295,4,1KedFSRT6J8cWV4cCG06kE,It's a Better Than Good Time,17,The Way We Were: The Best Of Gladys Knight & The Pips,2009-03-26,A#,minor,A# minor,346600
+Luv You Madly Orchestra,Disco,0.772,0.779,5,-9.484,0,0.0798,0.0384,0.902,127.752,4,3U6P8XM9ok959vfHBvmeoX,"Moon Maiden - 12 "" mix",5,Jungle Music,2010-08-16,F,minor,F minor,528280
+Biddu,Disco,0.672,0.766,11,-9.514,0,0.0357,0.862,0.849,111.814,4,46Jal50MkQSkvYmwi2Zf97,Rain Forest,24,Lo Esencial De La Música Instrumental Más Hermosa Del Mundo,2011-02-14,B,minor,B minor,282000
+Biddu Orchestra,Disco,0.682,0.67,7,-8.176,1,0.0346,0.918,0.516,125.678,4,43vWfIBs0dYKVNtgczRtgW,Trippin' On A Soul Cloud,4,Dance Masters,2005-11-14,G,major,G major,245773
+Bileo,Disco,0.755,0.896,2,-9.251,0,0.0846,2.53e-5,0.963,130.35,4,6otkaIE1aWQcD4Nky3wVNX,You Can Win,47,You Can Win,2014-09-08,D,minor,D minor,206207
+Bileo,Disco,0.872,0.812,9,-10.056,0,0.0443,0.00151,0.974,124.741,4,6otkaIE1aWQcD4Nky3wVNX,Let's Go,35,You Can Win,2014-09-08,A,minor,A minor,264757
+Billy Nichols,Disco,0.81,0.892,7,-5.025,0,0.0501,0.0444,0.671,125.943,4,6rHw1EZfgAN01qXtDZmsPu,Give Your Body Up To The Music - Club Version,6,Larry Levan's Classic West End Records Remixes Made Famous At The Legendary Paradise Garage,1999-01-01,G,minor,G minor,462677
+Taana Gardner,Disco,0.671,0.907,10,-5.377,1,0.083,9.83e-4,0.692,107.974,4,6rHw1EZfgAN01qXtDZmsPu,No Frills - Club Version,9,Larry Levan's Classic West End Records Remixes Made Famous At The Legendary Paradise Garage,1999-01-01,A#,major,A# major,388144
+Sparque,Disco,0.73,0.91,6,-6.619,1,0.0549,0.0329,0.821,118.682,4,6rHw1EZfgAN01qXtDZmsPu,Let's Go Dancin' - Club Version,8,Larry Levan's Classic West End Records Remixes Made Famous At The Legendary Paradise Garage,1999-01-01,F#,major,F# major,491978
+Loose Joints,Disco,0.716,0.659,4,-8.476,0,0.114,0.377,0.837,120.1,4,6rHw1EZfgAN01qXtDZmsPu,Is It All Over My Face? - Female Vocal,19,Larry Levan's Classic West End Records Remixes Made Famous At The Legendary Paradise Garage,1999-01-01,E,minor,E minor,416885
+Taana Gardner,Disco,0.734,0.729,2,-8.337,1,0.188,0.0754,0.404,125.183,4,6rHw1EZfgAN01qXtDZmsPu,Work That Body - Club Version,8,Larry Levan's Classic West End Records Remixes Made Famous At The Legendary Paradise Garage,1999-01-01,D,major,D major,467649
+Billy Ocean,Disco,0.752,0.736,6,-7.826,0,0.0323,0.176,0.961,115.996,4,4ZI9gAyVbpj3oioA8mwq65,Stay the Night,14,City Limit (Expanded Edition),2016-03-25,F#,minor,F# minor,385253
+Billy Ocean,Disco,0.741,0.78,5,-5.889,1,0.0449,1.38e-5,0.768,110.845,4,4ZI9gAyVbpj3oioA8mwq65,Who's Gonna Rock You,14,City Limit (Expanded Edition),2016-03-25,F,major,F major,215920
+Billy Ocean,Disco,0.853,0.744,0,-7.344,0,0.0515,0.0742,0.825,101.549,4,4ZI9gAyVbpj3oioA8mwq65,City Limit,19,City Limit (Expanded Edition),2016-03-25,C,minor,C minor,206226
+Billy Ocean,Disco,0.758,0.701,2,-7.381,1,0.0501,4.56e-6,0.78,112.657,4,4ZI9gAyVbpj3oioA8mwq65,Whatever Turns You On,12,City Limit (Expanded Edition),2016-03-25,D,major,D major,264026
+Billy Ocean,Disco,0.761,0.744,5,-6.154,1,0.0332,3.96e-6,0.724,112.71,4,4ZI9gAyVbpj3oioA8mwq65,American Hearts,22,City Limit (Expanded Edition),2016-03-25,F,major,F major,238533
+Billy Ocean,Disco,0.881,0.829,9,-5.968,0,0.122,6.3e-4,0.814,115.418,4,1qBIawNlWPB2UNg54APcNo,Nights (Feel Like Gettin' Down),34,Nights (Feel Like Getting Down),1981,A,minor,A minor,282200
+Black Ivory,Disco,0.708,0.86,1,-10.773,0,0.049,0.0159,0.712,116.304,4,4AszU3mLCSd8vdwYhMpJbk,Mainline,29,Hangin' Heavy,1979,C#,minor,C# minor,419173
+Black Ivory,Disco,0.882,0.782,0,-10.315,1,0.0497,0.0293,0.894,128.572,4,4AszU3mLCSd8vdwYhMpJbk,Big Apple Rock,6,Hangin' Heavy,1979,C,major,C major,614200
+Black Ivory,Disco,0.587,0.772,2,-9.291,0,0.0366,0.00143,0.92,132.435,4,6KHmbETh6lc1tmmytM8Mte,Making Love in My Mind,2,Black Ivory,1976,D,minor,D minor,140893
+Black Ivory,Disco,0.558,0.851,2,-11.016,1,0.0569,5.73e-5,0.627,118.174,4,6KHmbETh6lc1tmmytM8Mte,White Wind,3,Black Ivory,1976,D,major,D major,310693
+Black Ivory,Disco,0.613,0.839,9,-10.736,0,0.0382,0.00367,0.735,124.526,4,6KHmbETh6lc1tmmytM8Mte,Walking Downtown (Saturday Night),4,Black Ivory,1976,A,minor,A minor,499320
+Black Ivory,Disco,0.679,0.738,8,-11.562,0,0.0518,0.00596,0.971,133.258,4,6KHmbETh6lc1tmmytM8Mte,Longer Ride,2,Black Ivory,1976,G#,minor,G# minor,216040
+Blondie,Disco,0.728,0.68,4,-8.027,1,0.0338,0.0599,0.441,114.686,4,2vzwQELxR1wxXJWACtbvsW,Heart Of Glass - Single Version / Remastered,37,Heart Of Glass,1979-01-03,E,major,E major,252893
+Bob A Rela,Disco,0.618,0.625,9,-13.071,0,0.0659,0.00399,0.556,129.671,4,36inWjYLVfLkEhnBzMloWT,Spend the Night,4,"Disco Music History, Vol. 7",2012-07-23,A,minor,A minor,465146
+Bombers,Disco,0.725,0.626,11,-8.648,0,0.0872,0.0197,0.628,126.123,4,4uSDBHHQ4OiRTExvzQXXks,Everybody Get Dancin',11,Bombers 2,1979-01-01,B,minor,B minor,568600
+Bombers,Disco,0.581,0.656,2,-9.888,1,0.0688,0.397,0.829,122.331,4,4uSDBHHQ4OiRTExvzQXXks,Pistolero,5,Bombers 2,1979-01-01,D,major,D major,331933
+Bombers,Disco,0.73,0.874,10,-7.605,1,0.0706,0.00154,0.741,122.556,4,4uSDBHHQ4OiRTExvzQXXks,Disco Galaxy,5,Bombers 2,1979-01-01,A#,major,A# major,511080
+Bombers,Disco,0.726,0.706,11,-8.586,0,0.0779,0.0665,0.922,115.412,4,4uSDBHHQ4OiRTExvzQXXks,Shake,13,Bombers 2,1979-01-01,B,minor,B minor,315520
+Bombers,Disco,0.641,0.861,5,-7.402,0,0.0626,0.00466,0.811,121.949,4,4uSDBHHQ4OiRTExvzQXXks,Let's Dance,4,Bombers 2,1979-01-01,F,minor,F minor,295866
+Bombers,Disco,0.537,0.662,0,-11.114,1,0.0452,0.212,0.711,111.506,4,7Cutx7neHmBiLftHi36Sjq,Don't Stop the Music,2,Bombers,1978-01-01,C,major,C major,390080
+Bombers,Disco,0.601,0.693,0,-11.837,1,0.0453,0.711,0.912,113.807,4,7Cutx7neHmBiLftHi36Sjq,Dance Dance Dance,1,Bombers,1978-01-01,C,major,C major,354613
+Bombers,Disco,0.532,0.741,0,-11.564,1,0.0501,0.447,0.808,125.63,4,7Cutx7neHmBiLftHi36Sjq,Supermax,0,Bombers,1978-01-01,C,major,C major,389106
+Bombers,Disco,0.726,0.467,4,-14.913,0,0.0771,0.494,0.849,92.323,4,7Cutx7neHmBiLftHi36Sjq,Main Man,0,Bombers,1978-01-01,E,minor,E minor,225866
+Boney M.,Disco,0.761,0.682,5,-10.515,0,0.0361,0.735,0.941,124.456,4,47BiiKmyW9EYaTmuEwk91o,Daddy Cool,43,Take The Heat Off Me,1976-09-25,F,minor,F minor,208520
+Boney M.,Disco,0.607,0.88,10,-7.421,1,0.137,4.03e-5,0.908,132.639,4,3tmEsUoBTVz1n4oUZH3QKk,Take the Heat off Me,6,The Complete Boney M.,2008-11-07,A#,major,A# major,287160
+Boney M.,Disco,0.643,0.834,0,-9.296,0,0.0959,0.071,0.854,121.789,4,47BiiKmyW9EYaTmuEwk91o,Sunny,38,Take The Heat Off Me,1976-09-25,C,minor,C minor,241400
+Boney M.,Disco,0.631,0.946,1,-7.738,0,0.0572,0.713,0.814,123.373,4,0txzXbDfTn3vAdx77iCaXd,Nightflight to Venus,37,Nightflight to Venus,1978,C#,minor,C# minor,287240
+Boney M.,Disco,0.639,0.893,9,-6.509,1,0.036,0.00816,0.966,126.143,4,0txzXbDfTn3vAdx77iCaXd,Rasputin,62,Nightflight to Venus,1978,A,major,A major,351573
+Boney M.,Disco,0.781,0.936,1,-5.843,1,0.0293,0.0522,0.98,131.659,4,2S4y0QJV6tC2lEUBfKnXdn,Gotta Go Home,53,Oceans Of Fantasy,1979,C#,major,C# major,225626
+Boney M.,Disco,0.624,0.803,0,-6.187,1,0.0873,0.00839,0.962,129.094,4,0txzXbDfTn3vAdx77iCaXd,Painter Man,30,Nightflight to Venus,1978,C,major,C major,190720
+Boule Noire,Disco,0.686,0.853,9,-9.46,0,0.108,2.8e-6,0.8,95.711,4,2R71vI9WFScMBDYuYjlKVT,Aimes-tu la vie comme moi,28,Boule Noire,1976-01-01,A,minor,A minor,224373
+Boule Noire,Disco,0.646,0.78,9,-9.316,1,0.0466,0,0.859,130.686,4,2R71vI9WFScMBDYuYjlKVT,Dis-le moi,3,Boule Noire,1976-01-01,A,major,A major,224733
+Boule Noire,Disco,0.61,0.931,0,-7.487,1,0.0623,2.94e-5,0.891,107.558,4,2R71vI9WFScMBDYuYjlKVT,"Loin, loin de la ville",17,Boule Noire,1976-01-01,C,major,C major,193880
+Boule Noire,Disco,0.705,0.819,10,-8.898,0,0.0685,1.2e-4,0.725,125.808,4,2R71vI9WFScMBDYuYjlKVT,La balance qui balance,6,Boule Noire,1976-01-01,A#,minor,A# minor,216080
+Boule Noire,Disco,0.747,0.62,4,-11.023,0,0.0343,0.00169,0.52,111.487,4,2R71vI9WFScMBDYuYjlKVT,Le boum boum du bonheur,5,Boule Noire,1976-01-01,E,minor,E minor,190840
+Boule Noire,Disco,0.742,0.725,6,-8.549,0,0.0373,3.64e-6,0.825,124.494,4,2R71vI9WFScMBDYuYjlKVT,Comme on est bien,3,Boule Noire,1976-01-01,F#,minor,F# minor,177373
+Boule Noire,Disco,0.601,0.76,4,-8.084,0,0.0573,1.1e-6,0.911,123.787,4,6dL4ApuMaiFK9FP5wrTO4T,Loin d'ici,3,Les années passent,1977-01-01,E,minor,E minor,207533
+Boule Noire,Disco,0.722,0.58,6,-8.42,0,0.0321,1.96e-5,0.866,100.508,4,6dL4ApuMaiFK9FP5wrTO4T,Entre nous,1,Les années passent,1977-01-01,F#,minor,F# minor,204533
+Boule Noire,Disco,0.621,0.549,2,-10.021,1,0.0587,5.28e-4,0.738,91.427,4,6dL4ApuMaiFK9FP5wrTO4T,Sexy mama,1,Les années passent,1977-01-01,D,major,D major,297960
+Boule Noire,Disco,0.649,0.671,7,-9.448,1,0.0444,0.0123,0.781,120.404,4,6dL4ApuMaiFK9FP5wrTO4T,1254 rue Stanley,1,Les années passent,1977-01-01,G,major,G major,282693
+Boule Noire,Disco,0.683,0.649,9,-9.047,0,0.141,3.65e-4,0.79,96.89,4,0Q5BvrKwpazbsunPATkumv,Aimer d'amour,39,Aimer d'amour,1978-01-01,A,minor,A minor,207280
+Boule Noire,Disco,0.707,0.517,6,-11.222,0,0.0601,0.00269,0.948,128.753,4,0Q5BvrKwpazbsunPATkumv,Constance,11,Aimer d'amour,1978-01-01,F#,minor,F# minor,196280
+Boule Noire,Disco,0.732,0.555,0,-8.851,1,0.0299,5.61e-4,0.561,112.853,4,0Q5BvrKwpazbsunPATkumv,Douce musique,4,Aimer d'amour,1978-01-01,C,major,C major,242133
+Boule Noire,Disco,0.817,0.535,5,-11.308,1,0.0446,0.0441,0.818,114.234,4,0Q5BvrKwpazbsunPATkumv,Barbados Girl - Version francaise,5,Aimer d'amour,1978-01-01,F,major,F major,179973
+Boule Noire,Disco,0.611,0.448,4,-11.209,0,0.0599,1.35e-4,0.523,123.952,4,0Q5BvrKwpazbsunPATkumv,"Dansons, c'est bon!",4,Aimer d'amour,1978-01-01,E,minor,E minor,183133
+Boule Noire,Disco,0.753,0.76,9,-9.248,1,0.0469,8.35e-4,0.581,105.179,4,0Q5BvrKwpazbsunPATkumv,Tu m'habitais,4,Aimer d'amour,1978-01-01,A,major,A major,221440
+Boz Scaggs,Disco,0.662,0.788,11,-5.544,0,0.0635,0.141,0.929,116.499,4,7DysI4j6UqK00RTfETKXqs,Lowdown - Edit,60,Silk Degrees,1976,B,minor,B minor,315640
+Brainstorm,Disco,0.553,0.75,1,-12.822,1,0.053900000000000003,0.06,0.742,134.585,4,4tLBJzaV71qm3TyepiEIBy,Hot For You,9,Funky Entertainment,1979,C#,major,C# major,641266
+Brainstorm,Disco,0.555,0.749,2,-14.485,1,0.0451,0.00121,0.652,103.934,4,0mAMaIdFh0Q5Ze5UlVtxdh,Journey To The Light,11,Journey To The Light,1978-01-01,D,major,D major,340000
+Brainstorm,Disco,0.66,0.809,0,-12.88,1,0.0416,1e-4,0.803,117.355,4,0mAMaIdFh0Q5Ze5UlVtxdh,We're On Our Way Home (Part 1),14,Journey To The Light,1978-01-01,C,major,C major,224706
+Brainstorm,Disco,0.71,0.721,10,-12.864,1,0.0457,6.65e-4,0.867,134.38,4,4tLBJzaV71qm3TyepiEIBy,A Case Of The Boogie,5,Funky Entertainment,1979,A#,major,A# major,578426
+Brainstorm,Disco,0.424,0.715,0,-14.423,1,0.0456,8.45e-5,0.849,162.475,4,0mAMaIdFh0Q5Ze5UlVtxdh,If You Ever Need To Cry,7,Journey To The Light,1978-01-01,C,major,C major,392120
+Brainstorm,Disco,0.354,0.658,5,-13.234,0,0.0812,2.63e-4,0.706,176.396,4,0mAMaIdFh0Q5Ze5UlVtxdh,Loving Just You,5,Journey To The Light,1978-01-01,F,minor,F minor,270666
+Brainstorm,Disco,0.475,0.804,11,-11.937,0,0.159,0,0.316,90.184,4,0mAMaIdFh0Q5Ze5UlVtxdh,Brand New Day,4,Journey To The Light,1978-01-01,B,minor,B minor,229240
+The Brothers Johnson,Disco,0.73,0.622,7,-11.7,0,0.0532,0.00874,0.752,90.973,4,5B1f1QwqbRhjWAExB1sofe,Strawberry Letter 23,60,Right On Time,1977-01-01,G,minor,G minor,299066
+The Brothers Johnson,Disco,0.775,0.686,1,-12.047,0,0.0407,0.0013,0.884,102.963,4,5B1f1QwqbRhjWAExB1sofe,Runnin' For Your Lovin',25,Right On Time,1977-01-01,C#,minor,C# minor,307266
+The Brothers Johnson,Disco,0.757,0.662,0,-12.084,1,0.0342,6.93e-5,0.921,114.672,4,5B1f1QwqbRhjWAExB1sofe,"Free Yourself, Be Yourself",18,Right On Time,1977-01-01,C,major,C major,252893
+The Brothers Johnson,Disco,0.88,0.57,2,-13.145,1,0.0821,0.0388,0.791,106.035,4,5IzEY3pod97kHrdt5Qt1RB,Get The Funk Out Ma Face,48,Look Out For #1,1976-01-01,D,major,D major,147000
+The Brothers Johnson,Disco,0.859,0.782,10,-8.344,1,0.0369,0.0297,0.931,119.518,4,4DUmxqvkQn3UJgDLjlYsyX,Stomp! - Single Version,58,Strawberry Letter 23/The Very Best Of The Brothers Johnson,2003-01-01,A#,major,A# major,247133
+The Brothers Johnson,Disco,0.779,0.928,2,-9.41,1,0.0508,0.452,0.874,114.356,4,2dJxPMemJS59BoEsR6AJ55,Ain't We Funkin' Now,32,Blam! (With Bonus Track),1978,D,major,D major,337546
+Bumblebee Unlimited,Disco,0.769,0.696,8,-10.36,1,0.0462,0.0149,0.618,109.158,4,25DkBGXFTsTtqcwl1MVUzI,I Got a Big Bee,17,Sting Like A Bee,1979-03-01,G#,major,G# major,468760
+Bumblebee Unlimited,Disco,0.636,0.762,9,-9.322,0,0.0424,0.865,0.93,124.14,4,25DkBGXFTsTtqcwl1MVUzI,Space Shuttle Ride,11,Sting Like A Bee,1979-03-01,A,minor,A minor,390360
+Bumblebee Unlimited,Disco,0.711,0.605,1,-12.519,0,0.0692,0.0852,0.62,123.301,4,25DkBGXFTsTtqcwl1MVUzI,Honey Bun,6,Sting Like A Bee,1979-03-01,C#,minor,C# minor,318853
+C. Henry Woods Troupe,Disco,0.642,0.849,6,-6.199,0,0.0484,0.799,0.647,125.695,4,31Cu3f8Ao0OyhcIVmSJZmV,The Stranger,6,Soul Cal,2012-03-27,F#,minor,F# minor,513306
+Luther Davis,Disco,0.731,0.641,9,-6.16,0,0.0646,0.00323,0.802,130.565,4,31Cu3f8Ao0OyhcIVmSJZmV,You Can Be A Star,13,Soul Cal,2012-03-27,A,minor,A minor,277000
+Candi Staton,Disco,0.797,0.649,10,-9.352,0,0.069,0.00306,0.939,115.572,4,7jTJXXSCxc4Gr3GejywgTZ,When You Wake up Tomorrow,7,Young Hearts Run Free: The Best Of Candi Staton,1995-10-10,A#,minor,A# minor,402200
+Candi Staton,Disco,0.653,0.652,7,-9.304,0,0.0427,1.58e-5,0.846,115.388,4,39ntuIhbcC8rsmRV2qXkmZ,Young Hearts Run Free,63,Young Hearts Run Free (US Internet Release),1976,G,minor,G minor,248360
+Candi Staton,Disco,0.522,0.689,5,-8.696,1,0.126,0,0.652,116.802,4,39ntuIhbcC8rsmRV2qXkmZ,Run to Me,28,Young Hearts Run Free (US Internet Release),1976,F,major,F major,258826
+Candi Staton,Disco,0.686,0.561,0,-11.607,1,0.0851,0,0.933,102.09,4,1t3ooTkXczb3rVAvEwu2Et,Nights on Broadway,46,Music Speaks Louder Than Words,1977,C,major,C major,209826
+Carl Bean,Disco,0.704,0.846,5,-5.901,0,0.0537,7.55e-5,0.549,117.404,4,4lHbESROFQAfuTWS2zTlYP,"I Was Born This Way - 12"" Vocal",0,Keep On Dancin': A Tribute to the Godfather of Disco Mel Cheren (Pt. 2),2010-01-01,F,minor,F minor,393333
+Carol Jiani,Disco,0.774,0.572,10,-9.103,0,0.0425,0.0153,0.548,121.196,4,2XrNPcD3npQz0Olm2MruY8,Hit'n Run Lover,28,Hit'n Run Lover,1981,A#,minor,A# minor,486560
+Carol Jiani,Disco,0.812,0.64,2,-8.616,1,0.0846,0.794,0.82,124.52,4,2XrNPcD3npQz0Olm2MruY8,Mercy - Remix,13,Hit'n Run Lover,1981,D,major,D major,411560
+Carol Jiani,Disco,0.772,0.63,7,-8.178,1,0.0527,0.0189,0.51,120.509,4,2XrNPcD3npQz0Olm2MruY8,The Woman in Me - Remix,5,Hit'n Run Lover,1981,G,major,G major,341573
+Carol Jiani,Disco,0.827,0.661,5,-7.827,0,0.0559,0.471,0.693,118.935,4,2XrNPcD3npQz0Olm2MruY8,Can't Get Enough,3,Hit'n Run Lover,1981,F,minor,F minor,385826
+Carol Jiani,Disco,0.814,0.861,0,-5.94,1,0.0603,0.729,0.703,127.383,4,2XrNPcD3npQz0Olm2MruY8,High Cost of Living,1,Hit'n Run Lover,1981,C,major,C major,418733
+Carol Jiani,Disco,0.586,0.755,0,-7.126,0,0.047,3.12e-4,0.737,87.959,4,2XrNPcD3npQz0Olm2MruY8,All the People in the World - Remix,2,Hit'n Run Lover,1981,C,minor,C minor,484866
+Carol Jiani,Disco,0.787,0.714,0,-7.633,1,0.0513,0.349,0.871,122.717,4,2XrNPcD3npQz0Olm2MruY8,Ask Me,6,Hit'n Run Lover,1981,C,major,C major,378706
+Carol Jiani,Disco,0.562,0.615,8,-6.271,1,0.039,0,0.401,128.268,4,2XrNPcD3npQz0Olm2MruY8,Your Heart Is Safe,0,Hit'n Run Lover,1981,G#,major,G# major,227933
+Carol Williams,Disco,0.621,0.665,0,-12.963,1,0.0417,2.81e-4,0.661,121.801,4,7eY0iC16v1UNmrHqG1eiuB,Love Is You,12,'Lectric Lady,1976-07-01,C,major,C major,307617
+Carol Williams,Disco,0.532,0.713,0,-11.944,0,0.0812,2.46e-6,0.721,123.738,4,7eY0iC16v1UNmrHqG1eiuB,More,4,'Lectric Lady,1976-07-01,C,minor,C minor,339661
+Carol Williams,Disco,0.648,0.662,5,-10.929,0,0.0591,0,0.706,119.489,4,7eY0iC16v1UNmrHqG1eiuB,My Time of Need,0,'Lectric Lady,1976-07-01,F,minor,F minor,222981
+Carol Williams,Disco,0.671,0.719,5,-9.969,1,0.093,6.98e-5,0.712,127.541,4,7eY0iC16v1UNmrHqG1eiuB,Come Back,0,'Lectric Lady,1976-07-01,F,major,F major,220345
+Celi Bee & The Buzzy Bunch,Disco,0.848,0.397,0,-12.123,1,0.0516,0.0738,0.961,118.386,4,5P2ef31uQEAatAOYIRBUrd,Superman,9,Celi Bee & The Buzzy Bunch (Digitally Remastered),2007-07-01,C,major,C major,307800
+Celi Bee,Disco,0.681,0.623,5,-10.005,1,0.0457,1.45e-4,0.924,116.933,4,1nGfvxoyaf455Qe1wA2m8p,"Hurt Me, Hurt Me",0,Celi Bee & The Buzzy Bunch (Expanded Edition) [Digitally Remastered],2013-11-12,F,major,F major,187477
+Celi Bee,Disco,0.506,0.574,1,-9.499,1,0.0334,0.244,0.85,134.164,4,1nGfvxoyaf455Qe1wA2m8p,Smile,0,Celi Bee & The Buzzy Bunch (Expanded Edition) [Digitally Remastered],2013-11-12,C#,major,C# major,240640
+Celi Bee,Disco,0.621,0.859,3,-11.137,1,0.0386,0.433,0.932,134.151,4,1nGfvxoyaf455Qe1wA2m8p,One Love,2,Celi Bee & The Buzzy Bunch (Expanded Edition) [Digitally Remastered],2013-11-12,D#,major,D# major,479930
+Central Line,Disco,0.887,0.498,9,-8.276,0,0.0999,0.0444,0.854,111.997,4,7b8KxCyvlF8PtIm1SCfNs9,Walking Into Sunshine,36,"The Funk Essentials 12"" Collection And More",1999-01-01,A,minor,A minor,474040
+Cerrone,Disco,0.619,0.948,5,-6.641,0,0.0432,0.22,0.82,123.016,4,6bk44PKxM0jfZy6h5wvWy9,Supernature,47,"Cerrone I, II, III",2014-10-27,F,minor,F minor,585374
+Cerrone,Disco,0.74,0.856,6,-6.767,0,0.146,1.42e-4,0.958,127.45,4,1bhfKoFhwaP5KAARmQOlXw,Give Me Love,22,Brigade Mondaine - Intégrale,2014-10-27,F#,minor,F# minor,281750
+Cerrone,Disco,0.639,0.785,5,-7.889,0,0.0338,0.148,0.764,132.312,4,6flraTQ07sM0Z5MIcwZnOn,Midnite Lady [Edit],19,The Best Of Cerrone Productions,2014-12-15,F,minor,F minor,273153
+Cerrone,Disco,0.685,0.805,5,-6.058,1,0.0347,0.208,0.786,119.506,4,6flraTQ07sM0Z5MIcwZnOn,Look For Love [Edit],23,The Best Of Cerrone Productions,2014-12-15,F,major,F major,286000
+Chaka Khan,Disco,0.671,0.69,8,-9.089,0,0.0335,0.00201,0.875,116.133,4,6elTNQdWmobPp0QGEPwPMc,Fate - WSM Compilation Edit,48,What Cha' Gonna Do For Me,1981,G#,minor,G# minor,194493
+Chaka Khan,Disco,0.617,0.879,0,-7.564,0,0.0455,5.71e-5,0.746,114.453,4,2lvaLIoEg3hwL2dybu6zTC,I'm Every Woman,65,Chaka,1978-10-13,C,minor,C minor,247413
+Chaka Khan,Disco,0.703,0.755,0,-7.838,1,0.0362,0,0.893,111.243,4,2lvaLIoEg3hwL2dybu6zTC,Sleep on It,28,Chaka,1978-10-13,C,major,C major,261200
+Charity Brown,Disco,0.654,0.929,0,-7.407,0,0.0508,0,0.893,129.325,4,5ZhJ5RuARdkgMHus96crr6,Hold On Baby,0,The Best of Charity Brown,1976,C,minor,C minor,201720
+Charity Brown,Disco,0.722,0.727,8,-6.786,1,0.0739,6.7e-5,0.883,127.353,4,5ZhJ5RuARdkgMHus96crr6,Jimmy Mack,2,The Best of Charity Brown,1976,G#,major,G# major,151560
+Charity Brown,Disco,0.581,0.607,7,-8.399,1,0.0333,6.89e-5,0.831,108.434,4,5ZhJ5RuARdkgMHus96crr6,Ain't No Hurt Love Can't Heal,0,The Best of Charity Brown,1976,G,major,G major,172360
+Charity Brown,Disco,0.766,0.718,4,-7.167,1,0.0545,1.99e-4,0.932,113.588,4,5ZhJ5RuARdkgMHus96crr6,You Beat Me to the Punch,7,The Best of Charity Brown,1976,E,major,E major,173480
+Charity Brown,Disco,0.686,0.817,1,-9.446,1,0.0377,7.17e-5,0.834,127.124,4,5ZhJ5RuARdkgMHus96crr6,Forcast (Heartbreak Pain and Tears),0,The Best of Charity Brown,1976,C#,major,C# major,235760
+Chemise,Disco,0.963,0.544,9,-10.471,0,0.0863,4.55e-5,0.766,114.744,4,79GSZ1xDApKaw6BHNW5yly,She Can't Love You,36,"Classics Funky Music, Vol. 2",2001,A,minor,A minor,310293
+Cheryl Lynn,Disco,0.836,0.626,9,-10.143,0,0.0335,0.742,0.898,114.657,4,059jmsqbxhu2n78LMS0H3P,Got to Be Real,62,Cheryl Lynn (Expanded Edition),1978-07-17,A,minor,A minor,307946
+Cheryl Lynn,Disco,0.803,0.574,11,-11.241,1,0.0349,0.00405,0.953,112.153,4,059jmsqbxhu2n78LMS0H3P,You Saved My Day,29,Cheryl Lynn (Expanded Edition),1978-07-17,B,major,B major,267106
+Cheryl Lynn,Disco,0.677,0.814,2,-8.665,1,0.0394,0.46,0.851,106.123,4,059jmsqbxhu2n78LMS0H3P,Give My Love to You,14,Cheryl Lynn (Expanded Edition),1978-07-17,D,major,D major,214173
+CHIC,Disco,0.831,0.616,10,-12.678,0,0.0651,0.202,0.761,123.138,4,3Jhtxnrjbk5oxleA3oafAy,"Dance, Dance, Dance (Yowsah, Yowsah, Yowsah) - 2018 Remaster",37,The Chic Organization 1977-1979 (2018 Remaster),1977,A#,minor,A# minor,502240
+CHIC,Disco,0.722,0.66,5,-13.438,0,0.0538,9.01e-4,0.906,129.727,4,388S3dsftPqG1nwgauItcx,Everybody Dance - 2018 Remaster,57,Chic (2018 Remaster),1977-01-01,F,minor,F minor,402693
+CHIC,Disco,0.807,0.572,11,-14.508,0,0.0312,0.0144,0.949,113.523,4,3Jhtxnrjbk5oxleA3oafAy,You Can Get By - 2018 Remaster,21,The Chic Organization 1977-1979 (2018 Remaster),1977,B,minor,B minor,342440
+CHIC,Disco,0.699,0.604,9,-13.404,0,0.0359,0.073,0.96,114.226,4,3Jhtxnrjbk5oxleA3oafAy,I Want Your Love - 2018 Remaster,60,The Chic Organization 1977-1979 (2018 Remaster),1977,A,minor,A minor,413586
+CHIC,Disco,0.91,0.641,7,-11.316,1,0.0589,6.42e-5,0.903,118.533,4,3Jhtxnrjbk5oxleA3oafAy,Le Freak - 2018 Remaster,67,The Chic Organization 1977-1979 (2018 Remaster),1977,G,major,G major,331360
+CHIC,Disco,0.814,0.819,0,-12.712,0,0.0587,0,0.807,108.338,4,7rAk4WPpYlYr0fElVfXTOF,My Forbidden Lover - 2018 Remaster,14,Risqué (2018 Remaster),1979-07-30,C,minor,C minor,274960
+CHIC,Disco,0.803,0.599,10,-13.763,0,0.0339,5.19e-5,0.91,95.035,4,7rAk4WPpYlYr0fElVfXTOF,What About Me - 2018 Remaster,11,Risqué (2018 Remaster),1979-07-30,A#,minor,A# minor,246000
+CHIC,Disco,0.869,0.503,2,-12.804,1,0.0479,0.00837,0.914,112.664,4,7rAk4WPpYlYr0fElVfXTOF,Good Times - 2018 Remaster,17,Risqué (2018 Remaster),1979-07-30,D,major,D major,486186
+CHIC,Disco,0.862,0.67,2,-15.172,1,0.326,0.185,0.534,113.05,4,3Jhtxnrjbk5oxleA3oafAy,Chic Cheer - 2018 Remaster,38,The Chic Organization 1977-1979 (2018 Remaster),1977,D,major,D major,284666
+Chicago,Disco,0.765,0.833,10,-5.162,0,0.0875,0.269,0.837,126.426,4,3zhMFlaM6YZgETDe5TZlim,Street Player - 2003 Remaster,45,Chicago 13 (Expanded & Remastered),1979-08-13,A#,minor,A# minor,550706
+CJ & Co.,Disco,0.725,0.72,7,-11.062,1,0.0582,0.053900000000000003,0.648,124.448,4,0o7yO8T0Y1NYIfoE0Jk1Aa,Devil's Gun,17,USA Disco,2009-09-22,G,major,G major,438760
+CJ & Co.,Disco,0.602,0.808,9,-9.002,1,0.0411,0.275,0.903,119.379,4,0o7yO8T0Y1NYIfoE0Jk1Aa,We Got Our Own Thang,8,USA Disco,2009-09-22,A,major,A major,571733
+Cloud One,Disco,0.745,0.831,0,-8.008,1,0.0347,0.835,0.896,130.389,4,3rPJAH1VcOILbQIwfy7Rfz,"Jump, Jump, Jump",5,Spaced Out: The Very Best of Cloud One,2019-04-13,C,major,C major,621253
+Cloud One,Disco,0.612,0.876,7,-5.809,1,0.174,0,0.775,116.994,4,3rPJAH1VcOILbQIwfy7Rfz,"Atmosphere Strut, Pt. 1 & 2",8,Spaced Out: The Very Best of Cloud One,2019-04-13,G,major,G major,561986
+Cloud One,Disco,0.721,0.711,9,-7.288,0,0.0358,0.944,0.794,130.668,4,3rPJAH1VcOILbQIwfy7Rfz,Stomp Your Feet and Dance,4,Spaced Out: The Very Best of Cloud One,2019-04-13,A,minor,A minor,618626
+Cloud One,Disco,0.681,0.713,9,-7.629,1,0.0338,0.875,0.764,121.876,4,3rPJAH1VcOILbQIwfy7Rfz,Spaced Out,8,Spaced Out: The Very Best of Cloud One,2019-04-13,A,major,A major,394293
+Cloud One,Disco,0.592,0.737,9,-9.279,0,0.033,0.105,0.669,122.984,4,3rPJAH1VcOILbQIwfy7Rfz,Disco Juice,36,Spaced Out: The Very Best of Cloud One,2019-04-13,A,minor,A minor,419706
+Cloud One,Disco,0.728,0.772,0,-9.129,1,0.0383,0.68,0.78,116.22,4,3rPJAH1VcOILbQIwfy7Rfz,Don't Let My Rainbow Pass Me By,29,Spaced Out: The Very Best of Cloud One,2019-04-13,C,major,C major,280693
+Cloud One,Disco,0.782,0.872,1,-8.403,1,0.0861,0.0926,0.72,99.399,4,3rPJAH1VcOILbQIwfy7Rfz,Patty Duke,15,Spaced Out: The Very Best of Cloud One,2019-04-13,C#,major,C# major,327906
+Cloud One,Disco,0.622,0.941,9,-5.678,0,0.0593,0.924,0.928,121.538,4,3rPJAH1VcOILbQIwfy7Rfz,"Happy Music - 7"" Edit, Pt. 1",4,Spaced Out: The Very Best of Cloud One,2019-04-13,A,minor,A minor,179426
+Cloud One,Disco,0.492,0.918,0,-7.217,1,0.135,0.0417,0.593,117.069,3,3rPJAH1VcOILbQIwfy7Rfz,Doin' It All Night Long,5,Spaced Out: The Very Best of Cloud One,2019-04-13,C,major,C major,226240
+Cloud One,Disco,0.74,0.838,0,-6.676,1,0.0398,0.119,0.961,115.941,4,3rPJAH1VcOILbQIwfy7Rfz,"Flying High, Pt. 1",8,Spaced Out: The Very Best of Cloud One,2019-04-13,C,major,C major,383560
+Cloud One,Disco,0.548,0.693,0,-9.802,1,0.0306,0.0131,0.708,151.9,4,3rPJAH1VcOILbQIwfy7Rfz,Dust to Dust,8,Spaced Out: The Very Best of Cloud One,2019-04-13,C,major,C major,263706
+Coeo,Disco,0.899,0.677,3,-10.042,0,0.0394,0.776,0.657,119.007,4,3F98dsHSClqD3929v1B6S2,Like It Is,35,Disco Volante EP,2016,D#,minor,D# minor,355968
+Coeo,Disco,0.774,0.632,4,-10.758,0,0.0446,0.906,0.859,125.014,4,3F98dsHSClqD3929v1B6S2,Long Night Ahead,17,Disco Volante EP,2016,E,minor,E minor,432989
+Coeo,Disco,0.844,0.596,0,-8.665,1,0.24,1.84e-5,0.543,116.021,4,3F98dsHSClqD3929v1B6S2,Honey - Skit,19,Disco Volante EP,2016,C,major,C major,86777
+Coeo,Disco,0.859,0.546,9,-8.829,1,0.0825,0.859,0.722,118.072,4,3F98dsHSClqD3929v1B6S2,Pajama Stomp,24,Disco Volante EP,2016,A,major,A major,391983
+Connie Laverne,Disco,0.6,0.812,11,-7.916,0,0.181,2.53e-6,0.729,109.54,4,0VpyygiRwwIUPGczcqWiL2,Can't Live Without You,33,"Masters of Soul: George Kerr - Singles & Rarities, Vol. 2",2014-01-07,B,minor,B minor,156095
+Crackin',Disco,0.686,0.527,0,-16.13,1,0.0402,4.29e-5,0.886,118.544,4,0InHuVg6xBtFh8grDAGQ40,Feel Alright,8,Makings Of A Dream,1977,C,major,C major,233306
+Crown Heights Affair,Disco,0.684,0.819,0,-9.537,1,0.0377,0.326,0.709,123.568,4,7GnGq9qifsOfc2k0CbYti1,Dancin',0,Do It Your Way,1976-01-01,C,major,C major,374600
+Crown Heights Affair,Disco,0.734,0.891,9,-7.048,1,0.0581,0.104,0.809,114.679,4,3i22wmuAAn7E5oToXJz93i,You Gave Me Love,2,Sure Shot,1980-01-01,A,major,A major,353533
+Crown Heights Affair,Disco,0.831,0.766,2,-9.175,1,0.0683,5.25e-4,0.823,116.866,4,3i22wmuAAn7E5oToXJz93i,Use Your Body and Soul,1,Sure Shot,1980-01-01,D,major,D major,377133
+Diana Ross,Disco,0.51,0.52,1,-15.216,1,0.0389,0.0164,0.902,112.302,4,7BHw2NR6r6GRfsaojQL9xk,Love Hangover,26,Diana Ross,1976-02-10,C#,major,C# major,468866
+Diana Ross,Disco,0.639,0.905,4,-4.215,0,0.0543,4.93e-5,0.825,123.664,4,7jqe6yQ9qtHqahli8WSYH4,The Boss,56,The Boss,1979-05-23,E,minor,E minor,241333
+Diana Ross,Disco,0.72,0.828,5,-9.211,1,0.0463,0.433,0.768,110.07,4,3zgDLoVcpVGfFbDZJf3uHI,I'm Coming Out,66,Diana,1980-05-22,F,major,F major,323346
+DJ Day,Disco,0.813,0.759,1,-12.03,1,0.0408,0.939,0.667,112.012,4,1FJWNRqws0bdFbFRk5MxDX,Kossa,7,The Day Before (Deluxe Edition),2016-10-02,C#,major,C# major,160714
+Don Armando's 2nd Ave Rhumba Band,Disco,0.817,0.866,10,-6.796,1,0.0592,7.8e-5,0.922,125.64,4,63PkfAci4weXwGTB7ze6wj,Deputy Of Love,29,Deputy of Love,2007-01-01,A#,major,A# major,485754
+Don Armando's 2nd Ave Rhumba Band,Disco,0.743,0.802,10,-8.482,0,0.21,9.11e-6,0.655,131.011,4,63PkfAci4weXwGTB7ze6wj,Compliment Your Leading Lady,2,Deputy of Love,2007-01-01,A#,minor,A# minor,294892
+Don Armando's 2nd Ave Rhumba Band,Disco,0.737,0.776,10,-8.985,0,0.0576,1.02e-4,0.815,126.987,4,63PkfAci4weXwGTB7ze6wj,Winter Love,3,Deputy of Love,2007-01-01,A#,minor,A# minor,393087
+Don Downing,Disco,0.784,0.644,6,-9.132,0,0.0409,0.00225,0.854,129.083,4,0w5eYLqBhh7CpKxqXNbQY6,Dream World,3,Doctor Boogie,1978,F#,minor,F# minor,333026
+Donald Byrd,Disco,0.727,0.724,2,-8.982,0,0.0398,0.271,0.519,111.741,4,1aXGawvFnVe5EtY7n2drdA,Love Has Come Around,36,Love Byrd,1981,D,minor,D minor,472866
+Donna Summer,Disco,0.622,0.425,10,-16.256,1,0.052,5.73e-5,0.417,96.168,4,210folYgKMSZAz4IiqDnmy,Love To Love You Baby,45,Love To Love You Baby,1975-09-01,A#,major,A# major,1008533
+Donna Summer,Disco,0.825,0.916,0,-7.011,1,0.032,0.041,0.967,120.339,4,4h63dypm4IYSGfCDe2Gcz6,Hot Stuff,28,Bad Girls (Deluxe Edition),1979-04-25,C,major,C major,315744
+Donna Summer,Disco,0.862,0.872,2,-6.959,0,0.0352,0.00522,0.97,120.397,4,4h63dypm4IYSGfCDe2Gcz6,"Bad Girls - 12"" Version",30,Bad Girls (Deluxe Edition),1979-04-25,D,minor,D minor,295125
+Donna Summer,Disco,0.674,0.711,0,-15.581,1,0.0423,0.691,0.961,126.696,4,04nlrp346ZfIBhxsNOxpqe,I Feel Love,46,I Remember Yesterday,1977-01-01,C,major,C major,355173
+Donna Summer,Disco,0.739,0.627,4,-7.51,0,0.0406,1.38e-6,0.461,128.084,4,2TNGyJVlzMUsD5mry6qsw2,On The Radio,27,Summer: The Original Hits,2018-04-20,E,minor,E minor,244600
+Donna Summer,Disco,0.691,0.934,8,-3.993,1,0.0895,7.45e-6,0.735,131.969,4,2TNGyJVlzMUsD5mry6qsw2,Heaven Knows,31,Summer: The Original Hits,2018-04-20,G#,major,G# major,219346
+Double Exposure,Disco,0.716,0.797,1,-8.51,1,0.0316,0.156,0.962,114.193,4,28n4vKOfQNAevM2189Pfsm,My Love Is Free,32,Grandmaster Flash Presents: Salsoul Jam 2000,2017-03-01,C#,major,C# major,582800
+Double Exposure,Disco,0.545,0.855,10,-8.115,0,0.102,8.86e-4,0.805,106.022,4,17EWmz0LmM8w4JDsEqusVi,Everyman,33,Ten Percent,1976-07-01,A#,minor,A# minor,442666
+Double Exposure,Disco,0.831,0.443,10,-15.921,1,0.0955,0,0.691,112.838,4,1NqNDY4ynyKjKeVbM06PE0,I Got the Hots (For Ya),12,Locker Room,1979-01-01,A#,major,A# major,418470
+Double Exposure,Disco,0.533,0.908,0,-8.688,1,0.13,2.13e-5,0.559,121.541,4,28n4vKOfQNAevM2189Pfsm,Ten Percent,13,Grandmaster Flash Presents: Salsoul Jam 2000,2017-03-01,C,major,C major,427933
+Doug Willis,Disco,0.755,0.795,9,-8.132,1,0.0521,0.87,0.66,124,4,6o9JqyubyCdQVSA2l5eI8i,Crystal Lover,11,Meat Me Down The Disco (Mixed by Horse Meat Disco),2017-11-03,A,major,A major,393600
+Dr. Buzzard's Original Savannah Band,Disco,0.564,0.342,8,-19.713,0,0.0453,0,0.519,117.834,4,7EZlo6A3wcmAAjKozsQhiq,Sunshower,40,Dr. Buzzard's Original Savannah Band,1976,G#,minor,G# minor,245573
+Dr. Buzzard's Original Savannah Band,Disco,0.699,0.333,0,-19.342,1,0.0595,0,0.533,115.147,4,7EZlo6A3wcmAAjKozsQhiq,Cherchez la Femme / Se Si Bon,39,Dr. Buzzard's Original Savannah Band,1976,C,major,C major,347600
+The Duncan Sisters,Disco,0.553,0.554,11,-16.095,0,0.0371,0.0352,0.85,121.215,4,67Za0D5XluGk4Bm1WlQrIc,Boys Will Be Boys,4,"Can't Stop Dancing, Vol. 6",1995-01-01,B,minor,B minor,438266
+"Earth, Wind & Fire",Disco,0.724,0.879,5,-9.412,0,0.0369,0.0155,0.826,112.595,4,4p7Fp1dbgVOT4WVxKPpKHM,Getaway,46,Spirit,1976-09,F,minor,F minor,227080
+"Earth, Wind & Fire",Disco,0.697,0.832,9,-7.264,1,0.0298,0.00131,0.979,125.926,4,2FW0uQ4WL25umm5p2VrZO7,September,30,"The Best Of Earth, Wind & Fire Vol. 1",1978-11-23,A,major,A major,215093
+"Earth, Wind & Fire",Disco,0.802,0.763,2,-10.785,0,0.0359,0.0088,0.963,131.716,4,75CDFLAqMl6VgmPJtaTHmg,Boogie Wonderland,44,"The Essential Earth, Wind & Fire",2014-03-25,D,minor,D minor,288600
+"Ecstasy, Passion & Pain",Disco,0.722,0.745,5,-8.516,1,0.0475,0.00147,0.819,116.727,4,4uP0YR6zIrmhHuqWzqn92F,Ask Me,17,"Ecstasy, Passion & Pain",2005-07-12,F,major,F major,243426
+"Ecstasy, Passion & Pain",Disco,0.703,0.62,11,-10.218,0,0.0689,0.00064899999999999995,0.715,110.211,4,4uP0YR6zIrmhHuqWzqn92F,Touch and Go,13,"Ecstasy, Passion & Pain",2005-07-12,B,minor,B minor,259440
+"Ecstasy, Passion & Pain",Disco,0.807,0.638,2,-9.206,1,0.0534,1.21e-4,0.928,117.447,4,4uP0YR6zIrmhHuqWzqn92F,I Wouldn't Give You Up,5,"Ecstasy, Passion & Pain",2005-07-12,D,major,D major,205573
+"Ecstasy, Passion & Pain",Disco,0.689,0.667,5,-9.547,1,0.0325,5.94e-6,0.921,121.223,4,4uP0YR6zIrmhHuqWzqn92F,I'll Do Anything for You,4,"Ecstasy, Passion & Pain",2005-07-12,F,major,F major,183546
+"Ecstasy, Passion & Pain",Disco,0.705,0.681,5,-8.734,0,0.0829,2.49e-5,0.647,119.89,4,4uP0YR6zIrmhHuqWzqn92F,Good Things Don't Last Forever,10,"Ecstasy, Passion & Pain",2005-07-12,F,minor,F minor,220000
+Eddie Kendricks,Disco,0.456,0.862,2,-8.393,0,0.0386,0.00429,0.859,104.457,4,3wP5lKSz1LOxgltAabKhF6,Girl You Need A Change Of Mind,37,"The Eddie Kendricks Collection, Volume 1",2005-01-01,D,minor,D minor,462826
+El Coco,Disco,0.668,0.644,11,-9.859,0,0.0347,0.503,0.767,128.652,4,4Oohg2T9xIbizQQZHPJOHA,Cocomotion - Pt. 1 & Pt. 2,4,Disco 54 - The AVI Collection,1998-02-07,B,minor,B minor,614506
+Erotic Drum Band,Disco,0.567,0.582,1,-13.567,1,0.0569,0.00291,0.708,134.243,4,3O0VpTEdahLcXgx6KJsQlI,Love Disco Style,3,Action 78,1978,C#,major,C# major,836674
+Erotic Drum Band,Disco,0.525,0.552,11,-12.382,0,0.0404,0.419,0.344,125.438,4,3O0VpTEdahLcXgx6KJsQlI,Action 78,3,Action 78,1978,B,minor,B minor,449605
+Erotic Drum Band,Disco,0.726,0.748,7,-14.921,1,0.0577,0.65,0.855,131.788,4,3O0VpTEdahLcXgx6KJsQlI,Plug Me to Death,4,Action 78,1978,G,major,G major,436472
+Erotic Drum Band,Disco,0.725,0.862,10,-10.441,0,0.057,0.884,0.604,120.547,4,3O0VpTEdahLcXgx6KJsQlI,Jerky Rhythm,3,Action 78,1978,A#,minor,A# minor,550622
+Erotic Drum Band,Disco,0.887,0.629,5,-12.767,0,0.0434,0.0914,0.607,117.833,4,6SB0MnejuD58hZn5RcBH4t,Touch Me Where It's Hot,2,The Collection,1978-01-01,F,minor,F minor,415693
+Erotic Drum Band,Disco,0.851,0.707,5,-14.141,0,0.0343,0.225,0.871,119.139,4,6SB0MnejuD58hZn5RcBH4t,Dance in Your Pants,0,The Collection,1978-01-01,F,minor,F minor,466626
+Erotic Drum Band,Disco,0.782,0.78,8,-13.02,1,0.038,0.00853,0.963,119.556,4,6SB0MnejuD58hZn5RcBH4t,Pop Pop Shoo Wah,5,The Collection,1978-01-01,G#,major,G# major,385866
+Erotic Drum Band,Disco,0.845,0.576,8,-13.495,1,0.038,0.576,0.925,119.133,4,6SB0MnejuD58hZn5RcBH4t,Everybody Get Dancin',0,The Collection,1978-01-01,G#,major,G# major,306960
+"Evelyn ""Champagne"" King",Disco,0.897,0.431,3,-12.234,0,0.0481,0.0395,0.857,115.552,4,3o75BuQvN7lw4nzrAd8MPz,Love Come Down,51,"Love Come Down: The Best of Evelyn ""Champagne"" King",1993-03-23,D#,minor,D# minor,364946
+"Evelyn ""Champagne"" King",Disco,0.714,0.665,11,-10.948,0,0.0381,0.131,0.805,133.805,4,3o75BuQvN7lw4nzrAd8MPz,Shame,49,"Love Come Down: The Best of Evelyn ""Champagne"" King",1993-03-23,B,minor,B minor,392800
+"Evelyn ""Champagne"" King",Disco,0.882,0.606,5,-6.289,0,0.0714,0.00782,0.801,114.721,4,5SZVTXdGx4zFBQqTxVXUcE,I'm In Love,27,I'm In Love (Expanded Edition),1981-06-21,F,minor,F minor,305853
+"Faith, Hope & Charity",Disco,0.681,0.87,3,-8.525,0,0.0604,1.12e-4,0.919,110.377,4,4XMFNtn4pTZ6sD2ViClpNs,To Each His Own (That's My Philosophy),19,"Faith, Hope & Charity (Expanded Edition)",2014,D#,minor,D# minor,319373
+"Faith, Hope & Charity",Disco,0.689,0.876,11,-7.844,1,0.0871,6.71e-6,0.856,114.17,4,4XMFNtn4pTZ6sD2ViClpNs,Let's Go to the Disco,1,"Faith, Hope & Charity (Expanded Edition)",2014,B,major,B major,259186
+The Fantastic Johnny C,Disco,0.667,0.739,11,-7.584,0,0.0672,0,0.866,98.413,4,6WMV1kHlADvpHXSg7ItQVw,Waitin' for the Rain,8,The Phil-LA of Soul Singles Collection 1967-1973,2008-01-01,B,minor,B minor,222093
+Fat Larry's Band,Disco,0.762,0.593,2,-15.796,1,0.0411,2.01e-4,0.958,123.8,4,7h1YFLqb7aE9xGi8HR2Z4u,We Just Want to Play for You,4,Feel It,1976-07-20,D,major,D major,311893
+Fat Larry's Band,Disco,0.683,0.701,5,-15.887,1,0.0531,0.0019,0.493,122.573,4,7h1YFLqb7aE9xGi8HR2Z4u,Center City,11,Feel It,1976-07-20,F,major,F major,216933
+Fat Larry's Band,Disco,0.687,0.581,4,-16.1,0,0.041,3.03e-4,0.853,118.355,4,7h1YFLqb7aE9xGi8HR2Z4u,Fascination,6,Feel It,1976-07-20,E,minor,E minor,412933
+Fat Larry's Band,Disco,0.745,0.781,5,-7.701,0,0.125,3.11e-6,0.843,103.303,4,7EJ7WCaYLgelKpBONqOCaN,Act Like You Know,51,Breakin' Out,1982-01-01,F,minor,F minor,390013
+Fat Larry's Band,Disco,0.789,0.537,4,-12.439,0,0.122,0,0.813,109.083,4,2YvTYCIdf8TYp9MAllwlZB,Party After Midnight,5,Greatest Hits,1995-01-01,E,minor,E minor,305506
+Fat Larry's Band,Disco,0.821,0.545,9,-12.531,0,0.104,2.86e-5,0.623,123.28,4,2YvTYCIdf8TYp9MAllwlZB,Here Comes The Sun - Extended Version,9,Greatest Hits,1995-01-01,A,minor,A minor,322840
+Fat Larry's Band,Disco,0.727,0.661,4,-10.813,0,0.115,3.52e-5,0.652,122.432,4,2YvTYCIdf8TYp9MAllwlZB,Lookin' For Love - Extended Version,3,Greatest Hits,1995-01-01,E,minor,E minor,329666
+Fat Larry's Band,Disco,0.771,0.709,4,-13.293,0,0.0413,0.117,0.831,125.478,4,2YvTYCIdf8TYp9MAllwlZB,Boogie Town,1,Greatest Hits,1995-01-01,E,minor,E minor,243466
+Fat Larry's Band,Disco,0.569,0.737,0,-11.797,1,0.0518,0,0.724,107.528,4,2YvTYCIdf8TYp9MAllwlZB,Can't Keep My Hands To Myself,2,Greatest Hits,1995-01-01,C,major,C major,215600
+Fela Kuti,Disco,0.612,0.874,7,-7.664,0,0.114,0.395,0.682,124.281,4,5Grcby3L4ddjSg4gA9modq,Expensive Shit,21,The Best of the Black President 2,2009,G,minor,G minor,791216
+Fela Kuti,Disco,0.65,0.712,10,-6.622,0,0.041,0.0504,0.595,120.162,4,1CNaNv0HcJK9Agpkh7OdJC,Shakara (Oloje),1,Shakara,2009-09-01,A#,minor,A# minor,805733
+Fela Kuti,Disco,0.642,0.928,10,-7.541,0,0.0544,0.051,0.909,90.931,4,5QtXhQE2WvVLz60sYwafQH,Water No Get Enemy,12,Expensive Shit,2009-09-01,A#,minor,A# minor,660480
+Fibre Foundation,Disco,0.779,0.657,6,-8.922,1,0.046,0.0158,0.707,123.002,4,6o9JqyubyCdQVSA2l5eI8i,Weekend - Joey Negro Disco Re-Blend,12,Meat Me Down The Disco (Mixed by Horse Meat Disco),2017-11-03,F#,major,F# major,400608
+First Choice,Disco,0.696,0.838,8,-4.76,1,0.0538,0.00138,0.806,128.391,4,0UVFfI2HSulj4Ooh6TYh1f,This Is the House Where Love Died,0,Anthology,2003-01-01,G#,major,G# major,179680
+First Choice,Disco,0.552,0.661,8,-10.047,1,0.0351,0.00961,0.753,118.365,4,2Q0k4pZ92k6xI2tQbb4zqk,Doctor Love,32,"12"" Master Series Vol. 1",1994,G#,major,G# major,500200
+First Choice,Disco,0.807,0.468,10,-9.904,0,0.0392,8.44e-4,0.646,114.123,4,6J5CSMcU6EjQuWrDZOYuXb,Indian Giver,0,Delusions,1977-01-01,A#,minor,A# minor,306200
+First Choice,Disco,0.842,0.616,1,-8.946,0,0.0434,0.454,0.419,113.997,4,2H5CNn1cQDdsBQjOufmsbE,Love Having You Around - Late Nite Tuff Guy Rework,9,The Late Nite Tuff Guy Salsoul Reworks,2018-04-27,C#,minor,C# minor,395784
+First Choice,Disco,0.622,0.523,7,-7.225,1,0.0387,1.14e-6,0.652,122.202,4,0YbZ9lgPYhxGHS2zpRIOZg,Gamble On Love,5,Delusions (Bonus Version),1977-01-01,G,major,G major,168200
+First Choice,Disco,0.566,0.903,9,-5.611,0,0.108,0.0566,0.597,125.487,4,0YbZ9lgPYhxGHS2zpRIOZg,Chances Go Around,5,Delusions (Bonus Version),1977-01-01,A,minor,A minor,354973
+First Choice,Disco,0.328,0.636,0,-5.689,1,0.0349,0,0.459,168.603,4,0YbZ9lgPYhxGHS2zpRIOZg,I Love You More Than Before,4,Delusions (Bonus Version),1977-01-01,C,major,C major,254013
+First Choice,Disco,0.567,0.847,11,-5.681,1,0.1,0,0.759,119.581,4,0YbZ9lgPYhxGHS2zpRIOZg,Let No Man Put Asunder,17,Delusions (Bonus Version),1977-01-01,B,major,B major,264746
+First Choice,Disco,0.416,0.844,10,-6.204,1,0.0591,2.2e-6,0.668,169.973,4,0YbZ9lgPYhxGHS2zpRIOZg,Do Me Again,4,Delusions (Bonus Version),1977-01-01,A#,major,A# major,228080
+First Choice,Disco,0.652,0.693,0,-6.674,1,0.102,0,0.695,106.129,4,0YbZ9lgPYhxGHS2zpRIOZg,Jimmy Dee,3,Delusions (Bonus Version),1977-01-01,C,major,C major,174306
+First Choice,Disco,0.59,0.88,10,-9.289,0,0.171,0.0132,0.632,117.741,4,1fkMUX3lpOJqFJBT8J6lDO,Double Cross,22,Larry Levan's Paradise Garage,1978,A#,minor,A# minor,440173
+First Choice,Disco,0.808,0.659,10,-8.815,0,0.132,0.0495,0.8,110.849,4,28n4vKOfQNAevM2189Pfsm,Love Thang,36,Grandmaster Flash Presents: Salsoul Jam 2000,2017-03-01,A#,minor,A# minor,477066
+First Choice,Disco,0.623,0.691,5,-13.879,0,0.0473,7.64e-5,0.823,123.284,4,3eZNEKTcrgirsmWFgTKIjd,Armed and Extremely Dangerous,21,"Philly Groove Records Presents: The Early Years, Vol. 1",2014-10-28,F,minor,F minor,171000
+Five Special,Disco,0.745,0.444,1,-15.32,1,0.0794,0.135,0.703,121.695,4,1kHdtsIlpcOPuyondi8TCU,Why Leave Us Alone,16,Five Special,1979,C#,major,C# major,508946
+Five Special,Disco,0.625,0.472,9,-17.944,1,0.0476,0.00154,0.748,109.508,4,1kHdtsIlpcOPuyondi8TCU,It's a Wonderful Day,1,Five Special,1979,A,major,A major,246026
+Five Special,Disco,0.609,0.419,7,-16.621,1,0.0519,0.326,0.855,110.226,4,1kHdtsIlpcOPuyondi8TCU,Do It Baby,3,Five Special,1979,G,major,G major,434560
+Flipside,Disco,0.555,0.891,9,-7.807,0,0.161,4.49e-6,0.737,119.046,4,0miX7KZ6Pbi5Lh49rnmLV8,Music (Gets Me High),2,Havin' a Party,2016-09-23,A,minor,A minor,231146
+Floorplan,Disco,0.742,0.898,0,-9.34,1,0.0363,0.418,0.597,130.025,4,7dDhIiUAnc1PTAN2McTG81,Tell You No Lie,33,Music / Tell You No Lie,2016-04-29,C,major,C major,504058
+France Joli,Disco,0.733,0.737,8,-8.885,0,0.043,0.124,0.955,115.987,4,4aztxc0T9nlmeUyoemD7XX,Feel Like Dancing,9,Tonight,1980-01-01,G#,minor,G# minor,437173
+France Joli,Disco,0.518,0.511,5,-11.565,1,0.0359,1.04e-5,0.502,122.717,4,4aztxc0T9nlmeUyoemD7XX,Tough Luck,2,Tonight,1980-01-01,F,major,F major,321960
+France Joli,Disco,0.611,0.821,10,-9.805,0,0.071,1.31e-5,0.693,127.571,4,4aztxc0T9nlmeUyoemD7XX,The Heart to Break the Heart,5,Tonight,1980-01-01,A#,minor,A# minor,442466
+Frank Mills,Disco,0.467,0.471,1,-13.761,1,0.039,0.824,0.794,132.164,4,2Ym6tiJht0CqqPTOEhlatf,Music Box Dancer,39,Music Box Dancer,1978,C#,major,C# major,192360
+Frank Mills,Disco,0.591,0.706,9,-13.882,0,0.0321,0.921,0.75,144.693,4,2Ym6tiJht0CqqPTOEhlatf,Spanish Coffee,21,Music Box Dancer,1978,A,minor,A minor,203880
+Frank Mills,Disco,0.462,0.616,5,-13.065,1,0.0307,0.946,0.846,163.59,4,2Ym6tiJht0CqqPTOEhlatf,Love's Like that,7,Music Box Dancer,1978,F,major,F major,172906
+Frazelle,Disco,0.807,0.63,7,-9.904,1,0.253,0,0.625,113.961,4,4Uqd5v698FxpHAISPt37es,Today Is the Day - Hot Mix,10,Today Is the Day,2017-02-03,G,major,G major,198270
+Freda Payne,Disco,0.487,0.584,7,-12.128,0,0.0413,4.93e-6,0.738,129.484,4,20WuVQc0Fwu3qvX6MtYfJY,I Get High,35,Lost Soul Treasures,2002,G,minor,G minor,191026
+Freddie James,Disco,0.833,0.755,6,-7.401,1,0.0712,0.0303,0.944,130.644,4,1LzPzlQOjLRBqeo95E1YbS,Crazy Disco Music,0,Get up and Boogie,1979-01-01,F#,major,F# major,366574
+Freddie James,Disco,0.817,0.853,10,-7.678,0,0.053900000000000003,0.0789,0.908,130.615,4,1LzPzlQOjLRBqeo95E1YbS,Everybody Get up and Boogie,2,Get up and Boogie,1979-01-01,A#,minor,A# minor,494660
+Freddie James,Disco,0.795,0.514,9,-7.952,0,0.177,0.0766,0.808,124.362,4,1LzPzlQOjLRBqeo95E1YbS,Dance Little Boy Blue,0,Get up and Boogie,1979-01-01,A,minor,A minor,381787
+Freddie James,Disco,0.802,0.689,1,-7.683,1,0.0951,2.93e-4,0.867,130.545,4,1LzPzlQOjLRBqeo95E1YbS,Hollywood,0,Get up and Boogie,1979-01-01,C#,major,C# major,492850
+Freddie James,Disco,0.893,0.511,10,-15.103,0,0.132,0.0855,0.698,125.482,4,6XgiwR7VLA4gIYdCkQLlBR,Music Makes Me Higher,6,Sweetness,1981-01-01,A#,minor,A# minor,373760
+Freddie James,Disco,0.972,0.382,4,-14.437,0,0.0554,0.0321,0.835,113.024,4,6XgiwR7VLA4gIYdCkQLlBR,Dance to the Beat,4,Sweetness,1981-01-01,E,minor,E minor,402733
+Freddie James,Disco,0.384,0.0919,8,-18.895,1,0.0375,8.53e-6,0.0733,125.444,4,6XgiwR7VLA4gIYdCkQLlBR,It's Over,1,Sweetness,1981-01-01,G#,major,G# major,282333
+Freddie James,Disco,0.887,0.463,7,-14.623,1,0.068,0.209,0.969,118.996,4,6XgiwR7VLA4gIYdCkQLlBR,Everybody Here Do Your Thing,1,Sweetness,1981-01-01,G,major,G major,335200
+Freddie James,Disco,0.859,0.279,7,-16.003,1,0.0937,0.0211,0.881,113.711,4,6XgiwR7VLA4gIYdCkQLlBR,Let Me Be Your Energy,1,Sweetness,1981-01-01,G,major,G major,350093
+Freddie James,Disco,0.903,0.365,5,-15.927,1,0.106,0.00174,0.96,122.302,4,6XgiwR7VLA4gIYdCkQLlBR,I'm Just Your Fool,0,Sweetness,1981-01-01,F,major,F major,201933
+Freddie James,Disco,0.826,0.352,6,-16.462,0,0.0633,0.178,0.962,108.212,4,6XgiwR7VLA4gIYdCkQLlBR,Sweetness,0,Sweetness,1981-01-01,F#,minor,F# minor,315626
+Freddie James,Disco,0.723,0.332,8,-16.619,1,0.0492,0.0329,0.895,106.696,4,6XgiwR7VLA4gIYdCkQLlBR,In Love for the First Time,2,Sweetness,1981-01-01,G#,major,G# major,210360
+French Kiss,Disco,0.795,0.697,6,-8.943,0,0.0997,3.57e-6,0.738,129.818,4,2d9aUzDLczQBwSl9FulHTW,Panic,20,"Twelve Inch Classics from the 70s, Vol. 1",2010-12-07,F#,minor,F# minor,267506
+Fruit,Disco,0.648,0.894,7,-8.222,0,0.0453,0.236,0.794,125.608,4,7xJ5Sh36KwFLQ678HfFE7l,Space Lady,3,Fruit,2016-05-27,G,minor,G minor,278391
+Fruit,Disco,0.537,0.768,11,-9.616,0,0.0584,0.0015,0.536,120.007,4,7xJ5Sh36KwFLQ678HfFE7l,"If You Feel It, Say Yeah",16,Fruit,2016-05-27,B,minor,B minor,405718
+Fruit,Disco,0.471,0.82,7,-9.244,1,0.0647,0.00123,0.782,127.511,4,7xJ5Sh36KwFLQ678HfFE7l,Say It,1,Fruit,2016-05-27,G,major,G major,260604
+Fruit,Disco,0.643,0.872,9,-9.328,0,0.102,0.378,0.894,133.081,4,7xJ5Sh36KwFLQ678HfFE7l,Life Is a Challenge,2,Fruit,2016-05-27,A,minor,A minor,258008
+Fussy Cussy,Disco,0.689,0.73,11,-8.794,0,0.0557,0.762,0.835,108.476,4,0Ub1RS2ORIUysNzxQNEtyF,Like Lovers Do,0,Hits Anthology,2011-08-09,B,minor,B minor,366852
+Fussy Cussy,Disco,0.743,0.911,2,-5.971,1,0.0418,0.0441,0.943,129.387,4,0Ub1RS2ORIUysNzxQNEtyF,La Vita,0,Hits Anthology,2011-08-09,D,major,D major,590018
+Fussy Cussy,Disco,0.841,0.818,10,-5.985,1,0.106,0.00891,0.928,106.522,4,0Ub1RS2ORIUysNzxQNEtyF,You've Got The Motion,0,Hits Anthology,2011-08-09,A#,major,A# major,288008
+Fussy Cussy,Disco,0.682,0.759,5,-6.884,0,0.0456,0.00398,0.9,124.513,4,0Ub1RS2ORIUysNzxQNEtyF,Run For Your Love,0,Hits Anthology,2011-08-09,F,minor,F minor,207325
+G.Q.,Disco,0.771,0.49,7,-13.39,1,0.0607,0.00548,0.962,122.322,4,5hgGl3cmYdzcPedJs47Jum,Make My Dreams a Reality,21,Disco Nights (Expanded Edition),1979-01-01,G,major,G major,375920
+G.Q.,Disco,0.768,0.636,1,-13.368,1,0.0571,2.68e-4,0.952,120.321,4,5hgGl3cmYdzcPedJs47Jum,Spirit,7,Disco Nights (Expanded Edition),1979-01-01,C#,major,C# major,229800
+G.Q.,Disco,0.735,0.657,7,-12.226,0,0.0622,0.0661,0.96,130.317,4,5hgGl3cmYdzcPedJs47Jum,This Happy Feeling,15,Disco Nights (Expanded Edition),1979-01-01,G,minor,G minor,324893
+G.Q.,Disco,0.743,0.567,0,-15.188,1,0.039,0.00782,0.964,126.259,4,5hgGl3cmYdzcPedJs47Jum,Boogie Oogie Oogie,29,Disco Nights (Expanded Edition),1979-01-01,C,major,C major,254880
+G.Q.,Disco,0.798,0.528,5,-12.228,0,0.0531,0.00379,0.898,122.61,4,5hgGl3cmYdzcPedJs47Jum,Disco Nights (Rock Freak),34,Disco Nights (Expanded Edition),1979-01-01,F,minor,F minor,354906
+G.Q.,Disco,0.693,0.513,5,-11.712,1,0.0917,0.00681,0.963,124.283,4,4BFwQ2eRqnHJmVo3l0oCeC,Lies,29,Two (Expanded Edition),1980-01-01,F,major,F major,318920
+Gary Davis,Disco,0.749,0.566,2,-12.147,1,0.0327,9.65e-5,0.94,117.865,4,0DYpYGLH4WtDpJh5IchMwf,Gotta Get Your Love (Kenny Dope Mix),9,Gotta Get Your Love,2011-02-15,D,major,D major,265893
+Gary Toms Empire,Disco,0.57,0.721,7,-9.149,1,0.0351,1.45e-4,0.777,120.728,4,1aP1JzNu6QKscMVgxQEU1f,Love Me Right,0,The Best Of: Gary Toms Empire,1975-01-01,G,major,G major,281014
+Gary Toms Empire,Disco,0.802,0.683,0,-8.909,1,0.0425,2.39e-5,0.939,124.35,4,1aP1JzNu6QKscMVgxQEU1f,Drive My Car,1,The Best Of: Gary Toms Empire,1975-01-01,C,major,C major,348014
+Gary Toms Empire,Disco,0.397,0.607,0,-9,1,0.0345,0.00148,0.655,132.946,4,1aP1JzNu6QKscMVgxQEU1f,The New Empire,0,The Best Of: Gary Toms Empire,1975-01-01,C,major,C major,228027
+Gaz,Disco,0.923,0.44,7,-16.587,1,0.0906,0.00288,0.85,113.631,4,3VmR7Xu3yZ0qXqkl9E6vct,Sing Sing,18,Gaz,1978-01-01,G,major,G major,435130
+Gene Chandler,Disco,0.784,0.884,7,-6.962,1,0.0596,0.00775,0.828,119.916,4,3GrcAjRuLE6igVtPypLbth,When You're # 1,10,The Best Of The Chi-Sound Years 1978 - 83,2010-12-05,G,major,G major,553826
+Gene Page,Disco,0.604,0.409,9,-14.296,1,0.0605,0.392,0.634,124.117,4,3gVXtITzgK1HJmp7EC5MqW,Close Encounters of the Third Kind,8,Close Encounters,1978-02-25,A,major,A major,263200
+Gene Page,Disco,0.803,0.845,4,-7.014,0,0.0367,0.865,0.92,110.171,4,7iQhStWUSQLL8t3VvPS6WC,Blacula (The Stalkwalk),16,Blacula: Music From The Original Soundtrack,1972-01-07,E,minor,E minor,159346
+George Benson,Disco,0.835,0.765,1,-7.831,1,0.0681,0.0692,0.855,110.282,4,6qwOcN9wZgVF0bishcfFsh,Give Me the Night,50,Give Me The Night,1980-07-16,C#,major,C# major,301026
+George Benson,Disco,0.682,0.752,2,-9.521,1,0.0454,0.863,0.964,81.081,4,1ei5QjnfB7PHINJOH8Gft5,Breezin',58,Breezin',1976,D,major,D major,341733
+George McCrae,Disco,0.595,0.824,5,-9.768,0,0.0315,0.115,0.941,104.484,4,6wE37m8authSsjmKMB8jvM,Rock Your Baby,36,Rock Your Baby,1974,F,minor,F minor,384000
+George McCrae,Disco,0.738,0.643,0,-10.299,1,0.028,0.00565,0.912,111.197,4,6wE37m8authSsjmKMB8jvM,I Can't Leave You Alone (I Keep Holdin' On),17,Rock Your Baby,1974,C,major,C major,190813
+George McCrae,Disco,0.731,0.927,8,-9.271,1,0.0405,0.241,0.966,106.611,4,6wE37m8authSsjmKMB8jvM,Look at You,14,Rock Your Baby,1974,G#,major,G# major,299906
+George McCrae,Disco,0.424,0.837,8,-9.941,1,0.154,0.027,0.659,104.641,4,6wE37m8authSsjmKMB8jvM,You Can Have It All,40,Rock Your Baby,1974,G#,major,G# major,174000
+George McCrae,Disco,0.506,0.88,8,-6.569,1,0.0324,5.05e-4,0.917,96.975,4,6wE37m8authSsjmKMB8jvM,Make It Right,14,Rock Your Baby,1974,G#,major,G# major,173480
+Gino Soccio,Disco,0.888,0.479,11,-6.423,0,0.0489,0.655,0.473,124.349,4,1EaATYESKxC3pW4Whf2VvE,Dancer,8,A Night to Remember (Mixed By Tony Okungbowa & Jojoflores),2012-05-01,B,minor,B minor,304066
+Gino Soccio,Disco,0.731,0.511,9,-14.484,0,0.0597,0.136,0.686,126.303,4,7GN5Lxu9dfGPaKuypTFZiG,So Lonely,0,Outline,1979-01-01,A,minor,A minor,122346
+Gino Soccio,Disco,0.646,0.565,11,-10.442,1,0.0286,0.451,0.832,135.626,4,7GN5Lxu9dfGPaKuypTFZiG,Les visiteurs - Radio Mix,0,Outline,1979-01-01,B,major,B major,219853
+Gino Soccio,Disco,0.838,0.592,8,-6.503,1,0.0673,0.00314,0.397,128.138,4,5B25EKt36cSeE3HXSeoN0M,Dance to Dance,0,Dancer - EP,1979-01-01,G#,major,G# major,429054
+Gino Soccio,Disco,0.706,0.788,9,-12.984,1,0.0385,0.855,0.841,123.897,4,7GN5Lxu9dfGPaKuypTFZiG,There's a Woman,0,Outline,1979-01-01,A,major,A major,498053
+Gino Soccio,Disco,0.84,0.466,4,-16.245,0,0.0636,0.265,0.885,119.266,4,41cYLZtiscScEo1QkJwHNT,Heartbreaker,0,S-Beat,1980-01-01,E,minor,E minor,242906
+Gino Soccio,Disco,0.743,0.84,11,-15.424,0,0.0475,0.884,0.674,131.447,4,41cYLZtiscScEo1QkJwHNT,The Runaway,0,S-Beat,1980-01-01,B,minor,B minor,308800
+Gino Soccio,Disco,0.798,0.595,1,-16.506,1,0.0358,0.415,0.965,117.137,4,7B3BLFCtjihdhXPKALcPUT,Love Is,0,Closer,1981-01-01,C#,major,C# major,159440
+Gino Soccio,Disco,0.675,0.529,8,-14.7,1,0.0427,0.101,0.832,120.556,4,41cYLZtiscScEo1QkJwHNT,I Wanna Take You There - Now,0,S-Beat,1980-01-01,G#,major,G# major,359506
+Gino Soccio,Disco,0.856,0.42,11,-14.869,0,0.0879,0.153,0.709,113.634,4,7B3BLFCtjihdhXPKALcPUT,Try It Out,13,Closer,1981-01-01,B,minor,B minor,495400
+Gino Soccio,Disco,0.92,0.297,3,-16.439,1,0.0912,0.00329,0.894,119.993,4,7B3BLFCtjihdhXPKALcPUT,Hold Tight,7,Closer,1981-01-01,D#,major,D# major,317466
+Gino Soccio,Disco,0.885,0.294,11,-15.04,0,0.107,0.908,0.582,117.899,4,2QxeeAufzKJdvqD4dT4Of3,It's Alright,6,Face to Face,1982-01-01,B,minor,B minor,457960
+Gino Soccio,Disco,0.826,0.401,0,-16.596,1,0.0429,0.886,0.961,121.548,4,2QxeeAufzKJdvqD4dT4Of3,Dream On,2,Face to Face,1982-01-01,C,major,C major,364600
+Gino Soccio,Disco,0.832,0.17,11,-17.42,0,0.0975,0.702,0.746,114.935,4,2QxeeAufzKJdvqD4dT4Of3,You Move Me,1,Face to Face,1982-01-01,B,minor,B minor,359933
+Gino Soccio,Disco,0.827,0.314,8,-15.322,1,0.0976,0.903,0.693,120.473,4,2QxeeAufzKJdvqD4dT4Of3,Who Dunnit?,0,Face to Face,1982-01-01,G#,major,G# major,354133
+Gino Soccio,Disco,0.474,0.504,9,-16.782,0,0.136,0.94,0.35,186.245,3,2QxeeAufzKJdvqD4dT4Of3,Remember,4,Face to Face,1982-01-01,A,minor,A minor,392933
+Gino Soccio,Disco,0.87,0.292,4,-14.945,1,0.148,0.922,0.654,118.192,4,2QxeeAufzKJdvqD4dT4Of3,Look At Yourself,0,Face to Face,1982-01-01,E,major,E major,335773
+Gino Vannelli,Disco,0.739,0.621,7,-13.604,1,0.0452,0.0161,0.721,117.11,4,4nvSQNHUXTqJgfzAnyBI8V,People Gotta Move,30,Powerful People,1974-01-01,G,major,G major,201600
+Gloria Gaynor,Disco,0.839,0.808,11,-4.453,1,0.0829,0.052,0.796,119.067,4,74Au9TO9aZXj8viYN27ojU,"Anybody Wanna Party? - 12"" Remix",3,I Will Survive: The Anthology (Reissue),1998-01-15,B,major,B major,461173
+Goody Goody,Disco,0.859,0.376,7,-16.542,0,0.0439,0.0963,0.902,127.202,4,0X6uATczHL4Bz1y1lruCVC,#1 Dee Jay,20,Goody Goody,1978,G,minor,G minor,452160
+Graham Bonnet,Disco,0.6,0.886,0,-7.432,0,0.0467,2.38e-5,0.811,112.795,4,6bIyMIpHP8hcVpahpMORkv,"Warm Ride - 12"" Long Disco Version",5,Graham Bonnet / No Bad Habits (Expanded Deluxe Edition),2016-05-13,C,minor,C minor,373106
+Gwen Guthrie,Disco,0.827,0.66,9,-7.64,1,0.0986,0.00136,0.743,118.609,4,2h2fa6ML63Z8b8JJjQoS85,It Should Have Been You - Larry Levan Mix / Bonus Track,36,Gwen Guthrie,1982-01-01,A,major,A major,425266
+Gwen McCrae,Disco,0.892,0.433,0,-13.806,0,0.0699,8.92e-4,0.924,128.029,4,1jrWabqkvZea8QHbk3h2P0,Keep the Fire Burning,0,Disco Essentials,2018-12-21,C,minor,C minor,344546
+Harold Melvin & The Blue Notes,Disco,0.681,0.744,2,-8.718,1,0.0566,0,0.727,123.309,4,6B0BAhQBleEa0Nr7eYLTvN,The Love I Lost,41,The Essential Harold Melvin & The Blue Notes,1972,D,major,D major,383533
+Herbie Mann,Disco,0.653,0.72,9,-12.434,0,0.0342,5.81e-5,0.83,124.976,4,1PWQLHi7EykST3c47rZ4yN,Waterbed,5,Waterbed,1975,A,minor,A minor,228813
+Hifi Sean,Disco,0.746,0.974,6,-3.471,1,0.035,1.81e-6,0.963,125.009,4,012ktpiH174MvIxFm3MxTD,Testify,30,Ft.,2016-09-16,F#,major,F# major,227040
+Inner Life,Disco,0.832,0.796,11,-6.136,0,0.125,0.0187,0.925,110.181,4,60o5ZuM7b03ENGBfED56RG,I'm Caught Up - In a One Night Love Affair,34,I'm Caught Up (In a One Night Love Affair),1979-01-01,B,minor,B minor,446013
+Inner Life,Disco,0.767,0.866,2,-6.297,1,0.119,1.13e-4,0.821,127.542,4,60o5ZuM7b03ENGBfED56RG,I Want to Give You Me,7,I'm Caught Up (In a One Night Love Affair),1979-01-01,D,major,D major,477493
+Inner Life,Disco,0.735,0.802,9,-8.575,1,0.0372,0.245,0.947,128.375,4,60o5ZuM7b03ENGBfED56RG,You Don't Have Dancin' On Your Mind,7,I'm Caught Up (In a One Night Love Affair),1979-01-01,A,major,A major,339133
+Inner Life,Disco,0.709,0.848,9,-5.743,0,0.0474,1.94e-4,0.841,129.197,4,5eT6mfHiU2EJp15UXAYCUW,Ain't No Mountain High Enough,0,Inner Life,1981-01-01,A,minor,A minor,472200
+Inner Life,Disco,0.773,0.611,4,-7.348,0,0.0771,0.0025,0.651,116.475,4,5eT6mfHiU2EJp15UXAYCUW,(Knock Out) Let's Go Another Round,0,Inner Life,1981-01-01,E,minor,E minor,446466
+Inner Life,Disco,0.708,0.918,4,-7.428,0,0.0731,0.00836,0.876,122.619,4,5eT6mfHiU2EJp15UXAYCUW,Live It Up,0,Inner Life,1981-01-01,E,minor,E minor,243573
+Inner Life,Disco,0.74,0.742,11,-6.993,1,0.104,0.00285,0.753,113.406,4,4VkZqypbzycF7XrJaAAbFE,Moment of My Life,0,Inner Life II,1982-01-01,B,major,B major,391466
+Instant Funk,Disco,0.895,0.367,4,-11.077,1,0.106,0.0394,0.609,119.298,4,3Um8ugtFa8LxvuzDsYP3p0,Bodyshine,0,"A Collection of Rare 12"" Singles from the Salsoul Vault, Vol. 5",2004,E,major,E major,506533
+Instant Funk,Disco,0.726,0.802,5,-10.006,1,0.0609,0.0275,0.803,110.271,4,6gWR2IPhIu1FwtTPuRUrNF,I Got My Mind Made Up (You Can Get It Girl),46,Instant Funk,1979,F,major,F major,320026
+Instant Funk,Disco,0.664,0.646,10,-8.925,0,0.0673,0.0387,0.887,128.678,4,6h5wrh2Nl1pCgWRUpL5IzL,Crying,3,I Got My Mind Made Up - The Best of Instant Funk,1979-01-01,A#,minor,A# minor,353973
+The Isley Brothers,Disco,0.777,0.962,9,-6.426,1,0.0549,0.139,0.661,117.232,4,0SVqyFBkvKyaZMRKKftr6z,"I Wanna Be with You, Pts. 1 & 2",14,Winner Takes All,1979-08-21,A,major,A major,382106
+The Isley Brothers,Disco,0.812,0.869,4,-7.7,1,0.0531,0.0594,0.901,119.416,4,0SVqyFBkvKyaZMRKKftr6z,Winner Takes All,18,Winner Takes All,1979-08-21,E,major,E major,256720
+The Isley Brothers,Disco,0.893,0.79,0,-7.925,1,0.0693,0.0326,0.893,115.455,4,04nhRulMSOvcRCGRTa7I5l,"The Pride, Pts. 1 & 2",23,Go for Your Guns,1977-08-21,C,major,C major,333093
+The Isley Brothers,Disco,0.803,0.909,11,-6.039,0,0.0489,0.00901,0.972,133.179,4,0SVqyFBkvKyaZMRKKftr6z,"It's a Disco Night (Rock Don't Stop), Pts. 1 & 2",42,Winner Takes All,1979-08-21,B,minor,B minor,315880
+Jackie Moore,Disco,0.845,0.725,10,-11.09,0,0.0672,0.00183,0.891,123.816,4,1TRliU9QyLnAKCUfmL9ZW7,This Time Baby,11,I'm On My Way (Expanded Edition),1980-01-01,A#,minor,A# minor,433066
+Jackie Moore,Disco,0.754,0.702,7,-10.936,1,0.126,7.54e-4,0.854,115.574,4,1TRliU9QyLnAKCUfmL9ZW7,How's Your Love Life Baby,1,I'm On My Way (Expanded Edition),1980-01-01,G,major,G major,281600
+Jackie Moore,Disco,0.781,0.851,0,-7.721,1,0.0516,3.34e-4,0.904,135.89,4,4FlHz9z2GQaEfOHH3OVVng,Helpless,3,I'm On My Way / With Your Love,2009-09-07,C,major,C major,282720
+The Jackson 5,Disco,0.719,0.567,6,-13.335,1,0.0355,0.00347,0.968,119.908,4,1VDUI8iG0jUdMh4QI06qI5,Forever Came Today,11,The Original Soul Of Michael Jackson,1987-10-01,F#,major,F# major,353453
+Jacques Renault,Disco,0.828,0.873,5,-6.682,1,0.0524,0.37,0.659,117.032,4,6nr7tzTVQG6GEA0z4JUMLV,Can't Nobody Love Me,15,Favicon,2009-12-14,F,major,F major,407185
+Jacques Renault,Disco,0.712,0.885,6,-8.132,1,0.134,0.822,0.882,120.005,4,0aAHN8D326vK0D186AorRQ,Time Machine,4,Time Machine,2018-04-06,F#,major,F# major,378367
+Jacques Renault,Disco,0.645,0.905,7,-7.319,1,0.0741,0.924,0.531,121.979,4,5UGbRRHzzTnd2V9O7l5TGe,BK Slice,4,"BK Club Beats, Breaks & Versions",2018-08-03,G,major,G major,177178
+Jacques Renault,Disco,0.574,0.877,1,-5.605,1,0.0487,0.0214,0.785,120.021,4,1Ufhgok40dY8jyu2cTqtJc,Bridge Music,11,Tape Cuts & Cut-Outs,2018-10-19,C#,major,C# major,335697
+Jacques Renault,Disco,0.745,0.876,9,-8.18,0,0.242,0.764,0.668,122.014,4,5UGbRRHzzTnd2V9O7l5TGe,Make Me Feel Good,2,"BK Club Beats, Breaks & Versions",2018-08-03,A,minor,A minor,286411
+Jacques Renault,Disco,0.671,0.866,10,-11.451,0,0.0563,0.542,0.671,119.959,4,5UGbRRHzzTnd2V9O7l5TGe,One More Time,15,"BK Club Beats, Breaks & Versions",2018-08-03,A#,minor,A# minor,230129
+James Wells,Disco,0.612,0.587,11,-12.088,0,0.084,0.177,0.901,122.844,4,6j9GKCUSITRp6RQBZACGEh,My Claim To Fame,5,I Guess That's Life,2010-09-20,B,minor,B minor,973293
+Janice McClain,Disco,0.707,0.511,4,-11.24,0,0.0915,0.00438,0.67,107.806,4,6o9JqyubyCdQVSA2l5eI8i,Giving My Love,16,Meat Me Down The Disco (Mixed by Horse Meat Disco),2017-11-03,E,minor,E minor,395560
+Jean Carn,Disco,0.529,0.82,1,-7.986,1,0.0504,2.02e-4,0.954,117.372,4,4gsuDhx9sgXP5tqKFolPIj,Time Waits for No One,10,Jean Carn,1977,C#,major,C# major,255400
+Jesse Henderson,Disco,0.627,0.779,10,-8.425,1,0.078,7.57e-6,0.672,113.958,4,7ekx1z0kfh93WZ0NGxwnKI,I Did It Again,10,I Did It Again,1977-03-15,A#,major,A# major,449306
+Joe Thomas,Disco,0.682,0.65,1,-12.03,0,0.0932,0.0255,0.87,128.36,4,4wobhPYPJTCbPmrZYzPJsY,Make Your Move,7,Make Your Move,2005-01-01,C#,minor,C# minor,422306
+Joe Thomas,Disco,0.608,0.625,4,-12.817,0,0.034,0.441,0.712,120.98,4,4wobhPYPJTCbPmrZYzPJsY,Get On Back,0,Make Your Move,2005-01-01,E,minor,E minor,409986
+Johnnie Taylor,Disco,0.712,0.791,2,-8.234,1,0.0737,0,0.859,104.302,4,1wASYlnD3LasDxFlREG6JI,Disco Lady - Extended Disco Version With Johnnie's Rap,11,Eargasm,1976,D,major,D major,464066
+Johnnie Taylor,Disco,0.572,0.885,7,-8.025,0,0.0717,0.00179,0.961,106.17,4,1wASYlnD3LasDxFlREG6JI,You're the Best Girl in the World,12,Eargasm,1976,G,minor,G minor,197826
+Kano,Disco,0.881,0.57,9,-9.373,0,0.172,0.00916,0.551,107.387,4,2SVjAOXtuCmyEKiulLHvtu,Can't Hold Back - Your Loving,25,New York Cake,1981-01-01,A,minor,A minor,285695
+Kano,Disco,0.877,0.561,7,-9.037,0,0.0551,0.737,0.807,126.647,4,4QZV1TOPnjLycitoIhKjDq,I'm Ready - Extended Version,9,I'm Ready (Maxi Single),2018-07-27,G,minor,G minor,437942
+Kano,Disco,0.914,0.576,7,-9.766,0,0.0606,0.866,0.853,125.194,4,7kLxHJLm69CME6poG15PzX,Its a War,0,Greatest Hits,2006-01-01,G,minor,G minor,411613
+Kano,Disco,0.817,0.648,7,-11.246,1,0.0478,0.852,0.885,129.856,4,7IM0bm2zjWEY0vAxte6UXz,"Now!, Baby!, Now!",9,Kano,1980-01-01,G,major,G major,354226
+Kano,Disco,0.874,0.403,9,-12.738,0,0.152,0.884,0.598,125.435,4,3ooPxP3ht5vkQijHqBdbJf,Holly Dolly - Extended Version,10,I'm Ready (Disco Mix - Original 12 Inch Version),1980,A,minor,A minor,393247
+Karen Silver,Disco,0.896,0.353,7,-17.683,1,0.0788,0.682,0.363,129.34,4,6ohMaaen9cxiMS6AOEXA8N,Hold On I'm Comin',8,Hold on I'm Comin',1979-01-01,G,major,G major,443666
+Karen Silver,Disco,0.846,0.364,0,-15.492,1,0.104,0.0458,0.672,119.513,4,6ohMaaen9cxiMS6AOEXA8N,Fake,1,Hold on I'm Comin',1979-01-01,C,major,C major,380373
+Karen Silver,Disco,0.87,0.483,1,-14.405,1,0.062,0.178,0.721,119.601,4,6ohMaaen9cxiMS6AOEXA8N,Can't Stop Dancing,1,Hold on I'm Comin',1979-01-01,C#,major,C# major,321333
+Karen Silver,Disco,0.888,0.503,9,-12.88,1,0.0495,8.7e-5,0.705,121.608,4,6ohMaaen9cxiMS6AOEXA8N,Hot Stuff,1,Hold on I'm Comin',1979-01-01,A,major,A major,325973
+Karen Silver,Disco,0.842,0.535,0,-11.629,1,0.0328,0.382,0.965,113.712,4,3H2ikZHR2gW9IrEgcurC3F,Set Me Free,8,"Star Funk, Vol. 3",1992-01-01,C,major,C major,323760
+Karen Silver,Disco,0.626,0.527,4,-14.34,1,0.0448,1e-4,0.903,130.2,4,6ohMaaen9cxiMS6AOEXA8N,Love Me Tonight - Turn off the Light,0,Hold on I'm Comin',1979-01-01,E,major,E major,247240
+Karen Silver,Disco,0.939,0.293,7,-13.803,1,0.236,4.52e-6,0.773,111.364,4,6ohMaaen9cxiMS6AOEXA8N,Nobody Else,17,Hold on I'm Comin',1979-01-01,G,major,G major,363466
+Karen Silver,Disco,0.481,0.278,9,-14.335,0,0.035,0,0.364,142.85,4,6ohMaaen9cxiMS6AOEXA8N,Paradise,0,Hold on I'm Comin',1979-01-01,A,minor,A minor,284360
+Karen Young,Disco,0.808,0.861,2,-7.431,1,0.0948,0.0167,0.57,121.995,4,3sVqwJvLA1dzIgfQFep0Pq,Hot Shot - Joey Negro Sure Shot Mix,13,Hot Shot,1978-09-15,D,major,D major,367853
+Kat Mandu,Disco,0.783,0.847,4,-13.832,0,0.0425,0.787,0.957,132.621,4,5KA6WW1XpTp6XGh48EHjDW,The Break - Remix,21,I Wanna Dance,1995-01-01,E,minor,E minor,521293
+Kat Mandu,Disco,0.732,0.377,4,-16.494,1,0.0508,0.277,0.759,126.143,4,5KA6WW1XpTp6XGh48EHjDW,Dont Stop Keep On,7,I Wanna Dance,1995-01-01,E,major,E major,402760
+KC & The Sunshine Band,Disco,0.733,0.835,11,-11.001,1,0.0327,0.6,0.948,110.055,4,1nxHfb1EerQyKdT1aLSXf6,Baby I Love You (Yes I Do),18,KC & The Sunshine Band - Part 3...And More,2004-10-26,B,major,B major,275040
+KC & The Sunshine Band,Disco,0.882,0.649,4,-10.387,1,0.0478,0,0.938,107.514,4,1nxHfb1EerQyKdT1aLSXf6,Wrap Your Arms Around Me,19,KC & The Sunshine Band - Part 3...And More,2004-10-26,E,major,E major,222560
+KC & The Sunshine Band,Disco,0.829,0.685,10,-12.113,0,0.0655,1.53e-5,0.926,106.732,4,1nxHfb1EerQyKdT1aLSXf6,Let's Go Party,13,KC & The Sunshine Band - Part 3...And More,2004-10-26,A#,minor,A# minor,173600
+KC & The Sunshine Band,Disco,0.72,0.858,5,-11.077,1,0.0319,1.45e-4,0.945,109.319,4,1nxHfb1EerQyKdT1aLSXf6,Come on In,18,KC & The Sunshine Band - Part 3...And More,2004-10-26,F,major,F major,206600
+KC & The Sunshine Band,Disco,0.732,0.921,5,-11.195,0,0.0519,0.00484,0.904,110.38,4,1nxHfb1EerQyKdT1aLSXf6,I Like to Do It,20,KC & The Sunshine Band - Part 3...And More,2004-10-26,F,minor,F minor,175933
+KC & The Sunshine Band,Disco,0.649,0.825,10,-12.243,0,0.0335,0.154,0.961,112.124,4,1nxHfb1EerQyKdT1aLSXf6,"(Shake, Shake, Shake) Shake Your Booty",52,KC & The Sunshine Band - Part 3...And More,2004-10-26,A#,minor,A# minor,186906
+KC & The Sunshine Band,Disco,0.753,0.753,5,-13.023,0,0.0436,4.43e-5,0.913,113.068,4,1nxHfb1EerQyKdT1aLSXf6,I'm Your Boogie Man,51,KC & The Sunshine Band - Part 3...And More,2004-10-26,F,minor,F minor,242133
+KC & The Sunshine Band,Disco,0.773,0.721,3,-12.574,1,0.0294,1.61e-5,0.971,110.383,4,1nxHfb1EerQyKdT1aLSXf6,Keep It Comin' Love,48,KC & The Sunshine Band - Part 3...And More,2004-10-26,D#,major,D# major,271493
+Kiki Gyan,Disco,0.699,0.869,9,-10.199,1,0.0456,0.411,0.963,115.273,4,2f2AauWieTBpHDodyHYOcB,Disco Dancer,52,24 Hours in a Disco 1978-82,2012-12-03,A,major,A major,416800
+Kiki Gyan,Disco,0.706,0.827,7,-9.737,0,0.0765,0.0412,0.788,125.015,4,2f2AauWieTBpHDodyHYOcB,24 Hours in a Disco,34,24 Hours in a Disco 1978-82,2012-12-03,G,minor,G minor,439600
+Kiki Gyan,Disco,0.693,0.852,4,-8.749,0,0.0359,0.00216,0.866,118.177,4,2f2AauWieTBpHDodyHYOcB,Keep On Dancing,32,24 Hours in a Disco 1978-82,2012-12-03,E,minor,E minor,390293
+Kiki Gyan,Disco,0.696,0.856,11,-9.075,0,0.0402,0.434,0.955,121.608,4,2f2AauWieTBpHDodyHYOcB,Sexy Dancer,27,24 Hours in a Disco 1978-82,2012-12-03,B,minor,B minor,419120
+Kiki Gyan,Disco,0.81,0.787,7,-9.691,1,0.123,0.214,0.828,126.886,4,2f2AauWieTBpHDodyHYOcB,Disco Train,23,24 Hours in a Disco 1978-82,2012-12-03,G,major,G major,620413
+Kleeer,Disco,0.685,0.809,8,-12.309,1,0.0492,0.553,0.813,123.201,4,1gPTUwpJZd6hpwP7Ar2RTM,Tonight's the Night (Good Time),18,I Love to Dance,1979-07-14,G#,major,G# major,375040
+Kleeer,Disco,0.661,0.626,6,-15.59,0,0.0424,0.126,0.904,111.988,4,1gPTUwpJZd6hpwP7Ar2RTM,Happy Me,17,I Love to Dance,1979-07-14,F#,minor,F# minor,293813
+Kleeer,Disco,0.732,0.7,4,-14.187,0,0.0528,0.0477,0.914,129.747,4,1gPTUwpJZd6hpwP7Ar2RTM,It's Magic,19,I Love to Dance,1979-07-14,E,minor,E minor,437173
+Kool & The Gang,Disco,0.894,0.449,10,-16.147,1,0.104,0,0.923,120.376,4,0zK7P6PLhBU02U9Tc98VSK,If You Feel Like Dancin,20,Ladies' Night,1979-05-13,A#,major,A# major,306973
+Kool & The Gang,Disco,0.71,0.488,6,-16.646,0,0.205,2e-5,0.593,120.036,4,0zK7P6PLhBU02U9Tc98VSK,Hangin' Out,18,Ladies' Night,1979-05-13,F#,minor,F# minor,326960
+Kool & The Gang,Disco,0.657,0.431,9,-15.682,1,0.166,2.18e-5,0.926,112.008,4,0zK7P6PLhBU02U9Tc98VSK,Ladies Night,44,Ladies' Night,1979-05-13,A,major,A major,385506
+LaBelle,Disco,0.631,0.563,2,-12.135,0,0.0552,0,0.947,117.963,4,5Zx4eUC5dTg6aufiSLQ6uo,Lady Marmalade,51,Nightbirds,1974-09-13,D,minor,D minor,237120
+Lamar Thomas,Disco,0.813,0.592,1,-14.284,1,0.0886,0.0124,0.886,126.386,4,1bO9L1j7iIBns2VOQSIxd8,Feel so Good Inside,1,Disco: The Anthology,2016-11-25,C#,major,C# major,257699
+Lee Alfred,Disco,0.928,0.74,1,-6.097,1,0.081,0.00175,0.961,127.581,4,6ZTmHQNK4qBaQkdJy15j6w,Rockin’ Poppin’ Full Tilting,35,"Beach Diggin', Vol. 2",2014-07-07,C#,major,C# major,223546
+Lenny Williams,Disco,0.756,0.743,9,-11.212,1,0.0548,0.00122,0.814,118.667,4,6WhyyjT7SguubI15raOkDo,You Got Me Running,16,Spark Of Love (Expanded Edition),1978-06-18,A,major,A major,460426
+Lenny Williams,Disco,0.797,0.55,7,-10.131,1,0.0443,0,0.815,126.316,4,6WhyyjT7SguubI15raOkDo,Changes,13,Spark Of Love (Expanded Edition),1978-06-18,G,major,G major,304106
+Lime,Disco,0.745,0.767,9,-11.859,0,0.0332,0.0448,0.862,131.674,4,3AwPVk7c5UVaQu4uvHIQWN,"Babe, We're Gonna Love Tonight",46,Lime II,1982-01-01,A,minor,A minor,414600
+Lime,Disco,0.757,0.659,3,-10.724,0,0.0343,0.12,0.932,131.881,4,3AwPVk7c5UVaQu4uvHIQWN,Come and Get Your Love,38,Lime II,1982-01-01,D#,minor,D# minor,487240
+Lime,Disco,0.836,0.763,8,-12.375,1,0.173,0.0447,0.878,141.283,4,3AwPVk7c5UVaQu4uvHIQWN,Wake Dream - Remix,19,Lime II,1982-01-01,G#,major,G# major,424506
+Lime,Disco,0.678,0.655,11,-13.466,0,0.0512,0.416,0.942,139.022,4,3AwPVk7c5UVaQu4uvHIQWN,Help Yourself,15,Lime II,1982-01-01,B,minor,B minor,372800
+Lime,Disco,0.781,0.868,7,-15.332,0,0.0604,0.149,0.706,126.59,4,5RaL88VCe0mOOFy2kt0J0f,On the Grid - Extended,17,Lime 3,1983-01-01,G,minor,G minor,323026
+Lime,Disco,0.755,0.552,0,-13.133,1,0.0501,0.00252,0.597,119.79,4,5RaL88VCe0mOOFy2kt0J0f,Together,11,Lime 3,1983-01-01,C,major,C major,414640
+Lime,Disco,0.787,0.513,5,-10.592,0,0.0431,0.804,0.531,121.198,4,3r6eaaduZYtYc47c91esYL,You're My Magician,28,Your Love,1981,F,minor,F minor,454226
+Lime,Disco,0.799,0.711,0,-8.786,0,0.0474,0.853,0.8,137.992,4,3r6eaaduZYtYc47c91esYL,Your Love - Remix,44,Your Love,1981,C,minor,C minor,421973
+Lime,Disco,0.69,0.682,0,-10.504,1,0.0431,0.906,0.763,129.456,4,3r6eaaduZYtYc47c91esYL,Agent 406,20,Your Love,1981,C,major,C major,425213
+Lime,Disco,0.793,0.71,1,-10.82,1,0.0351,0.00758,0.961,128.083,4,3r6eaaduZYtYc47c91esYL,It's You,18,Your Love,1981,C#,major,C# major,436760
+Lime,Disco,0.855,0.538,10,-12.285,1,0.0385,0.899,0.913,121.502,4,3r6eaaduZYtYc47c91esYL,I'll Be Yours,19,Your Love,1981,A#,major,A# major,426040
+Linda Clifford,Disco,0.659,0.871,5,-9.2,0,0.046,0.00935,0.85,106.413,4,0i6i03upLYbGm42HE80nRe,Runaway Love,27,Greatest Hits,1990,F,minor,F minor,588800
+Linda Clifford,Disco,0.652,0.87,2,-7.997,0,0.0391,8.91e-4,0.692,128.641,4,5lXCMoO2DERDyZIHmAyW5b,If My Friends Could See Me Now,5,If My Friends Could See Me Now,1978,D,minor,D minor,475800
+Linda Clifford,Disco,0.644,0.768,2,-9.541,0,0.0588,2.13e-6,0.767,125.608,4,5lXCMoO2DERDyZIHmAyW5b,"You Are, You Are",0,If My Friends Could See Me Now,1978,D,minor,D minor,313800
+Linda Clifford,Disco,0.652,0.868,7,-7.239,1,0.046,0,0.788,121.421,4,5lXCMoO2DERDyZIHmAyW5b,I Feel Like Falling in Love Again,0,If My Friends Could See Me Now,1978,G,major,G major,303866
+Linda Clifford,Disco,0.658,0.8,5,-7.542,1,0.0829,2.77e-6,0.752,116.507,4,1WJzsjuEHxa1dX8QV66jxq,From Now On,1,Linda,1977,F,major,F major,312093
+Linda Clifford,Disco,0.798,0.788,8,-10.434,1,0.0619,0.162,0.814,122.656,4,0i6i03upLYbGm42HE80nRe,Red Light,3,Greatest Hits,1990,G#,major,G# major,204493
+Linda Clifford,Disco,0.801,0.832,9,-8.788,1,0.114,0.035,0.762,129.339,4,0i6i03upLYbGm42HE80nRe,Shoot Your Best Shot,6,Greatest Hits,1990,A,major,A major,406533
+Loleatta Holloway,Disco,0.703,0.534,11,-9.429,1,0.0432,0.117,0.676,109.524,4,28n4vKOfQNAevM2189Pfsm,"Hit and Run - 12"" Mix",14,Grandmaster Flash Presents: Salsoul Jam 2000,2017-03-01,B,major,B major,657893
+Loleatta Holloway,Disco,0.668,0.783,11,-7.276,0,0.0686,5.4e-4,0.79,109.749,4,3ssXnBPLR3LKxo5UZ5d2E2,Runaway,16,A Tribute To Loleatta Holloway: The Salsoul Years,1976,B,minor,B minor,286733
+Loleatta Holloway,Disco,0.56,0.792,11,-8.13,0,0.0845,0,0.806,121.838,4,7G0HRKPSz4yBOj6uvtXNyz,We're Getting Stronger (The Longer We Stay Together),17,Loleatta,1976-01-01,B,minor,B minor,277306
+Loose Change,Disco,0.851,0.874,9,-8.321,1,0.0386,0.0186,0.923,115.969,4,4PjDgJ8v4ZTB3zkivZLmh2,Straight from the Heart,8,Loose Change,2014-04-14,A,major,A major,362373
+Loose Joints,Disco,0.865,0.852,0,-3.462,1,0.0939,0.00627,0.903,123.435,4,2MxgPjv3jn3x5xzJSK3fRy,"Is It All over My Face? - 12"" Version",4,Pop Your Funk - Complete Singles Collection,2013-01-01,C,major,C major,600597
+Lou Rawls,Disco,0.694,0.719,0,-6.872,1,0.0552,4.28e-5,0.867,123.801,4,0fHzoR2PfTW5FhpVBcNJVN,See You When I Git There,15,Lou Rawls - The Very Best Of,2014-05-02,C,major,C major,265213
+Lou Rawls,Disco,0.733,0.756,9,-6.604,1,0.0419,2.08e-4,0.736,118.252,4,6mg5MNs8xfiFxVaDX7Rycl,There Will Be Love,18,"When You Hear Lou, You've Heard It All",1977,A,major,A major,259613
+Lou Rawls,Disco,0.695,0.713,2,-9.069,1,0.0353,1.33e-4,0.899,110.439,4,6VrgfU55RZBu5EMsfnGDaF,You'll Never Find Another Love Like Mine,26,Love's Greatest Hits,2006-01-01,D,major,D major,264720
+Lou Rawls,Disco,0.657,0.673,0,-7.685,1,0.0573,9.91e-4,0.789,90.328,4,6mg5MNs8xfiFxVaDX7Rycl,Lady Love,49,"When You Hear Lou, You've Heard It All",1977,C,major,C major,242386
+The Love Committee,Disco,0.489,0.9,9,-5.699,0,0.19,7.52e-4,0.433,126.469,4,1VwHTDGOxPgqKUfRMj4ADL,Law and Order,0,Law & Order,1978-01-01,A,minor,A minor,522293
+The Love Committee,Disco,0.617,0.939,5,-5.228,0,0.0876,2.93e-6,0.544,123.229,4,1VwHTDGOxPgqKUfRMj4ADL,Pass the Buck,0,Law & Order,1978-01-01,F,minor,F minor,326960
+The Love Committee,Disco,0.656,0.814,0,-6.82,0,0.166,0,0.71,125.552,4,1VwHTDGOxPgqKUfRMj4ADL,Just as Long as I Got You,0,Law & Order,1978-01-01,C,minor,C minor,333106
+The Love Committee,Disco,0.553,0.771,0,-6.353,1,0.114,0,0.762,118.824,4,1VwHTDGOxPgqKUfRMj4ADL,Where Will It End,0,Law & Order,1978-01-01,C,major,C major,457133
+Love Unlimited,Disco,0.678,0.799,8,-6.829,1,0.0478,0.00378,0.887,90.113,4,3QyqTJFBgIkFTHAYtVt8TM,Move Me No Mountain,23,In Heat,1974-01-01,G#,major,G# major,235333
+Love Unlimited,Disco,0.699,0.59,10,-8.609,1,0.0258,0.00758,0.961,128.808,4,3QyqTJFBgIkFTHAYtVt8TM,"Oh I Should Say, It's Such A Beautiful Day",9,In Heat,1974-01-01,A#,major,A# major,210773
+Love Unlimited,Disco,0.615,0.821,7,-6.965,0,0.0303,0.015,0.95,149.434,4,3QyqTJFBgIkFTHAYtVt8TM,I Needed Love - You Were There,11,In Heat,1974-01-01,G,minor,G minor,227666
+Love Unlimited,Disco,0.582,0.676,7,-6.779,0,0.0657,0.0023,0.545,81.896,4,3QyqTJFBgIkFTHAYtVt8TM,"I Love You So, Never Gonna Let You Go",11,In Heat,1974-01-01,G,minor,G minor,200306
+The Love Unlimited Orchestra,Disco,0.625,0.902,4,-4.866,0,0.0474,0.0439,0.75,103.209,4,3QyqTJFBgIkFTHAYtVt8TM,Love's Theme,17,In Heat,1974-01-01,E,minor,E minor,239173
+The Love Unlimited Orchestra,Disco,0.701,0.696,5,-10.033,1,0.0471,0.887,0.77,98.773,4,2mCUkzGTTkAsvJmtxWgTdc,Rhapsody In White,32,Rhapsody In White (Reissue),1998-01-15,F,major,F major,241000
+The Love Unlimited Orchestra,Disco,0.451,0.253,4,-14.03,1,0.0515,0.725,0.459,72.027,4,2mCUkzGTTkAsvJmtxWgTdc,Baby Blues,27,Rhapsody In White (Reissue),1998-01-15,E,major,E major,341133
+The Love Unlimited Orchestra,Disco,0.601,0.557,5,-12.331,1,0.0405,0.647,0.648,96.128,4,2mCUkzGTTkAsvJmtxWgTdc,Don't Take It Away From Me,16,Rhapsody In White (Reissue),1998-01-15,F,major,F major,277133
+The Love Unlimited Orchestra,Disco,0.496,0.563,4,-12.129,0,0.0337,0.804,0.723,97.136,4,2mCUkzGTTkAsvJmtxWgTdc,Love's Theme,55,Rhapsody In White (Reissue),1998-01-15,E,minor,E minor,246266
+Luther Davis Group,Disco,0.728,0.547,11,-9.365,0,0.0756,0.00718,0.797,130.572,4,2W50X23ZpQrRbclikWVrdK,You Can Be a Star,11,"Mr. Bongo Record Club, Vol. 3 (Compiled by Mr. Bongo)",2019-05-31,B,minor,B minor,277000
+Luv You Madly Orchestra,Disco,0.819,0.789,5,-11.071,0,0.0865,0.00389,0.85,127.588,4,5unClTaOVPbvaMxhuZgarY,Moon Maiden,1,Luv You Madly Orchestra,1978-01-01,F,minor,F minor,527894
+Machine,Disco,0.719,0.979,11,-4.984,0,0.182,0.00701,0.665,131.36,4,6aV2FkJ96pTbZUDvllQ5gJ,There But for the Grace of God Go I - Remix,32,There But for the Grace of God Go I,1980-01-01,B,minor,B minor,317733
+Machine,Disco,0.758,0.863,2,-5.611,1,0.0864,0.0817,0.936,134.576,4,6aV2FkJ96pTbZUDvllQ5gJ,You've Come a Long Way,8,There But for the Grace of God Go I,1980-01-01,D,major,D major,386266
+Machine,Disco,0.79,0.761,6,-8.141,0,0.0704,4.8e-4,0.864,119.981,4,6aV2FkJ96pTbZUDvllQ5gJ,Marisa,8,There But for the Grace of God Go I,1980-01-01,F#,minor,F# minor,482066
+Madleen Kane,Disco,0.702,0.94,0,-7.908,0,0.0446,0.432,0.672,127.8,4,4o8dRgYEYFMVpYf94hjND5,Forbidden Love,11,12 Inches & More,1994-03-01,C,minor,C minor,305533
+Manu Dibango,Disco,0.764,0.672,0,-9.702,1,0.116,0.0023,0.894,115.022,4,1yRSGm5kcA6QJhiGNeTio4,Soul Makossa - Manu Version,11,Afro-Soul Machine,2011-01-01,C,major,C major,265640
+Marlena Shaw,Disco,0.614,0.792,6,-7.183,0,0.0772,0,0.761,128.292,4,5zf588YtEJAR9rQBP8NeOb,Touch Me In The Morning,39,Take A Bite,1979-06-04,F#,minor,F# minor,360506
+Marta Acuna,Disco,0.566,0.518,9,-11.937,1,0.0768,0.00637,0.715,111.415,4,027YnfH4oxQiqlDwtgQRlk,"Dance, Dance, Dance",2,Kenny Dope vs. P&P Records - Rarities and Re-Edits (Unmixed),2005-11-01,A,major,A major,374466
+"Martin L. Dumas, Jr.",Disco,0.716,0.583,4,-12.783,0,0.028,8e-4,0.887,104.647,4,1Q0WgOdiIPwTDiSsBMlvtw,"Attitude, Belief and Determination - Zaf Lovevinyl Slight Edit",15,"Attitude, Belief and Determination / Nonstop to the Top",2015-06-08,E,minor,E minor,590000
+Mass Production,Disco,0.563,0.78,1,-12.393,0,0.0312,0.013,0.931,125.82,4,5QOF6dEkPBGkubRaSFlFcS,Cosmic Lust,0,Cotillion Originals - Soul Classics,2018-12-21,C#,minor,C# minor,363906
+Mass Production,Disco,0.832,0.547,10,-17.096,0,0.0966,0.00385,0.94,125.435,4,4y2zUR0LHt9dfqiF9PIe0T,Eyeballin',5,In The Purest Form,1979,A#,minor,A# minor,319986
+Maureen Bailey,Disco,0.626,0.718,1,-6.622,1,0.122,0.195,0.667,109.794,4,1PYpPBCZIMgFChfO7NKb3N,Takin' My Time with You,13,Beauty: A Journey Through Jeremy Underground's Collection,2016-09-09,C#,major,C# major,193533
+McFadden & Whitehead,Disco,0.678,0.688,1,-7.831,1,0.0543,0,0.888,114.095,4,49y7YFLvKz54gVZZzHbAzs,Ain't No Stoppin' Us Now,38,McFadden & Whitehead,1979,C#,major,C# major,420986
+Meco,Disco,0.673,0.847,0,-5.915,1,0.0366,0.842,0.646,124.711,4,3RhVd2QtOoRhRGmCnptrOU,"Medley: Star Wars - 12"" Version",30,Music Inspired By Star Wars And Other Galactic Funk,1977-01-01,C,major,C major,949360
+MFSB,Disco,0.643,0.663,0,-9.855,1,0.0856,0.865,0.581,113.789,4,6x6beV2H3fTTL2ovxA3iVQ,Love Is the Message,34,Love Is The Message,1973-06-01,C,major,C major,396293
+MFSB,Disco,0.707,0.854,7,-8.231,0,0.0286,0.116,0.96,114.021,4,6x6beV2H3fTTL2ovxA3iVQ,T.S.O.P. (The Sound of Philadelphia) (feat. The Three Degrees),48,Love Is The Message,1973-06-01,G,minor,G minor,222346
+MFSB,Disco,0.446,0.681,6,-8.859,1,0.0442,0.499,0.542,122.338,4,6x6beV2H3fTTL2ovxA3iVQ,Touch Me In the Morning,16,Love Is The Message,1973-06-01,F#,major,F# major,380493
+MFSB,Disco,0.899,0.668,2,-7.528,0,0.0526,0.475,0.939,121.068,4,6zJ6QkipXinrWlnIFQPc4Y,Picnic In The Park,11,Summertime,1976,D,minor,D minor,253120
+MFSB,Disco,0.602,0.85,3,-8.363,1,0.049,0.0357,0.921,125.802,4,6zJ6QkipXinrWlnIFQPc4Y,Summertime And I'm Feelin' Mellow,10,Summertime,1976,D#,major,D# major,242866
+MFSB,Disco,0.709,0.778,8,-7.741,0,0.0376,0.0254,0.966,122.368,4,6zJ6QkipXinrWlnIFQPc4Y,Plenty Good Lovin',11,Summertime,1976,G#,minor,G# minor,272360
+MFSB,Disco,0.646,0.685,7,-8.321,1,0.0881,0.0323,0.778,123.969,4,6zJ6QkipXinrWlnIFQPc4Y,I'm On Your Side,5,Summertime,1976,G,major,G major,210466
+MFSB,Disco,0.731,0.848,5,-8.099,0,0.0275,9.56e-4,0.972,112.71,4,6zJ6QkipXinrWlnIFQPc4Y,We Got The Time,9,Summertime,1976,F,minor,F minor,279920
+MFSB,Disco,0.496,0.923,0,-4.947,0,0.0616,0.127,0.671,126.887,4,2tYYOj4epWYjUm2rCpVw6C,Freddie's Dead,5,The Essential MFSB,2018-11-02,C,minor,C minor,431400
+MFSB,Disco,0.688,0.913,7,-6.707,0,0.0296,0.691,0.884,117.42,4,2tYYOj4epWYjUm2rCpVw6C,Back Stabbers,8,The Essential MFSB,2018-11-02,G,minor,G minor,389213
+MFSB,Disco,0.75,0.738,2,-7.781,0,0.0372,0.908,0.937,120.876,4,2tYYOj4epWYjUm2rCpVw6C,Family Affair,9,The Essential MFSB,2018-11-02,D,minor,D minor,261053
+Michael Boothman,Disco,0.721,0.768,11,-9.232,0,0.0578,0.0408,0.875,117.43,4,239FJRKEDIUlVJ0D0tzrvK,What You Won't Do for Love,37,Touch,2014-12-12,B,minor,B minor,672139
+The Michael Zager Band,Disco,0.859,0.752,10,-10.107,1,0.0786,0.123,0.756,119.215,4,2xpV9DXIMjXsVPs5Mz0Nez,Soul to Soul,14,Let's All Chant,1977,A#,major,A# major,354453
+The Michael Zager Band,Disco,0.88,0.834,6,-9.372,0,0.0586,0.0133,0.868,119.204,4,2xpV9DXIMjXsVPs5Mz0Nez,Music Fever,10,Let's All Chant,1977,F#,minor,F# minor,392013
+The Michael Zager Band,Disco,0.83,0.888,10,-9.088,0,0.0449,6.28e-4,0.839,128.429,4,2xpV9DXIMjXsVPs5Mz0Nez,Freak,7,Let's All Chant,1977,A#,minor,A# minor,198600
+The Michael Zager Band,Disco,0.849,0.88,0,-7.526,1,0.0466,0.0111,0.931,119.156,4,2xpV9DXIMjXsVPs5Mz0Nez,Dancin' Disney,8,Let's All Chant,1977,C,major,C major,480080
+The Michael Zager Band,Disco,0.85,0.769,4,-8.648,0,0.0359,0.01,0.967,122.007,4,2xpV9DXIMjXsVPs5Mz0Nez,Let's All Chant,47,Let's All Chant,1977,E,minor,E minor,184453
+The Mighty Pope,Disco,0.698,0.527,9,-14.763,0,0.0331,0.0937,0.966,123.21,4,5PJMgDp7z7scAZ0yOtZg9f,Sway,1,Sway EP,1979-01-01,A,minor,A minor,304293
+The Mighty Pope,Disco,0.789,0.433,9,-16.204,0,0.0595,0.569,0.908,126.188,4,5PJMgDp7z7scAZ0yOtZg9f,In-A-Gadda-Da-Vida,1,Sway EP,1979-01-01,A,minor,A minor,449106
+The Mighty Pope,Disco,0.794,0.567,0,-14.739,0,0.0641,0.0747,0.848,127.417,4,5PJMgDp7z7scAZ0yOtZg9f,New Orleans,0,Sway EP,1979-01-01,C,minor,C minor,352400
+The Mighty Pope,Disco,0.801,0.497,11,-12.867,0,0.0476,0.00111,0.843,126.219,4,5PJMgDp7z7scAZ0yOtZg9f,Because the Night,0,Sway EP,1979-01-01,B,minor,B minor,331040
+The Mighty Pope,Disco,0.829,0.407,8,-14.702,1,0.0488,0.225,0.793,121.079,4,5PJMgDp7z7scAZ0yOtZg9f,Sweet Blindness,9,Sway EP,1979-01-01,G#,major,G# major,468573
+Mixed Feelings,Disco,0.612,0.795,2,-7.083,0,0.0627,2.84e-4,0.827,126.967,4,31Cu3f8Ao0OyhcIVmSJZmV,Sha-La-La,6,Soul Cal,2012-03-27,D,minor,D minor,208053
+Moment Of Truth,Disco,0.585,0.847,5,-8.87,1,0.0546,0,0.574,123.407,4,4bOVtxXuPiT96J7aZfYPvE,Helplessly,11,Moment Of Truth,1977-01-01,F,major,F major,224933
+Moment Of Truth,Disco,0.624,0.808,11,-9.031,0,0.128,2.91e-4,0.528,124.89,4,0UNSjJIipCVinAoPT4WVuL,"You Got Me Hummin' - 12"" Mix",0,Moment of Truth,1977-01-01,B,minor,B minor,480826
+Moment Of Truth,Disco,0.525,0.954,10,-6.591,0,0.0533,2.12e-4,0.783,129.843,4,0UNSjJIipCVinAoPT4WVuL,Lovin' You Is Killin' Me,0,Moment of Truth,1977-01-01,A#,minor,A# minor,260866
+Montana,Disco,0.695,0.858,2,-5.638,0,0.0618,1.76e-4,0.773,128.001,4,1ObXjNgqUpImBaS6u29EOs,I Love Music,5,I Love Music,1978-06-15,D,minor,D minor,275440
+Montana,Disco,0.671,0.895,8,-7.882,1,0.0692,0.851,0.53,138.347,4,1ObXjNgqUpImBaS6u29EOs,Fanfare for the Common Man,1,I Love Music,1978-06-15,G#,major,G# major,323333
+Montana,Disco,0.666,0.704,5,-6.702,0,0.0335,0.811,0.87,116.854,4,1ObXjNgqUpImBaS6u29EOs,Montana & Friends,1,I Love Music,1978-06-15,F,minor,F minor,351053
+Montreal Sound,Disco,0.692,0.808,5,-10.578,1,0.0902,2.24e-5,0.634,126.215,4,1XUyek5tC4KBeDudDOlVjm,"Music (12"" Version)",1,"Twelve Inch Disco Classics from the '70s, Vol. 4",2011-05-31,F,major,F major,490186
+Alphonse Mouzon,Disco,0.868,0.531,1,-13.336,1,0.0571,0.553,0.966,130.707,4,0yJsd1Narf6wJoDDBOSQ1I,Everybody Get Down,32,Baby Come Back,1979,C#,major,C# major,274032
+Alphonse Mouzon,Disco,0.645,0.71,6,-11.71,1,0.0438,0.115,0.982,133.415,4,0yJsd1Narf6wJoDDBOSQ1I,All My Loving,9,Baby Come Back,1979,F#,major,F# major,202422
+Alphonse Mouzon,Disco,0.839,0.542,8,-14.942,0,0.137,0.913,0.899,130.183,4,0yJsd1Narf6wJoDDBOSQ1I,Disco Jungle,7,Baby Come Back,1979,G#,minor,G# minor,165470
+Narada Michael Walden,Disco,0.682,0.769,5,-12.274,1,0.0501,0.196,0.743,121.577,4,2bcyAp5VCrj4w5XBiWK74q,Tonight I'm Alright,31,The Dance Of Life,1979,F,major,F major,315800
+Nightlife Unlimited,Disco,0.87,0.328,11,-13.237,0,0.124,0.0342,0.653,114.337,4,3eUxhAFsXxEQpNjJnb1icD,Let's Do It Again,12,Let's Do It Again,1980-01-01,B,minor,B minor,307293
+Nightlife Unlimited,Disco,0.842,0.332,11,-15.626,0,0.344,0.0083,0.902,112.712,4,3eUxhAFsXxEQpNjJnb1icD,Do Me Tonight,10,Let's Do It Again,1980-01-01,B,minor,B minor,332333
+Nightlife Unlimited,Disco,0.911,0.415,11,-14.617,0,0.227,0.602,0.657,113.236,4,3eUxhAFsXxEQpNjJnb1icD,Got to Keep On Movin' - Remix,4,Let's Do It Again,1980-01-01,B,minor,B minor,425706
+Nightlife Unlimited,Disco,0.869,0.52,2,-17.226,1,0.0585,0.16,0.751,128.438,4,3eUxhAFsXxEQpNjJnb1icD,Just Be Yourself - Remix,4,Let's Do It Again,1980-01-01,D,major,D major,499106
+Nightlife Unlimited,Disco,0.936,0.37,1,-14.62,0,0.0641,0.00126,0.904,117.672,4,3eUxhAFsXxEQpNjJnb1icD,Tonight,7,Let's Do It Again,1980-01-01,C#,minor,C# minor,338333
+Nightlife Unlimited,Disco,0.795,0.439,7,-14.94,0,0.0421,0.00536,0.929,128.04,4,3eUxhAFsXxEQpNjJnb1icD,If You Know Better,8,Let's Do It Again,1980-01-01,G,minor,G minor,339240
+Nightlife Unlimited,Disco,0.84,0.376,11,-15.96,0,0.151,0.0294,0.925,119.764,4,3eUxhAFsXxEQpNjJnb1icD,If I Give You More - Will I Win Your Love,4,Let's Do It Again,1980-01-01,B,minor,B minor,348733
+Nightlife Unlimited,Disco,0.79,0.312,8,-18.526,1,0.0703,0.0462,0.855,124.488,4,3eUxhAFsXxEQpNjJnb1icD,Peaches & Prunes,13,Let's Do It Again,1980-01-01,G#,major,G# major,306906
+Nightlife Unlimited,Disco,0.928,0.346,0,-16.735,0,0.118,0.00949,0.898,113.917,4,3eUxhAFsXxEQpNjJnb1icD,Tell Me,9,Let's Do It Again,1980-01-01,C,minor,C minor,292226
+Nightlife Unlimited,Disco,0.817,0.888,6,-8.143,1,0.0616,0.757,0.739,131.88,4,1bbBbItmjFekG20y4OKQDV,Disco Choo Choo,14,Disco Choo Choo,1979-01-01,F#,major,F# major,564640
+Nightlife Unlimited,Disco,0.885,0.736,7,-9.957,1,0.151,0.344,0.617,129.257,4,1bbBbItmjFekG20y4OKQDV,Dance Freak Boogie,12,Disco Choo Choo,1979-01-01,G,major,G major,462373
+Nightlife Unlimited,Disco,0.868,0.501,11,-8.779,0,0.115,0.00728,0.875,129.488,4,1bbBbItmjFekG20y4OKQDV,Love Is in You,24,Disco Choo Choo,1979-01-01,B,minor,B minor,743933
+Nightlife Unlimited,Disco,0.883,0.597,0,-9.03,1,0.0837,0.221,0.809,129.494,4,1bbBbItmjFekG20y4OKQDV,Precious Moments,7,Disco Choo Choo,1979-01-01,C,major,C major,366600
+Nightlife Unlimited,Disco,0.909,0.389,1,-14.692,1,0.0785,0.0642,0.812,121.03,4,3eUxhAFsXxEQpNjJnb1icD,Dance With Me - Remix,4,Let's Do It Again,1980-01-01,C#,major,C# major,289453
+Nightlife Unlimited,Disco,0.838,0.263,2,-14.493,1,0.152,0.119,0.933,134.745,4,3eUxhAFsXxEQpNjJnb1icD,Tell Me Why,2,Let's Do It Again,1980-01-01,D,major,D major,201773
+Norma Jean Wright,Disco,0.757,0.68,9,-8.673,0,0.0341,1.01e-4,0.445,129.013,4,0SbNsZY1MvowLeC5YgEMrg,Saturday - Dimitri From Paris Remix [2018 Remaster],27,Dimitri From Paris Presents Le CHIC Remix,2018-07-27,A,minor,A minor,588063
+Norma Jean Wright,Disco,0.681,0.849,9,-12.919,0,0.049,8.45e-6,0.75,131.112,4,7Bo2lPXUL79QoKPzbFT1TZ,Saturday,30,Norma Jean,1978,A,minor,A minor,366160
+Norma Jean Wright,Disco,0.768,0.702,3,-12.429,1,0.0372,2.55e-4,0.951,131.745,4,7Bo2lPXUL79QoKPzbFT1TZ,Having a Party,9,Norma Jean,1978,D#,major,D# major,271013
+Norma Jean Wright,Disco,0.667,0.851,4,-14.022,1,0.0338,0.224,0.948,110.794,4,7Bo2lPXUL79QoKPzbFT1TZ,Sorcerer,14,Norma Jean,1978,E,major,E major,300746
+Norma Jean Wright,Disco,0.783,0.766,7,-11.806,1,0.0568,0.0377,0.891,126.449,4,7Bo2lPXUL79QoKPzbFT1TZ,I Like Love,17,Norma Jean,1978,G,major,G major,343786
+Norman Connors and The Starship Orchestra,Disco,0.684,0.692,6,-9.541,1,0.0808,0.00821,0.826,107.704,4,77SDzlpL5HpSh9ayWzWy3x,Stella,6,The Essential Norman Connors - The Buddah/Arista Years,2018-03-16,F#,major,F# major,199213
+Odyssey,Disco,0.715,0.765,4,-8.713,0,0.0368,2.73e-6,0.853,110.988,4,3OjWm8DrXFjtW6CS0EDiPq,Inside Out,15,Greatest Hits (Digitally Remastered),2008-10-07,E,minor,E minor,252973
+Odyssey,Disco,0.779,0.834,0,-8.511,1,0.068,0.0282,0.708,127.498,4,0Um71BYb1Zl8Oa6vSvn2ox,"Use It Up and Wear It Out - 12"" Single Edit",17,The Best of Disco,1996-11-25,C,major,C major,291013
+Odyssey,Disco,0.777,0.715,9,-9.429,0,0.139,0,0.853,120.971,4,6rY7bfN0RLiNyUUjOfNgJQ,Follow Me (Play Follow the Leader),6,Hang Together (Expanded Edition),1980-03-01,A,minor,A minor,250946
+Odyssey,Disco,0.656,0.906,6,-6.111,1,0.0439,0.0106,0.771,107.126,4,7jSAvrndMhUTj7zPOV523Z,"Going Back to My Roots - 12"" Version",6,Ultimate Jazzy Tunes,2015-06-04,F#,major,F# major,326346
+Odyssey,Disco,0.462,0.884,0,-8.722,1,0.0984,0.0484,0.551,106.395,4,1uXAM1SMOvZqP198Xnfda6,"Native New Yorker - 12"" Disco Mix",39,Odyssey (Expanded Edition),1977,C,major,C major,336466
+Odyssey,Disco,0.712,0.692,2,-12.476,0,0.206,6.52e-6,0.669,95.458,4,4lIAGPOg6rgFCvoo8YrFdA,Easy Come Easy Go,6,Greatest Hits,1990-02-24,D,minor,D minor,201266
+Patrice Rushen,Disco,0.912,0.534,6,-5.319,0,0.0366,0.102,0.963,114.681,4,73TPk27H5MBU6flqQ1lr09,Forget Me Nots,59,Straight From The Heart,1982,F#,minor,F# minor,275813
+Patrick Norman,Disco,0.582,0.715,7,-9.151,0,0.0353,0.177,0.823,122.468,4,4qo8jiyOj3j7nU7ZWSPHao,Sweet Sweet Lady,1,Sweet Sweet Lady,1978-01-01,G,minor,G minor,300053
+Patrick Norman,Disco,0.705,0.728,1,-9.23,0,0.0665,3.29e-6,0.817,174.66,4,4qo8jiyOj3j7nU7ZWSPHao,Bring Back the Love,0,Sweet Sweet Lady,1978-01-01,C#,minor,C# minor,320333
+Patrick Norman,Disco,0.848,0.463,9,-10.129,1,0.135,2.15e-5,0.826,128.137,4,4qo8jiyOj3j7nU7ZWSPHao,Paradise,1,Sweet Sweet Lady,1978-01-01,A,major,A major,369186
+Patrick Norman,Disco,0.421,0.83,9,-7.57,0,0.105,1.99e-4,0.487,117.857,4,4qo8jiyOj3j7nU7ZWSPHao,Loving You - With Black Light Orchestra,0,Sweet Sweet Lady,1978-01-01,A,minor,A minor,385946
+Patrick Norman,Disco,0.785,0.626,1,-9.66,1,0.0794,7.79e-4,0.884,118.808,4,4qo8jiyOj3j7nU7ZWSPHao,I Remember You,0,Sweet Sweet Lady,1978-01-01,C#,major,C# major,249706
+Patrick Norman,Disco,0.554,0.782,7,-10.17,0,0.102,4.13e-4,0.902,125.219,4,4qo8jiyOj3j7nU7ZWSPHao,Let's Try Once Again - With Black Light Orchestra,1,Sweet Sweet Lady,1978-01-01,G,minor,G minor,387160
+Patrice Rushen,Disco,0.873,0.851,7,-8.425,0,0.0402,0.653,0.969,136.362,4,3PgLKHkINPRRRA76eT6QJY,Let The Music Take Me,20,Pizzazz,1979-10-23,G,minor,G minor,411200
+Patrice Rushen,Disco,0.726,0.78,5,-9.139,1,0.0457,0.359,0.961,103.853,4,5WfbVYc3Z6DurvUwftWj82,Music of the Earth,24,Patrice,1978-10-17,F,major,F major,235813
+Patrice Rushen,Disco,0.88,0.703,6,-8.308,0,0.0807,0.685,0.947,127.952,4,3PgLKHkINPRRRA76eT6QJY,Haven't You Heard,50,Pizzazz,1979-10-23,F#,minor,F# minor,405293
+Patrick Cowley,Disco,0.782,0.609,6,-10.69,1,0.0384,0.164,0.738,129.966,4,38ftZ2jxwlJof8nxwo34Ma,Do You Wanna Funk?,39,Do Ya Wanna Funk,1982-01-01,F#,major,F# major,414746
+Patrick Hernandez,Disco,0.759,0.794,7,-8.85,1,0.0306,5.32e-4,0.788,131.045,4,3g5qdsnQf0rfPAD8Vxoozt,Born to Be Alive - Mix 79 Maxi,47,Born to Be Alive (Mix 79 Maxi),2010-11-08,G,major,G major,353361
+Patsy Gallant,Disco,0.659,0.724,2,-7.778,1,0.063,0,0.739,125.854,4,08L8Z6CjicAMpbiQzMcerP,O Michel,2,Patsy!,1978-01-01,D,major,D major,314613
+Patsy Gallant,Disco,0.482,0.617,2,-7.898,0,0.0553,0,0.872,179.937,4,08L8Z6CjicAMpbiQzMcerP,It'll All Come Around,19,Patsy!,1978-01-01,D,minor,D minor,263400
+Patsy Gallant,Disco,0.692,0.712,0,-7.342,1,0.0569,2.64e-4,0.907,130.412,4,08L8Z6CjicAMpbiQzMcerP,Slow Down,2,Patsy!,1978-01-01,C,major,C major,246200
+Patsy Gallant,Disco,0.508,0.304,11,-10.072,1,0.0329,0,0.308,84.262,4,08L8Z6CjicAMpbiQzMcerP,Best of the Woman in Me,1,Patsy!,1978-01-01,B,major,B major,190040
+Patsy Gallant,Disco,0.677,0.668,10,-7.781,1,0.039,0,0.829,115.017,4,3ONbXDCqblkmWne11qIlia,Are You Ready for Love,5,Are You Ready for Love,1978-01-01,A#,major,A# major,224000
+Patsy Gallant,Disco,0.564,0.747,2,-8.252,1,0.0544,0,0.746,127.336,4,3ONbXDCqblkmWne11qIlia,From New York to L.A.,20,Are You Ready for Love,1978-01-01,D,major,D major,291226
+Patsy Gallant,Disco,0.658,0.636,9,-9.101,1,0.0706,0,0.696,124.073,4,3ONbXDCqblkmWne11qIlia,Sugar Daddy,4,Are You Ready for Love,1978-01-01,A,major,A major,249533
+Patsy Gallant,Disco,0.549,0.671,5,-8.525,1,0.0657,0,0.767,121.023,4,3ONbXDCqblkmWne11qIlia,Precious Love,1,Are You Ready for Love,1978-01-01,F,major,F major,213706
+Patsy Gallant,Disco,0.521,0.37,5,-10.832,1,0.0387,0,0.538,109.005,4,3ONbXDCqblkmWne11qIlia,World of Fantasy,1,Are You Ready for Love,1978-01-01,F,major,F major,253026
+Patsy Gallant,Disco,0.502,0.573,0,-11.724,1,0.0732,0,0.663,125.066,4,3ONbXDCqblkmWne11qIlia,It's Raining This Morning,1,Are You Ready for Love,1978-01-01,C,major,C major,244066
+Patsy Gallant,Disco,0.501,0.588,9,-11.122,1,0.0568,0,0.812,152.3,4,3ONbXDCqblkmWne11qIlia,Together Again,1,Are You Ready for Love,1978-01-01,A,major,A major,176400
+Patsy Gallant,Disco,0.656,0.708,5,-6.292,1,0.0488,0,0.817,120.549,4,2fWyeazTZbiXsaJzCRvJ51,Besoin d'amour,2,Besoin d'amour,1976-01-01,F,major,F major,192560
+Patsy Gallant,Disco,0.589,0.636,2,-8.334,1,0.035,0,0.639,127.483,4,2fWyeazTZbiXsaJzCRvJ51,Mon pays,0,Besoin d'amour,1976-01-01,D,major,D major,268426
+Patsy Gallant,Disco,0.685,0.78,9,-5.211,0,0.0383,1.28e-6,0.915,123.48,4,5S8xvsk5hnt31sGHDDC4RL,Every Step of the Way,0,Will You Give Me Your Love,1977-01-01,A,minor,A minor,230026
+Patsy Gallant,Disco,0.461,0.936,7,-5.001,1,0.107,2.13e-5,0.585,137.965,4,5S8xvsk5hnt31sGHDDC4RL,Listen to Your D.J.,0,Will You Give Me Your Love,1977-01-01,G,major,G major,193826
+Patsy Gallant,Disco,0.699,0.73,7,-6.11,1,0.0327,1.47e-6,0.739,120.097,4,5S8xvsk5hnt31sGHDDC4RL,Stay a While with Me,1,Will You Give Me Your Love,1977-01-01,G,major,G major,205600
+Patsy Gallant,Disco,0.616,0.719,4,-6.542,0,0.0298,2.57e-6,0.682,109.625,4,5S8xvsk5hnt31sGHDDC4RL,Standing Room Only,0,Will You Give Me Your Love,1977-01-01,E,minor,E minor,226573
+Patsy Gallant,Disco,0.571,0.839,11,-4.75,0,0.0458,0,0.843,138.168,4,5S8xvsk5hnt31sGHDDC4RL,Someday I'll Wake up and You'll Be Gone,0,Will You Give Me Your Love,1977-01-01,B,minor,B minor,203333
+Patsy Gallant,Disco,0.49,0.589,0,-6.138,1,0.0265,0,0.406,143.312,4,5S8xvsk5hnt31sGHDDC4RL,Coming Home,0,Will You Give Me Your Love,1977-01-01,C,major,C major,194866
+Patsy Gallant,Disco,0.643,0.546,10,-8.873,1,0.0392,0,0.838,115.625,4,2fWyeazTZbiXsaJzCRvJ51,Libre pour l'amour,1,Besoin d'amour,1976-01-01,A#,major,A# major,222133
+Patti LaBelle,Disco,0.724,0.808,8,-11.752,0,0.0455,1.93e-5,0.929,112.295,4,3QHPKPXq2VnSkwyUnuA7O0,Music Is My Way of Life,5,The Essential LaBelle,2018-03-09,G#,minor,G# minor,196213
+Peaches & Herb,Disco,0.883,0.667,9,-9.174,1,0.0425,0.0293,0.949,132.718,4,4TVqA99IIxAoaCeTyavXbh,Shake Your Groove Thing,35,20th Century Masters: The Millennium Collection: The Best Of Peaches & Herb,2002-07-02,A,major,A major,331866
+Peaches & Herb,Disco,0.766,0.775,5,-6.786,0,0.0609,1.86e-5,0.781,111.627,4,1MzEdKoD6mxji2q7k3rRcw,We've Got Love,18,2 Hot!,1978-01-01,F,minor,F minor,202026
+Phyllis Hyman,Disco,0.838,0.679,10,-11.368,1,0.036,2.27e-4,0.969,116.572,4,1zYQwZEI4OEdoyRoOnc2vU,You Know How to Love Me - Long Version,12,You Know How To Love Me,2002-07-08,A#,major,A# major,454546
+Phyllis Hyman,Disco,0.799,0.556,11,-11.975,0,0.0456,0,0.964,115.468,4,1zYQwZEI4OEdoyRoOnc2vU,Under Your Spell - Remastered,4,You Know How To Love Me,2002-07-08,B,minor,B minor,278213
+Phyllis Hyman,Disco,0.779,0.74,11,-10.555,1,0.0426,0,0.958,126.676,4,1zYQwZEI4OEdoyRoOnc2vU,Heavenly,3,You Know How To Love Me,2002-07-08,B,major,B major,270506
+Pockets ,Disco,0.665,0.579,6,-10.679,0,0.0475,3.8e-4,0.917,119.3,4,4WQjrKHh6xcHvWjO0FbXMJ,Come Go With Me,24,Come Go With Us,1977-02-01,F#,minor,F# minor,265093
+Prince,Disco,0.812,0.507,1,-8.825,0,0.0452,0.0831,0.729,114.832,4,6k7RVZ7bSL9ryReb8RLYRI,I Wanna Be Your Lover,61,Prince,1979-10-19,C#,minor,C# minor,347666
+Punkin Machine,Disco,0.975,0.57,6,-10.604,0,0.0481,0.28,0.968,126.908,4,25RZ0JqMukSLQhdYsFpJ67,I Need You Tonight,34,I Need You Tonight / Tonight,1981,F#,minor,F# minor,338844
+Queen Samantha,Disco,0.78,0.637,0,-14.566,1,0.0597,0.744,0.965,113.724,4,1XUyek5tC4KBeDudDOlVjm,"Take A Chance (12"" Version)",2,"Twelve Inch Disco Classics from the '70s, Vol. 4",2011-05-31,C,major,C major,469240
+Queen Samantha,Disco,0.801,0.957,2,-7.383,0,0.0392,0.749,0.971,124.294,4,4FFTCeRIfeoxDCYL2GeHbV,Mama Rue - C'est moi,6,Queen Samantha - The Collection (Disco),2012,D,minor,D minor,308000
+Raphael Munnings,Disco,0.489,0.805,9,-5.598,1,0.0512,2.19e-5,0.931,113.337,4,1ZCNwYLS3N0gkt13A1DLUc,Takin' You Higher (Just Like Climbin a Ladder),4,Nassau Funky,2014-05-26,A,major,A major,190081
+Rasputin's Stash,Disco,0.683,0.742,0,-9.161,1,0.053900000000000003,0.00498,0.879,122.385,4,0WG4DSwp3CRQjWuLkOzUZ3,Everybody's a Masterpiece,2,Hidden Stash,2016-05-13,C,major,C major,153808
+Revanche,Disco,0.871,0.956,5,-5.492,1,0.0793,1.07e-4,0.857,127.933,4,2uo8Z48H5MLZEok6e01JQ8,You Get High In N.Y.C. (Full Length Album Mix),7,Music Man,1979,F,major,F major,512026
+Revanche,Disco,0.814,0.887,7,-6.617,0,0.121,0.0174,0.746,124.825,4,2uo8Z48H5MLZEok6e01JQ8,1979 It's Dancing Time (Full Length Album Mix),8,Music Man,1979,G,minor,G minor,519546
+Revanche,Disco,0.788,0.872,9,-6.585,0,0.125,0.0464,0.642,128.557,4,2uo8Z48H5MLZEok6e01JQ8,Revenge (Full Length Album Mix),6,Music Man,1979,A,minor,A minor,531613
+Rhythm Machine,Disco,0.501,0.675,1,-5.58,1,0.0503,8.83e-6,0.858,111.018,4,31Cu3f8Ao0OyhcIVmSJZmV,Put A Smile On Time,4,Soul Cal,2012-03-27,C#,major,C# major,233013
+Richie Havens,Disco,0.669,0.816,11,-10.759,0,0.0336,0.0383,0.881,120.39,4,7ycG05oTUchKzHEEfNrpef,Going Back to My Roots,44,Connections,1980,B,minor,B minor,303573
+Rose Royce,Disco,0.548,0.723,2,-10.305,1,0.0412,5.11e-5,0.406,116.785,4,1KqQ1bQvByUu4wbGWP34WD,Is It Love You're After,14,"Dance Grooves 70´s & 80´s - Disco, Soul & Funk",2017-08-16,D,major,D major,305533
+Roxy Music,Disco,0.838,0.757,2,-5.399,1,0.0927,0.0119,0.602,124.65,4,5Tpor3YZBVEJ9tWD5L31mH,Love Is The Drug,59,Siren (Remastered),1975-10-01,D,major,D major,251333
+Roy Ayers Ubiquity,Disco,0.52,0.765,1,-11.787,1,0.141,1.08e-6,0.475,116.085,4,5JehGpTedBPXzhUcwXoIlf,People And The World,22,Everybody Loves The Sunshine (Reissue),1976-05-12,C#,major,C# major,288466
+Roy Ayers Ubiquity,Disco,0.776,0.715,7,-13.893,1,0.057,0.052,0.861,111.826,4,5JehGpTedBPXzhUcwXoIlf,Tongue Power,29,Everybody Loves The Sunshine (Reissue),1976-05-12,G,major,G major,182440
+Roy Ayers,Disco,0.65,0.79,5,-13.387,1,0.0692,0,0.649,126.113,4,1rA1iPf6VWrHLRUNse6i3l,Get On Up Get On Down,6,Evolution: The Polydor Anthology,1995-02-28,F,major,F major,263466
+Roy Ayers,Disco,0.83,0.466,10,-13.162,0,0.147,2.25e-5,0.774,115.632,4,2FtG21lowfa5dnswLCmryp,Running Away,36,The Best Of Roy Ayers,1997-01-01,A#,minor,A# minor,240306
+Rufus,Disco,0.587,0.462,1,-12.711,0,0.0395,0.0172,0.756,125.077,4,3ZJJdnvxztzpOvwvzUzUxC,At Midnight (My Love Will Lift You Up),20,Ask Rufus,1977-01-01,C#,minor,C# minor,260893
+Rufus,Disco,0.649,0.661,4,-8.344,1,0.0441,2.65e-5,0.662,92.773,4,3o8GWA6IiUF6V4r26bF0HS,Hollywood,20,The Very Best Of Rufus Featuring Chaka Khan,1982-01-01,E,major,E major,249533
+Sabata,Disco,0.616,0.933,11,-7.774,1,0.0453,0.033,0.965,120.87,4,6uRAJFfj90HqrOB4xwiFtf,Man for My Lady,3,The T.S.O.B. Anthology: The Funk & Disco Sound of Brooklyn,2013-07-23,B,major,B major,346378
+Saint Tropez,Disco,0.676,0.733,5,-9.189,0,0.117,0.0124,0.743,123.377,4,0Ye2F06fVmelJEaMmb6jl1,Fill My Life with Love,0,Belle de jour,1978-01-01,F,minor,F minor,378944
+Saint Tropez,Disco,0.703,0.63,11,-8.892,0,0.127,0,0.874,136.188,4,0Ye2F06fVmelJEaMmb6jl1,One More Minute,1,Belle de jour,1978-01-01,B,minor,B minor,426156
+Saint Tropez,Disco,0.411,0.783,2,-8.965,1,0.305,7e-6,0.669,109.484,4,0Ye2F06fVmelJEaMmb6jl1,Hold on to Love,0,Belle de jour,1978-01-01,D,major,D major,258539
+Saint Tropez,Disco,0.574,0.767,5,-10.114,1,0.192,5.73e-5,0.802,105.897,4,0Ye2F06fVmelJEaMmb6jl1,Think I'm Gonna Fall in Love with You,1,Belle de jour,1978-01-01,F,major,F major,313607
+Saint Tropez,Disco,0.394,0.676,7,-12.125,0,0.0868,0.341,0.761,91.616,4,0Ye2F06fVmelJEaMmb6jl1,When You Are Gone,0,Belle de jour,1978-01-01,G,minor,G minor,304360
+Samuel Jonathan Johnson,Disco,0.709,0.837,8,-6.802,0,0.0499,0.00551,0.837,125.562,4,50M2o5oVvrG0LEt6ecgJXy,You,23,"DISCO - 100 Hit's - Dance floor fillers from the 70s and 80s inc. The Jacksons, Boney M & Earth Wind & Fire",2013-06-21,G#,minor,G# minor,350520
+Sarah Vaughan,Disco,0.728,0.531,5,-15.206,0,0.0675,0.00182,0.62,133.493,4,4ceeeNqKJ9OtF33DaHQuum,Get Back,13,Songs Of The Beatles,1981-05-13,F,minor,F minor,177106
+Sarah Vaughan,Disco,0.744,0.469,11,-11.409,0,0.0365,0.05,0.685,109.408,4,4ceeeNqKJ9OtF33DaHQuum,Eleanor Rigby,15,Songs Of The Beatles,1981-05-13,B,minor,B minor,228986
+Sarah Vaughan,Disco,0.627,0.375,7,-15.855,1,0.0459,0.00223,0.674,81.838,4,4ceeeNqKJ9OtF33DaHQuum,Fool on the Hill,18,Songs Of The Beatles,1981-05-13,G,major,G major,257839
+Sarr Band,Disco,0.695,0.634,9,-13.629,0,0.0438,0.00895,0.853,115.035,4,57KdalbhRHusjo8EDYk2Iz,Double Action,2,Saar Band - Magic Mandrake,2019-01-30,A,minor,A minor,212060
+Serenade,Disco,0.647,0.633,9,-11.907,0,0.0288,0.0906,0.961,132.447,4,6o9JqyubyCdQVSA2l5eI8i,Maybe This Time,8,Meat Me Down The Disco (Mixed by Horse Meat Disco),2017-11-03,A,minor,A minor,393973
+Shalamar,Disco,0.729,0.928,6,-6.752,0,0.0719,0.00107,0.949,117.036,4,3sY9MPqUb0mSj1sujVdLZc,Take That to the Bank,20,The 12 Inch Collection,1993,F#,minor,F# minor,373213
+Shalamar,Disco,0.769,0.592,8,-6.042,1,0.0423,0.0494,0.903,112.896,4,3sY9MPqUb0mSj1sujVdLZc,The Second Time Around,17,The 12 Inch Collection,1993,G#,major,G# major,433053
+Sharon Brown,Disco,0.852,0.752,6,-7.774,1,0.0576,2.72e-4,0.834,113.287,4,53L3e8tU8vmeU2xHtpz8T0,I Specialize In Love - 12 Inch Version,36,I Specialize In Love,2010-09-10,F#,major,F# major,437453
+Sharon Redd,Disco,0.661,0.784,2,-10.596,1,0.0426,0.00593,0.812,119.341,4,6ySKe0QR1PKW6e9ibsN7rt,Try My Love On for Size,16,Sharon Redd,1981-01-01,D,major,D major,308000
+Sharon Redd,Disco,0.807,0.617,2,-14.214,1,0.0457,0.0207,0.831,107.646,4,5pBzCqQuiL6FAYD9rLK7yH,You Got My Love,3,12 Inch Classics,1993-01-01,D,major,D major,431533
+Sharon Redd,Disco,0.733,0.833,10,-11.118,0,0.0456,0.0179,0.962,108.782,4,6ySKe0QR1PKW6e9ibsN7rt,Can You Handle It,34,Sharon Redd,1981-01-01,A#,minor,A# minor,386173
+Sharon Redd,Disco,0.759,0.677,9,-12.932,1,0.0414,3.99e-5,0.941,109.885,4,6ySKe0QR1PKW6e9ibsN7rt,Its a Lie,8,Sharon Redd,1981-01-01,A,major,A major,342000
+Sharon Redd,Disco,0.664,0.764,9,-12.496,0,0.035,2.65e-4,0.925,112.828,4,6ySKe0QR1PKW6e9ibsN7rt,Love Is Gonna Get Ya,11,Sharon Redd,1981-01-01,A,minor,A minor,298600
+Silver Convention,Disco,0.749,0.348,5,-21.068,0,0.0681,0.927,0.842,122.548,4,06Y7ghOzNhkvi96rcXsTvt,Save Me,17,Save Me,1975,F,minor,F minor,206600
+Silver Convention,Disco,0.682,0.385,5,-15.869,1,0.0338,0.0785,0.769,105.344,4,06Y7ghOzNhkvi96rcXsTvt,I Like It,15,Save Me,1975,F,major,F major,317333
+Silver Convention,Disco,0.777,0.563,5,-14.256,1,0.0813,0,0.756,127.529,4,06Y7ghOzNhkvi96rcXsTvt,Always Another Girl,8,Save Me,1975,F,major,F major,231773
+Silver Convention,Disco,0.708,0.33,0,-17.553,1,0.115,0.524,0.665,188.308,4,06Y7ghOzNhkvi96rcXsTvt,Heart of Stone,10,Save Me,1975,C,major,C major,253973
+Silver Convention,Disco,0.628,0.504,9,-16.117,0,0.051,0.00976,0.965,207.956,4,4PbbYD1ElHiMUtCnjZwzR0,Get Up and Boogie (That's Right),32,Silver Convention,1976,A,minor,A minor,250253
+Sister Sledge,Disco,0.7,0.816,7,-9.711,0,0.044,0.00123,0.838,113.244,4,4GSidaoqyGNwaG5mNKmuLT,He's the Greatest Dancer,60,We Are Family [Expanded],1979-02-15,G,minor,G minor,375400
+Sister Sledge,Disco,0.784,0.893,7,-5.153,0,0.0923,1.57e-5,0.819,118.738,4,4GSidaoqyGNwaG5mNKmuLT,We Are Family,69,We Are Family [Expanded],1979-02-15,G,minor,G minor,216733
+Sister Sledge,Disco,0.661,0.846,5,-8.869,1,0.0467,5.17e-6,0.911,101.068,4,4GSidaoqyGNwaG5mNKmuLT,Thinking of You,58,We Are Family [Expanded],1979-02-15,F,major,F major,266826
+Sister Sledge,Disco,0.758,0.841,0,-7.509,1,0.0319,1.53e-4,0.849,114.487,4,4GSidaoqyGNwaG5mNKmuLT,Lost in Music,57,We Are Family [Expanded],1979-02-15,C,major,C major,287440
+Sister Sledge,Disco,0.785,0.791,4,-7.839,0,0.0484,0.00249,0.97,122.881,4,3IR3SugZin4tvc1DS4V4pJ,Blockbuster Boy,7,Together,1977,E,minor,E minor,236146
+Sister Sledge,Disco,0.73,0.848,10,-6.873,1,0.0627,0,0.903,104.367,4,3IR3SugZin4tvc1DS4V4pJ,I Was Made to Love Her (Him),12,Together,1977,A#,major,A# major,183762
+Sister Sledge,Disco,0.804,0.9,7,-5.37,1,0.106,3.02e-6,0.912,124.476,4,4L1Astvd0LwOkF49jQ2Uyt,Got to Love Somebody,15,The Best Of Sister Sledge (1973-1985),1992-08-11,G,major,G major,410293
+Sister Sledge,Disco,0.674,0.832,2,-7.734,0,0.0436,0,0.926,121.054,4,0MJj5o9vLbyQEjuxhLgK4T,If You Really Want Me,24,All American Girls,1981,D,minor,D minor,277600
+Sister Sledge,Disco,0.713,0.717,6,-7.159,0,0.1,2.23e-5,0.913,121.928,4,0m2vzoSsyqSk7ZUYjbiAfG,My Guy,21,The Sisters,1982,F#,minor,F# minor,226026
+Skyy,Disco,0.596,0.642,10,-13.428,0,0.0492,0.00294,0.708,106.761,4,29vaYuqgN8ZZqlyvO2LwCz,First Time Around,9,Skyy,1979-01-01,A#,minor,A# minor,396394
+Skyy,Disco,0.733,0.633,0,-8.951,1,0.0623,9.7e-4,0.81,112.227,4,6wMCS84QUyhS0v7C2gYObc,High,28,Skyway,1980-01-01,C,major,C major,293994
+Skyy,Disco,0.795,0.724,11,-11.26,0,0.104,3.58e-5,0.876,122.402,4,3FQ9h4WfCBEDaFxnCMAJsk,Here's To You,18,Skyyport,1980-01-01,B,minor,B minor,320862
+Space Project,Disco,0.561,0.655,7,-12.429,0,0.0404,0.802,0.567,133.793,4,1ukJXHqVmwiag848lavCiS,Conquest of the Stars,2,Conquest of the Stars,1978-01-01,G,minor,G minor,489640
+Space Project,Disco,0.627,0.632,0,-13.748,1,0.0367,0.879,0.817,132.348,4,1ukJXHqVmwiag848lavCiS,Beyond Orion,0,Conquest of the Stars,1978-01-01,C,major,C major,464973
+Space Project,Disco,0.581,0.545,9,-14.026,0,0.0388,0.901,0.781,132.623,4,1ukJXHqVmwiag848lavCiS,Mission to Lyra,1,Conquest of the Stars,1978-01-01,A,minor,A minor,441253
+Space Project,Disco,0.654,0.533,0,-12.929,0,0.0333,0.855,0.683,128.753,4,1ukJXHqVmwiag848lavCiS,Lady Capella,0,Conquest of the Stars,1978-01-01,C,minor,C minor,442746
+Sparque,Disco,0.761,0.877,3,-7.952,0,0.0724,0.175,0.89,118.338,4,1C4EsnZ2ikoE3bprCfm6QB,Let's Go Dancin' - Club Version,20,Let's Go Dancin',1981-01-01,D#,minor,D# minor,495178
+Spirit of Love,Disco,0.458,0.923,11,-5.47,0,0.21,3.75e-4,0.288,121.365,4,1ugsv0TFosMb7hRqt32rWc,The Power of Your Love,18,The Power of Your Love,2016-08-12,B,minor,B minor,253181
+Split Decision Band,Disco,0.762,0.64,10,-9.88,0,0.0471,2.56e-4,0.835,121.482,4,51UXHJ2YydaTSxJXoczKVz,Watchin' Out,28,Watchin' Out,2014-09-08,A#,minor,A# minor,195114
+Stephen Encinas,Disco,0.614,0.547,11,-10.754,0,0.116,0.0448,0.922,122.365,4,26rGYscuFwQ7GKb9pgek6n,Disco Illusion,35,Disco Illusion,2014-05-16,B,minor,B minor,404391
+Suzy Q,Disco,0.968,0.575,1,-9.988,1,0.157,0.00469,0.747,111.746,4,0ER0B2JhUjXjbNlsgcypl9,Get On Up and Do It Again,22,Can't Live Without Your Love,1981-01-01,C#,major,C# major,356680
+Suzy Q,Disco,0.89,0.586,1,-8.971,1,0.0848,0.00387,0.885,120.486,4,0ER0B2JhUjXjbNlsgcypl9,Get On Up,6,Can't Live Without Your Love,1981-01-01,C#,major,C# major,309240
+Suzy Q,Disco,0.789,0.523,4,-8.952,0,0.0364,0.381,0.858,125.091,4,0ER0B2JhUjXjbNlsgcypl9,Harmony - Extended Mix,15,Can't Live Without Your Love,1981-01-01,E,minor,E minor,359853
+Suzy Q,Disco,0.715,0.631,3,-8.238,0,0.0574,0.089,0.907,127.871,4,0ER0B2JhUjXjbNlsgcypl9,Can't Live Without Your Love - Airwave Mix,15,Can't Live Without Your Love,1981-01-01,D#,minor,D# minor,415653
+Switch,Disco,0.853,0.509,0,-10.037,1,0.137,0.138,0.769,123.558,4,3WENzoa4OlHZ67dhvz3vd3,Best Beat In Town,6,Switch II,1979-01-01,C,major,C major,286560
+Sylvester,Disco,0.459,0.725,11,-7.758,1,0.0335,0.0065,0.921,132.021,4,0qLgyguyAdlC11bS1EZtTU,"Over And Over - 12"" Version",19,Mighty Real: Greatest Dance Hits,2013-01-01,B,major,B major,568826
+Sylvester,Disco,0.727,0.566,1,-9.966,1,0.0495,2.53e-5,0.97,128.427,4,0qLgyguyAdlC11bS1EZtTU,Changes,4,Mighty Real: Greatest Dance Hits,2013-01-01,C#,major,C# major,188373
+Sylvester,Disco,0.54,0.657,9,-14.068,0,0.0324,0.0553,0.877,132.652,4,66w7Uu28k6PBgTieyN8aBY,Stars,15,Stars,1979,A,minor,A minor,632786
+Sylvester,Disco,0.674,0.693,9,-9.705,0,0.0299,0.00354,0.697,129.316,4,0qLgyguyAdlC11bS1EZtTU,Body Strong,7,Mighty Real: Greatest Dance Hits,2013-01-01,A,minor,A minor,518520
+Sylvester,Disco,0.689,0.836,8,-9.592,1,0.0282,0.382,0.929,132.952,4,0qLgyguyAdlC11bS1EZtTU,"Dance (Disco Heat) - 12"" Version",35,Mighty Real: Greatest Dance Hits,2013-01-01,G#,major,G# major,498973
+Sylvester,Disco,0.65,0.601,10,-13.74,1,0.0336,0.0881,0.951,138.586,4,0yltJZ7nTGw97P0Fm7VhX8,Grateful,16,Step II,1978,A#,major,A# major,212920
+Sylvester,Disco,0.674,0.863,10,-11.385,1,0.0288,0.439,0.968,132.273,4,0qLgyguyAdlC11bS1EZtTU,"You Make Me Feel (Mighty Real) - 12"" Version",23,Mighty Real: Greatest Dance Hits,2013-01-01,A#,major,A# major,375400
+Symbol 8,Disco,0.765,0.803,9,-8.864,1,0.0693,5.3e-4,0.961,122.312,4,7D4Lwp4a5jiKe0afVRBwNS,I Thought You Wanted to Dance - Full Length Midtown Mix,18,I Thought You Wanted To Dance,2016-06-10,A,major,A major,450086
+Symbol 8,Disco,0.755,0.636,7,-8.484,0,0.212,8.36e-6,0.699,124.68,4,7D4Lwp4a5jiKe0afVRBwNS,Call Me,11,I Thought You Wanted To Dance,2016-06-10,G,minor,G minor,180151
+T-Connection,Disco,0.83,0.796,0,-14.929,1,0.0404,8.81e-5,0.964,112.458,4,1tqXOdpRbzZf59S6p4JaRC,Saturday Night,2,Twelve Inch Classics Volume 2,2011-02-01,C,major,C major,416355
+T-Connection,Disco,0.754,0.766,1,-9.665,0,0.0604,0.189,0.854,117.388,4,6jw1zvgpMTFZWj67JYRnx3,Groove to Get Down,20,Playlist: The Best Of T-Connection,2016-05-13,C#,minor,C# minor,251733
+T-Connection,Disco,0.794,0.871,0,-10.296,1,0.0957,4.61e-5,0.899,116.844,4,6jw1zvgpMTFZWj67JYRnx3,At Midnight,5,Playlist: The Best Of T-Connection,2016-05-13,C,major,C major,217280
+T-Connection,Disco,0.692,0.765,10,-9.95,0,0.0439,0.0472,0.902,118.692,4,6jw1zvgpMTFZWj67JYRnx3,Do What You Wanna Do - Edit,10,Playlist: The Best Of T-Connection,2016-05-13,A#,minor,A# minor,213280
+T-Connection,Disco,0.624,0.855,5,-7.611,1,0.0553,0.00592,0.739,126.516,4,6jw1zvgpMTFZWj67JYRnx3,Let Yourself Go,1,Playlist: The Best Of T-Connection,2016-05-13,F,major,F major,308239
+Tavares,Disco,0.612,0.749,9,-9.209,0,0.0345,0,0.969,116.791,4,04p4pcNAodBupBWhO2p0w8,Heaven Must Be Missing An Angel - Pt. 1,48,Anthology,2004-01-01,A,minor,A minor,394133
+Tavares,Disco,0.485,0.318,2,-16.727,1,0.0614,7.23e-5,0.459,131.708,4,0Iytoyo5RIovN9CL5Ii8nW,To The Other Man,10,Sky High,2011-01-01,D,major,D major,273949
+Tavares,Disco,0.715,0.765,11,-11.692,1,0.0502,1.36e-5,0.89,127.855,4,0Iytoyo5RIovN9CL5Ii8nW,Don't Take Away The Music,16,Sky High,2011-01-01,B,major,B major,377560
+Teddy Pendergrass,Disco,0.806,0.864,7,-8.317,1,0.0665,1.84e-6,0.832,118.937,4,6yTiY5jSYTygHkG4PkSIMv,I Don't Love You Anymore,23,The Essential Teddy Pendergrass,2007-11-05,G,major,G major,238608
+Teddy Pendergrass,Disco,0.714,0.573,9,-9.356,0,0.059,0,0.912,97.568,4,6yTiY5jSYTygHkG4PkSIMv,When Somebody Loves You Back,37,The Essential Teddy Pendergrass,2007-11-05,A,minor,A minor,296611
+Teddy Pendergrass,Disco,0.833,0.75,7,-8.908,0,0.081,0.00795,0.735,120.898,4,6yTiY5jSYTygHkG4PkSIMv,Only You,17,The Essential Teddy Pendergrass,2007-11-05,G,minor,G minor,303717
+Delegation,Disco,0.734,0.42,2,-12.036,1,0.028,0.242,0.462,94.161,4,2Hu144ydKhUydmnhfEEqfi,Oh Honey,57,Oh Honey,1978-07-17,D,major,D major,356200
+The Doobie Brothers,Disco,0.575,0.912,7,-7.275,0,0.0393,0.00211,0.843,117.399,4,0M2KWMbvY5x1sUnIKNpyUt,Long Train Runnin',70,The Captain And Me,1973,G,minor,G minor,207266
+The Emotions,Disco,0.784,0.713,0,-6.865,1,0.0339,0.14,0.97,115.443,4,7iJCy3T66FJmXT7LGVd3QA,Best of My Love,64,Rejoice,1977-06-10,C,major,C major,220560
+The Emotions,Disco,0.75,0.722,1,-8.842,1,0.0574,0.00296,0.934,120.022,4,4lebgv3ia7YVlZAz68jUa8,I Don't Wanna Lose Your Love,35,Flowers (Bonus Track Version),1976,C#,major,C# major,241933
+The Emotions,Disco,0.499,0.411,0,-14.93,1,0.108,0.495,0.912,139.919,4,30OwtFBugzMGsAYhXzEBEP,A Feeling Is,17,The Best Of The Emotions: Best Of My Love,1996,C,major,C major,214666
+The Emotions,Disco,0.63,0.691,3,-8.361,0,0.0386,0.0178,0.847,132.836,4,7iJCy3T66FJmXT7LGVd3QA,A Long Way to Go,16,Rejoice,1977-06-10,D#,minor,D# minor,228546
+The Emotions,Disco,0.474,0.444,5,-10.53,0,0.0643,0.00505,0.374,98.573,3,7iJCy3T66FJmXT7LGVd3QA,Key to My Heart,19,Rejoice,1977-06-10,F,minor,F minor,320920
+The Emotions,Disco,0.741,0.7,11,-9.293,0,0.0335,0.673,0.855,122.307,4,7iJCy3T66FJmXT7LGVd3QA,Love's What's Happenin',17,Rejoice,1977-06-10,B,minor,B minor,199080
+The Emotions,Disco,0.601,0.881,4,-7.4,0,0.0412,0.0168,0.943,94.969,4,7iJCy3T66FJmXT7LGVd3QA,How'd I Know That Love Would Slip Away,15,Rejoice,1977-06-10,E,minor,E minor,282973
+The Emotions,Disco,0.529,0.868,11,-8.65,0,0.0485,0.286,0.947,112.675,4,7iJCy3T66FJmXT7LGVd3QA,Rejoice,17,Rejoice,1977-06-10,B,minor,B minor,321866
+The Equals,Disco,0.736,0.618,10,-15.376,1,0.0508,9.94e-6,0.762,122.271,4,1QIziGobFEewDn0O1mlkaO,Black Skinned Blue Eyed Boys,12,Baby Come Back,2011-05-30,A#,major,A# major,164773
+The Impressions,Disco,0.56,0.849,5,-6.108,0,0.0422,8.27e-5,0.866,97.473,4,1K7pkOrAVyFF8iPfcl4PGM,We Must Be in Love,33,Check Out Your Mind!,1970,F,minor,F minor,237613
+The Joneses,Disco,0.773,0.544,5,-12.475,1,0.105,0.0137,0.863,123.245,4,58STS86oy7HcgvP6yt6mca,Sugar Pie Guy,13,The Best Of Disco Funk (Disco Nights Vol.2),1994-06-06,F,major,F major,273440
+The McCrarys,Disco,0.678,0.703,1,-11.487,1,0.0279,4.72e-4,0.961,124.377,4,3oYv9w1uqTIAXjGP7RByzR,(Do You Wanna) Dance with Me?,1,On the Other Side,1979-06-30,C#,major,C# major,218920
+The McCrarys,Disco,0.643,0.79,1,-11.255,1,0.0467,0.534,0.832,112.679,4,3oYv9w1uqTIAXjGP7RByzR,Sunshine,1,On the Other Side,1979-06-30,C#,major,C# major,209293
+The McCrarys,Disco,0.699,0.614,1,-13.32,1,0.0691,0.379,0.8,120.773,4,3oYv9w1uqTIAXjGP7RByzR,Makin' Music,2,On the Other Side,1979-06-30,C#,major,C# major,215973
+The O'Jays,Disco,0.751,0.714,10,-11.614,1,0.0374,0,0.935,124.379,4,09jTPeDoSuJLLAwFGNUKCX,Back Stabbers,53,Back Stabbers,1972,A#,major,A# major,186093
+The O'Jays,Disco,0.627,0.804,5,-11.43,0,0.0446,5.1e-5,0.798,130.167,4,09jTPeDoSuJLLAwFGNUKCX,992 Arguments,21,Back Stabbers,1972,F,minor,F minor,366373
+The O'Jays,Disco,0.616,0.711,0,-12.724,0,0.0457,0.00886,0.94,128.015,4,1QwDfYIIZW3VfrToXVoNz0,I Love Music,35,Family Reunion,1975,C,minor,C minor,411093
+The O'Jays,Disco,0.668,0.774,5,-7.001,1,0.0468,4.39e-5,0.77,128.32,4,1XoURLvpVgr7WR4fJ6OJSC,Message in Our Music,28,Message In The Music,1976,F,major,F major,380160
+The O'Jays,Disco,0.668,0.739,2,-6.906,1,0.0391,0,0.662,107.942,4,1XoURLvpVgr7WR4fJ6OJSC,"Darlin' Darlin' Baby (Sweet, Tender, Love)",44,Message In The Music,1976,D,major,D major,256240
+The O'Jays,Disco,0.721,0.84,2,-6.014,0,0.0428,4.5e-5,0.844,113.121,4,1XoURLvpVgr7WR4fJ6OJSC,Let Life Flow,14,Message In The Music,1976,D,minor,D minor,269320
+Brief Encounter,Disco,0.763,0.575,9,-11.42,1,0.107,0.328,0.77,123.452,4,5zum4FdH9gzhtYmuGXYk5n,Rocking,3,We Want to Play,2019-05-31,A,major,A major,243809
+Brief Encounter,Disco,0.635,0.652,9,-8.505,1,0.0471,7.53e-5,0.478,119.305,4,5zum4FdH9gzhtYmuGXYk5n,Since I Met You Girl,3,We Want to Play,2019-05-31,A,major,A major,152895
+Brief Encounter,Disco,0.689,0.774,0,-7.579,1,0.0549,0.0449,0.707,107.389,4,5zum4FdH9gzhtYmuGXYk5n,We Want to Play,10,We Want to Play,2019-05-31,C,major,C major,255616
+Brief Encounter,Disco,0.688,0.578,5,-6.906,1,0.053900000000000003,5.06e-4,0.648,115.614,4,5zum4FdH9gzhtYmuGXYk5n,Sweet Tender Loving,5,We Want to Play,2019-05-31,F,major,F major,253693
+Brief Encounter,Disco,0.33,0.539,11,-8.502,1,0.0306,0,0.341,133.843,4,5zum4FdH9gzhtYmuGXYk5n,Together in Love,2,We Want to Play,2019-05-31,B,major,B major,210895
+LaRombé,Disco,0.758,0.744,2,-9.91,1,0.0453,7.41e-4,0.865,124.42,4,6VvGeEcwZIdMmElwYACecH,You're the Best,8,You're the Best,2019-06-14,D,major,D major,265768
+LaRombé,Disco,0.749,0.448,11,-12.733,0,0.0739,5.54e-5,0.564,120.381,4,6VvGeEcwZIdMmElwYACecH,Train of Thought,3,You're the Best,2019-06-14,B,minor,B minor,268393
+Gratitude,Disco,0.689,0.685,11,-11.303,0,0.0515,0.0665,0.752,135.605,4,3BftXZNrkbnI0eHGuGkXUn,We Are Here to Party,10,We Are Here to Party,2019-03-08,B,minor,B minor,272244
+Gratitude,Disco,0.678,0.626,7,-11.56,0,0.0455,0.0113,0.769,124.217,4,3BftXZNrkbnI0eHGuGkXUn,Loving You,1,We Are Here to Party,2019-03-08,G,minor,G minor,379901
+The Ritchie Family,Disco,0.84,0.722,2,-9.448,0,0.064,0.00456,0.903,115.611,4,085SZM9ecUcKaDyl9Ep8Dr,I'll Do My Best,38,I'll Do My Best,1982,D,minor,D minor,324093
+The Ritchie Family,Disco,0.621,0.59,0,-11.704,1,0.0406,0.316,0.92,118.806,4,0Fi7cFOd7dgS8N4LcSA9DF,Quiet Village,15,African Queens,1977-09-06,C,major,C major,348533
+The Ritchie Family,Disco,0.623,0.804,2,-9.539,0,0.0343,5.39e-5,0.881,132.645,4,0Fi7cFOd7dgS8N4LcSA9DF,Summer Dance,11,African Queens,1977-09-06,D,minor,D minor,331666
+The Salsoul Orchestra,Disco,0.743,0.846,7,-5.917,1,0.0354,0.837,0.74,124.021,4,7KvRf4PZGIdqF9hLuE8CNu,Salsoul Rainbow,0,Salsoul,1975-01-01,G,major,G major,245760
+The Salsoul Orchestra,Disco,0.743,0.546,10,-9.731,0,0.0635,0.686,0.486,122.702,4,1ArEjGGPWMMCCWDeLK2AAU,Don't Beat Around the Bush,0,Nice 'N' Naasty,1976-01-01,A#,minor,A# minor,302093
+The Salsoul Orchestra,Disco,0.7,0.915,7,-4.485,1,0.071,0.0761,0.536,126.231,4,1ArEjGGPWMMCCWDeLK2AAU,Standing and Waiting on Love,0,Nice 'N' Naasty,1976-01-01,G,major,G major,219293
+The Salsoul Orchestra,Disco,0.684,0.615,2,-6.154,0,0.0322,0.189,0.501,123.34,4,1ArEjGGPWMMCCWDeLK2AAU,It's Good for the Soul,0,Nice 'N' Naasty,1976-01-01,D,minor,D minor,274293
+The Salsoul Orchestra,Disco,0.662,0.728,5,-8.24,0,0.0651,0.00102,0.725,127.89,4,1ArEjGGPWMMCCWDeLK2AAU,It Don't Have to Be Funky - To Be Groove,0,Nice 'N' Naasty,1976-01-01,F,minor,F minor,290573
+The Salsoul Orchestra,Disco,0.488,0.748,0,-6.722,1,0.0791,0.829,0.227,130.248,4,1ArEjGGPWMMCCWDeLK2AAU,Salsoul:3001,0,Nice 'N' Naasty,1976-01-01,C,major,C major,397333
+The Salsoul Orchestra,Disco,0.658,0.788,5,-6.034,0,0.0611,0.0691,0.741,123.59,4,7KvRf4PZGIdqF9hLuE8CNu,Salsoul Hustle,0,Salsoul,1975-01-01,F,minor,F minor,313600
+The Salsoul Orchestra,Disco,0.678,0.641,0,-10.542,1,0.12,0.00366,0.756,116.732,4,7KvRf4PZGIdqF9hLuE8CNu,Ooh I Love It - Love Break,0,Salsoul,1975-01-01,C,major,C major,442133
+The Salsoul Orchestra,Disco,0.823,0.564,7,-7.593,1,0.0387,0.69,0.957,125.725,4,7KvRf4PZGIdqF9hLuE8CNu,Get Happy,0,Salsoul,1975-01-01,G,major,G major,185560
+The Salsoul Orchestra,Disco,0.696,0.787,7,-7.819,1,0.0327,0.839,0.598,127.898,4,42N00h3qvFVP5AW6RRmSLi,Magic Bird of Fire,7,Magic Journey,1977-01-01,G,major,G major,302602
+The Salsoul Orchestra,Disco,0.676,0.909,5,-7.389,0,0.0517,0.88,0.956,108.894,4,42N00h3qvFVP5AW6RRmSLi,Getaway,8,Magic Journey,1977-01-01,F,minor,F minor,260109
+The Salsoul Orchestra,Disco,0.665,0.774,11,-7.487,0,0.066,5.18e-4,0.784,109.798,4,42N00h3qvFVP5AW6RRmSLi,Run Away,26,Magic Journey,1977-01-01,B,minor,B minor,284613
+The Salsoul Orchestra,Disco,0.551,0.79,0,-5.231,1,0.0335,0.32,0.534,123.144,4,7KvRf4PZGIdqF9hLuE8CNu,Tangerine,0,Salsoul,1975-01-01,C,major,C major,279400
+The Spinners,Disco,0.411,0.788,8,-10.197,0,0.109,0,0.612,198.435,4,1YtoIFW84QtpYVlkOR8xTe,It's A Shame,44,The Best Of The Spinners,1973-01-01,G#,minor,G# minor,191960
+The Spinners,Disco,0.608,0.428,1,-11.625,1,0.109,0,0.881,176.735,4,6QVemXFGMR4OLvlXvtQVjg,One of a Kind (Love Affair),40,Spinners,1973,C#,major,C# major,214146
+The Spinners,Disco,0.647,0.405,2,-11.651,0,0.0292,2.82e-6,0.737,109.423,4,6QVemXFGMR4OLvlXvtQVjg,Ghetto Child,29,Spinners,1973,D,minor,D minor,230719
+The Spinners,Disco,0.382,0.727,9,-6.677,0,0.0861,0,0.826,207.265,4,6QVemXFGMR4OLvlXvtQVjg,Could It Be I'm Falling in Love,58,Spinners,1973,A,minor,A minor,249733
+The Stovall Sisters,Disco,0.66,0.877,8,-6.989,1,0.0875,0.526,0.961,123.92,4,6AqvdwzMenv6rwkOics47a,Hang On In There,1,Rare Funk,2018-06-15,G#,major,G# major,216000
+The Temptations,Disco,0.691,0.497,5,-14.177,1,0.0302,3.54e-6,0.876,113.63,4,3ZRpmo4encM3hourEMUE0g,Law Of The Land,31,Masterpiece,1973,F,major,F major,300960
+The Three Degrees,Disco,0.564,0.594,9,-9.245,1,0.0328,0.00366,0.766,120.749,4,348rR3bK4ypUS5MF2aIetX,When Will I See You Again,51,The Three Degrees,1973,A,major,A major,178746
+The Trammps,Disco,0.828,0.606,1,-13.45,1,0.0365,0.0926,0.961,124.59,4,0JCpZXyG2nhtt4ykFR4Kxo,Soul Searchin' Time,0,Groove Masters,2017-04-21,C#,major,C# major,364506
+The Trammps,Disco,0.783,0.823,8,-10.047,1,0.0357,2.17e-5,0.816,125.377,4,1y2xsGVio33PRhyqIgbGJq,Soul Bones,0,Disco Crate,2017-04-13,G#,major,G# major,257466
+The Trammps,Disco,0.837,0.758,5,-8.454,1,0.0968,0.00328,0.745,116.878,4,1GVZB91vtwNlsWy6vEmn1N,Music Freek,2,The Complete Albums 1976-1980,2019-05-31,F,major,F major,296906
+The Trammps,Disco,0.726,0.809,5,-6.804,0,0.0344,1.37e-4,0.956,121.886,4,6IBI01gmj7d5BpfiaD9cGh,Save a Place,20,Disco Champs,1977,F,minor,F minor,286680
+The Trammps,Disco,0.676,0.704,10,-8.534,1,0.0329,0.0709,0.812,129.594,4,2fbPRtAt1i5f68lZegx1iB,Disco Inferno,52,Playlist: The Best Of The Trammps,2016-06-17,A#,major,A# major,213840
+The Trammps,Disco,0.645,0.703,0,-10.865,0,0.0588,4.3e-4,0.632,121.186,4,3SelPCaY9JkgQYfOSmN2nh,The Night the Lights Went Out,0,Retro 70's Grooves,2018-12-28,C,minor,C minor,427160
+The Trammps,Disco,0.372,0.582,0,-11.319,1,0.0569,6.18e-5,0.584,166.777,4,1GVZB91vtwNlsWy6vEmn1N,Seasons for the Girls,4,The Complete Albums 1976-1980,2019-05-31,C,major,C major,477226
+The Trammps,Disco,0.627,0.585,9,-11.727,0,0.0441,4.96e-6,0.876,119.114,4,2nQGPoSiIylXwUcg78PDDB,I'm so Glad You Came Along,4,The Trammps III,1977,A,minor,A minor,175400
+The Trammps,Disco,0.599,0.622,7,-9.148,1,0.0417,0.0215,0.724,128.002,4,2nQGPoSiIylXwUcg78PDDB,Life Ain't Been Easy,4,The Trammps III,1977,G,major,G major,197160
+The Trammps,Disco,0.696,0.713,5,-13.814,1,0.0504,0.015,0.395,123.068,4,1vP1R14x8ItaHB1PT0zjct,That's Where the Happy People Go,26,Where The Happy People Go,1976,F,major,F major,474266
+The Whispers,Disco,0.795,0.573,11,-7.471,0,0.0781,0.0209,0.899,116.541,4,1EaATYESKxC3pW4Whf2VvE,And the Beat Goes On,13,A Night to Remember (Mixed By Tony Okungbowa & Jojoflores),2012-05-01,B,minor,B minor,181533
+Titanic,Disco,0.64,0.791,4,-7.806,0,0.0444,0.84,0.918,122.767,4,5vxZm9QdzBB0KjAFLdW4Zo,Sultana,7,Sea Wolf,2016-12-05,E,minor,E minor,252613
+Trans-X,Disco,0.7,0.649,7,-9.981,0,0.0331,0.67,0.965,131.056,4,6gMdfh1Dxlt0IU2CqeSa1d,Living On Video,53,Living On Video,1986,G,minor,G minor,354333
+Unlimited Touch,Disco,0.697,0.582,11,-12.173,0,0.114,0.344,0.823,115.929,4,31fKBqNpIIRDSiBoTv408q,I Hear Music in the Streets,39,Searching to Find the One,1980,B,minor,B minor,413573
+Van McCoy,Disco,0.573,0.552,3,-8.792,0,0.0301,0.795,0.782,116.104,4,11UaN3XDLmV6s610jdz5wM,Love Is the Answer,0,Love Is the Answer,1974,D#,minor,D# minor,200984
+Van McCoy,Disco,0.519,0.597,4,-6.872,1,0.0578,0.758,0.627,115.244,4,11UaN3XDLmV6s610jdz5wM,African Symphony,0,Love Is the Answer,1974,E,major,E major,180302
+Van McCoy,Disco,0.803,0.905,2,-8.174,0,0.0543,0.484,0.936,115.203,4,5ZxqYgrzpjP9SU1ItBeisA,Party,0,The Real McCoy,1976,D,minor,D minor,250592
+Van McCoy,Disco,0.664,0.915,10,-9.076,1,0.0354,0.0166,0.939,111.728,4,25JmXT8zZ11ywvhNboTGvA,Change with the Times,0,The Disco Kid,1975,A#,major,A# major,197712
+Van McCoy,Disco,0.534,0.823,7,-7.888,1,0.0348,0.88,0.728,120.673,4,5ZxqYgrzpjP9SU1ItBeisA,"Theme From Star Trek - Music From the TV Series ""Star Trek""",0,The Real McCoy,1976,G,major,G major,279884
+Van McCoy,Disco,0.589,0.722,8,-8.376,1,0.0649,8.54e-5,0.748,114.734,4,4UQ1nhFjs54TUCUBGSeC6r,"Hey Girl, Come and Get It - Disco Mix",0,Sweet Rhythm,1979,G#,major,G# major,421703
+Van McCoy,Disco,0.613,0.942,0,-6.829,1,0.106,0.397,0.812,110.24,4,2XCExjOlLqfgXdBVd7Zc0z,The Hustle,7,Disco Baby,1975,C,major,C major,244558
+Voyage,Disco,0.634,0.816,5,-10.495,1,0.0317,0.559,0.81,128.05,4,4ialwDYlbguQs0POO51ENH,Souvenirs,0,The Best of Voyage,1983-07-01,F,major,F major,389973
+Voyage,Disco,0.838,0.795,0,-8.661,1,0.0446,0.662,0.914,128.077,4,4ialwDYlbguQs0POO51ENH,Kechak Fantasy,0,The Best of Voyage,1983-07-01,C,major,C major,187400
+Voyage,Disco,0.629,0.89,9,-9.55,1,0.0398,0.0365,0.865,128.244,4,4ialwDYlbguQs0POO51ENH,Eastern Trip,0,The Best of Voyage,1983-07-01,A,major,A major,123466
+Voyage,Disco,0.681,0.781,2,-11.425,1,0.0421,0,0.966,127.899,4,4ialwDYlbguQs0POO51ENH,Tahiti Tahiti,1,The Best of Voyage,1983-07-01,D,major,D major,302626
+Voyage,Disco,0.698,0.787,9,-11.019,0,0.0319,0.821,0.866,128.735,4,4ialwDYlbguQs0POO51ENH,From East to West,0,The Best of Voyage,1983-07-01,A,minor,A minor,428826
+Walter Murphy,Disco,0.704,0.701,5,-8.085,1,0.0448,1.78e-5,0.839,126.608,4,3WGhDlddrE9npY07UYyA7D,(You've Got To) Be Your Own Best Friend,9,A Fifth of Beethoven,1976-10-31,F,major,F major,207386
+Walter Murphy,Disco,0.619,0.683,0,-7.28,1,0.0632,0.0113,0.845,115.924,4,3WGhDlddrE9npY07UYyA7D,California Strut,18,A Fifth of Beethoven,1976-10-31,C,major,C major,213173
+Walter Murphy,Disco,0.652,0.799,10,-6.673,1,0.0413,0.965,0.913,114.646,4,3WGhDlddrE9npY07UYyA7D,Suite Love Symphony,10,A Fifth of Beethoven,1976-10-31,A#,major,A# major,175906
+Walter Murphy,Disco,0.764,0.637,10,-10.151,1,0.0672,0.257,0.959,131.443,4,3WGhDlddrE9npY07UYyA7D,Midnight Express,9,A Fifth of Beethoven,1976-10-31,A#,major,A# major,186773
+Walter Murphy,Disco,0.652,0.642,10,-8.144,1,0.0453,0.832,0.826,108.684,4,3WGhDlddrE9npY07UYyA7D,A Fifth of Beethoven,31,A Fifth of Beethoven,1976-10-31,A#,major,A# major,183773
+War,Disco,0.855,0.79,9,-10.967,0,0.0981,0.00859,0.519,118.658,4,7pCaMlTawu0ljgxW37XKR4,Galaxy - Edit,5,Anthology 1970-1994,1994-01-01,A,minor,A minor,318066
+Was (Not Was),Disco,0.675,0.972,2,-6.453,1,0.0722,0.0371,0.396,118.307,4,1tHKBdN7kXJXI6PIZ5szN3,Tell Me That I'm Dreaming,8,Out Come The Freaks,2004-01-01,D,major,D major,302133
+Wham!,Disco,0.624,0.516,4,-12.036,0,0.0402,2.41e-5,0.92,119.162,4,4OGNb3T3gb76EdH9Nl1gL1,Lovemaker,4,Wham!,1978-03-06,E,minor,E minor,303933
+Wild Cherry,Disco,0.807,0.712,0,-10.877,1,0.0824,0,0.889,109.37,4,50M2o5oVvrG0LEt6ecgJXy,Play That Funky Music,30,"DISCO - 100 Hit's - Dance floor fillers from the 70s and 80s inc. The Jacksons, Boney M & Earth Wind & Fire",2013-06-21,C,major,C major,299240

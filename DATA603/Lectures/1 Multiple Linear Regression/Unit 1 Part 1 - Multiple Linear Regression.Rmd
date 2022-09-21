@@ -1,0 +1,417 @@
+---
+title: "DATA 603 - Lecture Notes Unit 1 Part 1"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+```
+
+# PART I: FIRST ORDER MODELS WITH QUANTITATIVE INDEPENDENT VARIABLES
+
+Suppose that we are statistical consultants hired by a client to provide advice on to improve sales of a particular product. The advertising data set consists of the Sales (in thousands of units) of that product in 200 different markets, along with advertising budgets(in thousands of dollars) for the product in each of those markets for three
+different media: TV, radio, and newspaper. In this setting, the advertising budgets(TV, radio,and newspaper) are independent variables(predictor variables) and Sales are the dependent variable(response variable). The least square fit for the simple linear regressions of sales onto TV,radio, and newspapers are shown as following,
+
+```{r Plot Simple Linear Regressions, message = FALSE}
+Advertising <- read_delim("/Users/Ellsworth/Documents/School/DATA603/Lectures/Advertising.txt", delim ="\t" )
+Advertising %>%
+  ggplot(aes(x = tv, y = sale)) +
+  geom_point(color='red') +
+  geom_smooth(method = "lm", se = FALSE)
+Advertising %>%
+  ggplot(aes(x = radio, y = sale)) +
+  geom_point(color='green') +
+  geom_smooth(method = "lm", se = FALSE)
+Advertising %>%
+  ggplot(aes(x = newspaper, y = sale)) +
+  geom_point(color='black') +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r Summarize Simple Linear Regressions, message = FALSE}
+summary(lm(sale~tv,data=Advertising))
+summary(lm(sale~radio,data=Advertising))
+summary(lm(sale~newspaper,data=Advertising))
+```
+
+$$
+\begin {aligned}
+\widehat{Sale} =& 7.032594 + 0.047537 * tv \\
+\widehat{Sale} =& 9.31164 + 0.20250 * radio \\
+\widehat{Sale} =& 12.35141 + 0.05469 * newspaper \\
+\end {aligned}
+$$ 
+Simple linear regression is a useful approach for predicting a response on the basis of a single predictor variable. However, it is unclear how to make a single prediction of sales given levels of three advertising media budgets, since each of the budgets is associated with a separate regression equation.
+
+## INTRODUCTION
+Does a regression with one independent variable even make sense? It does or it does not. The world is might too complex a place for simple regression alone to model it. A
+Regression with two or more independent variables is called Multiple Regression. It can be looked upon as an extension of straight-line regression analysis (which involves
+only one independent variable) to the situation where more than one independent variable must be considered. Dealing with several independent variables simultaneously in a
+regression analysis is considerably more difficult than dealing with a single independent variable, for following reasons:
+
+  1. It is more difficult to choose the best model, since several reasonable candidates may exist.
+  2. It is more difficult to visualize what the best fitted model looks like (especially if there are more than two independent variables), since it is not possible to plot either the data or the fitted model directly in more than three dimensions.
+  3. Computations are virtually impossible without access to a high speed computer and a reliable packaged computer program.
+
+## The General Multiple Linear Regression Model
+A model that includes only terms denoting quantitative independent variable, called a firstorder model:
+<insert LaTex here>
+
+From the Advertising example, instead of fitting a separate simple linear regression model for each predictor, a better approach is to extend to the multiple linear regression model so that it can directly accommodate multiple predictors.
+
+$$ Sale = \beta_0 + \beta_1 * tv + \beta_2 * radio + \beta_3 * newspaper + \epsilon $$
+
+## Estimating the Regression point estimates
+<insert LaTex here>
+
+## Point Estimating for Multiple Regression Coefficients
+In this class, we use a statistical R program on a computer to do all the calculations for multiple regression coefficients.
+
+### Interpreting the Intercept
+$\widehat{\beta_0}$, , the y-intercept, can be interpreted as the value you would predict for y when all $X_1, X_2, …, X_p = 0$.
+
+### Interpreting Coefficients of Predictor Varibales
+$\widehat{\beta_i}$, the regression coefficient, describes how much change in response y for every unit change in $X_i$ when other predictor variables are held constant. From the Advertising example, the following code displays the multiple regression coefficient estimates when TV, radio, and newspaper advertising budgets are used to
+predict product sales.
+
+```{r Estimating the Regression Point Estimates}
+reg1 <- lm(sale ~ tv + radio + newspaper, data = Advertising)
+coefficients(reg1)
+```
+
+The estimated model is
+
+$$ \widehat{Sale} = 2.939 + 0.046 * tv + 0.189 * radio - 0.001 * newspaper$$
+
+We interpret these results as following:
+$/beta_1 = 0.046$ means that for a given amount of radio and newspaper advertising, spending additional $1,000 on TV advertising leads to an increase in sales by approximately 46 units.
+$/beta_2 = 0.189$ means that for a given amount of TV and newspaper advertising, spending additional $1,000 on radio advertising leads to an increase in sales by approximately 189 units.
+$/beta_3 = -0.001$ means that for a given amount of TV and radio advertising, spending additional $1,000 on newspapers advertising leads to a decrease in sales by approximately 1 unit.
+
+## Interval Estimate for Multiple Regression Coefficients (Confidence Interval for the individual regression coefficient)
+
+A $100(1 - \alpha)%$ Confidence Interval for parameter $\beta_i$ is $\widehat{\beta_i} \pm t_{\alpha/2} * S_{\widehat{\beta_i}}$
+
+where,
+
+$n$ = number of observations
+$p$ = number of regression coefficients
+
+```{r Estimating the Regression Coefficients Confidence Interval}
+reg1 <- lm(sale ~ tv + radio + newspaper, data = Advertising)
+confint(reg1) # a 95% confidence interval for coefficients
+confint(reg1, level = 0.99) # a 99% confidence interval for coefficients
+```
+
+From the Advertising example, the output displays the multiple regression 95% confidence interval for coefficient estimates when TV, radio, and newspaper advertising budgets are used to predict product sales. Thus, we can interpret that sales increase between 43.01 units to 48.51 units for every $1000 increase in TV advertising budget, holding radio and newspaper advertising budget (with 95% of chance).
+
+#### Inclass Practice Problem 1 - Model Fit and Confidence Interval for Regression Coefficients
+
+*How do real estate agents decide on the asking price for a newly listed condominium? A computer data base in a small community contains the listed selling price Y (in thousand of dollars), the amount of living area (in hundreds of square metres), and the number of floors, bedrooms, and bathroom are recorded for 15 randomly selected condos currently on the market. The data file is provided in condominium.csv. Use R software package to fit the model and construct a 95% confidence interval for regression coefficients.*
+
+```{r Practice Problem 1}
+# Load data
+condominium <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/condominium.csv")
+
+# Create a multiple linear regression model
+price_model <- lm(data = condominium, listprice ~ livingarea + baths + floors + bedrooms)
+summary(price_model)
+
+# Solve for the 95% confidence intervals in the coefficients
+confint(price_model) # The bedrooms confidence interval covers 0 and could be dropped
+
+# Solve for the 99% confidence intervals in the coefficients
+confint(price_model, level = 0.99)  # The floors confidence interval also covers 0 and could be dropped
+```
+
+We notice that the multiple regression coefficient estimates for TV and radio are in the same direction but the coefficient estimate for newspaper is close to zero. Moreover, a 95% confidence interval for newspaper also includes zero (-0.0126,0.0105). In this case, is there a relationship between newspaper and sales? In general when we perform multiple regression, we usually are interested in answering a few important questions.
+
+  1. Is this multiple regression model any good at all? Is at least one of the predictors useful in predicting the response?
+  2. Do all the predictors help to explain Y, or is only a subset of the predictors useful?
+
+Now we address these questions as following topics.
+
+## Evaluating Overall Model Utility
+
+### Testing a Relationship Between the Response and Predictors
+
+### Full Model Test
+
+We ask the global question, “Is this multiple regression model any good at all?” The answer is that we can test some hypotheses to see the relationship between the response and predictors. The first of these hypotheses is an overall F-test or a global F test which tells us if the multiple regression model is useful. To address the overall question, we will test:
+
+$$
+\begin {aligned}
+H_0 :& \beta_1 = \beta_2 = ... = \beta_p = 0 \\
+H_a :& \text{at least one } \beta_i \text{ is not zero } (i = 1, 2, ..., p)
+\end {aligned}
+$$
+
+### The Analysis of Variance for Multiple Linear Regression
+
+```{r ANOVA table formula}
+# The ANOVA table for multiple linear regression
+header <- c("Source of Variation", "Df", "Sum of Squares", "Mean Squares", "F-Statistic")
+anova_table <- data.frame(rbind(c("Regression", "p", "SSR", "MSR", "F_stat"),
+                                c("Residual", "n - p - 1", "SSE", "MSE", ""),
+                                c("Total", "n - 1", "SSR + SSE", "", "")))
+names(anova_table) <- header
+anova_table
+```
+
+This hypothesis test is performed by computing the F-statistic,
+
+$$F_{cal} = \frac{MSR}{MSE} = \frac{\frac{SSR}{p}}{\frac{SSE}{(n-p-1)}}$$
+
+where
+
+Sum of squares for error or residual
+
+$$
+\begin{aligned}
+SSE =& \sum_{i=1}^n e_i^2 \\
+    =& \sum_{i=1}^n (y_i - \hat{y_i})^2 \\
+    =& \sum_{i=1}^n (y_i - (\hat{\beta_0} + \hat{\beta_{1i}} * X_{1i} + \hat{\beta_{2i}} * X_{2i} + \hat{\beta_{3i}} * X_{3i}))^2
+\end{aligned}
+$$
+
+Sum of squares for regression
+
+$$SSR = \sum_{i=1}^n (\hat{y_i} - \bar{y})^2$$
+
+Total corrected sum of squares of the Ys
+
+$$SST = \sum_{i=1}^n (y_i - \bar{y})^2$$
+
+$n = $ the sample size
+$p = $ the number of predictors or the number of regression coefficients
+
+$SST = SSR + SSE$
+
+```{r ANOVA comparison NULL model with Full Model}
+reg1 <- lm(sale ~ tv + radio + newspaper, data = Advertising) # (Full) model with all variables
+reg2 <- lm(sale ~ 1, data = Advertising) # Model with only intercept
+# summary is used to produce result summaries of the results of various model fitting functions.
+summary(reg1)
+# anova is used to compute the analysis of variance (or deviance) tables for one or more fitted model objects
+anova(reg2,reg1) # We compare the NULL model with the full model
+```
+
+```{r ANOVA table advertising}
+header <- c("Source of Variation", "Df", "Sum of Squares", "Mean Squares", "F-Statistic")
+p <- 3
+SSR <- 4860.3
+MSR <- SSR / p
+F_stat <- 570.27
+n <- 200
+SSE <- 556.8
+MSE <- SSE / (n - p - 1)
+anova_table_advertising <- data.frame(rbind(c("Regression", p, SSR, MSR, F_stat),
+                                c("Residual", n - p - 1, SSE, MSE, ""),
+                                c("Total", n - 1, SSR + SSE, "", "")))
+names(anova_table_advertising) <- header
+anova_table_advertising
+```
+
+From the Advertising example, the output shows that $F_{cal} = 570.3$ with $df = 3,196$ (p-value<
+2.2e-16 < $\alpha = 0.05$),indicating that we should clearly reject the null hypothesis. It provides compelling evidence against the null hypothesis H0. In other word, the large F-test suggests that at least one of the advertising media must be related to sales. Based on the p-value, we also have extremely strong evidence that at least one of the media is associated with increased sales. Once we check the overall F-test and reject the null hypothesis, we can move on to checking the test statistics for the individual coefficients and particular subsets of the full model test.
+
+## Partial Test
+### Individual Coefficients Test (t-test)
+
+$$
+\begin {aligned}
+H_0 :& \beta_i = 0 \\
+H_a :& \beta_i \not= 0 (i = 1, 2, ..., p)
+\end {aligned}
+$$
+
+$$t_{cal} = \frac{\hat{\beta_l} - \beta_i}{SE(\beta_l)} \text{ which has } df = n - p \text{ degrees of freedom }$$
+
+```{r Individual Coefficients Test t-test}
+reg1 <- lm(sale ~ tv + radio + newspaper, data = Advertising)
+summary(reg1)
+```
+
+From the Advertising example, the output shows that the newspaper has tcal=-0.177 with the p-value= 0.86 > 0.05, indicating that we should clearly not to reject the null hypothesis that the newspaper advertising has not significantly influence on sales at $\alpha = 0.05$.
+
+### Partial F test
+The goal is to investigate the contribution of a subset of predictors given that a different set
+of predictors is already in the model. We define:
+
+  - Full Model to be the model with the whole set of predictors
+  - Reduced Model to be the model with the whole set of predictors less the subset to be tested.
+
+For example, if we want to test $X_1$ given $X_2$ and $X_3$ are in the model, then the Full Model has the predictors $X_1, X_2$ and $X_3$, and the Reduced Model has the predictors $X_2$ and $X_3$. This will test the effect of $X_1$ in the full model with all 3 predictors. The hypotheses are:
+
+$$
+\begin {aligned}
+H_0 :& \beta_1 = 0 \text{ in the model } Y = \beta_0 + \beta_1 * X_1 + \beta_2 * X_2 + \beta_3 * X_3 + \epsilon \\
+H_a :& \beta_1 \not= 0 \text{ in the model } Y = \beta_0 + \beta_1 * X_1 + \beta_2 * X_2 + \beta_3 * X_3 + \epsilon
+\end {aligned}
+$$
+
+In general, to test that a particular subset of q of the coefficients are zero, the hypotheses are:
+
+$$
+\begin {aligned}
+H_0 :& \beta_{p - q + 1} = \beta_{p - q + 2} = ... = \beta_p = 0 \\
+H_a :& \text{at least one } \beta_i \text{ is not zero } (i = 1, 2, ..., p)
+\end {aligned}
+$$
+
+This can be achieved using an F-test. Let SSE (Full model) be the residual sum of squares under the full model and SSE (Reduced model) be the residual sum of squares under the reduced model. Then the F-statistic is:
+
+$$F_{cal} = \frac{\frac{SSE_{\text{reduced model}} - SSE_{\text{full model}}}{df_{reduced} - df_{full}}}{\frac{SSE_{\text{full model}}}{df_{full}}}$$
+
+```{r Partial F Test}
+full <- lm(sale ~ tv + radio + newspaper, data = Advertising)
+reduced <- lm(sale ~ tv + radio, data = Advertising) # dropping a newspaper variable
+anova(reduced, full) # test if Ho: newspaper = 0 
+```
+
+From the Advertising example, after dropping the variable newspaper off the full model, the reduced output shows that:
+
+$$F_{cal} = \frac{\frac{556.9 - 556.8}{197 - 196}}{\frac{556.8}{196}} = 0.031$$
+
+with df = 1, 196 (p-value = 0.8599 > $\alpha = 0.05$), indicating that we should clearly not to reject the null hypothesis which mean that we definately drop the variable newspaper off the model. At this point, the initial estimated regression model is:
+
+$$\widehat{Sale} = 2.939 + 0.046 * tv + 0.189 * radio - 0.001 * newspaper$$
+
+After checking individual coefficients test, the final regression model is:
+
+$$\widehat{Sale} = 2.939 + 0.046 * tv + 0.189 * radio$$
+
+#### Inclass Practice Problem 2 - Partial F Test
+*From the condominium problem, use the method of Partial F test to fit the model. How many possible fitted models would you suggest for predictive purpose?*
+
+```{r}
+# Partial F-Test to fit the model
+# Check floors
+reduced_price_model1 <- lm(data = condominium, listprice ~ livingarea + baths + floors)
+
+# Check floors and bedrooms
+reduced_price_model2 <- lm(data = condominium, listprice ~ livingarea + baths)
+
+# Test the reduced models to see which 
+summary(reduced_price_model1)
+summary(reduced_price_model2)
+anova(reduced_price_model1, price_model)
+anova(reduced_price_model2, price_model)
+
+# Reduced price model 1 will be used
+```
+
+### Model Fit
+How well does the regression model fit?? Two of the most common numerical measures of model fit are RSE(Residual Standard Error: $s$) and $R^2$ (Coefficient of Determination), the fraction of variation explained. These quantities are computed and interpreted in the same fashion as for simple linear regression.
+
+### R^2 (the coefficient of determination)
+Recall that in simple linear regression, $R^2$, is the square of the correlation of the response
+and the variable. In multiple regression, it turns out that it equals to $Cor(Y, \hat{Y})^2$, the square of the correlation between the response and the fitted linear model, $R^2$, is the proportion of the total variation that is explained by the regression model of $Y$ on $X_1, X_2, ..., X_p$ that is,
+
+$$R^2 = \frac{SSR}{SST} = 1 - \frac{SSE}{SST}$$
+
+An $R^2$ value close to 1 indicates that the model explains a large portion of the variance in the response variable. For example, if $R^2$ is 0.7982 for the model, then 79.82% of the variation of the response variable is explained by the model.
+
+It turns out that $R^2$ will always increase when more variables are added to the model, even if those variables are only weakly associated with the response. To compensate for this one can define an adjusted coefficient of determination, $R_{adj}^2$
+
+$$R_{adj}^2 = 1 - \frac{\frac{SSE}{n - p - 1}}{\frac{SST}{n-1}}$$
+
+```{r R squared adjusted Advertising}
+full<-lm(sale~tv+radio+newspaper, data=Advertising)
+reduced<-lm(sale~tv+radio, data=Advertising)
+summary(full)$r.squared
+summary(reduced)$r.squared
+summary(full)$adj.r.squared
+summary(reduced)$adj.r.squared
+```
+
+From the Advertising example, the model containing all predictors has a $R_{adj}^2 = 0.8956$. In contrast, the model that contains only TV and radio as predictor has a $R_{adj}^2 = 0.8962$. This implies that a model that uses TV and radio expenditures to predict sales is substantially better than one that use the full model.
+
+### The estimation of Standard error of residuals (RMSE or s)
+One way to assess strength of fit is to consider how far off the model is for a typical case. That is, for some observations, the fitted value will be very close to the actual value, while for others it will not. The magnitude of a typical residual can give us a sense of generally how close our estimates are. Some of the residuals are positive, while others are negative.Thus, it makes more sense to compute the square root of the mean squared residual and to make this estimate unbiased, we have to divide the sum of the squared
+residuals by the degrees of freedom in the model. In general, RMSE or $s$ is defined as
+
+$$s = RMSE = \sqrt{\frac{1}{n - p - 1}SSE} = \sqrt{MSE}$$
+
+Where
+
+$$
+\begin{aligned}
+SSE =& \sum_{i=1}^n e_i^2 \\
+    =& \sum_{i=1}^n (y_i - \hat{y_l})^2 \\
+    =& \sum_{i=1}^n (y_i - (\hat{\beta_0} + \hat{\beta_{1i}} * X_{1i} + \hat{\beta_{2i}} * X_{2i} + \hat{\beta_{3i}} * X_{3i}))^2
+\end{aligned}
+$$
+
+RMSE can be interpreted as the standard deviation of the unexplained variance, and has the useful property of being in the same units as the response variable. Lower values of RMSE indicate better fit.
+
+As a reminder,
+
+Explained variation
+  - This is the amount that other variables in the data set explain differences between the values of the variable of interest (the signal).
+
+Unexplained variation
+  - Some differences between the values cannot be explained in terms of the changing values of other variables in the data set. The unexplained variation is often noise.
+
+```{r RMSE Advertising}
+full <- lm(sale ~ tv + radio + newspaper, data = Advertising)
+reduced <- lm(sale ~ tv + radio, data = Advertising)
+sigma(full) # RMSE for the full model
+sigma(reduced) # RMSE for the reduced model
+```
+
+Looking at the reduced model that contains only TV and radio as predictors has an RMSE of 1.681, and the model that also contains newspaper as a predictor (full model) has an RMSE = 1.686. This corroborates our previous conclusion that a model that uses TV and radio expenditures to predict sale is much more accurate than one that use the full model. Therefore, there is no point in using newspaper spending as a predictor in the model.
+
+In many computer printouts and textbooks, $s^2$, is called the mean square for error (MSE). This estimate of $s^2 = MSE = \frac{1}{n - p - 1}SSE$. The units of the estimated variance are squared units of the dependent variable y. Since the dependent variable y in the adverstising data example is sales in units, the units of $s^2$ are units$^2$.  This makes meaningful interpretation of $s^2$ difficult, so we use the standard deviation $s$ to provide a more meaningful measure of variability.
+
+Output from the full model,
+
+Residual standard error: 1.686 on 196 degrees of freedom
+
+Multiple R-squared: 0.8972, Adjusted R-squared: 0.8956
+
+Output from the reduced model
+
+Residual standard error: 1.681 on 197 degrees of freedom
+
+Multiple R-squared: 0.8972, Adjusted R-squared: 0.8962
+
+### Model Prediction
+
+Once we have fit the multiple regression model, it is straightforward to predict the response Y on the basis of a set of values for the predictors $X_1, X_2, ..., X_p$. We usually use a prediction interval to predict the response y.
+
+```{r Model Prediction Advertising}
+reduced <- lm(sale ~ tv + radio, data = Advertising)
+newdata = data.frame(tv = 200, radio = 20)
+predict(reduced, newdata, interval = "predict")
+```
+
+The 95% confidence interval of the sale with the given parameters is between 12.5042 (thousand units )and 19.1597(thousandunits) when the TV and Radio advertising budgets are 200 thousand dollars and 20 thousand dollars, respectively.
+
+### Inclass Practice Problem 3 - Model Fit
+*From the condominium problem, use the method of Model Fit to calculate $R_{adj}^2$ and RMSE for all possible models. Which model or set of models would you suggest for predictive purpose?*
+
+```{r Model Fit Condominium}
+full <- lm(listprice ~ livingarea + floors + bedrooms + baths, data = condominium) # full model
+print("Full")
+summary(full)$adj.r.squared
+summary(full)$sigma
+print("Reduced1")
+#Reduced model (dropping a bedrooms availabe)
+reduced <- lm(listprice ~ livingarea + floors + baths, data = condominium) 
+summary(reduced)$adj.r.squared
+summary(reduced)$sigma
+print("Reduced2")
+#Reduced model (dropping a bedrooms and a floors availabe)
+reduced2 <- lm(listprice ~ livingarea + baths, data = condominium)
+summary(reduced2)$adj.r.squared
+summary(reduced2)$sigma
+#Reduced model (dropping a bedrooms availabe)
+reduced1 <- lm(listprice ~ livingarea + floors + baths, data = condominium)
+summary(reduced1)
+newdata = data.frame(livingarea=11, baths=1,floors=2)
+predict(reduced1,newdata,interval="predict")
+```
+

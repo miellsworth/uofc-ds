@@ -1,0 +1,164 @@
+---
+title: "DATA603 Unit 3 Part 2"
+---
+
+
+## Part II: Model Adequacy Checking
+
+## Basic Assumptions of One-Factor Designs and ANOVA
+
+For a CRD model, those well-versed in regression analysis will find the assumptions familiar; the same so-called standard assumptions are common to both techniques. We ascribe no special meaning to the order in which we list them. Recall the statistical model $Y_{ij}=\mu+\tau_i+\epsilon_{ij}$. We assume the following three statements:
+
+1. The $\epsilon_{ij}$ are independent random variables for all $i$, $j$ and uncorrelated.
+
+This means that each error term, $\epsilon_{ij}$, is independent of each other error term. 
+
+2. Each $\epsilon_{ij}$ is normally distributed. We can assume that $E(\epsilon_{ij})=0$ (that is, the true mean of $\epsilon_{ij}$ is zero)
+
+
+This is equivalent to saying that if we consider all the data values in a specific column, they would (theoretically, or if we had an infinite number of them) be distributed according to a normal distribution, with a mean equal to whatever is the true mean of that column. 
+
+3. Each $\epsilon_{ij}$ has the same variance, $\sigma^2_\epsilon$ (a constant variance)
+
+This says that the normal distribution of each respective column, though perhaps differing in mean, has the same variance. This assumption is often referred to as the assumption of constant variance, and sometimes __the assumption of homoscedasticity.__
+
+Note!! We define the residual for observation $j$ in treatment $i$ as
+
+$$
+\begin {aligned}
+e_{ij}&=y_{ij}-\hat{y}_{ij}\\
+where\\
+\hat{y}_{ij}&\mbox{ is the estimate of the corresponding observation   }y_{ij}\mbox{  obtained as follow}\\
+\hat{y}_{ij}&=\hat{\mu}+\hat{\tau}_i\\
+&=\bar{y}_{..}+(\bar{y}_{i.}-\bar{y}_{..})\\
+&=\bar{y}_{i.}
+\end{aligned}
+$$
+
+## How to check Model Adequacy
+
+__1. Plot of Residuals Versus Fitted Values__
+
+If the model is correct and if the assumptions are satisfied, the residuals should be structureless; in particular they should be unrelated to any other variable including the predicted response.
+
+A simple check is to __plot the residuals versus the fitted values__ $\hat{y}_{ij}$. This plot should not reveal any obvious pattern.
+
+
+The plot also can check for __nonconstant variance__. Sometimes the variance of the observations increases as the magnitude of the observation increases. The residuals would get larger as $y_{ij}$ gets larger, and the plot of residuals versus $\hat{y}_{ij}$ would look like an outward-opening funnel or megaphone. Nonconstant variance also arises in case where the data follow a non normal, skewed distribution because in skewed distributions the variance tends to be a function of the mean. 
+
+If the assumption of homogeneity of variances is violated, the $F$ test is only slightly affected in the balanced model.
+
+__2. Statistical Tests for Equality of Variance__
+Although residual plots are frequently used to diagnose inequality of variance such as Breusch-Pagan test, Levene test, several statistical tests have also been proposed. Here we provide __the Bartlett's test__
+
+$$
+\begin {aligned}
+H_o:&\sigma^2_1=\sigma^2_2=\sigma^2_3=...=\sigma^2_c\\
+H_a:&\mbox{ at least one }\sigma^2 \mbox{ is different } i=1,2,3,...,c
+\end{aligned}
+$$
+The procedure involves computing a statistic whose sampling distribution is closely approximated by the chi-square distribution with $c-1$ degrees of freedom.
+
+
+The test statistic is
+$$
+\begin {aligned}
+\chi^2=2.3026 \frac{Q}{C},
+\end{aligned}
+$$
+where $Q$ and $C$ are some quantities. 
+We reject $H_0$ when $\chi^2$ > $\chi^2_{\alpha,c-1}$. The p-value approach to decision making could be used.
+
+__3. Plotting a normal probability plot of the residuals__
+
+A check of the normallity assumption could be made by plotting a histrogram of the residuals. If the NID(0,$\sigma^2$) assumption (normality and independence) on errors is satisfied, then this plot should look like a sample from a normal distribution centered at zero. Unfortunally, with small samples, considerable fluctuation often occurs, so an extremely useful procedure is to construct a normal probability plot of the residuals. If the underlying error distribution is normal, this plot will resemble a straight line.
+
+Note! There are also a variety of statistical tests for normality, including Shapiro-Wilk test (from Linear Regression). We could use this test as well.
+
+
+From the broker study,check Model Adequacy (Normality Assumption, Constant Variance Assumption, Independent error term Assumption )
+
+```{r}
+library(lmtest)
+brokerstudy=read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/brokerstudy.csv", header=TRUE)
+str(brokerstudy)#Read your data set and double check that dependent and indepent variables are correctly read by R
+CRD<-aov(price~broker, data=brokerstudy) #Perform ANOVA for CRD
+summary(CRD)
+par(mfrow=c(2,2))
+plot(CRD)
+bartlett.test(price~broker, data=brokerstudy)
+shapiro.test(residuals(CRD))
+bptest(CRD)
+```
+
+## Inclass Practice Problem
+
+From the MVPC experiment, check Model Adequacy (Normaillty Assumption, Constant Variance Assumption, Independent error term Assumption)
+
+```{r,include=FALSE}
+library(lmtest)
+MVPC=read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/MVPC.csv", header=TRUE)
+str(MVPC)#Read your data set and double check that dependent and indepent variables are correctly read by R
+CRD<-aov(Score~Treatment, data=MVPC) #Perform ANOVA for CRD
+boxplot(Score~Treatment, data=MVPC, main="Boxplot diagram for the different Levels") #a visual comparison of the data obtained at the different levels
+par(mfrow=c(2,2))
+plot(CRD)
+bartlett.test(Score~Treatment, data=MVPC)
+shapiro.test(residuals(CRD))
+bptest(CRD)
+```
+
+## Inclass Practice Problem
+
+From the lifetime of AA battery experiment,check Model Adequacy (Normaillty Assumption, Constant Variance Assumption, Independent error term Assumption )
+```{r,include=FALSE}
+lifetime=read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/lifetime.csv", header=TRUE)
+str(lifetime)#Read your data set and double check that dependent and indepent variables are correctly read by R
+CRD<-aov(hrs~device, data=lifetime) #Perform ANOVA for CRD
+par(mfrow=c(2,2))
+plot(CRD)
+bartlett.test(Score~Treatment, data=MVPC)
+shapiro.test(residuals(CRD))
+bptest(CRD)
+```
+
+In the situations where assumptions are unjustified, the experimenter may wish to use an alternative procedure to the F -test analysis of the variance that does not depend on the assumptions. Such a procedure has been developed by Kruskal and Wallis (1952).
+
+## Kruskal-Wallis Test
+One way to avoid the distributional aspect of the standard assumptions (that is, the assumption of normality) is to perform what is called a nonparametric test. The Kruskal-Wallis test is used to test the null hypothesis that the $c$ treatments are identical against the alternative hypothesis that some of the treatments generate observations that are larger than others. Because the procedure is designed to be sensitive for testing differences in means, it is sometimes convenient to think of the Kruskal- Wallis test as a test for equality of treatment means. The Kruskal-Wallis test is a __nonparametric alternative__ to the usual analysis of variance.
+
+To perform a Kruskal-Wallis test, first rank the observations $y_{ij}$ in ascending order and replace each observaton by its rank, say $R_{ij}$, with smallest observation having rank 1. In the case of ties, assign the average rank to each of the tied observations.
+
+The test statistic is
+$$
+\begin {aligned}
+H&=\frac{1}{S^2}[\sum^c_{i=1}\frac{R^2_i}{r_i}-\frac{N(N+1)^2}{4}]\\
+S^2&=\frac{1}{N-1}[\sum^c_{i=1}\sum^{r_i}_{j=1}R^2_{ij}-\frac{N(N+1)^2}{4}]\\
+where\\
+r_i&\mbox{  is the number of observations in the i treatment}\\
+N&\mbox{  is the total number of observations}\\
+S^2&\mbox{  is just the variance of the ranks}
+\end{aligned}
+$$
+We reject the null hypothesis $H_0$ when $H>\chi^2_{\alpha,c-1}$. The p-value approach could be used.
+
+```{r}
+brokerstudy=read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/brokerstudy.csv", header=TRUE)
+str(brokerstudy)#Read your data set and double check that dependent and indepent variables are correctly read by R
+kruskal.test(price~broker, data=brokerstudy)
+```
+
+The output shows that H= 16.498 with the p-value= 0.002419 <$\alpha=0.05$. We can conclude that at least one average price is different. 
+
+
+If the Kruskal-Wallis test is significant, a post-hoc analysis can be performed to determine which levels of the independent variable differ from each other level.  The most popular test for this is the **Dunn test**.
+
+```{r}
+library(FSA)
+brokerstudy=read.csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 3/brokerstudy.csv", header=TRUE)
+DT = dunnTest(price~broker,data=brokerstudy,method="none")
+DT
+```
+
+
+

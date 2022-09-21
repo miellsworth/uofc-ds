@@ -1,0 +1,131 @@
+Color	Number of Unique Pieces	Number of Unique Sets	Number of Unique Themes	Number of Years	Max Set Size	Median Set Size
+Aqua	55	48	15	10	1305	73
+Black	4367	8333	373	60	5922	330
+Blue	1822	5279	342	65	5922	300
+Blue-Violet	35	17	3	2	987	165
+Bright Green	257	726	131	24	5200	155
+Bright Light Blue	137	196	53	16	4009	155
+Bright Light Orange	404	618	128	14	4640	240
+Bright Light Yellow	105	193	60	13	4060	197
+Bright Pink	238	432	69	15	4640	208
+Brown	463	933	131	38	2472	196
+Chrome Antique Brass	2	14	7	5	902	355
+Chrome Black	3	1	1	1	7	7
+Chrome Blue	7	17	7	6	485	99
+Chrome Gold	34	251	74	28	4060	226
+Chrome Green	1	2	1	1	499	315
+Chrome Pink	8	21	2	7	231	70
+Chrome Silver	70	355	94	25	3807	184
+Copper	25	51	17	11	2455	400
+Dark Azure	173	200	57	7	2741	302
+Dark Blue	752	988	202	17	5461	354
+Dark Blue-Violet	4	3	2	2	231	142
+Dark Bluish Gray	1511	3748	254	15	5922	448
+Dark Brown	335	795	142	10	4640	414
+Dark Flesh	40	31	20	6	2844	48
+Dark Gray	823	1501	161	33	3115	249
+Dark Green	440	532	155	15	4640	378
+Dark Orange	344	668	144	19	4640	293
+Dark Pink	310	521	72	24	5200	142
+Dark Purple	417	496	94	14	4640	252
+Dark Red	765	974	195	17	5922	413
+Dark Tan	466	1131	167	16	4640	472
+Dark Turquoise	131	98	27	10	1712	327
+Earth Orange	28	55	21	16	1574	94
+Fabuland Brown	7	19	6	8	153	51
+Flat Dark Gold	27	33	11	5	987	51
+Flat Silver	584	1436	201	18	4640	257
+Flesh	54	62	36	12	2530	267
+Glitter Trans-Clear	11	12	7	6	516	93
+Glitter Trans-Dark Pink	11	31	9	11	1229	82
+Glitter Trans-Light Blue	8	10	4	3	1013	475
+Glitter Trans-Neon Green	1	5	3	2	1573	275
+Glitter Trans-Purple	6	16	7	5	700	142
+Glow In Dark Opaque	34	76	32	19	871	169
+Glow In Dark Trans	8	19	8	6	2031	126
+Glow in Dark White	28	43	22	7	2062	435
+Green	1014	2963	271	62	5200	287
+Lavender	83	136	28	7	4009	281
+Light Aqua	128	124	36	7	4009	291
+Light Blue	23	28	9	11	4640	33
+Light Bluish Gray	1589	3971	254	16	5922	462
+Light Flesh	758	813	75	15	5195	334
+Light Gray	1350	2842	188	56	3115	271
+Light Green	41	40	12	15	1017	90
+Light Lime	10	8	4	5	675	191
+Light Orange	7	9	4	4	1505	153
+Light Pink	5	11	6	9	328	92
+Light Purple	12	6	5	3	4640	500
+Light Salmon	7	6	3	3	113	70
+Light Turquoise	9	11	6	5	153	68
+Light Violet	36	26	8	10	328	101
+Light Yellow	59	44	11	15	1305	95
+Lime	687	1244	184	22	5200	254
+Maersk Blue	59	10	4	9	1232	982
+Magenta	192	320	48	16	4060	262
+Medium Azure	274	417	62	7	4640	232
+Medium Blue	446	674	146	25	5922	320
+Medium Dark Flesh	311	481	102	8	4640	397
+Medium Dark Pink	3	2	1	1	216	176
+Medium Green	49	38	11	11	716	108
+Medium Lavender	170	227	43	7	4060	285
+Medium Lime	21	19	7	6	207	102
+Medium Orange	81	64	22	11	1305	153
+Medium Violet	2	2	2	2	500	284
+Metal Blue	29	16	5	4	987	379
+Metallic Gold	50	153	66	17	4640	340
+Metallic Green	11	5	3	2	1100	1100
+Metallic Silver	103	442	95	26	5195	365
+Milky White	22	77	29	27	744	120
+Olive Green	232	204	64	6	4009	430
+Orange	793	1721	214	21	5461	332
+Pearl Dark Gray	312	576	123	16	4060	192
+Pearl Gold	458	1044	158	14	4640	324
+Pearl Light Gold	11	10	5	6	1679	176
+Pearl Light Gray	327	503	115	15	3807	200
+Pearl Very Light Gray	3	4	3	2	68	45
+Pearl White	11	7	3	3	401	66
+Pink	117	99	15	16	805	135
+Purple	103	104	26	13	4640	226
+Red	2863	6469	350	66	5922	291
+Reddish Brown	938	2121	202	16	5922	440
+Royal Blue	197	169	52	35	5195	48
+Rust	4	4	3	3	420	96
+Salmon	3	2	1	2	28	28
+Sand Blue	310	267	94	17	4009	303
+Sand Green	306	293	94	18	4640	471
+Sand Purple	14	5	3	2	716	716
+Sand Red	32	17	6	4	805	194
+Sky Blue	13	7	3	2	207	94
+Speckle Black-Copper	4	3	1	1	437	44
+Speckle Black-Gold	2	4	1	2	1009	686
+Speckle Black-Silver	12	47	15	9	2455	364
+Speckle DBGray-Silver	5	6	1	1	437	86
+Tan	1040	2593	256	24	5922	437
+Trans Light Royal Blue	1	1	1	1	66	66
+Trans-Black	199	1205	158	19	4640	279
+Trans-Bright Green	109	258	64	12	4640	216
+Trans-Clear	469	3256	259	65	5922	289
+Trans-Dark Blue	179	1283	206	40	5195	243
+Trans-Dark Pink	149	356	68	19	5200	95
+Trans-Green	113	1104	214	41	4640	252
+Trans-Light Blue	360	1685	209	33	4640	241
+Trans-Light Purple	10	10	2	2	266	16
+Trans-Medium Blue	88	178	73	17	4640	153
+Trans-Neon Green	159	935	193	28	4640	207
+Trans-Neon Orange	198	979	205	25	4640	200
+Trans-Neon Yellow	1	7	5	3	226	36
+Trans-Orange	116	1049	152	15	4640	311
+Trans-Pink	42	29	1	4	152	66
+Trans-Purple	108	205	54	18	4060	265
+Trans-Red	148	2736	267	42	5200	268
+Trans-Very Lt Blue	24	25	2	4	152	71
+Trans-Yellow	148	1794	216	41	5200	246
+Unknown	42	70	27	26	2286	159
+Very Light Bluish Gray	50	42	8	7	2448	434
+Very Light Gray	2	2	2	2	861	833
+Very Light Orange	2	2	2	2	132	83
+Violet	40	31	9	6	696	78
+White	4693	6801	363	66	5922	293
+Yellow	2918	6359	332	64	5922	277
+Yellowish Green	57	65	18	5	2741	471

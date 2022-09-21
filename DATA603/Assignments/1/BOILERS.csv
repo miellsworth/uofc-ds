@@ -1,0 +1,36 @@
+Manhrs,Capacity,Pressure,Boiler,Drum,cp
+3698,610,1500, utility ,mud,915000
+3728,627,1525, utility ,mud,956175
+3211,610,1500, utility ,mud,915000
+2974,120,375, industry ,mud,45000
+1965,65,750, industry ,mud,48750
+2566,150,500, industry ,mud,75000
+1515,150,250, industry ,mud,37500
+2000,150,500, industry ,mud,75000
+2735,150,325, industry ,mud,48750
+2635,90,1140, industry ,mud,102600
+1206,30,325, industry ,mud,9750
+3775,441,410, industry ,mud,180810
+3120,441,410, industry ,mud,180810
+4206,441,410, industry ,mud,180810
+4006,441,410, industry ,mud,180810
+1200,30,325, industry ,mud,9750
+10825,1073.8,2170, utility , steam,2330146
+7606,610,1500, utility , steam,915000
+6454,627,1525, utility , steam,956175
+3137,120,375, industry , steam,45000
+3590,65,750, industry , steam,48750
+4526,150,500, industry , steam,75000
+4023,150,325, industry , steam,48750
+3748,88.2,399, industry , steam,35192
+2972,88.2,399, industry , steam,35192
+3163,88.2,399, industry , steam,35192
+4065,90,1140, industry , steam,102600
+2048,30,325, industry , steam,9750
+6500,441,410, industry , steam,180810
+5651,441,410, industry , steam,180810
+6565,441,410, industry , steam,180810
+6387,441,410, industry , steam,180810
+4268,150,500, industry , steam,75000
+2680,125,750, industry , steam,93750
+4065,90,1140, industry , steam,102600

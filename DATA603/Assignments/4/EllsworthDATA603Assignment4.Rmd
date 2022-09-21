@@ -1,0 +1,300 @@
+---
+title: "DATA 603 Assignment 4"
+author: "Michael Ellsworth"
+date: "December 6, 2019"
+output:
+  html_document:
+    df_print: paged
+header-includes: \usepackage{xcolor}
+---
+```{r Load Packages, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(aod)
+library(lmtest)
+library(ROCR)
+library(pROC)
+library(agricolae)
+library(FSA)
+library(kableExtra)
+```
+
+# Problem 1
+*Numerous factors contribute to the smooth running of an electric motor (“Increasing Market Share Through Improved Product and Process Design: An Experimental Approach,” Quality Engineering, 1991: 361-369). In particular, it is desirable to keep motor noise and vibration to a minimum. To study the effect that the brand of bearing has on motor vibration, five different motor bearing brands were examined by installing each type of bearing on different random samples of six motors. The amount of motor vibration (measured in microns) was recorded when each of the 30 motors was running. The data for this study is given in the data file vibration.csv*
+
+```{r Load Data 1, include=FALSE}
+vibration <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/4/vibration.csv")
+vibration$brand <- as.factor(vibration$brand)
+glimpse(vibration)
+levels(vibration$brand)
+```
+
+## a
+*What are the response variable and an experimental unit?*
+
+  - The response variable is vibration (microns)
+  - The experimental unit is the motor
+
+## b
+*What is the treatment and how many treatment levels of this experiment?*
+
+  - The treatment is the brand bearing
+  - There are 5 treatment levels; brand1, brand2, brand3, brand4 and brand5
+
+## c
+*Write the hypotheses testing, test and conclude if the average amount of motor vibrations are different at significance level = 0.05.*
+
+Hypothesis test:
+
+$$ \begin{aligned}
+H_0:& \mu_\text{brand1} = \mu_\text{brand2} = \mu_\text{brand3} = \mu_\text{brand4} = \mu_\text{brand5} \\
+H_a:& \text{ at least one } \mu_\text{brandi} \text{ is different } i = 1, 2, 3, 4, 5
+\end{aligned}$$
+
+```{r Anova test Vibration, echo = FALSE}
+CRD_1c <- aov(vibration ~ brand, data = vibration)
+summary(CRD_1c)
+```
+
+From the summary of the anova test, the P-value of the hypothesis is less than 0.05, which means we can reject $H_0$ and conclude that the average amount of motor vibrations are different amongst the motors for at least one motor brand.
+
+
+## d
+*Construct the Anova table for the test.*
+
+```{r Anova Table Input, include = FALSE}
+# Define ANOVA inputs
+SSE <- 22.84
+SSTr <- 30.86
+SST <- SSE + SSTr
+c <- 5
+N <- 30
+
+# Create anova table inputs
+MSTr <- SSTr / (c - 1)
+MSE <- SSE / (N - c)
+F_stat <- MSTr / MSE
+
+# Create anova table
+header <- c("Source of Variation", "Df", "Sum of Squares", "Mean Squares", "F-Statistic", "P-Value")
+anova_table <- data.frame(rbind(c("Between Treatments", c - 1, SSTr, MSTr, F_stat, 0.000187),
+                                c("Error within Treatments", N - c, SSE, MSE, "", ""),
+                                c("Total", N - 1, SSTr + SSE, "", "", "")))
+names(anova_table) <- header
+```
+
+```{r ANOVA Table, echo = FALSE}
+kable(anova_table, "html", booktabs = TRUE) %>%
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(0, align = "c", bold = TRUE, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(anova_table), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(anova_table), by = 2), color = "black", background = "#FFFFFF")
+```
+
+
+## e
+*Construct the boxplots for all levels. Do you detect any influencial outliers?*
+
+```{r Boxplots and Outliers, echo = FALSE}
+vibration %>% ggplot(aes(x = brand, y = vibration)) +
+  geom_boxplot(aes(fill = brand))
+boxplot(vibration ~ brand, data = vibration)
+```
+
+In brand 3, there are two influential outliers.
+
+## f
+*Test all possible pairwise t tests (both Unadjusted and adjusted P-value), Tukey HSD, Newman-Keuls, and Scheffe Test. Compare all outputs and report your results.*
+
+```{r Means, echo = FALSE}
+# Calculate mean
+vibration %>% 
+  group_by(brand) %>%
+  summarise(mean = mean(vibration)) %>%
+  arrange(mean)
+```
+
+Means in order:
+
+  - Brand 5
+  - Brand 3
+  - Brand 1
+  - Brand 4
+  - Brand 2
+
+```{r Pairwise t-test unadjusted}
+# Pairwise t-test (un-adjusted)
+pairwise.t.test(vibration$vibration, vibration$brand, p.adj = "none")
+```
+
+From the unadjusted pairwise t-test output, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1
+  - Group 2: Brand 3, Brand 1, Brand 4
+  - Group 3: Brand 2
+
+```{r Pairwise t-tests bonferroni, echo = FALSE}
+# Pairwise t-test (bonferroni)
+pairwise.t.test(vibration$vibration, vibration$brand, p.adj = "bonferroni")
+```
+
+From the adjusted pairwise t-test output, using the bonferroni adjustment, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1, Brand 4
+  - Group 2: Brand 4, Brand 2
+
+```{r Pairwise t-tests holm, echo = FALSE}
+# Pairwise t-test (holm)
+pairwise.t.test(vibration$vibration, vibration$brand, p.adj = "holm")
+```
+
+From the adjusted pairwise t-test output, using the holm adjustment, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1
+  - Group 2: Brand 3, Brand 1, Brand 4
+  - Group 3: Brand 4, Brand 2
+
+```{r Tukey HSD, echo = FALSE}
+# Tukey HSD
+TukeyHSD(CRD_1c, conf.level = 0.95)
+```
+
+From the Tukey HSD output, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1
+  - Group 2: Brand 3, Brand 1, Brand 4
+  - Group 3: Brand 4, Brand 2
+
+```{r Newman-Keuls, echo = FALSE}
+# Newman-Keuls
+print(SNK.test(CRD_1c, "brand", group = TRUE))
+```
+
+From the Newman-Keuls output, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1
+  - Group 2: Brand 3, Brand 1, Brand 4
+  - Group 3: Brand 2
+
+```{r Scheffe Test, echo = FALSE}
+# Scheffe Test
+scheffe.test(CRD_1c, "brand", group = TRUE, console = TRUE)
+```
+
+From the Scheffe test output, the groups with similar means are as follows:
+
+  - Group 1: Brand 5, Brand 3, Brand 1, Brand 4
+  - Group 2: Brand 4, Brand 2
+  
+Comparing all the outputs:
+
+```{r Comparison dataframe, include = FALSE}
+header <- c("Brand", "Pairwise t-test Unadjusted (Groups)", "Pairwise t-test Bonferroni (Groups)", "Pairwise t-test Holm (Groups)", "Tukey HSD (Groups)", "Newman-Keuls (Groups)", "Scheffe (Groups)")
+Brand_5 <- c("5", "1", "1", "1", "1", "1", "1")
+Brand_3 <- c("3", "1, 2", "1", "1, 2", "1, 2", "1, 2", "1")
+Brand_1 <- c("1", "1, 2", "1", "1, 2", "1, 2", "1, 2", "1")
+Brand_4 <- c("4", "2", "1, 2", "2, 3", "2, 3", "2", "1, 2")
+Brand_2 <- c("2", "3", "2", "3", "3", "3", "2")
+comparison <- as.data.frame(rbind(Brand_5, Brand_3, Brand_1, Brand_4, Brand_2), row.names = FALSE)
+names(comparison) <- header
+```
+
+```{r Comparison Table, echo = FALSE}
+kable(comparison, "html", booktabs = TRUE) %>%
+  kable_styling(full_width = FALSE, position = "center") %>%
+  row_spec(0, align = "c", bold = TRUE, color = "white", background = "#696969" ) %>%
+  column_spec(1, color = "white", bold = TRUE, background = "#696969") %>%
+  column_spec(seq(from = 3, to = ncol(comparison), by = 2), color = "black", background = "#D3D3D3") %>%
+  column_spec(seq(from = 2, to = ncol(comparison), by = 2), color = "black", background = "#FFFFFF")
+```
+
+Comparing the tests:
+
+  - Each test consistently puts Brand 2 and Brand 5 in a single group
+  - Pairwise t-test with a Bonferroni adjustment and the Scheffe test are consistent
+  - Pairwise t-test with a Holm adjustment and Tukey are consistent
+  - Pairwise t-test unadjusted and Newman-Keuls are consistent
+
+## g
+*Check all basic assumptions for CRD and report your result. If some assumptions are not met, what would you proceed?*
+
+```{r Assumption Plots, echo = FALSE}
+par(mfrow=c(2,2))
+plot(CRD_1c)
+
+# Equal variance
+bartlett.test(vibration ~ brand, data = vibration)
+
+# Normally Distributed Residuals
+shapiro.test(residuals(CRD_1c))
+
+# Equal variance
+bptest(CRD_1c)
+```
+
+Assumptions:
+
+  - Plot of Residuals Versus Fitted Values: There is no obvious pattern in the plot
+  - Statistical Tests for Equality of Variance: Both Breusch-Pagan and Bartlett test suggest equal variance
+  - Plotting a normal probability plot of the residuals: The QQ plot and Shapiro-Wilk test suggest normally distributed residuals
+
+# Problem 2
+*Members of the golf league at Eastern Electric are looking for a new golf course; the course they’ve used for years has been sold to developers of a retirement community. A search team has gathered the data in golfleague.csv on four local courses; for each course, they have the most recent scores for players like those in the Eastern Electric golf league.*
+
+```{r Load Data 2, include=FALSE}
+golfleague <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/4/golfleague.csv")
+golfleague$group <- as.factor(golfleague$group)
+glimpse(golfleague)
+```
+ 
+## a
+*Perform an ANOVA to determine whether there is a significant difference in average score among the four local golf courses.*
+
+```{r ANOVA golf, echo = FALSE}
+CRD_2a <- aov(score ~ group, data = golfleague)
+summary(CRD_2a)
+```
+
+From the summary of the anova test, the P-value of the hypothesis is less than 0.05, which means we can reject $H_0$ and conclude that the average score is different amongst the different golf courses.
+
+## b
+*Check all basic assumptions for CRD and report your result. If some assumptions are not met, perform an alternative test and a posthoc analysis to determine whether there is a significant difference in average score among the four local golf courses.*
+
+```{r Assumption Plots golf, echo = FALSE}
+par(mfrow = c(2, 2))
+plot(CRD_2a)
+
+# Equal variance
+bartlett.test(score ~ group, data = golfleague)
+
+# Normally Distributed Residuals
+shapiro.test(residuals(CRD_2a))
+
+# Equal variance
+bptest(CRD_2a)
+```
+
+Assumptions:
+
+  - Plot of Residuals Versus Fitted Values: There is no obvious pattern in the plot
+  - Statistical Tests for Equality of Variance: Both Breusch-Pagan and Bartlett test suggest equal variance
+  - Plotting a normal probability plot of the residuals: The QQ plot and Shapiro-Wilk test suggest non-normally distributed residuals
+
+Since the assumption that the residuals are normally distributed is rejected, we would need to perform the Kruskal-Wallis test.
+
+```{r Kruskal Test golf, echo = FALSE}
+kruskal.test(score ~ group, data = golfleague)
+```
+
+Based on the Kruskal-Wallis test, we can conclude that the average score is different amongst the different courses. The Dunn test will determine which courses are different from each other.
+
+```{r Dunn Test, echo = FALSE}
+DT = dunnTest(score ~ group, data = golfleague, method = "none")
+DT
+golfleague %>%
+  ggplot(aes(x = group, y = score)) +
+  geom_boxplot(aes(fill = group))
+```
+
+From the Dunn test and the boxplots, the mean scores for all of the courses are different from each other.

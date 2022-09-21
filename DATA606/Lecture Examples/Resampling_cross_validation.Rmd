@@ -1,0 +1,147 @@
+---
+title: "Resampling: cross-validation"
+output: html_notebook
+---
+
+### Cross-validation
+```{r}
+library(ISLR)
+library(boot)
+library(ggplot2)
+
+data(Auto)
+set.seed(1000)
+
+# LOOCV 
+cv_error<-rep(0,7)
+for(i in 1:7){
+  model_fit<-glm(mpg~poly(horsepower,i), data = Auto, family = gaussian())
+  cv_error[i]=cv.glm(Auto, model_fit)$delta[1]
+}
+
+cv_result<-data.frame(cv_error, poly=seq(1,7,by=1))
+ggplot()+geom_line(data = cv_result, aes(poly, cv_error), colour='red')+geom_point(data = cv_result, aes(poly, cv_error), colour='black')
+```
+
+___________________________________
+**In-class practice 1**
+```{r}
+# Now considering use the following combination of explanatory variables to predict the "mpg"
+# 1. weight + horsepower
+# 2. cylinders + horsepower
+# 3. weight + cylinders
+# Q: which combination is more suitable? (based on simple linear regression and LOOCV)
+
+
+```
+
+
+___________________________________
+```{r}
+set.seed(1000)
+CV_error1<-rep(0,7)
+CV_error2<-CV_error1
+for(i in 1:7){
+  model_fit<-glm(mpg~poly(horsepower,i), data = Auto, family = gaussian())
+  CV_error1[i]=cv.glm(Auto, model_fit, K=5)$delta[1]
+  CV_error2[i]=cv.glm(Auto, model_fit, K=5)$delta[1]
+}
+CV_result<-data.frame(CV_error1, CV_error2, poly=seq(1,7,by=1))
+ggplot()+geom_line(data = CV_result, aes(poly, CV_error1), colour='red')+geom_line(data = CV_result, aes(poly, CV_error2), colour='blue')+geom_point(data = CV_result, aes(poly, CV_error1), colour='black')+geom_point(data = CV_result, aes(poly, CV_error2), colour='black')
+```
+```{r}
+# MSE
+CV_error1
+```
+
+```{r}
+# RMSE
+sqrt(CV_error1)
+```
+
+
+### Apply "caret" pakcage
+```{r}
+library(caret)
+set.seed(1000)
+CV_error3<-rep(0,7)
+library(dplyr)
+
+new_data <- Auto %>% mutate(horsepower2 = horsepower,
+                            horsepower3 = horsepower ** 2,
+                            horsepower4 = horsepower ** 3)
+
+for (i in 1:7){
+  x = bquote(mpg~(poly(horsepower, .(i))))
+  model_fit<-train(as.formula(x), data=Auto, trControl = trainControl(method = "cv", number = 5), method='glm', family="gaussian")
+  CV_error3[i]=as.numeric(model_fit$results[2])
+}
+CV_error3
+```
+
+________________________________
+**In-class practice 2**
+```{r}
+# Now use k-fold with k=10 to recheck the result of practice 1.
+
+
+
+
+```
+
+________________________________
+### Classification based on logistic regression
+```{r}
+# snoring and heart diease
+set.seed(1000)
+y<-c(rep(1,24),rep(0,1355),rep(1,35),rep(0,605),rep(1,21),rep(0,192),rep(1,30),rep(0,224))
+x<-c(rep(0,1379),rep(2,640),rep(4,213),rep(5,254))
+bi_data<-data.frame(x,y)
+
+cv_error2<-rep(0,3)
+key<-c("identity","log","logit")
+for (i in 1:3){
+  model_fit<-glm(y~x, data = bi_data, family=binomial(link=key[i]))
+  cv_error2[i]=cv.glm(bi_data, model_fit, K=20)$delta[1]
+}
+cv_error2
+```
+
+### Are the above mis-classification rates correct?
+```{r}
+# You should redefine the "cost" argument in cv.glm
+cv_error4<-rep(0,3)
+key<-c("identity","log","logit")
+Cost<-function(a,b){
+  mean(abs(a-b))
+}
+
+for (i in 1:3){
+  model_fit<-glm(y~x, data = bi_data, family=binomial(link=key[i]))
+  cv_error4[i]=cv.glm(bi_data, model_fit, cost =Cost, K=20 )$delta[1]
+}
+cv_error4
+```
+
+__________________________________
+**In-class practice 3**
+```{r}
+# import the data "titanic_train"
+setwd('C:/Users/wenjun.jiang/OneDrive - University of Calgary/Course materials/DATA 606/Lec12')
+titanic_data<-read.csv("Titanic_train.csv")
+
+# Extract part of the explanatory variables (Pclass, Sex, etc.) as well as the response (Survived)
+myDATA<-titanic_data[, c(2,3,5,7,8)]
+```
+
+```{r}
+# Q: Apply logistic regression as well as k-fold with k=10 to choose the best combination of explanatory variables
+# 1. Pclass + Sex
+# 2. SibSp + Parch
+
+
+
+```
+
+
+

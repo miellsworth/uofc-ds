@@ -1,0 +1,843 @@
+---
+title: "DATA 602 - Introduction to Discrete Random Variables"
+output: html_notebook
+---
+
+# What is a Random Variable?
+
+Up to now, we have been describing events produced by random experiments in terms of $A$, $B$, $H_{i}$, or something
+of this nature. In many instances, we may be interested in investigating the *distribution* of events produced
+by a random experiment. In order to do so we must take these events $A$, $B$, etc., and use some measurement scale to quantify these events. Such events are made into numbers through the introduction of a random variable.
+
+A **random variable** is a numerical quantity whose value is dictated by chance. It is a way of assigning a unique
+numerical value to the various event(s) that are produced by a random experiment. Specifically, a random variable
+maps elements of the ${\cal S}$ to the real number line.
+
+**Illustration 1:** Consider a random experiment that involves three successive tosses of a fair coin. There are $n({\cal S}) = 8$ possible outcomes: $\cal S = \{(H,H,H), (H,H,T),(H,T,H),(T,H,H),(H,T,T),(T,H,T),(T,T,H),(T,T,T)\}$. Consider the event of 2 heads occur. Rather than express this in terms of $A$, or $2\:\:Heads$, we can introduce a random variable to *count* the number of heads that appear in the three tosses of the fair coin. 
+
+$X$ is to count the number of heads observed after the three coin tosses. $X$ can take on four different values, and these are $X = 0, 1, 2, 3$. Specifically, 
+
+$$
+\cal S = \{\underbrace{(H,H,H)}_{X = 3}, \underbrace{(H,H,T),(H,T,H),(T,H,H)}_{X = 2},\underbrace{(H,T,T),(T,H,T),(T,T,H)}_{X = 1},\underbrace{(T,T,T)}_{X = 0}\}
+$$
+When $X = 3$, this means that the number of heads appearing after the three tosses of the coin is three. And, $P(Observe\:\:3\:\:Heads) = P(X = 3) = \frac{1}{8} = 0.125$. Similarly, we can find the $P(X = 2), P(X = 1)$ and $P(X = 0)$. 
+
+It is customary to present these probabilities in tabular form. This method of visualizing the distibution of probabilities associated with the various values of the random variable $X$ is called a **probability distribution**. Below is the probability distribution for $X$ which counts the number of heads observed in three tosses of a fair coin, and shows via a table-display *how* the probabilities are distributed amongst the four different values of $X$. 
+
+$$
+\begin{array}{l|c|c|c|c}
+X              &  0                  &    1                &   2                 &   3    \\
+\hline
+P(X = x_{i})   & \frac{1}{8} = 0.125 & \frac{3}{8} = 0.125 & \frac{3}{8} = 0.125 & \frac{1}{8} = 0.125 \\
+\end{array}
+$$
+
+------------
+
+## Properties of a Probability Distribution
+
+In order for the tabular presentation of the probabilities associated with $X$ to be a probability distribution, two properties must hold:
+
+1. $0 < P(X = x_{i}) < 1$ for each unique value of $x_{i} \:\: \underbrace{\epsilon}_{\text{means an element of}} \:\: X$
+
+2. $\sum_{i = 1}^{k}P(X = x_{i}) = 1$
+
+We can see above that these two properties hold: (i) each probability is the table is between 0 and 1 and (ii)
+$$
+\begin{align}
+\sum_{X = 0}^{2}P(X = x) = & P(X = 0) + P(X = 1) + P(X=2) + P(X=3) \\
+                         = & \frac{1}{8} + \frac{3}{8} + \frac{3}{8} + \frac{1}{8} \\
+                         = & 1
+\end{align}
+$$
+From this, we can compute
+
+$$
+P(At\:\:most\:\:1\:\:Head) = P(X \leq 1) = P(X = 0) + P(X=1) = \frac{1}{8} + \frac{3}{8} = \frac{4}{8} = 0.50
+$$
+and
+$$
+P(Less\:\:1\:\:Head) = P(X < 1) = P(X = 0) = \frac{1}{8} = 0.125
+$$
+One can visualize the probability distribution of $X$ with the following R-code:
+```{r}
+x = c(0,1,2,3)  #creates a vector of value of the random variable X
+p = c(1/8, 3/8, 3/8, 1/8) #creates a vector of probabilities associated with each value of X
+plot(x,p, xlab="Values of X", ylab="P(X = x)", ylim=c(0,0.50), main="Probability Distribution of the Number of Heads in Three Tosses", type="h", col='blue')
+```
+From this visualization, we can discuss the behaviour, or *tendencies*, of $X$. The distribution of $X$ is said to be *symmetrical*. In this instance, the symmetry is perfect, as the lower half of the distribution is a mirror-image of the upper half.
+
+We now have some experience with working with a **discrete** random variable. This type of random variable can assume one of a finite number of possible values. 
+</br>
+</br>
+
+**Example 2** A recent shipment of 100 transmissions to an automobile repair shop included 10 transmissions that were faulty. As part of its quality control processes, the automobile repair shop is to randomly pick 5 of the 100 transmissions and test each. If at *least 2 of the tested transmissions are faulty*, then the entire shipment will be rejected. 
+</br>
+</br>
+The number of defective transmissions found in the five to be tested, measured by the random variable $X$, has the **probability distribution function**
+$$
+P(X = x) = \frac{{10 \choose x}{90 \choose 5 - x}}{{100 \choose 5}} \hspace{0.5in} x = 0, 1, 2, \cdots, 5
+$$
+</br>
+In this example, you will first *create a function* in R Studio that will enable you to compute various probabilities, rather than compute the various probabilities with the provided formula/probability distribution function. 
+<font color='red'>
+</br>
+
+1. Creation of a function in R Studio: We will create a `function()` called **deftran**, which is a function of $x$:
+```{r}
+deftran = function(x)
+  { #start the function with an left curly bracket
+  (choose(10,x)*choose(90,5-x))/choose(100,5)  #the prob.dist.function of x
+  }  #end the function with a right curly bracket
+```
+
+2. Now, create a *data vector* that stores all values of this partcular random variable.
+```{r}
+xvalues = 0:5 #deftrans has values 0,1,2,3,4,5
+```
+
+3. Create a second vector that will compute and store $P(X = x)$ for all values of $X = 0, 1, 2, \cdots, 5$:
+```{r}
+probx = numeric(length(xvalues)) #create a numeric vector with length(xvalues) positions (6 positions)
+```
+
+4. Create the probability distribution of $X$, stored in the **probx** data vector.
+```{r}
+options(scipen=999)  #included so the P(X=x)s are not in scienfic notation
+probx = deftran(xvalues)  #computes P(X=x) for each value
+probx #returns all P(X=x)s
+sum(probx[3:6])
+sum(probx[1:2])
+```
+
+If we use the **sum()** command, we can demonstrate that the above is a probability distribution!
+```{r}
+sum(probx)  #adds all P(X=x)s stored in the probx vector
+```
+
+</font>
+(b) From the work in (a), compute the probability that the shipment will be rejected.
+</br>
+</br>
+<font color='blue'>
+**Answer:** From a theoretical standpoint, you are required to (i) what it means for the shiptment to be rejected in terms of value(s) of the random variable $X$ then (ii) compute the probability. 
+$$
+\begin{aligned}
+P(\text{shipment rejected})  = & P(X \geq 2)\\
+                             = & P(X = 2)+ P(X = 3) + P(X = 4)  + P(X = 5)\\
+                             = & \frac{{10 \choose 2}{90 \choose 5 - 2}}{{100 \choose 5}} + \frac{{10 \choose 3}{90 \choose 5 - 3}}{{100 \choose 5}} + \frac{{10 \choose 4}{90 \choose 5 - 4}}{{100 \choose 5}} + \frac{{10 \choose 5}{90 \choose 5 - 5}}{{100 \choose 5}}\\
+                             = & 0.070218809173 + 0.006383528107 + 0.000251037622 + 0.000003347168 \\
+                             = & 0.07685672 \\
+                             \approx & 0.0769
+\end{aligned}
+$$
+This can alos be solved using the complement of the event $\text{shipment rejected}$, which is $(\text{shipment rejected})^{c} = \text{shipment not rejected}$:
+$$
+\begin{aligned}
+P(\text{shipment rejected})  = & 1 - P(\text{shipment not rejected}) \\
+                             = & 1 - P(X\geq 2)^{c} \\
+                             = & 1 - P(X < 2) \\
+                             = & 1 - P(X \leq 1) \\
+                             = & 1 - (P(X = 0) + P(X = 1)) \\
+                             = & 1 - (0.583752366926 + 0.339390911004)
+                             = & 1 - 0.9231433 \\
+                             = & 0.0769
+\end{aligned}
+$$
+</font>
+</br>
+<font color='red'>
+**Solving this with R:** Consider the probabilites you computed in R and stored in the vector `probx`. 
+```{r}
+probx
+```
+there are six positions in this vector. Position 1 holds $P(X = 0$)$. This probabilty can be accessed with `probx[1]`, where the subscript in the square-brackets refers to value occupying the first index in the `probx` data vector:
+```{r}
+probx[1] #returns the value stored in index 1 of the probx data vector, whihc in this case is P(X = 0)
+```
+From this, R can be used to compute $P(\text{shipment rejected}) = P(X \geq 2)$:
+```{r}
+sum(probx[3:6]) # P(X >=2) = sum(P(X=2), P(X = 3), P(X = 4), P(X = 5))
+```
+OR
+```{r}
+1- sum(probx[1:2]) # 1 - (P(X = 0) + P(X = 1))
+```
+</font>
+</br>
+(c) Using the code devleped in part (a), let's generate the visual probability distribution of $X$ using the **plot()** command 
+</br>
+</br>
+<font colr='red'>
+```{r}
+plot(xvalues, probx, xlab = "Number of Defective Transmissions Found", ylab="P(X = x)", main="Probability Distribution of X", type="h", col='blue')
+```
+</font>
+<div style="margin-bottom:50px;">
+</div>
+
+**Time to Play 1:** A random variable $X$ counts the number of times a certain event is observed after a random experiment has occurred. The probability distribuiton function of $X$ is given as
+$$
+P(X = x) = \frac{x}{105} \hspace{0.5in} x = 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+$$
+Attempt the following parts:
+
+(a) Create a function in R called `example2pdf`. 
+(b) Use R to verify $\sum_{x = 6}^{15}P(X = x) = 1$.
+(c) Use your creation in part (a) to compute $P(X \leq 9)$ and $P(X < 13)$
+(d) Use R to compute $P(7 \leq X \leq 9)$.
+(e) Use the `plot()` command outlined in part 4 of Example 1 to visualize the probability distribution of $X$. 
+
+After you have made an attempt to this Time to Play exercise, use the [following link](http://people.ucalgary.ca/~jbstall/Answers/SolutiontoExample2DiscreteRV.nb.html) 
+to verfiy your results. 
+
+---------
+
+# More About Probability Distributions:  Measures of Center and Spread
+
+## The Measure of Center: The Mean or Expected Value
+
+**Illustration 2:** Three balls are randomly chosen from a container that contains 5 balls, each numbered 1 through 5. Two different random variables are defined: (i) $X$ represents the sum of the three balls chosen (ii) $Y$ is the largest of the three numbers chosen. The sample space is given below and $n(\cal S) = {5 \choose 3} = 10$
+$$
+\cal S = \{(1,2,3), (1,2,4), (1,2,5), (1,3,4), (1,3,5), (1,4,5), (2,3,4), (2,3,5), (2,4,5), (3,4,5) \}
+$$
+The R code below documents the setup and visualization of both $X$ and $Y$.
+```{r}
+x = 6:12  #possible values of X =6, 7, 8, 9, 10, 11, 12
+probx = c(0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1) #P(X = 6), P(X = 7), ...., P(X = 12)
+y = 3:5  #possible values of Y = 3, 4, 5
+proby = c(0.1, 0.3, 0.6)  #P(Y = 3), P(Y =4), P(Y = 5)
+par(mfrow=c(1,2)) #this sets the graphics window to create 2 plots side-byside
+plot(x, probx, xlab = "Values of X", ylab="P(X = X)", ylim=c(0,0.3), main="Distribution of Sum", type="h", col='blue') #plots the prob. dist of X
+plot(y, proby, xlab = "Values of Y", ylab="P(Y = y)", ylim=c(0,0.8), main="Distribution of Maximum", type="h", col='purple') #plots the probldist of Y
+par(mfrow=c(1,1)) #returns graphics window to one graph at a time
+```
+The balancing point of each of these probability distributions is called the **expected value** of the random variable and is computed with
+$$
+\mu_{X} = E(X) = \sum_{all\:\:x}xP(X = x)
+$$
+The expected value, or mean, of a random variable computed the `weighted-average' of the random variable. 
+
+**Example 1:** The expected value of the random variable $X$ is computed by
+$$
+\begin{aligned}
+E(X) = & \sum_{x = 6}^{12}P(X=x) \\
+     = & 6P(X=6)+7P(X=7)+\cdots + 12P(X=12) \\
+     = & (6*0.1)+(7*0.1)+(8*0.2)+(9*0.2)+(10*0.2)+(11*0.1)+(12*0.1) \\
+     = & 0.6 + 0.7 + 1.6 + 1.8 + 2.0 + 1.1 + 1.2 \\
+ E(X)  = & 9
+\end{aligned}
+$$
+Below is the R-code that will enable this computation
+```{r}
+x = 6:12
+px = c(0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1)
+sum(x*px) #sums the cross-product terms of x and px
+```
+**Example 2** We have encountered a problem where a random variable $X$ counts the number of defective transmissions found in 5 tested (see Example 2 in the previous section). We labeled the probability distribution function ``deftran()`, the values of $X$ `xvalues`, and the probabilites stored in `probx`. With R, compute the expected number of defective transmissions to be found in the testing of 5.
+</br>
+</br>
+<font color='red'>
+**Answer:** Computing $E(X)$, where $X$ represents the number of defective transmissions found in the five inspected at random
+```{r}
+expectx = sum(xvalues*probx) #computes the E(number of defective transmissions found), or E(X)
+expectx #returns the value of E(X)
+```
+and
+$$
+\begin{aligned}
+E(X) = &(0*P(X=0)) + (1*P(X = 1)) + (2*P(X=2)) + \cdots + (5*P(X=5)) \\
+     = &(0*0.5837) + (1*0.3394) + \cdots + (5* 0.000003347168) \\
+     = & 0.5
+\end{aligned}
+$$
+</font>
+
+-----------------------------
+
+## The Measure of Spread: The Variance and Standard Deviation
+
+Any random variable has a measure of dispersion which represents how the individual values of the random variable $X$ are distributed around its expected value, or mean. This measure of spread is called the standard deviation and it measures the *typical distance* each possible value of the random variable lies away from the mean.
+
+The standard deviation of a random variable $X$, or $\sigma_{X}$, is the square root of the expected squared-distance each value lies away from the mean (a quantity deemed the variance). The standard deviation is computed through the following process:
+
+1. Compute the variance of the random variable $X$
+2. Take the square root of the variance. The result is the standard deviation of the random variable $X$.
+
+The **variance** of a random variable $X$ is defined as the mean squared-distance the random variable $X$ falls off its expected value. 
+$$
+\begin{align}
+               Var(X) = & E\left[(X - \mu_{X})^2 \right] \hspace{0.5in} (\mu_{X} = E(X)) \\
+                      = & \sum_{all x}(x_{i} - \mu_{X})^{2}P(X=x) \\
+                      = & \sum_{all x}x_{i}^{2}P(X = x_{i}) - 2\mu_{X}\underbrace{\sum_{all x}x_{i}P(X = x_{i})}_{\mu_{X}} + \mu_{X}^{2}\underbrace{\sum_{all x}P(X = x_{i})}_{1} \\
+                      = & \sum_{all x}x_{i}^{2}P(X = x_{i}) - 2\mu_{X}^{2} + \mu_{X}^{2} \\
+                      = & \sum_{all x}x_{i}^{2}P(X = x_{i}) - \mu_{X}^{2} \\
+                        & \\
+                Var(X)= & E(X^{2}) - E(X)^{2} 
+\end{align}
+$$
+The $E(X^{2})$ term is called the *second moment* of the random variable $X$ due to the 2 in the exponent of $X$; the expected value is sometimes called the *first moment* of $X$.
+
+
+The standard deviation of the random variable $X$, represented by $\sigma_{X}$ or $SD(X)$, is then computed by
+$$
+\sigma_{X} = SD(X) = \sqrt{Var(X)}
+$$
+
+
+**Example 1:** A survey carried out in the summer of 2018[^1] reported that "15% of Canadian cannibis users with a driver's license have have operated a vehicle within two hours of cannibus consumption at least once in the past two months". 
+</br>
+</br>
+Suppose you were to sample $X$ Canadians who consume cannibis and have a drivers licence to find *the first* to have operated a motor vehicle within two hours of cannibis consumption at least once in the past two months.This random variable can be modeled by the probability distribution function
+$$
+P(X = x) = (0.85)^{x-1}(0.15) \hspace{0.5in} x = 1, 2, 3, 4, \cdots
+$$
+Below is the probability distribution function as well as the expected number sampled computed from the R code.
+```{r}
+nocannabisdrivers = 1:50  #starting values of x
+cannabisprob = function(x) #create the function in R
+{
+  (0.85)^{x-1}*(0.15)
+}
+plot(nocannabisdrivers, cannabisprob(nocannabisdrivers), xlab="No. Of Canadians Sampled to Find First Dopey Driver", ylab="P(X = x)", main="Distribution of X", type="h", col='blue') #create the plot
+nocannabisdrivers = 1:300
+ev = sum(nocannabisdrivers*cannabisprob(nocannabisdrivers))
+ev
+```
+Notice how the probabilities get smaller as you move to the right of the $x$-axis? This tells us that it becomes less and less likely/probable to find that the first `dopey driver' is a large value - or the distribution shape os *right-skewed* because values of $X$ are more likely/have a higher probability of occurrence in the *lower/left* portion of the distribuiton than in the right, hence *skewed* to the right. 
+Therefore $E(X) = 6.666657 \approx 6.667$. 
+
+Let's see how the variance and standard deviation is computed. 
+<font color='blue'>
+</br>
+1. We find $E(X^{2})$, the second moment:
+$$
+\begin{aligned}
+E(X^{2}) = & \sum_{x = 1}^{\infty}x^{2} * (0.85)^{x-1}(0.15) \\
+         = & 1^{2}*P(X=1) + 2^{2}*P(X=2) + \cdots \\
+         = & 1^{2}*(0.15) + 2^{2}*(0.1275) + \cdots \\
+E(X^{2}) = & 82.22122
+\end{aligned}
+$$
+This can be computed by adding the following command to the previous series of R commands
+```{r}
+moment2 = sum(nocannabisdrivers^{2}*cannabisprob(nocannabisdrivers)) #computes E(X^2), the second moment of X
+moment2
+```
+</br>
+2. Now, from the second moment we subtract the square of the expected value:
+```{r}
+varexample1 = moment2 - (ev)^{2} #E(X^2) - E(X)^2
+varexample1
+```
+Here R Studio has been instructed to compute $Var(X) = E(X^{2}) - E(X)^{2} = 37.7769$ $\text{persons sampled}\:^{2}$.
+</br>
+</br>
+3. Compute the standard deviation, which is the square root the variance:
+```{r}
+sdexample1 = sqrt(varexample1)  #compute the square root of the variance
+sdexample1 #return the standard deviation
+```
+and
+$$
+\sigma_{X} = SD(X) = \sqrt{Var(X)} = \sqrt{37.77778} = 6.146363 \approx 6.15 \:\:\text{persons}
+$$
+</font>
+In summary, one would expect to sample 6.667 cannabis using Canadians with a driver's licence to have driven within 2 hours of using cannabis at least once in the past 2 months. The standard deviation in this count $X$ is $SD(X) = 6.1463 \approx 6.15$ persons. this can be thought of as a 'buffer', or a 'plus or minus'.  
+
+Another way to conceptualize the standard deviation is to think of it as a way to quantify the risk, or the uncertainly associated with the random variable. In this instance, the risk is computed as $\sigma_{X} = SD(X) = 6.15$. We expect it to take just a little more than 6 Canadians (six and two-thirds) to find the first Canadian driver who is driving under the influence of marijuana, plus or minus 6.15. 
+$$
+E(X) \pm SD(X) \rightarrow (E(X) - SD(X), E(X) + SD(X)) = (6.667 - 6.15, 6+.667 + 6.15) = (0.5167, 12.81) \approx (1, 13)
+$$
+From a probabilistic perspective, the *majority of the time* the number of drivers inspected until the first is found to be driving under the influence of marijuana is somewhere between  and 13. The probabilityof $X$ being a value of between 1 and 13 is more than 0.50:
+```{r} 
+sum(cannabisprob(1:13)) #computes P(X = 1), ..., P(X = 13), then computes the sum of these probabilites
+```
+and $P(1 \leq x \leq 13) = 0.8791 > 0.50$.
+</br>
+</br>
+
+[^1]:(https://www.vancourier.com/many-canadians-are-driving-high-on-cannabis-according-to-new-national-survey-1.23394669)
+
+
+**Example 2:** Compute the standard deviation of the distribution which counts the number of defective tranmissions discovered out of 5. use R code to perform the computation.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Within the code below, the previously defined function `deftran` and `xvalues`are used. 
+Here is the R-code to find the $Var(X)$ and the $\sigma_{X}$.
+```{r echo=TRUE}
+probx = deftran(xvalues)  #computes P(X=x) for each value of X
+xvalues^2*probx  # computes x^2}*P(X = x) for each value of x
+moment2 = sum((xvalues^2)*probx) #computes E(X^2)
+moment2
+```
+The above code computes
+$$
+\begin{aligned}
+E(X^{2}) = & (0^2*P(X = 0)) + (1^2*P(X = 1)) + (2^2*P(X = 2)) + \cdots + (5^2*P(X = 5)) \\
+         = & 0*P(X = 0) + 1*P(X = 1) + 4*P(X = 2) + \cdots 5*P(X = 5) \\
+         = & (0*0.5838) + (1*0.3393909) + (4*0.0702) + \cdots + (25*0.0000033) \\
+         = & 0 + 0.3394 + 0.2808752 + \cdots + 0.00008367 \\
+         = & 0.6818182 \\
+         \approx & 0.6818
+\end{aligned}
+$$
+The variance, then the standard deviation is then computed. 
+```{r}
+varx = moment2 - (expectx)^2 #cmputes the Var(X)
+varx #returns the computed value of Var(x)
+sdx = sqrt(varx) #computes the SD(X)
+sdx #returns the SD computation
+```
+</br>
+</br>
+From the R code above, 
+$$ 
+Var(X) = 0.431818\:\:{\rm defective\:\:transmissions}^{2} \hspace{0.5in} \sigma_{X} = \sqrt{Var(X)} = \sqrt{0.431818} = 0.6571 \:\: {\rm defective\:\:transmissions}
+$$
+</font>
+
+**Time to Play 2:** Recall an earlier example (Example 2, Introduction to Discrete Random Variables) where you were asked to work with the probability distribution function
+$$
+P(X = x) = \frac{x}{105} \hspace{0.5in} x = 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+$$
+Adding to your current understanding of this random variable, attempt the following inqiries:
+
+(a) How would you classify the *behavior* of the random variable? Is is skewed, or more symmetric than skewed?
+(b) Compute the expected value/mean of $X$, $E(X) = \mu_{X}$.
+(c) Compute the second moment of $X$, the $E(X^{2})$. 
+(d) Compute the variance of $X$.
+(e) Compute the standard deviation of $X$.
+(f) Compute the interval $E(X) - SD(X), E(X) + SD(X)$. 
+
+
+Use the [following link](http://people.ucalgary.ca/~jbstall/Answers/SolutiontoExample3Expectation.nb.html) to check your results of this particular Time to Play exercise. 
+
+------------
+
+# Models of Probabilistic Behaviour
+
+In the previous section you encountered different scenarios where your understanding of probability can be used to create a function that will enable you to compute probabilities associated with some type of random variable. Case in point was the probabilty distribution function encountered that will compute the probability of observing a certain number of defective transmissions when five are picked at random from a shipment of 100, 10 of which are defective. 
+
+In other instances, such a probability function has been provided. These probability distribution functions serve as *probability models* that represent the probabilisitic tendencies of the random variable. 
+
+Often, random variables that are designed in a certain way have a specific type of probability model. In this section, you will encounter two different types of probability models, many of which can be derived from the foundational probability model that is called the Bernoulli random variable. 
+
+## The Bernoulli Random Variable
+
+Any random experiment can be simplified to produce one of two *mutually exclusive* outcomes: a favourable outcome or unfavourable outcome. The favourable outcome is a subset of the sample space that consists of all outcomes that will satisfy a certain event, with the unfavourable outcome being the complement of the favourable outcome, or'anything but the favourable outcome'. To see what constitutes a favourable and unfavourable outcome, consider Example 1 below.  
+
+**Example 1:** Consider the toss of two fair die afterwhich the sum of the topsides are observed. There are $n(\cal S) = 36$ possible outcomes. Suppose you are *only interested* in the sum of the topsides being either a 7 or 11. There are $n(7) = 6$ ways in which a sum of 7 can be observed and $n(11) = 2$ ways in whic a sum of 11 can be observed. The probability of observing a sum of 7 or 11 is
+$$
+P(Sum\:\:of\:\:Seven\:\:\cup\:\:Sum\:\:of\:\:11) = P(Sum\:\:of\:\:Seven) + P(Sum\:\:of\:\:Eleven) = \frac{6}{36} + \frac{2}{36} = \frac{8}{36} = 0.22222
+$$
+If the die sum to 7 or 11, we can say the outcome is favourable, otherwise the outcome is unfavourable. The Bernoulli random variable enables you to enumerate a favourable outcome, or unfavourable outcome, in the following way:
+
+A **Bernoulli** random variable is defined as
+$$
+X_{i} = \left \{
+\begin{array}{ll}
+1 & {\rm favourable\:\:with\:\:probability\:\:} p \\
+0 & {\rm unfavourable\:\:with\:\:probability\:\:} 1 - p \\
+\end{array}
+\right.
+$$
+**llustration:** Two fair die are tossed and the sum of the topsides is observed. If the topsides sum to 7 or 11, the outcome is determined to be a 'win' (favourable); otherwise the outcome is determined to be a 'loss' (unfavourable). Quantify the outcome of this random experiment in terms of a Bernoulli random variable $X$. 
+</br>
+</br>
+**Answer** 
+$$
+X = \left \{
+\begin{array}{ll}
+1 & {\rm observe\:\:sum\:\:of\;\:7\:\;or\:\:11\:\:with\:\:probability} \frac{8}{36} \\
+0 & {\rm otherwise\:\:with\:\:probability\:\:} \frac{28}{36} \\
+\end{array}
+\right.
+$$
+
+The R-code below can be used to create this Bernoulli random variable. Copy and paste this into an R chunk, then run the chunk to see'what happens' on your simulated toss of two fair dice. 
+
+```{r}
+trial = sample(1:6, 2, replace=TRUE)  #randomly generates two numbers, each number between 1 and 6 (inclusive)
+trial  #observe the coutcome, favourable or unfavourable
+bernoulli = if (sum(trial) == 7 | sum(trial) == 11) 1 else 0   #if the sum is 7 or 11, assigns a 1 as favourable; otherwise a 0
+bernoulli
+```
+In the case above, the two dice sum to 5, and an unfavourable outcome has been observed, therefore $X = 5$. Now, feel free to create an R chunk, copy-and-paste the R code above, then run the code a few different times, observing if each run produces a favourable or unfavourable outcome. 
+
+Here is the probability distribution of this particular Bernoulli random variable:
+```{r echo=TRUE}
+rvx = c(0,1) #two values of the Bernoullie RV, 0 or 1
+probx = c(28/36, 8/36)  #P(X = 0), P(X = 1)
+plot(rvx, probx, xlab="Values of X", ylab="P(X=x)", ylim=c(0,1),main="Probability Distribution of X", type="h", col='red')
+```
+
+**Result:** The expected value/mean and standard deviation of a Bernoulli random variable $X$ are
+$$
+\mu_{X}= E(X) = p \hspace{1in} \sigma_{X} = SD(X) = \sqrt{p(1-p)}
+$$
+**Example 2:** Compute the expected value/mean and the standard deviation of the distribution just provided.
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute the expected value/ mean of the Bernoulli random variable $X$ that was defined in Example 1, use the above result
+$$
+E(X) = \mu_{X} = p = \frac{8}{36} = 0.2222,  \hspace{0.2in} SD(X) = \sigma_{X} = \sqrt{p(1 - p)} = \sqrt{\frac{8}{36}\left((1 - \frac{8}{36}\right)} = 0.4157 \approx 0.42
+$$
+The mean of 0.2222 is reflected by the skewed-right distribution of the random variable $X$; The probability of an unfavourable outcome is $P(X = 0) = \frac{28}{36}$ and a favourable outcome is $P(X = 1) = \frac{8}{36}$. Probabilistically, the disribution is heavily weighted towards $X = 0$. 
+</font>
+
+
+**Time to Play 3:** A poll conducted by Abacus Data in June of 2018[^2] asked Canadians the question 'Do you feel you contribute to plastic garbage in the oceans?' of which 36\% of of respondents answered *No*. 
+
+You are posed with the same question. Can the outcome be classified as a Bernoulli Trial? If so, describe how you would enumerate your response, visualize the distribution of the response(s), along with the expected response and the standard deviation. 
+
+Refer to [this link](http://people.ucalgary.ca/~jbstall/Answers/SolutionToExample3BernoulliRV.nb.html) to check your result.  
+
+
+[^2]:https://abacusdata.ca/new-poll-canadians-say-plastics-in-oceans-a-problem-and-more-action-needed/
+
+------
+
+## The Binomial Probability Model
+
+**Illustration:** Let's look at the casino game **Craps**. A player of this game rolls two die. If the dice sum to 7 or 11, the player wins their bet. If the dice sum to 2, 3, or 12, the player losses their bet. Otherwise, the game continues. The players rolls the dice again in the attempt to observe the same sum as on the first roll which is a winning outcome, or a sum of 7 which is a loosing outcome. For example, if this player rolls a sum of 4 on the first roll, they continue to roll until they observe a sum of 4 again (win) or a sum of 7 (loss). The probability of winning a game of Craps is $0.49292929 \approx 0.4929$. 
+</br>
+</br>
+This outcome of a play of Craps can be enumerated by a Bernoulli random variable $X$, which takes on a value of 1 with probability 0.4949 and a value of 0 with probability 0.5071. The mean/expected value and standard deviation of is
+$$
+\mu_{X} = E(X) = p = 0.4929 \hspace{0.25in} \sigma_{X} = \sqrt{Var(X)} = \sqrt{p(1-p)} = \sqrt{0.4929(1-0.4929)} = 0.49995 \approx 0.5
+$$ 
+</br>
+
+What if this player outlined decides to plays 10 game of Craps? What is the chance/probability of winning half (5) of the games? Winning at least half of these games? 
+</br>
+</br>
+
+A random experiment that consists of a series of $n$-independent Bernoulli trials is often called a **Binomial Experiment**. Such a random experiment requires
+
+1. a fixed number of trials/replications, denoted by $n$ (the number of trials).
+2. each replication/trial *must* be a Bernoulli trial.
+
+It is vital that the outcome on each trial is free, or independent, of previous Bernoulli trial(s).
+
+When one is to count how many, out of $n$-trials in a Binomial Experiment, are successful - a count represented by the random variabl $X$ - that probabilistic behaviour of $X$ can be modeled by the **Binomial Distribution**.
+</br>
+</br>
+The probability distribution function of a Binomial random variable $X$ is
+
+$$
+P(X = x) = {n \choose x}p^{x}(1 - p)^{n - x} \hspace{.5in} x = 0, 1, 2, \cdots, n.
+$$
+This probability model can be computed in R Studio with the command `dbinom(x,n,p)`.
+</br>
+</br>
+**Example 1:** Suppose the aforementioned gambler decides to play 100 games of Craps and one is to keep track how many of the 10 games the gambler has won, or observe the value of $X$. What does the *distribution* of $X$ look like? 
+
+Below is the R-code that simulates this random process.
+```{r echo=TRUE}
+x = numeric(100)  #create a vector to hold probabilities
+for (i in 1:100){  #do the action below 100 times
+  x[i] = sample(c(0,1), 1, replace=FALSE, c(0.5071, 0.4929))  #pick a 0 with prob 0.5071, 1 with prob 0.4929
+}
+x #shows the 100 outcomes with 0 corresponding to a loss and a 1 corresponding to a win
+gameswon = sum(x) #the number of successes out of the 100
+gameswon
+```
+(a) Compute the probability of the observed outcome, $X = 45$ .
+</br>
+</br>
+<font color='blue'>
+**Answer:** Here the random variable $X$ counts the number of games won, out of 100 independent games. The probabilistic behavour of $X$ can be modeled by the Binomial distribution, thus the Binomial probability distribution can be used.
+$$
+\begin{aligned}
+P(X = 45) = & \overbrace{{100 \choose 45}}^{\text{pick 45 of 100 games to be won}}*(0.4929)^{45}*(1 - 0.4929)^{100 -45} \\
+          = & {100 \choose 45}(0.4929)^{45}(0.5071)^{55} \\
+          =&  0.05531
+\end{aligned}
+$$
+</font>
+</br>
+<font color='red'>
+Alternatively, the probability of observing $X = 45$ can be comptued with the R command `dbinom()`:
+```{r}
+dbinom(45, 100, 0.4929)  #first argument is value of x = 45, second is n = 100, third is p = 0.4929
+```
+</font>
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Compute the probability that the number of games won is between 40 and 70, inclusive. That is, $P(40 \leq X \leq 70)$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:**
+$$
+\begin{aligned}
+P(40 \leq X \leq 70)  = & \sum_{x = 40}^{x = 70}{100 \choose x}(0.4929)^{a}(1-0.4929)^{100 - x} \\
+                      = & P(X = 40) + P(X = 41) + \cdots + P(X = 69) + P(X= 70) \\
+                      = & {100 \choose 40}(0.4929)^{40}(1-0.4929)^{100 - 40} + {100 \choose 41}(0.4929)^{41}(1-0.4929)^{100 - 41} + \\
+                      + & \cdots + {100 \choose 70}(0.4929)^{70}(1-0.4929)^{100 - 70} \\
+                      = &  0.9752406
+\end{aligned}
+$$
+This computation can take some time. Let's see how R can compute these probabilities. 
+</font>
+</br>
+<font color='red'>
+The `dbinom(x,n,p)` command computes $P(X=x)$. By replacing the "d" with a "p", we change the computation from $P(X = x)$ *to* $P(X \leq x)$. 
+</br>
+</br>
+The answer in Example 1(b), the $P(40 \leq X \leq 70)$ can be computed one of two ways:
+
+1. 
+```{r}
+pbinom(70, 100, 0.4929)  #computes P(X <= 70)
+pbinom(39, 100, 0.4929)  #computes P(X <= 39)
+```
+then take the difference between these two cumulative probabilites. *OR* try this:
+
+2. 
+```{r}
+pbinom(70, 100, 0.4929) - pbinom(39, 100, 0.4929)
+```
+
+$$
+P(40 \leq X \leq 70) = 0.9752406
+$$
+</font>
+</br>
+Below is the distribution of $X$, the number of games won out of 100. Most of the time the observed value of $X$ is within the 40 to 60 range.  
+
+```{r echo=TRUE}
+x = 0:100
+probx = dbinom(x, 100, 0.4929)
+plot(x, probx, xlab="Values of X", ylab="P(X = x)", main="Distribution of Number of Games of Craps Won", type="h", col='blue')
+```
+Notice how the distribution is *symmetrical*, close to being *perfectly symmetrical*. What is the expected value/mean $E(X)$ and the standard deviation $\sigma_{X} = SD(X)$ of this particular random variable that counts the number of games of Craps won, out of 100 being played?
+
+This brings us to the useful result that is tied to the Binomial random variable $X$:
+
+**Result** The mean/expected value and standard deviation of a random variable that is modeled by the Binomial distribution is
+$$
+\mu_{X} = E(X) = np \hspace{0.25in} {\rm and} \hspace{0.25in} \sigma_{X} = SD(X) = \sqrt{np(1-p)} = \sqrt{E(X)(1-p)}
+$$
+
+**Example 2** How many of the 100 games of Craps can the gambler expect to win? The standard deviation? Compute the mean/expected value and the standard deviation above. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** The expected number of games won/average number of games won out of 100 being played is
+$$
+E(X) = \mu_{X} = np = 100*90.4929) = 49.29 \:\:\text{games}
+$$
+The standard deviation of the above distribution is computed with
+$$
+SD(X) = \sigma_{X} = \sqrt{E(X)(1-p)} = \sqrt{49.2929(1 - 0.4929)} = \sqrt{24.9964} = 4.9996 \approx 5 \:\:\text{games}
+$$
+What does the above all mean. If you were to play 100 games of Craps, you would expect to win just a bit more than 49 games, plus or minus 5 games. Clearly you are not going to win 49.29 games; but imagine this scenario where you play 100 games of craps and observe that you win 44 games. Then you play 100 different games of Craps and win 54 games, the average number of games won is $\frac{44 + 54}{2} = 49$. If you were to continue this process, after each 100 games recomputing the average number of games won, you would find the average number of games would eventually *converge* to 49.29 games. 
+</font>
+
+<div style="margin-bottom:30px;">
+</div>
+
+**Time to Play 4:** At this time this document was prepared, about 62% of purchases made on Amazon were made by Amazon Prime members. To be an Amazon Prime member, one pays an annual fee of $119 USE. This allows Prime members access to special deals, and free two-day shipping. 
+
+On a certain day, an employee working at an Amazon fulfillment centre is to process 50 orders for shipping. Assume each order is independent of the other 49 orders. Answer the following questions:
+
+(a) Compute the probability that 35 of these 50 orders were made by Amazon Prime Members. 
+(b) Compute the probability that between 20 and 40, inclusive, of these 50 orders were made by Amazon Prime Members.
+(c) Compute the probability that at least 40 of these orders were made by Amazon Prime Members. 
+(d) Visualize this Binomial Distribution with R. 
+(e) Compute the mean/expected value and the standard deviation. 
+(f) From your finding in part (e), compute $(\mu_{X} - \sigma_{X}, \mu_{X} + \sigma_{X})$. Then compute $P(\mu_{X} - \sigma_{X} < X < \mu_{X} + \sigma_{X})$. What do you find? </br>
+</br>
+
+Refer to the [link](http://people.ucalgary.ca/~jbstall/Answers/SolutionToExample3Binomial.nb.html) to compare your results to the answer of this Time to Play exercise. 
+
+
+-----------------------------------
+
+## The Poisson Probability Model
+
+The Binomial distribution is one of a variety of probability distributions that can model a count - or how many times a certain event occurs after a random process has been completed. There are distributions that model 
+
+- how many trial are required to observe the *first* favourable outcome (Geometric Probability Distribution)
+- the number of trials required to observe a certain number of favourable outcomes (Negative Binomial Distribution)
+- the number of times a certain event occurs over a well-defined time-interval or physical-space
+
+It is this last case that a specific type of probability will be applied - it is a probability model called the *Poisson Distribution*, starting with the definition below. 
+
+A random variable $X$ is said to follow the **Poisson** distribution if the probability distribution function is of the form
+$$
+P(X = x) = \frac{e^{-\lambda}(\lambda)^{x}}{x!} \hspace{0.5in} {\rm for}\:\:x = 0, 1, 2, 3, \cdots
+$$
+What does the Poisson random variable count? Theoretically, the Poisson probability model served, and still can serve, as an exact method for computing probabilities that are Binomial in nature WHEN $n$ is large and $p$ is small. That is to say, a bit of calculus can be used to show
+$$
+\lim_{n \rightarrow \infty} {n \choose x}p^{x}(1 - p)^{n - x} = \frac{e^{-\lambda}(\lambda)^{x}}{x!}, \hspace{0.2in} {\rm where} \:\: \lambda = np
+$$
+
+**Example 1: ** Chlamydia is the most commonly reported STI among sexually active Canadians.  In a 2013 report, the Public Health Agency of Canada reported a rate of 276 out of 100,000 Canadians are infected with this bacteria, or 0.276\%. 
+Compute the probability that exactly  three of 500 randomly picked Canadians have chlamydia
+
+(a) using the Binomial distribution.
+</br>
+</br>
+<font color='blue'>
+**Answer:** The $P(X = 3) = {500 \choose 3}(0.00276)^{3}(0.99734)^{497} = 0.1102$ is computed with R below:
+```{r}
+dbinom(3,500,0.00276) #computes the Binomial P(X=x)
+```
+</font>
+
+(b) using the Poisson distribution.
+</br>
+</br>
+<font color='blue'>
+**Answer:** We set $\lambda = np = 500*(0.00276) = 1.38$. Using the Poisson probability distribution function
+$$
+P(X = 3) = \frac{e^{-1.38}(1.38)^{3}}{3!} = 0.1101944 \approx 0.1102
+$$
+
+A Poisson probability computed with the R-command `pois(x, lambda)`. As was the case with the R-commands that are used to compute Binomial, probabilities, a "d" is used to compute $P(X = x)$, a "p" is used to compute $P(X \leq x)$. Below is an illustration of using `dpois()` to compute $P(X = 3)$ in Example 1(b). 
+```{r}
+dpois(3, 500*0.00276) #computes the Poisson P(X=3) when lambda = 1.38
+```
+</font>
+
+---------------------
+
+These two probabilities are very simiar in value. If $n$ were to increase to $n = 1000$, or larger, the Poisson probability would become closer to the computed value with the Binomial probability distribution function. 
+
+Although this illustration is nice, that is not what the Poisson probability model is used for in practice. Rather, it is used to model counts that are of the following nature:
+
+1. the random variable $X$ represents the number of times a well-defined event occurs over a specific time period.
+2. the random variable $X$ represents the number of times a certain event occurs over a well-defined physical region.
+
+For example, here are some situations where the Poisson probability model is used:
+
+1. $X$ is defined as the number of customers entering a store in a specific time frame
+2. $X$ represents the number of dandelions per square meter of city park property
+3. $X$ counts the traffic to a particular website per second
+
+What is the behaviour of a Poisson random variable? Below is the distribution of a Poisson random variable where the *parameter* (the constant term in the probability distribution function) $\lambda = 5$:
+```{r}
+x = 0:35  #values 0, 1, 2,..., 35
+probx = dpois(x,5) #computes P(X=x) for each value in x
+plot(x, probx, xlab="Values of X", ylab="P(X = x)", main="Probability Distribution of a Poisson Random Variable with E(X) = 5", type="h", col='purple')
+```
+This leads us to the result below, which informs us as to "what" $\lambda$ represents. 
+**Result:** The mean/expected value and the standard deviation of random variable that is modeled by the Poisson distribution are
+$$
+\mu_{X} = E(X) = \lambda \hspace{1in} \sigma_{X}  = \sqrt{\lambda}
+$$
+$\lambda* is the expected value/mean of the Poisson distribution, the weighted average of the number of times an event will be observed over a time-frame or physical region.
+
+**Question:** How will the Poisson distribution with $\lambda = 5$ change when the value of $\lambda$ decreases? Consider a Poisson random variable with $E(X) = \mu_{X} = 2.5$:
+```{r}
+x = 0:35  #values 0, 1, 2,..., 35
+probx = dpois(x,5) #computes P(X=x) for each value in x
+plot(x, probx, xlab="Values of X", ylab="P(X = x)", main="Probability Distribution of a Poisson Random Variable with E(X) = 2.5", type="h", col='red')
+```
+The distribution becomes more right-skewed: As the mean/expected value of $\lambda$ decreases, smaller values becomes more likely/probable to occur, resulting in a smaller variance and a tighter standard deviation. 
+
+
+**Example 1:** The number of phone calls that an operator at a call-centre answers in an hour varies from one hour to the next in accordance with the Poisson probability model with an average/mean number of 12.5 calls per hour. In *any* given hour, compute the probability that this operator
+
+(a) will get 10 calls.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Let $X$ represent the number of calls observed in a certain one hour time period. To compute the $P(X = 10)$ where the mean/expected value of this distribution is $\lambda = 12.5$, 
+$$
+P(X = 10) = \frac{e^{-12.5}(12.5)^{10}}{10!} = 0.09564364 \approx 0.0956
+$$
+<font color='red'>
+This can be computed with the `dpois` command
+```{r}
+dpois(10, 12.5)  #computes P(X = 10) for a mean/lambda = 12.5
+```
+</font>
+</font>
+<div style="margin-bottom:30px;">
+</div>
+
+(b) will get at least 5 calls.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Similar to part (a), the $P(X \geq 5)$ needs to be computed. 
+$$
+\begin{aligned}
+P(X \geq 5) = & P(X = 5) + P(X = 6) + P(X = 7) + \cdots \hspace{0.5in} (\text{theoretically, there is no stopping point here..}) \\
+            = & 1 - P(X < 5) \\
+            = & 1 - P(X \leq 4) \\
+            = & 1 - \left(\frac{e^{-12.5}(12.5)^{0}}{0!} + \frac{e^{-12.5}(12.5)^{1}}{1!}  + \cdots +    \frac{e^{-12.5}(12.5)^{4}}{4!}       \right) \\
+            = & 1 - (0.0000037 + 0.00004658 + \cdots + 0.00379094) \\
+            = & 1 - 0.005345505 \\       
+            = & 0.9946545 \\
+            \approx & 0.9947
+\end{aligned}
+$$
+<font color='red'>
+Using the `ppois()` command 
+```{r}
+dpois(0:4, 12.5)  #returns P(X =0), P(X = 1), P(X = 2), P(X =3 ), and P(X = 4)
+ppois(4,12.5) #P(X <= 4)
+1 - ppois(4, 12.5)   #1 - P(X <= 4)
+```
+</font>
+</font>
+
+<div style="margin-bottom:30px;">
+</div>
+
+(c) Compute the chance that this operator gets 5 calls in half-an-hour.
+</br>
+</br>
+<font color='blue'>
+**Answer:** If the number of calls received in an hour can be modeled by the Poisson distribution with a mean $\lambda = 12.5$, then the number of calls received in half-hour (it could be the first 30-minutes, or the last 30-mintues) *can also be modeled* by the Poisson distribution, with a mean of $\lambda = \frac{12.5}{2} = 6.25$. 
+</br>
+A *new random variable* $Y$ is then introduced to count the number of calls received in 30-minutes/half-hour, with a mean of $\lambda = 6.25$. The probability of observing five calls in half-an-hour or $P(Y = 5)$ is then computed with
+$$
+P(Y = 5) = \frac{e^{-6.25}(6.25)^{5}}{5!} = 0.1534187 \approx 0.1534
+$$
+<font color='red'> 
+Computed using the `dpois` command
+```{r}
+dpois(5, 6.25)  #P(Y = 5) for mean/lambda = 6.25
+```
+</font>
+</font>
+
+<div style="margin-bottom:30px;">
+</div>
+
+**Time to Play 5:** Environment Canada reports that Calgary receives the most days with lightening in a given year than any other city in the province of Alberta, with an average number of days with lightening in a year being 26. Presume this only covers the months of April through October, a span of seven-months. 
+
+(a) Visualize the probability distribution that demonstrates the number of days in Calgary that receive a lightening storm. 
+(b) Compute the probability that in a given year, there are 31 days with lightening in Calgary.
+(c) Compute the probability that in a given year, there are more than 40 days with lightening.
+(d) Compute the probability that in the month of July, there are between 3 and 10 days (inclusive) where lightening occurs in Calgary.(Presume all months have the same number of days...probabilistically, it will be negligible.)
+
+
+Refer to the [link](http://people.ucalgary.ca/~jbstall/Answers/SolutionToExample2Poisson.nb.html) to compare your result to the answer. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

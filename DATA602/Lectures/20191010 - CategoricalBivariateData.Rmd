@@ -1,0 +1,446 @@
+---
+title: "DATA 602 - Introduction to Bivariate (Categorical) Data Analysis (October 10)"
+output:
+  html_document:
+    df_print: paged
+---
+&copy; Jim Stallard 2019
+
+```{r include=FALSE}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(mosaic)
+library(mosaicData)
+library(ISLR)
+```
+
+# The Statistical Treatment of Bivariate Data that is Categorical
+
+Previously, we discussed bivariate data 
+$$
+(x_{1}, y_{1}), (x_{1}, y_{1}), (x_{1}, y_{1}), \cdots, (x_{n}, y_{n}) 
+$$
+where $(x_{i}, y_{i})$ represent the observed values of variable $X$ and variable $Y$ from element/person $i$ inspected from the population of interest. Whatever the context, $X$ and $Y$ were numerical variables. 
+
+For this class, we will be considering bivariate data that is **categorical** - each variable is a *classification* of "which bin" the element/individual falls into with respect to the categorical, or classification, variable.  
+
+## Categorical Bivariate Data and its Summary
+
+Let's think a bit more about categorical bivariate data and how such data is summarized? We have covered how categorical bivariate data can be visualized with "nested" bar graphs. 
+
+The numerical summarization of categorical bivariate data is done with a **contingency table** (sometimes called a **cross-tab** table). A contingency table displays the "cross-tabulations" (or crosss-tabs) which summarize how the two categorical variables $X$ and $Y$ are distributed all of each levels. 
+
+Consider categorical variable $X$ that has $c$-categories, or $c$ possible responses; similarly categorical variable $Y$ has $r$-categories, or $r$-possible responses. There are then $c*r$ different contingencies, or possible combintations, of variables $X$ and $Y$. 
+
+
+These data are summarized in the form of the contingency/cross-tab table below.
+$$
+\begin{array}{lccccc}
+                     &               &              &    {\rm Variable\:\:}X         &             &            \\
+                     &    O_{11}     &  O_{12}      &   O_{13}    & \cdots      &   O_{1c}        \\
+ {\rm Variable\:\:}Y &    O_{21}     &  O_{22}      &   O_{23}    & \cdots      &   O_{2c}        \\
+                     &    :          &  :           &   :         & \cdots      &   :             \\
+                     &    O_{r1}     &  O_{r2}      &   O_{r3}    & \cdots      &   O_{rc}        \\
+                     \hline
+\end{array}
+$$
+
+$O_{ij}$ represents the observed number of elements/individuals possessing attribute/bin $i$ of variable $Y$ *AND* possessing attribute/bin $j$ of variable $X$. 
+
+So, what can we infer from such data? 
+
+The main purpose for collecting data on two different variables is to investigate if there is some type of synergy between these two variables. In other words, are these two variables related or unrelated? Comprehending the natural "co-existence" of variable $X$ and variable $Y$ can lead us determine if variable $X$ can be treated separately from variable $Y$ (or vice versa) or variables $X$ and $Y$ are treated in a joint fashion. 
+
+## $\chi^{2}$ Test of Independence
+
+The $\chi^{2}$ Test of Independence is a statistical test that can be applied to bivariate categorical data to determine of the two categorical variables $X$ and $Y$ are related or unrelated. It is called the "test of independence" because of the statistical hypotheses below.
+$$
+{\rm H}_{0}: {\rm Variable\:\:} X \:\: {\rm and\:\:Variable\:\:} Y \:\:\text{are Independent} \:\:(\text{OR X and Y are not related}) \\
+{\rm H}_{A}: {\rm Variable\:\:} X \:\: {\rm and\:\:Variable\:\:} Y \:\: \text{are not Independent} \:\:(\text{OR X and Y are related})\\
+$$
+
+Given the null hypothesis of "independence" of variables $X$ and $Y$, we seek to come up with a test statistic to determine of the null hypothesis is supported from the bivariate categorical data. 
+
+The test statistic that computed to determine the statisical concreteness of ${\rm H}_{0}$ is given below
+
+$$
+\chi^{2}_{obs} = \sum_{i = i}^{r}\sum_{j = 1}^{c}\frac{(O_{ij} - E_{ij})^{2}}{E_{ij}} \sim \chi^{2}_{df=(c-1)*(r-1)}
+$$
+What does the $E_{ij}$ term represent? This is the **expected count**, or expected number of elements/persons, who would be counted to satisfy category $i$ of Variable $Y$ *AND* category $j$ of Variable $X$. 
+
+How are these $E_{ij}$s computed? Consider the following
+$$
+\begin{aligned}
+E_{ij} = & n*P(X_{j} \cap Y_{i}) \\
+       = & n *P(X_{j})*P(Y_{i}) \hspace{0.2in} ({\rm by\:\:independence\:\:in\:\:Variable\:\:}X\:\:{\rm and\:\:Variable\:\:}Y) \\
+       = & n * \left(\frac{\#\:\:{\rm having\:\:category\:\:}j\:\:{\rm of\:\:Variable\:\:}X}{n}\right)*\left(\frac{\#\:\:{\rm having\:\:category\:\:}i\:\:{\rm of\:\:Variable\:\:}Y}{n}\right) \\
+       = & \frac{(\#\:\:{\rm having\:\:category\:\:}j\:\:{\rm of\:\:Variable\:\:}X)*(\#\:\:{\rm having\:\:category\:\:}i\:\:{\rm of\:\:Variable\:\:}Y)}{n} \\
+E_{ij}  = & \frac{({\rm Total\:\:of\:\:Column\:\:}j)*({\rm Total\:\:of\:\:Row\:\:}i)}{n} \\
+\end{aligned}
+$$
+
+-------------------------------------
+
+**Illustration 1: ** Prior to seat-belt usage being legislated, data was collected on two variables: Variable $Y$ is if a parent operating the motor-vehicle was using a seat-belt and Variable $X$ was if the child/children in the vehicle were using seat-belt(s). The data you see below resulted from a random sample of $n = 82$ randomly inspected vehicles at a police inspection stop. 
+$$
+\begin{array}{lcc}
+                                         &  {\bf Child}                         &       \\
+{\bf Parent}                             &  {\rm Using\:\:Seat\:\:Belt}          & {\rm Not\:\:Using\:\:Seat\:\:Belt}  \\
+{\rm Using\:\:Seat\:\:Belt}              &     56                                &        8                           \\
+{\rm Not\:\:Using\:\:Seat\:\:Belt}       &      2                                &      16                           \\
+\end{array}
+$$
+
+
+Do these data indicate that there is a relationship between a parent's seat-belt usage and a child's seat-belt usage? 
+</br>
+</br>
+**Step 1:** We consider the statistical hypotheses:
+$$
+{\rm H}_{0}: {\rm Parent's\:\:Seatbelt\:\:Usage\:\:and\:\:Child's\:\:Seatbelt\:\:Usage\:\:are\:\:Independent} \\
+{\rm H}_{A}: {\rm Parent's\:\:Seatbelt\:\:Usage\:\:and\:\:Child's\:\:Seatbelt\:\:Usage\:\:are\:\:Not\:\:Independent} \\
+$$
+
+**Step 2:** From the assumed state of the world of independence between these two categorical variables $Y$ - Parent's Seatbelt Usage (Yes, No) and $X$ - Child's seatbelt usage (Yes, No), we compute the expected counts. 
+
+For $E_{11}$, we compute "how many" of the $n = 82$ vehicles (with children) we would expect to have the parent (driving parent) using a seat-belt and the child (children) are using seatbelts
+
+The contingency table above is replicated with the addition of the Row Totals and Column Totals:
+$$
+\begin{array}{lcc|c}
+                                         &  {\bf Child}                          &       &     \\
+{\bf Parent}                             &  {\rm Using\:\:Seat\:\:Belt}          & {\rm Not\:\:Using\:\:Seat\:\:Belt}  &  {\rm Row\:\:Totals} \\
+{\rm Using\:\:Seat\:\:Belt}              &     56                                &        8                            &       64      \\
+{\rm Not\:\:Using\:\:Seat\:\:Belt}       &      2                                &      16                             &       18      \\
+\hline
+{\rm Column\:\:Totals}                   &      58                               &       24                            & n = 82        \\
+\end{array}
+$$
+
+The process starts with the computation of $E_{11}$, which represents "how many" of the $n = 82$ vehicles observed would be *expected* to have the parent (driver) using a seat-belt and the child(ren) using seatbelts:
+
+$$
+\begin{aligned}
+E_{11} = & \frac{({\rm Total\:\:of\:\:Row\:\:}1)*({\rm Total\:\:of\:\:Column\:\:}1)}{n} \\
+       = & \frac{(64)*(58)}{82} \\
+E_{11} = & 45.26829
+\end{aligned}
+$$
+
+If the null hypothesis were true, we would expect 45.26829 of the 82 vehicles inspected to have the parent (driving) and the children in the vehicle using seatbelts. 
+
+**Time to Play 1:** Compute $E_{12}$, the expected number of vehicles where the parent is using a seat belt and the child is not. 
+</br>
+</br>
+**Answer:** 
+$$
+\begin{aligned}
+E_{12} = & \frac{({\rm Total\:\:of\:\:Row\:\:}1)*({\rm Total\:\:of\:\:Column\:\:}2)}{n} \\
+       = & \frac{(64)*(24)}{82} \\
+E_{12} = & 18.73
+\end{aligned}
+$$
+
+<div style="margin-bottom:200px;">
+</div>
+
+**Back to Our Investigation:** The contingency table, completed with $(E_{ij})$s are provided in the contingency table below.
+$$
+\begin{array}{lcc|c}
+                                         &  {\bf Child}                          &       &     \\
+{\bf Parent}                             &  {\rm Using\:\:Seat\:\:Belt}          & {\rm Not\:\:Using\:\:Seat\:\:Belt}  &  {\rm Row\:\:Totals} \\
+{\rm Using\:\:Seat\:\:Belt}              &     56 (45.268)                               &        8  (?)                          &       64      \\
+{\rm Not\:\:Using\:\:Seat\:\:Belt}       &      2 (12.732)                              &      16 (5.268)                            &       18      \\
+\hline
+{\rm Column\:\:Totals}                   &      58                               &       24                            & n = 82        \\
+\end{array}
+$$
+
+**Step 3:** We now compute the value of the $\chi^{2}$ test statistic:
+$$
+\begin{aligned}
+\chi^{2}_{Obs} = & \sum_{i = i}^{r}\sum_{j = 1}^{c}\frac{(O_{ij} - E_{ij})^{2}}{E_{ij}} \\
+               = & \frac{(O_{11} - E_{11})^{2}}{E_{11}} + \frac{(O_{12} - E_{12})^{2}}{E_{12}} + \frac{(O_{21} - E_{21})^{2}}{E_{21}} + \frac{(O_{22} - E_{22})^{2}}{E_{22}} \\
+               = & \frac{(56 - 45.268)^{2}}{45.268} + \frac{(8 - 18.731)^{2}}{18.731} + \frac{(2 - 12.732)^{2}}{12.732} + \frac{(16 - 5.268)^{2}}{5.268} \\
+               = & 2.544310 + 6.147796 + 9.046169 + 21.863292 \\
+               = & 39.60157 \\
+               = & 39.6
+\end{aligned}
+$$
+**Step 4:** We know compute the $P$-value. How likely is it to get a result that is *stronger* against the null hypothesis than our current result of $\chi^{2}_{Obs} = 39.6$?
+
+First, we determine the degrees of freedom on the $\chi^{2}$ distribution. The degrees of freedom is $df = (c - 1)*(r - 1) = (2 - 1)*(2 - 1) = 1$. 
+
+Now, we consider the $P(\chi^{2}_{(2-1)(2-1)} > 39.6) = P(\chi^{2}_{1} > 39.6)$. A visualization of this is provided below.
+
+```{r}
+chivalues = seq(0, 42, 0.1)
+plot(chivalues, dchisq(chivalues,1), xlab="Values of Test Statistic", ylab="Density",type="l", col="blue")
+abline(v=39.6, col='red')
+```
+
+The $P$-value is the area to the right of the <font colour=red>red line </font>. We compute this to be
+```{r}
+options(scipen=999)
+1-pchisq(39.6, 1)  #1 - P(chisq_{1} <= 39.6)
+```
+and
+$$
+P-{\rm value} = P(\chi^{2}_{1} > 39.60157) = 0.0000000003116833
+$$
+
+**Step 5:** From these data, the null hypothesis of "independence" between the parent (driver) using a seatbelt and the child(ren) using seatbelt(s) in the vehicle is not supported. There is a $3.11 x 10^{-10}$ probability of observing stronger evidence against the null hypothesis than the current data. We conclude from these data that there is a relationship between a parent's (driver) seatbelt usage and the child(ren) occupying the vehicle using seatbelt(s). 
+</br>
+</br>
+
+### Carrying Out the Test of Independence with R
+
+To have R carry out this test, we need to 
+1. enter the contingency table
+2. use the `chisq.test(table(x,y))` command
+
+First, we enter the observed counts in the contingency table as a two-by-two table/matrix:
+```{r}
+seatbelt = rbind(c(56,8), c(2, 16))  #create a table of observed counts called seatbelt
+seatbelt
+```
+We can also give the entered contingency table `rownames` and `colnames`.
+```{r}
+rownames(seatbelt) = c("Parent Use SB", "Parent Not Use SB")
+colnames(seatbelt) = c("Child Use SB", "Child Not Use SB")
+seatbelt
+```
+Second, we use the `chisq.test` command, where the argument is the name that we have given the contingency table:
+```{r}
+chisq.test(seatbelt, correct=FALSE) #correct=TRUE uses Yates continuity correction (|o - e| - 0.5)
+```
+From this output, we observe the value of the test statistic $\chi^{2}_{obs} = 39.599 \approx 39.6$ and the $P$-value of $0.0000000003118$. 
+</br>
+</br>
+
+### Connection With the Two Independent Sample Test of $p_{1} = p_{2}$ 
+
+Suppose we treated the data in the illustration as two independent samples from two populations, Population 1 consists of child(ren) of driver-parent who *do use* seatbelts, and Population 2 consists of child(ren) of driver-parents who *do not use* seatbelts. In this instance, we can represent the data as:
+$$
+\begin{array}{lcc}
+{{\rm Child\:\:Seatbelt\:\:Use}}    & {\rm Parent\:\:Uses\:\:Seatbelt}   & {\rm Parent\:\:Does\:\:Not\:\:use\:\:Seatbelt} \\
+{\rm Yes}                           &          56                          &         2                                      \\
+{\rm No}                            &          8                           &        16                                      \\
+                                    & n_{ParentSB} = 64                    & n_{ParentNoSB} = 18   \\
+\end{array}
+$$
+
+If the "Population Variable" of the parent (driver) is independent of the other "Population Variable" of child seatbelt-usage, then the proportion of child(ren) using seatbelts in vehicles driven by seatbelt-using parent(s) will be the same as the proportion of child(ren) using seatbelts in vehicles driven by non-seatbelt using parent(s). This can be articulated by the statistical hypotheses
+$$
+{\rm H}_{0}: p_{ParentSB} = p_{ParentNoSB} \hspace{0.25in}{\rm versus} \hspace{0.25in} {\rm H}_{A}: p_{ParentSB} \ne p_{ParentNoSB}
+$$
+Remember how the `prop.test()` command generated a $\chi^{2}_{1}$ test statistic, which was squared rooted and then either a $+$ or $-$ sign was placed in front depending on the sign of $\widehat{p}_{1} - \widehat{p}_{2}$ to compute value of $Z_{obs}$:
+```{r}
+prop.test(c(56,2), c(64,18), alternative="two.sided", correct=FALSE)
+```
+
+Notice the output produces the $\chi^{2}_{Obs} = 39.599 \approx 39.6$ with the identical $P$-value of $0.0000000003118$. The value of $Z_{Obs} = +\sqrt{\chi^{2}_{Obs}} = +\sqrt{39.599} =  6.292774 \approx 6.293$, and the $P$-value is $P(Z > 6.293)*2$ given below
+```{r}
+(1-pnorm(6.293))*2
+```
+
+### Using the chisq.test() command with "Raw Data"
+
+**Illustration 2:** Recall teh **studentsurveydf** data resulting form a random sample of $n = 109$ first-year university students who are taking a multie-sectioned first-year Statistics course. 
+```{r}
+studentsurveydf = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/studentsurvey.csv")
+head(studentsurveydf, 2)
+```
+Previously, we tested the statistical hypotheses that there is no difference between the proportion of males (0) and the proportion of females (1) who used marijuana (coded 1) in the six-months *prior* to being surveyed. 
+$$
+{\rm H}_{0}: p_{M} = p_{F} \hspace{0.5in} \text{versus} \hspace{0.5in} {\rm H}_{A}: p_{M} \ne p_{F}
+$$
+We can obtain the contingency table with the `tally` function
+```{r}
+conttableIllustration2 = tally(~Gender + MariUse, margins=TRUE, data=studentsurveydf)
+conttableIllustration2
+```
+From the summary of these data, we obtain
+$$
+\widehat{p}_{M} = \frac{14}{51} \hspace{0.2in} \widehat{p}_{F} = \frac{9}{58}  \hspace{0.2in} \widehat{p} = \frac{14 + 9}{51 + 58} = 0.2110
+$$
+$Z_{obs}$ is then computed as
+$$
+Z_{obs} = \frac{\left(\frac{14}{51} - \frac{9}{59}\right) - (0)}{\sqrt{0.2110(1-0.211)\left(\frac{1}{51} + \frac{1}{58}  \right)}} = 1.524
+$$
+The $P$-value is $P(Z > 1.524)*2  = 0.1275087$.
+```{r}
+(1 - pnorm(1.524))*2
+```
+
+Applying the `chisq.test` to these data:
+```{r}
+justcountsIll2 = tally(~Gender + MariUse, data=studentsurveydf) #we need just the continugency table without row and column tallys
+justcountsIll2 
+```
+
+```{r}
+chisq.test(justcountsIll2, correct=FALSE)
+```
+and $\chi^{2}_{obs} = 2.3214$ which is approximately - due to rounding errors in the computation of $Z_{obs}$ - equal to $(Z_{obs})^{2}$:
+```{r}
+prop.test(c(14, 9), c(51, 58), correct=FALSE)
+```
+</br>
+</br> 
+
+### A Parting Remark About the $\chi^{2}$ Test of Independence and R
+
+This test has a condition that the $E_{ij} \geq 5$. If this condition is not met, then R will provide the following message in <font color="red">Chi-squared approximation may be incorrect</font>. 
+
+Should you receive this message, you can direct R to carry out a simulation by using the option **simulate.p.value=TRUE**. In Illustration 2: 
+```{r}
+chisq.test(conttableIllustration2, simulate.p.value=TRUE)
+```
+
+Produces a $\chi^{2}_{Obs} = 2.3214$ and an *empirical* $P$-value of $P(\chi^{2}_{obs} > 2.3214) = 0.6717$. 
+
+Also, the command `xchisq.test(~RowCategoricalVariable + ColumnCategoricalVariable, data=dataframename, correct=FALSE)` will produce $\chi^{2}_{obs}$, the $P$-value, as well as the (i) observed counts (ii) (expected counts) (iii) $\frac{(O_{ij} - E_{ij})^2}{E_{ij}}$ and (iv) the residuals. This command is part of the **mosaic** package. 
+
+```{r}
+xchisq.test(justcountsIll2, correct=FALSE)
+```
+</br>
+How to remember the difference between the `chisq.test` and the `xchisq.test` commands? The "x" in front stands for "extra", as the `xchisq.test` command provides "extra stuff" with the output. 
+</br>
+</br>
+```{r}
+fisher.test(justcountsIll2) #Fisher's Exact test for 
+```
+</br>
+</br>
+
+**Time to Play 2:** A poll[^1] conducted by Ekos Research asked $n = 2216$ randomly chosen Canadians the question
+
+<center>
+"Do you agree or disagree with the following statement: I think that there should be a strict ban on guns in urban areas.""
+</center>
+</br>
+The responses were broken down according to education level and provided below. 
+$$
+\begin{array}{lccc}
+                                          & \text{Agree}   & \text{Disagree}   & \text{Unsure}   \\
+                                          \hline
+\text{High School or Less}                & 363            & 194               & 5               \\
+\text{Two-year College or Equivalent}     & 498            & 237               & 10              \\
+\text{University or Higher}               & 708            & 190               & 11              \\
+\end{array} 
+$$
+
+(a) Create this contingency table in R.
+</br>
+</br>
+**Answer:** See the R code below.
+```{r}
+gunviewstable= rbind(c(363, 194, 5), c(498, 237, 10), c(708, 190, 11))
+colnames(gunviewstable) = c("Agree", "Disagree", "Unsure") #provide names for the columns
+rownames(gunviewstable) = c("HS", "2-year", "Univ+") #provide names for the rows
+gunviewstable
+```
+<div style="margin-bottom:10px;">
+</div>
+
+(b) State the statistical hypotheses of interest. 
+</br>
+</br>
+**Answer:** The statistical hypotheses to be tested is
+$$
+{\rm H}_{0}:  \text{One's View on strict gun bans in urban areas is independent of their education level} \\
+{\rm H}_{A}:  \text{One's View on strict gun bans in urban areas is NOT independent of their education level} \\
+$$
+<div style="margin-bottom:10px;">
+</div>
+
+(c) If the null hypotheis in (b) is true, how many Canadians sampled with a University or higher education level would you expect to Disagree?
+</br>
+</br>
+**Answer:** If the null hypothesis is true, then one expect
+$$
+E_{Univ+,Disagree} = \frac{\text{(Total of Row Univ+)*(Total of Colmnn Disagree)}}{n } = \frac{\text{(708 + 190 + 11)*(194 + 237 + 190)}}{2216} = 254.733
+$$
+<div style="margin-bottom:10px;">
+</div>
+
+(d) Carry out the statistical test, computing the value of the test statistic and the $P$-value. 
+</br>
+</br>
+**Answer:** In this answer the `xchisq.test` function is used (this will generate all $E_{i,j}$s)
+```{r}
+xchisq.test(gunviewstable, correct=FALSE)
+```
+from which
+$$
+\chi^{2}_{obs} = 40.461 \hspace{0.1in} \text{with a}\:\:P-\text{value} = P(\chi^{2}_{df=(3-1)(3-1) = 4} > 40.461) = 0.00000003475
+$$
+<div style="margin-bottom:10px;">
+</div>
+
+(e) What can you conclude from these data? 
+</br>
+</br>
+**Answer:** From these data, one can conclude that a person's opinion on the a "strict ban" on guns in urban areas is not independent of their level of education. 
+<div style="margin-bottom:10px;">
+</div>
+
+
+[^1]:http://www.ekospolitics.com/wp-content/uploads/full_report_december_4_2017.pdf
+
+<div style="margin-bottom:400px;">
+</div>
+
+**Time to Play 3:** Return to today's **studentsurveydf** data. In addition to whether a student had used marijuana in the past six months or not, a student was asked the following question:
+<center>
+"Which political party best represents your view(s)?"
+</center>
+The responses are in the **PoliViews** variable.
+```{r}
+table(studentsurveydf$PoliViews)
+```
+where "1" corresponds to Progressive Conservative, "2" to Liberal, "3" to NDP, "4" to Green, and "5" to Other. 
+</br>
+</br>
+Can you infer from these data that a student's political views **PoliViews** (categorized by which political party best represents their views) is independent of their **Gender**? Carry out the necessary statistical test. 
+</br>
+</br>
+**Answer:** The statistical hypotheses to be tested is
+$$
+{\rm H}_{0}:  \text{One's choice of Political Party is independent of their Gender} \\
+{\rm H}_{A}:  \text{One's choice of Political Party is not independent of their Gender} \\
+$$
+From the data, a contingeny table is created below.
+```{R}
+countdataGenderPoliview = tally(~Gender + PoliViews, data=studentsurveydf)  #Gender is row variable, PoliView is column variable
+countdataGenderPoliview
+```
+One can use either the `chisq.test` or the `xchisq.test` function here. 
+```{r}
+chisq.test(countdataGenderPoliview, correct=FALSE)
+```
+In light of the warning,
+```{r}
+chisq.test(countdataGenderPoliview, correct=FALSE, simulate.p.value=TRUE)
+```
+Compare this result to the `xchisq.test`
+```{r}
+xchisq.test(countdataGenderPoliview, correct=FALSE)
+```
+
+```{r}
+xchisq.test(countdataGenderPoliview, correct=FALSE, simulate.p.value=TRUE)
+```
+The observed value of the test statistic is 
+$$
+\chi^{2}_{obs} = 17.135 \hspace{0.5in} P-\text{value} = P(\chi^{2}_{(2-1)*(5-1) = 4} > 17.135) \approx 0.001 
+$$
+Given the unlikeliness of observing stronger evidence against the null hypothesis, the null hypothesis is rejected. One can infer from these data that a student's choice of political party that best represents their political views is not independent with their gender. 
+
+<div style="margin-bottom:300px;">
+</div>
+
+

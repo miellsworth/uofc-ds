@@ -1,0 +1,735 @@
+---
+title: "DATA 602 - Properties of Statistics"
+output:
+  html_document:
+    df_print: paged
+---
+
+&copy; Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+#studentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+#attach(studentsurvey)
+library(dplyr)
+#install.packages("nycflights13")
+library(nycflights13)
+```
+
+
+# Statistics as Random Variables
+
+Recall the sample of $n = 1000$ flights taken from the $N = 336,776$ data points appearing in the **flights** data set.
+
+```{r}
+sampleflights <- sample(flights, 1000, replace = FALSE)  #select 1000 cases from flights without replacement
+head(sampleflights, 4)
+```
+
+# Statistics and Their Properties
+
+We have experienced how statistics such as the sample mean $\overline{X}$, the sample median $\widetilde{X}$, the sample variance $S^{2}$ and sample standard deviation $S$, the first quartile $Q1$, the third quartile $Q3$, the sample minimum $X_{Min}$ and the sample maximum $X_{Max}$ are computed from a subset of data that was chosen from a very large set of *unknown* data (the population).
+</br>
+</br>
+Due to the randomness of the data appearing in the sample *and* that the various sample statistics are computed from such "random" data, the computed statistics and therefore the observed values of these various sample statistics are *random variables*. 
+</br>
+</br>
+It is under this new notion of a statistic being a random variable that we can investigate the distributional properties of some of these statistics. 
+
+## The Sample Mean $\overline{X}$
+
+**Illustration:** In a previous example, we inspected some data that resulted from a random sample of $n = 1000$ flights randomly chosen from all flights that left three NYC-area airports in 2013. The data produced from this sample was previously used in the **sampleflights** data frame. At this point we have inspected many of the variables in this data set: **dep_delay**, **arr_delay**, **air_time**. Let's look at the data on a different variable called **distance**, a variable that measures the flight distance (in miles) from the point of departure to the airport of arrival. 
+</br>
+</br>
+
+First, below is the distribution of the distance (in miles) for all flights appearing in the sample. 
+
+```{r}
+#histogramof data in the sample showing the distribution of flight-distance 
+ggplot(data=sampleflights, aes(x = distance)) +
+  geom_histogram(col='red', fill='blue', binwidth=250, na.rm=TRUE) +
+  xlab("Distance of Flight in Miles") +
+  ylab("Count") +
+  ggtitle("Histogram of Flight Distances from 3-NYC Airports")
+#The density plot
+ggplot(data=sampleflights, aes(x = distance)) +
+  geom_density(col='blue', na.rm=TRUE) +
+  xlab("Flight Distance in Miles") +
+  ylab("Density") +
+  ggtitle("Density-Plot of Flight Distances from 3-NYC Airports")
+```
+
+The mean of this particular sample is $\overline{X} = 1070.154$. Various other statistics, such as the $\widetilde{X} = 888$, $x_{25} = 509$, $x_{75} = 1400$, and $S = 753.85$. 
+
+```{r echo=TRUE}
+dim(sampleflights)
+favstats(~ distance, data=sampleflights)
+```
+
+Now, recall that this data set is one of ${336776 \choose 1000}$ different possible samples/data sets that can occur. So the value of the sample mean we have observed/computed is one of ${336776 \choose 1000}$ different possible values.
+```{r}
+choose(336776, 1000)
+```
+</br>
+
+We can see how the sample mean is a variable, the value of which will *vary* from one sample of $n = 1000$ to another sample of $n = 1000$. 
+</br>
+</br>
+
+Does the sample mean $\overline{X}$ have a certain behaviour, or a certain distribution? If so, does the distribution of the sample mean mirror the distribution of the underlying variable that the average/mean is being computed? 
+</br>
+</br>
+To investigate, let's take a look at a small sample of $n = 5$ flights. The data and the sample mean computed from such data follow.
+
+```{r}
+samplemeandf1 = data.frame(samplemeans = sample(na.omit(flights$distance), 5, replace=FALSE)) #selects 5 flight distances, w/o replacement
+samplemeandf1 #the data vector with the sample of 5 values
+```
+```{r}
+mean(~samplemeans, data=samplemeandf1)
+```
+
+
+We see the distance of the $n = 5$ flights randomly chosen as well as the computed value of $\overline{X}$. 
+</br>
+</br>
+
+Now, suppose another random sample of $n = 5$ is taken. What will this sample look like? 
+```{r echo=FALSE}
+samplemeandf2 = data.frame(samplemeans = sample(na.omit(flights$distance), 5, replace=FALSE))
+head(samplemeandf2, 5) 
+```
+
+```{r}
+mean(~samplemeans, data=samplemeandf2)
+```
+
+The second sample of $n = 5$ flights gives much different data, along with a different value of the sample mean. 
+</br>
+</br>
+These two different random samples of five demonstrate *how* the data resulting from the sampling procedure are "random" data - that is, they are observed values of five elements, in our case flights, chosen from the population of flights.
+</br>
+</br>
+Moreover, the statistic computed from the sample *also* is a random variable, because it is computed from random variables or is a *function* of random variables. 
+</br>
+</br>
+
+What would happen if one continuously continued to sample $n = 5$ and then computed $\overline{X}$. What would the *distribution* of $\overline{X}$ look like? 
+</br>
+</br>
+Below, a simulation was conducted where a sample of $n = 5$ flights and the distance of each was taken, the data observed, and $\overline{X}$ computed. This produced 1000 *different values* of $\overline{X}$, which is presented in both the form of a histogram and a density plot. 
+</br>
+</br>
+Also, the average and standard deviation of the 1000 $\overline{X}$'s was computed.  The code required is also provided. Note that in this simulation I did not create a data frame, but rather I put each value of $\overline{X}_{i}$ into the data vector **xbar**.
+
+```{r echo=TRUE}
+nsamples = 1000  #no. of simulations
+xbar = numeric(nsamples) #data vector to hold 1000 sample means
+for(i in 1:nsamples){
+  sdata = sample(na.omit(flights$distance), 5, replace=F) #randomly pick 5 flights w/o replacement
+  xbar[i] = mean(sdata) #compute the mean of the five flights
+}
+samplestatsdf1 = data.frame(xbar)
+head(samplestatsdf1, 4)
+tail(samplestatsdf1, 4)
+```
+The histogram and density plot showing the distribution of $n = 1000$ values of $\overline{X}$ is provided below.
+```{r}
+ggplot(samplestatsdf1, aes(x = xbar)) +
+  geom_histogram(col='red', fill='blue', binwidth=50) +
+  xlab("Values of the Sample Mean") +
+  ylab("Count") +
+  ggtitle("Distribution of the Sample Mean (n = 5)")
+#density plot
+ggplot(samplestatsdf1, aes(x = xbar)) +
+  geom_density(col='red', fill='blue') +
+  xlab("Values of the Sample Mean") +
+  ylab("Density") +
+  ggtitle("Distribution of the Sample Mean (n = 5)")
+cat("The average of these 1000 values of the sample mean based on n = 5 is", mean(~xbar, data=samplestatsdf1), "and the standard deviation is",sd(~xbar, data=samplestatsdf1),".\n")
+```
+Now, suppose we were to increase the sample size from $n = 5$ to $n = 15$? How would this affect the *distribution* of $\overline{X}$? 
+</br>
+</br>
+**Time To Play 1:** Repeat simulation above in the space below. Copy and paste the code above into your R Notebook/Markdown. Ensure you change the sample size from $n = 5$ to $n = 15$.  
+</br>
+</br> 
+**Answer:**
+```{r}
+nsamples = 1000  #no. of simulations
+xbar = numeric(nsamples) #data vector to hold 1000 sample means
+for(i in 1:nsamples){
+  sdata = sample(na.omit(flights$distance), 15, replace=F) #randomly pick 15 flights w/o replacement
+  xbar[i] = mean(sdata) #compute the mean of the 15 flights
+}
+samplestatsdf2 = data.frame(xbar)
+cat("The average of these 1000 values of the sample mean based on n = 15 is", mean(~xbar, data=samplestatsdf2), "and the standard deviation is",sd(~xbar, data=samplestatsdf2),".\n")
+
+ggplot(samplestatsdf2, aes(x = xbar)) +
+  geom_histogram(col='red', fill='blue', binwidth=50) +
+  xlab("Values of the Sample Mean") +
+  ylab("Count") +
+  ggtitle("Distribution of the Sample Mean (n = 15)")
+#density plot
+ggplot(samplestatsdf1, aes(x = xbar)) +
+  geom_density(col='red', fill='blue') +
+  xlab("Values of the Sample Mean") +
+  ylab("Density") +
+  ggtitle("Distribution of the Sample Mean (n = 15)")
+cat("The average of these 1000 values of the sample mean based on n = 15 is", mean(~xbar, data=samplestatsdf1), "and the standard deviation is",sd(~xbar, data=samplestatsdf1),".\n")
+```
+
+Now, repeat your simulation two more times, one for (i) $n = 25$ and (ii) $n = 50$.
+
+```{r}
+nsamples = 1000  #no. of simulations
+xbar25 = numeric(nsamples) #data vector to hold 1000 sample means for n = 25
+xbar50 = numeric(nsamples) #data vector to hold 1000 sample means for n = 50
+for(i in 1:nsamples){
+  s25data = sample(na.omit(flights$distance), 25, replace=F) #randomly pick 25 flights w/o replacement
+  s50data = sample(na.omit(flights$distance), 25, replace=F) #randomly pick 50 flights w/o replacement
+  xbar25[i] = mean(s25data) #compute the mean of the 25 flights
+  xbar50[i] = mean(s50data) #compute the mean of the 50 flights
+}
+xbars = c(xbar25, xbar50) #combine the two vectors of sample means
+sizemean = c(rep("Xbar25", 1000), rep("Xbar50", 1000)) #1000 Xbar25, 1000 Xbar50
+meansdata = data.frame(sizemean, xbars) #create a data frame
+head(meansdata, 4)
+tail(meansdata, 4)
+
+meansdata %>%
+  filter(sizemean == "Xbar25") %>%
+  ggplot(aes(xbars)) +
+  geom_histogram(fill='blue', col='black', binwidth = 50) +
+  xlab("Sample Mean (n = 25)") +
+  ggtitle("Distribution of the Sample Mean (n = 25")
+meansdata %>%
+  filter(sizemean == "Xbar50") %>%
+  ggplot(aes(xbars)) +
+  geom_histogram(fill='blue', col='black', binwidth = 50) +
+  xlab("Sample Mean (n = 50)") +
+  ggtitle("Distribution of the Sample Mean (n = 50")
+meansdata %>%
+  ggplot(aes(x = xbars, y =..density.., group=sizemean)) +
+  geom_freqpoly(aes(color=sizemean), binwidth=50)
+```
+
+Looking at the two distributions above, it should be noted that the $\overline{X}_{n=25}$ and $\overline{X}_{n=50}$, computed below,are very close in value. Another attribute, the $S_{n=25}$ and $S_{n=50}$ miles, respectively:  
+
+```{r}
+mean(~xbars| sizemean,  data = meansdata)
+sd(~xbars| sizemean, data = meansdata)
+```
+
+This simulation exercise gives us insight into a very important statistical theorem called the **Central Limit Theorem**. In short, the Central Limit Theorem, or CLT, says the following:
+
+**Result:** Let $X$ be a random variable (either discrete or continuous) having a probability distribution with a mean $\mu_{X}$ and a standard deviation $\sigma_{X}$.
+</br>
+</br>
+A random sample of $n$-elements is taken on a population variable described by the probability distribution of $X$. Let $\overline{X}$ represent the mean of this sample, where
+$$
+\overline{X} = \left ( \frac{\sum_{i = 1}^{n}X_{i}}{n} \right ) = \left (\frac{X_{1} + X_{2} + \cdots + X_{n}}{n} \right )
+$$
+
+and
+$X_{1}, X_{2}, \cdots, X_{n}$ simply represent observed values of the sample.
+</br>
+</br>
+
+$\overline{X}$ is a random variable that is
+
+1. approximately follows a Normal model. (If the sample is taken on a population variable that can be modeled by the Normal distribution, 
+then $\overline{X}$ is *exactly* a Normally distributed random variable.
+2. The mean and standard deviation of $\overline{X}$ is given by
+$$
+\mu_{\overline{X}} = \mu_{X} \hspace{1in} \sigma_{\overline{X}} = \frac{\sigma_{X}}{\sqrt{n}}
+$$
+
+```{r}
+mean(~distance, data=flights) #computes the mean of the entire population, mean distance of all flights
+sd(~distance, data=flights)   #computes the standard deviation of the distance of all flights
+```
+and the values of the population mean and standard deviation are 
+$$
+\mu_{Distance} = 1039.913 \hspace{0.5in} \sigma_{Distance} = 733.233
+$$
+</br>
+</br>
+The results of similar simulations, according to $n$ size, are presented below:
+$$
+\begin{array}{rcccc}
+{\rm Sample\:\:Size}:                             & n = 5     &  n = 15    &  n = 25  & n = 50 \\
+\overline{X}:                                     &  1025.05 &   1046.90 & 1039.099 &  1042.359 \\
+\sigma_{\overline{X}} = \frac{733.233}{\sqrt{n}} \approx : &  328.2 &  186.18 & 147.59 & 104.80 \\
+\end{array}
+$$
+We also see that the sample mean $\overline{X}$ is an *unbiased* statistic that estimates the population mean $\mu$. In order for a statistic to be an unbiased estimator for a parameter, the value of which is unknown, the mean or expected value of the statistic *must equal* the target parameter. That is,
+
+$$
+E(\text{Statistic}) = \text{Parameter}
+$$
+In the case of the sample mean, $E(\overline{X}) = \mu$. Therefore $\overline{X}$ is an **unbiased statistic/estimator** for the population mean $\mu$. 
+
+**Example 1:** A paper[^1] reporting on the usage of GPS to better manage the processing times of garbage truck visits to landfills fond that the amount of time it takes for a truck to be weighed and then offloaded of the garbage it is carrying can be modeled by a Normal distribution with a mean of $\mu_{X} = 13$ minutes and a standard deviation of $\sigma_{X} = 4$ minutes. You are to randomly pick $n = 40$ garbage trucks, and record the processing time of each. The distribution is visualized below.
+
+```{r echo=FALSE}
+x = seq(0,26, 0.1)
+plot(x, dnorm(x, 13, 4), xlab="Processing Time of Garbage Truck", ylab="f(x)", main="Normal Distribution with Mean = 13 and Standard Deviation = 4", type="l", col='blue')
+```
+
+
+(a) Compute the probability that the mean processing time of your sample is less than 12 minutes.
+</br>
+</br>
+**Answer:** We wish to compute $P(\overline{X} < 12)$. To do so, we remember that the distribution of the sample mean from $n = 40$ is *approximately* modeled by the Normal probability model, with a mean of $\mu_{X} = 13$ and a standard deviation of $\sigma_{\overline{X}} = \frac{4}{\sqrt{40}} = 0.6325$. To do so in R, we use the `pnorm` command, where a "p" in front computes the cumulative probability of Normal probability model:
+
+```{r}
+pnorm(12, mean=13, sd=0.6324)  #OR
+pnorm(12, mean=13, sd=(4/sqrt(40)))  # computes P(Sample Mean < 12), with mean of 13 and standard deviation of 4/sqrt(40)
+```
+
+and $P(\overline{X} < 12) = 0.0559$.
+</br>
+</br>
+
+(b) 95% of the time, the mean processing time of a sample of $n = 40$ will be at most how long?
+</br>
+</br>
+**Answer:** In this instance, we are required to find the 95th percentile of the distribution of $\overline{X}$ based on $n = 40$. We use the "q" rather than the "p", and use the cumulative probability as the first argument:
+
+```{r echo=TRUE}
+qnorm(0.95, mean=13, sd=(4/sqrt(40)))  # computes 95 percentile of distribution of Sample Mean with mean of 13 and standard deviation of 4/sqrt(40)
+```
+
+[^1]: ''Estimating Waste Transfer Station Delays using GPS'', *Waste Management*, 2008; 1742 - 1750.
+
+</br>
+</br>
+**Time to Play 2:** The amount of time a potential customer spends "surfing" around a certain company's website can be modeled by the Exponential distribution with a mean of $\mu = 2.5$ minutes. The company has released a new webpage/portal. To determine if the new version of the webpage/portal is more effective, they randomly pick $n = 80$ visitors to the company webpage (new version) and observe the amount of time (in minutes) each customer spends on the company webpage/portal. The mean amount of time was found to be 3.05 minutes, or $\overline{X} = 3.05$. 
+</br>
+</br>
+
+(a) Consider the distribution of $\overline{X}_{n=80}$. What does this distribution look like?
+</br>
+</br>
+**Solution:** The distribution of the sample mean $\overline{X}$ is approximately Normal with a mean of $\mu_{\overline{X}} = 2.5$ and a standard deviation of $\sigma_{\overline{X}} = \frac{2.5}{\sqrt{80}}$. This distribution appears like
+```{r}
+x = seq(1.5,3.5, 0.1)
+plot(x, dnorm(x, 2.5, 2.5/sqrt(80)),
+     xlab="Mean Processing Time of 80 Garbage Trucks",
+     ylab="f(x)",
+     main="Normal Distribution with Mean = 2.5 and Standard Deviation = 0.28",
+     type="l",
+     col='red')
+```
+
+(b) 75% of such samples means, $\overline{X}_{n=80}$, are at most equal to what value? With R, compute $\overline{X}_{75}$. 
+</br>
+</br>
+**Solution:** We wish to find the 75-th percentile of the sample mean based on a random sample of $n = 80$ trucks, or $\overline{x}_{75}$.
+```{r}
+qnorm(0.75, mean = 2.5, sd = 2.5/80**0.5)
+```
+
+
+(c) How likely is it to observe a $\overline{X}_{n=80} = 3.05$. Compute the probability of observing a sample mean that is at least equal to $\overline{X}_{n=80} = 3.05$.
+</br>
+</br>
+**Solution:** Here we wish to compute $P(\overline{X} > 3.05)$. Usign the `pnorm` function with a mean of 2.5 and a standard deviation of $\sigma_{\overline{X}} = \frac{2.5}{\sqrt{80}}$,
+```{r}
+1 - pnorm(3.05, mean = 2.5, sd = 2.5 / 80**0.5)
+```
+</br>
+</br>
+
+--------------------
+
+## The Sample Proportion $\widehat{p}$
+
+The sample proportion is another type of statistic. Represented by $\widehat{p}$ (p-hat), it represents the proportion of Bernoulli trials that are successful. Specifically, 
+
+$$
+\widehat{p} = \frac{X_{1} + X_{2} + \cdots + X_{n}}{n} = \frac{{\rm Binomial\:\:Random\:\:Variable}}{n}
+$$
+
+A poll[^2] conducted last summer of $n = 900$ Alberta residents of age 18 years or older. Each was asked the question: ''There has been a great deal of discussion lately about Calgary hosting another Winter Olympics. In your opinion, do you think Calgary should or should not bid on the 2026 Winter Olympics.'' Suppose the true proportion of Albertan who think Calgary should bid on the 2026 Winter Olympics is $p = 0.52$. 
+</br>
+</br>
+Then, out of the 900 we would expect $E(\text{Binomial}) = 900(0.52) = 468$ to respond **bid** with a standard deviation of $SD(\text{Binomial}) = \sqrt{900(0.52)(1 - 0.52)} = 14.988$.
+</br>
+</br>
+So what is the mean/expected value and the standard deviation of the sample proportion $\widehat{p}$? Recall from earlier material that
+
+$$
+\begin{aligned}
+E(\widehat{p}) = & E\left(\frac{\text{Binomial}}{n}\right)\\
+              = & \frac{E(\text{Binomial})}{n} \\
+              = & \frac{np}{n}\\
+E(\widehat{p})= & p
+\end{aligned}
+$$
+From this, we see that the sample proportion is an unbiased statistic/estimator for the population proportion, as $E(\widehat{p}) = p$. The standard deviation of the sample proportion $\widehat{p}$ is
+
+$$
+\begin{align}
+\sigma_{\widehat{p}} = & \sqrt{Var(\widehat{p})} \\
+                     = & \sqrt{Var\left(\frac{\text{Binomial}}{n}\right)} \\
+                     = & \sqrt{\frac{1}{n^2}*Var(\text{Binomial})} \\
+                     = & \sqrt{\frac{1}{n^{2}}*np(1-p)} \\
+\sigma_{\widehat{p}} = & \sqrt{\frac{p(1-p)}{n}}
+\end{align}
+$$
+What about the distribution of $\widehat{p}$? Consider a random variable $X$ that counts the number of Albertans from a random sample of $n$ that believe Calgary should bid on the 2026 Winter Olympics. Consider three different values of $n$: $n = 20$, $n = 100$, and $n = 500$. The respective distributions are provided below.
+
+```{r echo=TRUE}
+nsample1 = 20
+nsample2 = 100
+nsample3 = 500
+x = 0:nsample1
+y = 0:nsample2
+z = 0:nsample3
+plot(x, dbinom(x,nsample1, 0.52), xlab="Number Out of 20 Support Calgary Bid", ylab="Probability", main="Distribution of Count", type="h", col='blue')
+plot(y, dbinom(y,nsample2, 0.52), xlab="Number Out of 100 Support Calgary Bid", ylab="Probability", main="Distribution of Count", type="h", col='red')
+plot(z, dbinom(z,nsample3, 0.52), xlab="Number Out of 500 Support Calgary Bid", ylab="Probability", main="Distribution of Count", type="h", col='orange')
+```
+Of the $n = 900$ sampled in this particular poll, 495 indicated that Calgary **should bid** on the 2026 Winter Olympics. That is, 
+$$
+\widehat{p} = \frac{495}{900} = 0.55
+$$
+
+The distribution of the *sample proportion* based on $n = 1000$ is then the Binomial distribution "divided" by 1000:
+```{r}
+x = seq(420, 630, 0.1)
+phat = (x/1000)
+plot(phat, dnorm(phat, 0.52, 0.0157987), yaxt = 'n', xlab="Values of the Sample Proportion", ylab = "", main="Distribution of Sample Proportion", type="h", col='purple')
+```
+Let's consider the computation of another poll of $n = 900$ producing a sample proportion that is *at least* as much as what was observed.
+</br>
+</br>
+The answer to this, we can use the `pnorm(x, mean, sd)` command, with a mean of $\mu_{\widehat{p}} = 0.52$ and a standard deviation of $\sigma_{\widehat{p}} = \sqrt{\frac{0.52(1-0.52)}{900}} = 0.01665$:
+
+```{r}
+1 - pnorm(0.55, mean=0.52, sd=0.01665) #computes 1 - P(phat >= 0.52)
+```
+and $P(\widehat{p} \geq 0.55) = 0.0357883 \approx 0.0358$. 
+</br>
+</br>
+
+**Note:** The result of the 2018 Referendum on this issue resulted in 43.6% of Calgary residents supporting a 2026 Winter Olmpic bid.
+</br>
+</br>
+
+[^2]: http://s3.documentcloud.org/documents/4575266/2018-07-03-Olympic-Bid.pdf
+
+**Time to Play 3:** The Residential Telephone Survey conducted by Statistics Canada[^3] in July 2015 found that 20% of Canadian households do not have a land-line telephone. You are to randomly pick $n = 1000$ Canadian households. 
+
+(a) What does the distribution shape of the sample proportion $\widehat{p}$ look like. Feel free to use previously used code in today's class to assist you in this visualization. 
+</br>
+</br>
+**Answer:** The distribution of the sample proportion $\widehat{p}$ is approximately Normal. A plot of this distribuiton is provided below.
+```{r}
+phatvalues = seq(0.16, 0.24, 0.001)
+plot(phatvalues, dnorm(phatvalues, 0.20, 0.012649),
+     yaxt = 'n',
+     xlab = "Values of the Sample Proportion",
+     ylab = "",
+     main = "Distribution of Sample Proportion",
+     type = "l",
+     col = 'purple')
+```
+
+(b) Consider the disrtibution you gave in part (a). Compute its expected value/mean and its standard deviation. 
+</br>
+</br>
+**Answer:** The mean and standard deviation of the above distribution is
+$$
+\mu_{\widehat{p}} = 0.20 \hspace{0.5in} \sigma_{\widehat{p}} = \sqrt{\frac{0.20(1-0.20)}{1000}} = 0.012649
+$$
+
+(c) Compute the probability that between 18% and 23% of these households sampled do not have a land-line telephone.
+</br>
+</br>
+**Answer:** To compute $P(0.18 \leq \widehat{p} \leq 0.23)$, invoke the `pnorm` function:
+```{r}
+#P(phat <= 0.23) - P(phat < 0.18)
+pnorm(0.23, 0.20, (0.20*(1 - 0.20)/1000)**0.5) - pnorm(0.18, 0.20, (0.20*(1 - 0.20)/1000)**0.5) 
+```
+
+[^3]: www.statcan.gc.ca/daily-quotidien/140623/dq140623a-eng.htm
+
+**Extention of Time to Play 3:** 90% of all sample proportions computed from $n = 1000$ randomly chosen Canadian households will be *at least* what value? 
+</br>
+</br>
+**Answer:** To compute the 10th percentile of the sample propotion $\widehat{p}$, or $\widehat{p}_{10}$, use the `qnorm` function
+```{r}
+qnorm(0.10, 0.20, (0.20*(1 - 0.20)/1000)**0.5)
+```
+and $\widehat{p}_{10} = 0.1838$. 
+
+
+
+**Time to Play 4:** An assumed to be "fair die"" is tossed 200 times, and the percentage of tosses that come up "6" is to be observed. Of the 200 tosses, 45 came up "6". Does this indicate that the die is fair? If the die is fair, then $P(6) = p = \frac{1}{6}$. 
+</br>
+</br>
+**Answer:** Assuming the die is fair, let's investigate this assumption by computing the probability of observing *at least* 45 sixes, or at least a value of the sample proportion of $\widehat{p} = \frac{45}{200} = 0.225$.
+</br>
+
+Since $\widehat{p}$ can be modeled, *approximately*, by the Normal model with a mean/expected value and a standard deviation of
+
+$$
+\mu_{\widehat{p}} = \frac{1}{6} = 0.1667 \hspace{0.5in} \sigma_{\widehat{p}} = \sqrt{\frac{\frac{1}{6}(1 - \frac{1}{6})}{200}} = 0.0264
+$$
+
+To compute the $P\left(\widehat{p} \geq \frac{45}{200}\right)$, we proceed with the `pnorm` command:
+```{r echo=TRUE}
+1 - pnorm(45/200, 1/6, sqrt(5/7200))  # 5/7200 = 1/6*5/6*1/200
+```
+</br>
+</br>
+and $P(\widehat{p} \geq \frac{45}{200}) = 0.01342$. 
+
+-------------------
+
+## The Sample Variance $S^{2}$
+
+The sample variance is also a random variable. Why? It is a *function* of the sample mean $\overline{X}$, we we have just learned is a random variable that is approximately modeled by the Normal distribution for $n \geq 25$. 
+$$
+S^{2} = \frac{\sum_{i=1}^{n}(x_{i} - \overline{X})^{2}}{n - 1}
+$$
+What does the distribution of the sample *standard deviation* $S$ look like? Simiilar to the simulation conducted in *Illustration 1*, let's sample from the population of flights data.frame *flights** using a sample of (i) $n = 5$ (ii) $n = 15$, each time computing the sample standard deviation. 
+```{r}
+nsamples = 1000  #no. of simulations
+samplesdn5 = numeric(nsamples) #data vector to hold 1000 sample standard deviations
+for(i in 1:nsamples){
+  sdata = sample(na.omit(flights$distance), 5, replace=FALSE) #randomly pick 5 flights w/o replacement
+  samplesdn5[i] = sd(sdata) #compute the standard deviation of the five flights
+}
+samplestatsdf3 = data.frame(samplesdn5)
+head(samplestatsdf3, 3)
+```
+
+```{r}
+samplestatsdf3 %>%
+  ggplot(aes(x = samplesdn5)) +
+  geom_histogram(col='orange', fill='yellow', binwidth=50) +
+  xlab("Values of Sample Standard Deviation") +
+  ylab("Count") +
+  ggtitle("Distribution of 1000 Sample Standard Deviations (n=5)")
+#
+cat("The average of these 1000 values of the sample standard deviation based on n = 5 is",
+    mean(~samplesdn5, data=samplestatsdf3),
+    "miles and the standard deviation is",
+    sd(~xbar, data=samplestatsdf2),
+    "miles. \n")
+```
+Now, what would happen if we *squared* each computed value of $S$, $S_{1}, S_{2}, \cdots, S_{1000}$ in this simulation and viewed the distibution of the resulting sample variance $S^{2}$?
+```{r}
+samplestatsdf3 = samplestatsdf3 %>% 
+  mutate(samplevarn5 = (samplesdn5)^{2})
+head(samplestatsdf3, 4)
+```
+A histogram and density plot of the distribution of the sample variance $S^{2}$ is provided below.
+```{r}
+samplestatsdf3 %>%
+  ggplot(aes(x = samplevarn5)) +
+  geom_histogram(col='orange', fill='yellow', binwidth=10000) +
+  xlab("Values of the Sample Variance") +
+  ylab("Count") +
+  ggtitle("Distribution of Sample Variance (n = 5)")
+samplestatsdf3 %>%
+  ggplot(aes(x = samplevarn5)) +
+  geom_density(col='orange', fill='yellow') +
+  xlab("Values of the Sample Variance") +
+  ylab("Density") +
+  ggtitle("Distribution of Sample Variance (n = 5)")
+```
+
+**Time to Play 5:** Re-run the code that generated the distibution of $S$ from a sample of $n = 5$ changing the line
+```{r}
+samplesdn5[i] = sd(sdata) #computes the standard deviation of each  of 1000 samples of n = 5
+```
+to
+```{r}
+samplevarn15 = var(sdata) #computes the variance of each  of 1000 samples of n = 15
+```
+Then generate the distribution of $S^{2}$. What do you notice about the distribution? (Ensure you use a different data frame name in which to store the various values of $S^{2}$ that you will generate, name it **samplestatsdf4**..)
+</br>
+</br>
+**Answer:** Here is the (our) code:
+```{r}
+nsamples = 1000  #no. of simulations
+samplevarn15 = numeric(nsamples) #data vector to hold 1000 sample variances
+for(i in 1:nsamples){
+  sdata = sample(na.omit(flights$distance), 15, replace = FALSE) #randomly pick 15 flights w/o replacement
+  samplevarn15[i] = var(sdata) #compute the variance of the 15 flights
+}
+samplestatsdf4 = data.frame(samplevarn15)
+head(samplestatsdf4, 3)
+```
+The histogram and density-plot of $S^{2}$ based on $n = 15$ is provided below.
+```{r}
+samplestatsdf4 %>%
+  ggplot(aes(x = samplevarn15)) +
+  geom_histogram(col='orange', fill='yellow', binwidth=10000) +
+  xlab("Values of the Sample Variance") +
+  ylab("Count") +
+  ggtitle("Distribution of Sample Variance (n = 15)")
+#
+samplestatsdf4 %>%
+  ggplot(aes(x = samplevarn15)) +
+  geom_density(col='orange', fill='yellow') +
+  xlab("Values of the Sample Variance") +
+  ylab("Density") +
+  ggtitle("Distribution of Sample Variance (n = 15)")
+```
+
+--------------------
+In this most recent **Time to Play** exercise, 1000 values of $S^{2}$ were computed. Now suppose we create a new variable which results from *transforming each of these values of* $S^{2}$ by the fraction $\frac{n - 1}{\sigma^{2}}$, where $\sigma = 733.233$ miles.
+
+```{r}
+samplestatsdf4 = samplestatsdf4 %>%
+  mutate(transformedvar = ((15 - 1)/(733.233^{2})*samplevarn15))
+head(samplestatsdf4, 4)
+```
+The distribution of this new variable **transformedvar** is
+```{r}
+samplestatsdf4 %>%
+  ggplot(aes(x = transformedvar)) +
+  geom_histogram(col='orange', fill='yellow', binwidth=2) +
+  xlab("Values of the Transformed Sample Variance") +
+  ylab("Count") +
+  ggtitle("Distribution of Transformed Sample Variance (n = 15)")
+#
+samplestatsdf4 %>%
+  ggplot(aes(x = transformedvar)) +
+  geom_density(col='orange', fill='yellow') +
+  xlab("Values of the Transformed Sample Variance") +
+  ylab("Density") +
+  ggtitle("Distribution of Transformed Sample Variance (n = 15)")
+```
+The mean and standard deviation of this transformed variance variable **transformedvar** is 
+```{r}
+mean(~transformedvar, data = samplestatsdf4)
+sd(~transformedvar, data = samplestatsdf4)
+```
+This finding provides is with some insights into the distribution of the *transformed* value of the sample variance $S^{2}$:
+</br>
+</br>
+**Result:** When the sample variance $S^{2}$ is transformed by
+$$
+\frac{(n - 1)*S^{2}}{\sigma^{2}}
+$$
+where $n$ is the sample size and $\sigma$ is the *population variance*, the resulting transformation is a random variable that can be approximated by the Chi-square ($\chi^{2}$) distribution with a mean of $n - 1$ and a standard deviation of $\sqrt{2(n-1)}$. the $n - 1$ is commonly called the **degrees of freedom** of the $\chi^{2}$ distribution, or $\chi^{2}_{df=n-1}$. 
+</br>
+</br>
+Probabilties associated with the $\chi^{2}$ can be computed in R with either the `dchisq(x, df)` or the `pchisq(p, df)` commands. 
+</br>
+</br>
+
+**Example 1:** Let's return to our **sampleflights** data frame which we loaded and worked with last Thursday. Specifically, the variable *distance*. The observed value of the sample standard deviation. Recall the value of the population standard deviation is $\sigma = 733.233$. 
+```{r}
+favstats(~distance, data=sampleflights)
+```
+$$
+S = 753.8438\:\;\text{miles}
+$$
+With respect to the variable *distance* there are no missing values, so $n = 1000$. 
+</br>
+</br>
+Compute the probability that another random sample of $n = 1000$ flights will produce a sample standard deviation that is between 700 miles and 725 miles.
+</br>
+</br>
+**Answer:** We wish to compute $P(700 \leq S \leq 725)$. 
+$$
+\begin{aligned}
+P(700 \leq S \leq 725) = & P(700^{2} \leq S^{2} \leq 725^{2})  \\
+                       = & P \left(\frac{(n - 1)*700^{2}}{\sigma^{2}} \leq \frac{(n - 1)*S^{2}}{\sigma^{2}} \leq \frac{(n - 1)*725^{2}}{\sigma^{2}} \right)  \\
+= & P \left(\frac{(1000 - 1)*700^{2}}{733.233^{2}} \leq \chi^{2}_{1000 - 1} \leq \frac{(1000 - 1)*725^{2}}{733.233^{2}} \right)  \\
+= & P(910.4949 \leq \chi^{2}_{999} \leq 976.6917) \\
+= & \underbrace{P(\chi^{2}_{999} \leq 976.6917)}_{\text{pchisq(976.6917, 999)}} - \underbrace{P(\chi^{2}_{999} \leq 910.4949)}_{\text{pchisq(910.4949, 999)}} \\
+= & 0.2914636 \\
+\approx & 0.2915 
+\end{aligned}
+$$
+
+```{R}
+pchisq(976.6917, 999) - pchisq(910.4949, 999)  #computes the difference between two cumulative probabilies
+```
+</br>
+</br>
+**Time to Play 6:** Using the last example, compute the probability that another sample of $n = 1000$ departing flights from the 3-NYC airiports will yield a sample standard devaition that exceeds the observed value of $S$ (rounded to two decimals).
+</br>
+</br>
+**Answer:** Here it is required to compute $P(S > 753.85)$
+$$\begin{aligned}
+P(S > 753.85) = & P( S^{2}  > 753.85^{2}  ) \\
+= & \left(\frac{(n - 1)*S^{2}}{\sigma^{2}} > \frac{(n - 1)*753.85^{2}}{\sigma^{2}}  \right) \\
+= & \left(\chi^{2}_{999} > \frac{(1000 - 1)*753.85^{2}}{733.233^{2}}  \right) \\
+= & P(\chi^{2}_{999} > 1055.969) \\
+= & 1 - \underbrace{P(\chi^{2}_{999} \leq 1055.969)}_{\text{pchisq(1055.969, 999)}} \\
+= & 0.1027749 \\
+\approx & 0.1028
+\end{aligned}$$
+```{r}
+1 - pchisq(1055.969, 999)
+```
+
+</br>
+</br>
+
+**Wrap Up Exercise:** The National Graduate Study[^3] is a national survey conducted by Statistics Canada every five years. For a population of Canadians that consisted of those that graduated from an undergraduate degree program in 2010 and were interviewed in 2013, the mean amount owed to either a government or non-government source - student-debt -  at the time of graduation was $\mu = 26.3$ (in $1000s) and a standard deviation of $\sigma = 4.5$ (in $1000s). 
+</br>
+Suppose you are to randomly pick $n = 50$ persons from this population. 
+</br>
+
+(a) Compute the probabilty that the mean student-debt of this sample will be between $25,000 and $27,000 at the time of graduation. 
+</br>
+</br>
+**Answer:** In this instance, we use the fact that the distribution of $\overline{X}$ is close to being Normally distributed with a mean of $\mu_{\overline{X}} = 26.3$ and a standard deviation of $\sigma_{\overline{X}} = \frac{4.5}{\sqrt{50}}$. It is required to compute $P(25.0 \leq \overline{X} \leq 27.0)$.
+</br>
+</br>
+The R code below computes this probability:
+```{R}
+pnorm(27, 26.3, 4.5/sqrt(50)) - pnorm(25, 26.3, 4.5/sqrt(50)) #P(Xbar <= 27.0) - P(Xbar <= 25.0)
+```
+and $P(25.0 \leq \overline{X} \leq 27.0) = 0.8437833 \approx 0.8438$.
+
+(b) Compute the probability that the standard deviation of student-debt of this sample will be more than $5000 at the time of graduation. 
+</br>
+</br>
+**Answer:** 
+To compute $P(S > 5)$, we need to convert the value of $S$ to the $\chi^{2}_{df = 50 - 1}$. This is done with
+$$
+\frac{(n - 1)*S^{2}}{\sigma^{2}} = \frac{(50 - 1)*5^{2}}{4.5^{2}} = 60.4938
+$$
+
+From this,
+$$
+P(S > 5) = P(\chi^{2}_{49} > 60.4938)
+$$
+```{R}
+1 - pchisq(60.4938, 49)  #computes 1 - P(Chi^{2}_{df=49}) <= 66.252)
+```
+and
+$$
+P(S > 5) = P(\chi^{2}_{49} > 60.4938) = 0.125694 \approx 0.1257
+$$
+
+(c) The report also stated that of *all those Canadians who graduated from an undergradute program in 2010 with student-debt*, 34% had paid off their student-debt by the time they were interviewed. Compute the probability that at least 40% of the $n=100$ (larger sample size) persons chosen had paid off their student in the three-years since their graduation.  
+</br>
+</br>
+**Answer:** To compute $P(\widehat{p} \geq 0.40)$, we invoke the Central Limit Theorem as $\widehat{p}$ is a random variable that can roughly be explained by the Normal distibution with a mean of 0.34 $(\mu_{\widehat{p}}) = 0.34$ and a standard deviation of $\sqrt{\frac{0.34(1 - 0.34)}{100}} = 0.04737$. In R, this probability is computed with
+```{r}
+1 - pnorm(0.40, 0.34, sqrt(0.34*(1-0.34)/100))
+```
+and $P(\widehat{p} \geq 0.40) = 0.102649 \approx 0.1026$. 
+</br>
+</br>
+Note: This can also be computed by the notion that if at least 40% of $n = 100$ persons paid off their student-debt by the time of the interview (or in 3-years), then at least $0.40*100 = 40$ of the $n = 100$ have paid off their debt. This count can be modeled by the Binomial probability distribution (why?) and 
+```{r}
+1 - pbinom(39, 100, 0.34) # P(X >= 40) = 1 - P(X <= 39)
+````
+
+
+[^3]: http://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&SDDS=5012

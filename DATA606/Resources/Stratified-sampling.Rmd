@@ -1,0 +1,103 @@
+---
+title: "Stratified Sampling"
+author: "Michael Ellsworth"
+date: '2020-01-08'
+output: html_document
+---
+
+```{r Stratified Sampling Notes}
+library(truncnorm)
+
+N=600
+x<-seq(1,N) # list of units
+
+# we constrcut 3 strata
+# response variable: monthly salary
+# explanatory variable: education level
+work_year <- rtruncnorm(600, 0, 30, 5, 2)
+
+# no post-secondary education
+y1 <- 1000 + 10 * work_year[1:300] + rtruncnorm(300, 0, 20, 5, 1)
+
+# has post-secondary but without post-graduate education
+y2 <- 2000 + 13 * work_year[301:500] + rtruncnorm(200, 0, 20, 5, 1)
+
+# has post-graduate education
+y3 <- 3000 + 15 * work_year[501:600] + rtruncnorm(100, 0, 20, 5, 1)
+y <- c(y1, y2, y3)
+
+par(mfrow=c(2,2))
+plot(work_year[1:300], y1, "p", main="None", xlab="Number of working years", ylab="Monthly salary")
+plot(work_year[301:500], y2, "p", main="post-secondary", xlab="Number of working years", ylab="Monthly salary")
+boxplot(y1, main = "None", at = c(1), names = c("None"), las = 2, col = c("orange"), border = "brown", horizontal = TRUE, notch = TRUE)
+boxplot(y2, main = "post-secondary", at = c(1), names = c("post-secondary"), las = 2, col = c("orange"), border = "brown", horizontal = TRUE, notch = TRUE)
+
+# To estimate the population mean 
+# SRS
+mean(y)
+
+ind=sample(x,30,replace=FALSE)
+mean(y[ind])
+
+# Stratified sampling
+ind1=sample(x[1:300],15,replace=FALSE)
+ind2=sample(x[301:500], 10, replace=FALSE)
+ind3=sample(x[501:600], 5, replace=FALSE)
+mean(y[c(ind1,ind2,ind3)])
+
+# compare within-strata and between-strata variance
+sd(c(mean(y1), mean(y2), mean(y3)))
+
+c(sd(y1), sd(y2), sd(y3))
+
+# Compare the estimator variance
+es_var<-function(s){
+  mean1<-rep(0,s)
+  mean2<-mean1
+  for (i in 1:s){
+    ind<-sample(x,30,replace=FALSE)
+    mean1[i]<-mean(y[ind])
+    ind1=sample(x[1:300],15,replace=FALSE)
+    ind2=sample(x[301:500],10,replace=FALSE)
+    ind3=sample(x[501:600],5,replace=FALSE)
+    mean2[i]<-mean(y[c(ind1,ind2,ind3)])
+  }
+  print(c(sd(mean1),sd(mean2)))
+}
+es_var(20)
+
+es_var(5)
+
+es_var(10)
+
+# Compute the estimator variance
+within_var<-function(vec){
+  N_vec<-c(300,200,100)
+  N_cum<-cumsum(N_vec)
+  temp<-rep(0,length(N_vec))
+  for (i in 1:length(N_vec)){
+    ind<-sample(x[(N_cum[i]-N_vec[i]+1):N_cum[i]],vec[i],replace=FALSE)
+    temp[i]<-(1-vec[i]/N_vec[i])*(N_vec[i]/sum(N_vec))^2*sd(y[ind])^2/vec[i]
+  }
+  return(temp)
+}
+sqrt(sum(within_var(c(15,10,5))))
+
+##############################
+library(sampling)
+
+# Not proportional (not recommended?)
+data <- rbind(matrix(rep("nc", 165), 165, 1, byrow = TRUE),
+              matrix(rep("sc", 70), 70, 1, byrow = TRUE))
+data <- cbind(data, c(rep(1, 100), rep(2, 50), rep(3, 15), rep(1, 30), rep(2, 40)),
+              1000 * runif(235))
+data<-as.data.frame(data)
+names(data)=c("state","region","income")
+
+table(data$region,data$state)
+
+s <- sampling:::strata(data, stratanames = c("region"), size = c(10, 4, 6), method = "srswor")
+mydata <- getdata(data, s)
+mydata
+```
+

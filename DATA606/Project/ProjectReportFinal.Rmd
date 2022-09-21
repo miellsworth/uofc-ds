@@ -1,0 +1,986 @@
+---
+title:
+- 'What It Takes to Buy a House in Iowa'
+subtitle:
+- "A statistical analysis…"
+author: 
+- "Authors:"
+- "Mark Dodd"
+- "Michael Ellsworth"
+- "Dustin Tang"
+- "Raymond Wong"
+date:
+- 'Date: February 12th, 2020'
+output: html_document
+---
+
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  text-align: center;
+}
+h3.subtitle {
+  font-size: 18px;
+  text-align: center;
+}
+h4.author {
+  font-size: 16px;
+  text-align: center;
+}
+h4.date {
+  font-size: 14px;
+  text-align: center;
+}
+</style>
+
+```{r Load Libraries, include = FALSE}
+library(survey)
+library(sampling)
+library(tidyverse)
+library(mosaic)
+library(kableExtra)
+library(mice)
+library(cowplot)
+library(caret)
+```
+
+```{r Read Data, include = FALSE}
+house.orig = read_csv('train.csv')
+names(house.orig) = make.names(names(house.orig))
+```
+# Background
+Our team has chosen the [Ames Housing dataset](http://jse.amstat.org/v19n3/decock.pdf) for our Data 606 final project. This is an extremely interesting dataset with many features, which makes it well suited for analysis. This dataset is well suited for regression analysis in addition to utilizing sampling techniques and data imputation methods.
+
+The primary question that we intend to answer with this project is: Can we accurately predict the sale price of a house given variables describing the house? This is of interest to us as understanding what factors affect a home price is useful when purchasing and selling a home, which, most people will do at some time in their life and it is a major purchase. The specific data set is for the city of Ames, Iowa, so in that respect it is not especially interesting as we will probably never purchase or sell a home in Ames, but the techniques and methods we employ during our project will be useful in the future.
+
+# Introduction to the dataset
+In this report we intend to explore this data set looking for relationships between the target variable and the predictors. There is a large number of initial features (80), with some categorical data as well as numerical data. Below we detail out each of the individual variables that comprise our data set.
+
+```{r Pretty Table for Variables, echo=FALSE, message=FALSE, warning=FALSE}
+variable_csv = read_csv("Variables.csv")
+kable(variable_csv, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(variable_csv), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(variable_csv), by = 2), color = "black", background = "#FFFFFF")
+```
+
+# Methodology
+
+## Exploratory data analysis
+
+## Data cleaning
+
+```{r Clean Functions, include = FALSE}
+# Create a function to count the NAs in a dataframe
+count_na = function(df) {
+  x = df %>% 
+    summarise_all(funs(sum(is.na(.)))) %>%
+    gather(key = "Feature", value = "NAs") %>% 
+    filter(NAs > 0)
+  return(x)
+}
+
+# Create a function to replace categories in the house dataframe
+replace_cats = function(df) {
+  # replace categorical variables based on text file description
+  replacements = list(Alley = "None", BsmtCond = "None", BsmtQual = "None", BsmtExposure = "None",
+                      BsmtFinType1 = "None", BsmtFinType2 = "None", FireplaceQu = "None", GarageType = "None",
+                      GarageYrBlt = "None", GarageFinish = "None", GarageQual = "None", GarageCond = "None",
+                      PoolQC ="None", Fence = "None")
+  return(df %>% replace_na(replacements))
+}
+
+# Create a function that will drop columns from a dataframe
+drop_cols = function (df, cols) {
+  return(df %>% select(-(!!cols)))
+}
+```
+
+### Replace Missing Values
+
+From the original dataset, the first step of the data cleaning process was to look at the features with missing values. A function was created and a count of the missing values was generated.
+
+```{r Count NAs, echo = FALSE, warning = FALSE}
+count_na(house.orig)
+```
+
+From the description of the dataset, we know that for a number of these features, "NA" is actually a true category that we can simply fill in. The following code chunk replaces the “NA” value with a meaningful category and returns the remaining missing values from the cleaned dataset.
+
+```{r Replace the NAs with meaningful categories}
+house.clean = replace_cats(house.orig)
+```
+
+From here are left with 5 features that we need to explore further. This will be outlined in the “Imputation” section.
+
+### Imputation
+
+```{r Impute Functions, include = FALSE}
+# Create a function that will return the mode from a vector
+# From https://www.tutorialspoint.com/r/r_mean_median_mode.htm
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# Create a function that will impute the mode into missing values of a column of a dataframe
+impute_cat_mode = function(df, col) {
+  mode_ = getmode(df[[col]])
+  df[, col] = replace(df[, col], is.na(df[, col]), mode_)
+  return(df)
+}
+
+# Create a function that will impute values
+replace_cats_prop = function(df, col_name){
+  col <- as.name(col_name)
+  n = (df %>% filter(is.na(!!col)) %>% summarise(n()))[[1]]
+  
+  # randomly select n values from the categorical column - this should approximate the same distribution of values in that column
+  temp = df %>%
+    filter(!is.na(!!col)) %>%
+    sample_n(n, replace = TRUE)
+  df[is.na(df[col_name]), col_name] = temp[col_name]
+  return(df)
+}
+
+# Create a function that will remove the messages from the mice package
+# some function from Hadley Wickham - craziness
+quiet <- function(x) {
+  sink(tempfile())
+  on.exit(sink())
+  invisible(force(x))
+}
+
+# Create a function to impute values
+impute_values = function(df, cols_to_impute) {
+  tempData <- quiet(mice(df, m=5, maxit=5, meth='pmm', seed=500))
+  tempComplete = complete(tempData, 1)
+  for (col_s in cols_to_impute) {
+    df = df %>% mutate(!!col_s := tempComplete[[col_s]])
+  }
+  return(df)
+}
+```
+
+In order to further remove missing values from the dataset, there are 5 remaining variables that need to be explored further. The `MiscFeature` variable is missing 96.3% of the values, and upon reviewing the description of this category we have deemed it safe to simply remove this feature.
+
+The following table outlines the counts of each category within the `Electrical` variable.
+
+```{r Count Electrical Types}
+table(house.clean$Electrical)
+```
+
+Based on this table, we see that one of the categories, “SBrkr”, which represents the standard electrical system of a typical house, dominates the other categories. As a result, we decided to choose the dominant category to impute into the one missing value. This is done in the following code chunk.
+
+```{r Impute Electrical}
+# Impute the mode of the categorical variable
+house.clean = impute_cat_mode(house.clean, "Electrical")
+```
+
+The following table outlines the counts of each category within the masonry veneer type variable, `MasVnrTypes`.
+
+```{r Count MasVnrTypes}
+table(house.clean$MasVnrType)
+```
+
+From the above table, it is not clear if there is a straightforward way to impute values into the missing values. The following code chunk completes the following steps:
+
+1. Count the number of missing values in the feature column = n
+2. Select a simple random sample (n) of observations without missing values
+3. Replace the missing values with the simple random sample
+
+```{r Impute MasVnrTypes}
+house.clean = replace_cats_prop(house.clean, 'MasVnrType')
+```
+
+The last two variables that require imputed values are "MasVnrArea" and "LotFrontage". This was completed using the `mice` package.
+
+```{r Impute MasVnrArea and LotFrontage, warning=FALSE}
+house.clean = impute_values(house.clean, c("MasVnrArea", 'LotFrontage'))
+```
+
+### Remove Outliers
+
+The following section outlines the process behind removing outliers and cleaning up unnecessary columns from the dataset.
+
+We removed 2 data points out of the set. These 2 points are when the above ground living around is above 4000 but the sale price is less than 200000.
+
+## Feature Engineering
+
+The following section outlines the steps taken to remove, filter and combine columns in order to create a reduced dataframe with features that are more relevant to the housing sale price.
+
+### Above Ground and Below Ground Bathrooms
+
+FullBath: Full bathrooms above grade
+HalfBath: Half baths above grade
+
+The Above Ground bathrooms variables were combined into one variable thru combining Full Baths and Half Baths.  They were further categorized due to the variance of the amount of bathrooms, say if a house had 3+ bathrooms, they were combined with any house that had 2.5+ Above Ground bathrooms.  We will show the categorization below.
+The Below Ground bathrooms where calculated in a very similar manner 
+
+Our BathAbove variable starts with:
+$$
+BathAbove = FullBath + 0.5 * HalfBath
+$$
+
+Our BathBelow variable starts with:
+$$
+BathAbove = BsmtFullBath + 0.5 * BsmtHalfBath
+$$
+
+```{r}
+house.clean %>% 
+  mutate(colorN  = ifelse((FullBath + 0.5 * HalfBath) <= 1, "1",
+                     ifelse((FullBath + 0.5 * HalfBath) >= 2.5, '2.5+', as.character(FullBath + 0.5 * HalfBath)))) %>%
+ggplot(aes(y = (SalePrice), x = factor(FullBath + 0.5 * HalfBath), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue", "Blue", "Green")) +
+     scale_alpha_manual(values=c("1", "0", "2","2.5+")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+
+```
+
+```{r}
+house.clean %>% 
+  mutate( colorN  = ifelse((BsmtFullBath + 0.5 * BsmtFullBath) <= 1, "1",
+          ifelse( (BsmtFullBath + 0.5 * BsmtFullBath) >= 2.5, "2.5+", as.character( BsmtFullBath + 0.5 * BsmtFullBath )))) %>%
+  ggplot(aes(y = (SalePrice), x = factor(BsmtFullBath + 0.5 * BsmtFullBath), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue", "Green", "Green")) +
+     scale_alpha_manual(values=c("0", "1", "2","2.5+")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+
+```
+
+### WoodDeck Square Footage (not complete)
+
+```{r}
+ggplot(house.clean, aes(y = SalePrice, x = WoodDeckSF, color = WoodDeckSF)) +
+  geom_point() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2 )
+
+house.clean %>% 
+  filter(WoodDeckSF > 0) %>%
+  ggplot(aes(y = SalePrice, x = WoodDeckSF, color = WoodDeckSF)) +
+  geom_point() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2) +
+  geom_smooth(method='lm', formula= y~x)
+```
+
+### Type of Sale
+
+The type of sale variable, “SaleType”, has limited variation between categories and the majority of the data falls in a couple of categories, as outlined in the following chart.
+
+```{r Feature Engineering SaleType Original}
+house.clean %>%
+  ggplot(aes(x = SaleType, y = SalePrice)) +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+Due to the limited variation between categories, this variable was reduced into three categories: New, Deed and Other. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineering SaleType Reduced}
+house.clean %>%
+  mutate(SaleType = ifelse(SaleType == 'New',
+                     "New",
+                     ifelse(SaleType %in% c("WD", "CWD", "VWD", "COD"),
+                            "Deed",
+                            "Other"))) %>%
+  ggplot(aes(x = SaleType, y = SalePrice)) +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2)
+```
+
+### Sale Condition
+
+The sale condition variable, “SaleCondition”, has limited variation between categories and the majority of the data falls in a couple of categories, as outlined in the following chart.
+
+```{r Feature Engineer SaleCondition Original}
+house.clean %>%
+  ggplot(aes(x = SaleCondition, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+Due to the limited variation between categories, this variable was reduced into two categories: Good and Poor. The original six categories did not have a suitable amount of variation and as a result, five of these categories were combined into the “Poor” category. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineer SaleCondition Reduced}
+house.clean %>%
+  mutate(SaleCondition = ifelse(SaleCondition %in% c("Partial"),"Good", "Poor")) %>%
+  ggplot(aes(x = SaleCondition, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+### Overall Condition
+
+The overall condition variable, a categorical variable with values ranging from 1 to 9, has limited variation between categories as outlined in the following chart.
+
+```{r Feature Engineer OverallCond Original}
+house.clean %>%
+  ggplot(aes(y = SalePrice, x = factor(OverallCond))) + 
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+this variable was reduced into two categories: Good and Bad. The reduced category, “Good”, now represents overall condition with values greater than and equal to 5 while “Bad” represents values less than 5. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineer OverallCond Reduced}
+house.clean %>%
+  mutate(OverallCond = ifelse(OverallCond >= 5, "Good", "Bad")) %>%
+  ggplot(aes(y = SalePrice, x = OverallCond)) + 
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+### Type of Foundation
+
+The type of foundation variable, “Foundation”, has limited variation between categories and the majority of the data falls in a couple of categories, as outlined in the following chart.
+
+```{r Feature Engineering Foundation Original}
+house.clean %>%
+  ggplot(aes(x = Foundation, y = SalePrice)) +
+  stat_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+Due to the limited variation between categories, this variable was reduced into two categories: “PConc” and “Other”. The “PConc” category, which represents houses with poured concrete foundations, represented the majority of the data in this dataset and its distribution was different than all other categories, hence the reduction into two categories. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineering Foundation}
+house.clean %>% 
+  mutate(colorN = ifelse(Foundation == "PConc", Foundation, "Other")) %>%
+  ggplot(aes(y = (SalePrice), x = factor(Foundation), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue" )) +
+  scale_alpha_manual(values=c("PConc", "Other" )) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+### The General Zoning Classification
+
+The general zoning classification variable, “MSZoning”, has limited variation between categories and the majority of the data falls in a couple of categories, as outlined in the following chart.
+
+```{r Feature Engineering MSZoning Original}
+house.clean %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+Due to the limited variation between categories, this variable was reduced into two categories: “RL” and “Other”. The “RL” category, which represents houses in low density residential zones, represented the majority of the data in this dataset and its distribution was different than all other categories, hence the reduction into two categories. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineering MSZoning}
+house.clean %>%
+  mutate(MSZoning = ifelse(MSZoning == "RL", MSZoning, "Other")) %>%
+  ggplot(aes(x = MSZoning, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 300000))
+```
+
+### Total Rooms Above Grade
+
+The total rooms above grade variable, “TotRmsAbvGrd”, a categorical variable with values ranging up to 14, has limited variation between categories as outlined in the following chart.
+
+```{r Feature Engineering TotRmsAbvGrd Original}
+house.clean %>% 
+  mutate(colorN = ifelse(TotRmsAbvGrd >= 7, "High", "Low")) %>%
+  ggplot(aes(y = (SalePrice), x = factor(TotRmsAbvGrd), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("red", "blue")) +
+  scale_alpha_manual(values=c("High", "Low")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2) +
+  xlab("Total Rooms Above Grade") +
+  ylab("Sale Price") +
+  scale_y_continuous(labels = scales::dollar) +
+  theme(legend.title = element_blank())
+```
+
+Due to the limited variation between categories, was reduced into two categories: “High” and “Low”. The reduced category, “Good”, now represents overall condition with values greater than and equal to 5 while “Bad” represents values less than 5. The following chart outlines a reasonable amount of variation between these new, combined categories.
+
+```{r Feature Engineering TotRmsAbvGrd}
+house.clean %>% 
+  mutate(colorN  = ifelse(Fireplaces > 0, TRUE, FALSE)) %>%
+  ggplot(aes(y = (SalePrice), x = factor(Fireplaces), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue")) +
+  scale_alpha_manual(values=c(FALSE, TRUE)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2) +
+  xlab("Total Rooms Above Grade") +
+  ylab("Sale Price") +
+  scale_y_continuous(labels = scales::dollar) +
+  theme(legend.title = element_blank())
+```
+
+### Fireplace
+Fireplaces: Number of fireplaces
+
+```{r}
+house.clean %>% 
+  mutate( colorN  = ifelse(Fireplaces > 0, TRUE, FALSE)) %>%
+  ggplot(aes(y = (SalePrice), x = factor(Fireplaces), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue")) +
+  scale_alpha_manual(values=c(FALSE, TRUE)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+The Fireplace variable was shortened simply to houses that had or did not have a fireplace. There wasn’t enough variance between houses with more than 1 fireplace, nor are their considerably more data points for houses that have more than 1 fireplace.
+
+### GarageCars
+
+```{r}
+house.clean %>% 
+  mutate( colorN  = ifelse(GarageCars < 3, GarageCars, 3)) %>%
+  ggplot(aes(y = log(SalePrice), x = factor(GarageCars), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue", "Green", "Yellow" )) +
+  scale_alpha_manual(values=c("0", "1", "2", "3")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+The Garage Cars variables was re-categorized into an ordinal category variable.  Because there were not many 4 Garage Car homes, they are combined into one category of 3+ Garage homes. 
+
+### SaleType
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(SaleType == 'New',"New",
+                         ifelse(SaleType %in% c("WD", "CWD", "VWD", "COD"), "Deed", "Other"))) %>%
+  ggplot(aes(y = log(SalePrice),
+             x = reorder(factor(SaleType), log(SalePrice), FUN = median),
+             fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue", "Green" )) +
+  scale_alpha_manual(values=c("New", "Deed", "Other" )) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+When considering SaleType we wanted to boxplot the values to see the variance between each category, however when considering the meaning and context of each of the categories, we grouped based on their contextual meaning of each category, ultimately re-categorizing the variables as a ordinal variable, a New Sale, Deeds sale, and other.
+
+### BasementCond (kept and categorized)
+
+When considering Basement Condition, our boxplot chart explains that there is no variance relative to Sale Price, between a Basement Condition  that is Good and Typical, between Fair and No Basement, and a Poor Basement Condition.  As such, they are re-categorized to a
+Good, Average and Bad categorization.
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(BsmtCond %in% c("Gd", "TA"), "Good",
+                         ifelse(BsmtCond %in% c("Fa", NA), "Ave", "Bad"))) %>%
+  ggplot(aes(y = (SalePrice), x = factor(BsmtCond), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("red", "black", "blue")) +
+  scale_alpha_manual(values=c("Good", "Ave", "Bad")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+### OverallCond 
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(OverallCond >= 5, "Good", "Bad")) %>%
+  ggplot(aes(y = (SalePrice), x = factor(OverallCond), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue" )) +
+  scale_alpha_manual(values=c("Good", "Bad" )) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+### Heating (kept and categorized)
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(Heating %in% c("GasA", "GasW"), "Gas", "NoGas")) %>%
+  ggplot(aes(y = (SalePrice), x = factor(Heating), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue" )) +
+  scale_alpha_manual(values=c("Gas", "NoGas" )) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+### BsmtFinType1 (kept and categorized)
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(BsmtFinType1 %in% c("ALQ", "BLQ", "LwQ", "Rec", "Unf"), "Ave",
+                         ifelse(BsmtFinType1 == "GLQ", "Good", "None"))) %>%  
+  ggplot(aes(y = (SalePrice), x = factor(BsmtFinType1), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("red", "blue", "black")) +
+  scale_alpha_manual(values=c("Good", "Ave", "Bad")) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+### OverallQual
+
+```{r}
+house.clean %>% 
+  mutate(colorN = ifelse(OverallQual >= 9, "9+",
+                         ifelse(OverallQual <= 2, "0-",
+                                ifelse(OverallQual > 2 & OverallQual <= 4, "3-4", OverallQual)))) %>%
+  ggplot(aes(y = (SalePrice), x = factor(OverallQual), fill=factor(colorN) , color = factor(colorN))) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("Red", "Blue","Green", "Green", "Green", "Green", "Yellow" )) +
+  scale_alpha_manual(values=c("5","6","7", "8", "3-4", "9+", "0-"  )) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+```{r}
+#Scheffe Test
+CRD.OverallQual = aov(log(SalePrice) ~ OverallQual, data = house.clean)
+summary(CRD.OverallQual)
+
+# Fishers LSD (Least Significant Difference)
+library(agricolae)
+ls.OveralQual = LSD.test(CRD.OverallQual, trt='OverallQual')
+ls.OveralQual
+
+# Scheffes Test
+df = scheffe.test(CRD.OverallQual, "OverallQual", group = TRUE, console = TRUE)$groups
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+variable_csv = read_csv("OverallQual.csv")
+kable(variable_csv, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(variable_csv), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(variable_csv), by = 2), color = "black", background = "#FFFFFF")
+```
+
+### Age of House
+
+There are three different measures that all relate to the age of a home: `YrSold`, `YearBuilt`, and`YearRemodAdd`. We wanted to combine these into a single `Age` variable. It should be noted that if a house did not have a renovation then `YearRemodAdd` is equal to `YearBuilt`.
+
+Our initial estimate for this value was:
+$$
+Age = Y_{sold} - \frac{Y_{built} + Y_{renov}}{2}
+$$
+
+Which, can be rewritten as:
+$$
+Age = Y_{sold} - w \cdot  Y_{built} + (1-w) \cdot Y_{renov}
+$$
+ 
+We then wanted to optimize the value of $w$ so we built a small linear regression model and ran a grid search of $w$ values using 10-Fold Cross Validation. After a number of iterations we found an optimized value of $w=0.58$ which minimized the RMSE of the 10-Fold Cross Validation.
+
+```{r Weight Optimization for Age formula}
+results = data.frame() # create an empty dataframe to store the result of the grid search
+
+age_seq = seq(0.57,0.59,by=0.001) # final sequence of values to search through
+old_age = 30
+for(w in age_seq) {
+  # create a temporary data frame with the new formula for age
+  temp.data = house.clean %>% mutate(Age = YrSold - (w * YearBuilt + (1-w) * YearRemodAdd),
+                                 Old = Age >= old_age)
+
+  # set up the cross validation
+  set.seed(123)
+  train.control = trainControl(method = "cv", number = 10)
+
+  # Train the model
+  model = train(log(SalePrice) ~ GrLivArea + Age:Old, data = temp.data,
+               method = "lm",
+               trControl = train.control)
+  # save the results
+  results = rbind(results, cbind(w=w, model$results))
+}
+
+# display the results of the grid search
+results
+
+# and now we can find the optimal weight for YearBuilt
+results %>% filter(RMSE == min(RMSE))
+```
+
+### Age 
+
+```{r}
+w_age = 0.579
+new_age = 5
+old_age = 30
+ggplot(house.clean, aes(x=(YrSold - (w_age * YearBuilt + (1-w_age) * YearRemodAdd)),
+                        y=SalePrice), color=SalePrice) +
+  geom_point() +
+  geom_smooth(method = 'loess') +
+  scale_y_continuous(labels = scales::dollar, limits = c(0, 600000)) +
+  xlab("Age")
+```
+
+YrSold - (w_age * YearBuilt + (1-w_age) * YearRemodAdd)
+
+There were a number of variables that were connected and in an effort to reduce similar variables in our feature engineering process, we created the following formula to convert YearBuilt, YearRemodAdd, W_age.  Combining these variables returned the linear regression as seen above.
+
+### Neighborhood
+
+We know from everyday life that the neighborhood that you live in is related to the price of your house, but we suspected many neighborhoods to share similar characteristics. We analyzed this in some depth as follows.
+
+```{r EDA Neighborhood - Unsorted}
+ggplot(house.clean, aes(y = log(SalePrice), x = factor(Neighborhood), color = factor(Neighborhood))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  xlab("Neighbourhood") +
+  ylab("Sale Price (log)")
+```
+
+```{r EDA Neighborhood - Sorted}
+ggplot(house.clean, aes(y = log(SalePrice), x = reorder(factor(Neighborhood), log(SalePrice), FUN = median), color = factor(Neighborhood))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "None") +
+  xlab("Neighbourhood") +
+  ylab("Sale Price (log)")
+```
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+neighborhood_csv = read_csv("neighborhood-groups.csv")
+kable(neighborhood_csv, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(neighborhood_csv), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(neighborhood_csv), by = 2), color = "black", background = "#FFFFFF")
+```
+
+### Alley
+
+```{r Alley Chart for Removal}
+house.clean %>%
+  group_by(Alley) %>%
+  ggplot(aes(x = Alley, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the Alley, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "None" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### BldgType
+
+```{r BldgType Chart for Removal}
+house.clean %>%
+  group_by(BldgType) %>%
+  ggplot(aes(x = BldgType, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the BldgType, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "1Fam" category and the distribution of SalePrice is not significantly different between categories.<br>
+
+### BsmtExposure
+
+```{r BsmtExposure Chart for Removal}
+house.clean %>%
+  group_by(BsmtExposure) %>%
+  ggplot(aes(x = BsmtExposure, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the BsmtExposure, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "No" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### HeatingQC
+
+```{r HeatingQC Chart for Removal}
+house.clean %>%
+  group_by(HeatingQC) %>%
+  ggplot(aes(x = HeatingQC, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the HeatingQC, the chart shows that the variable doesn’t contribute to the selling price as the distribution of SalePrice is not significantly different between categories. <br>
+
+### LotShape
+```{r LotShape Chart for Removal}
+house.clean %>%
+  group_by(LotShape) %>%
+  ggplot(aes(x = LotShape, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the LotShape, the chart shows that the variable doesn’t contribute to the selling price as the distribution of SalePrice is not significantly different between categories.
+
+### Pool Area
+
+```{r Pool Area Chart for Removal}
+house.clean %>%
+  filter(PoolArea > 0) %>%
+  ggplot(aes(x = PoolArea, y = SalePrice)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the Pool Area, the chart shows that the variable doesn’t contribute to the selling price as there are very few houses sold with a pool in the dataset. Additionally, there is no relationship between Pool Area and SalePrice. <br>
+
+### Fence
+
+```{r Fence Chart for Removal}
+house.clean %>%
+  group_by(Fence) %>%
+  ggplot(aes(x = Fence, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the BsmtExposure, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "None" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### MiscVal
+
+```{r MiscVal Chart for Removal}
+house.clean %>%
+  filter(MiscVal > 0, MiscVal < 2500) %>%
+  ggplot(aes(x = MiscVal, y = SalePrice)) +
+  geom_point() +
+  scale_y_continuous(labels = scales::dollar) +
+  geom_smooth(method = 'lm')
+```
+
+When investigating the MiscVal variable, there is no distinct correlation between sale price and the misc values people assign the property. <br>
+
+### Electrical
+
+```{r Electrical Chart for Removal}
+house.clean %>%
+  group_by(Electrical) %>%
+  ggplot(aes(x = Electrical, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the Electrical variable, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "SBrkr" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### ScreenPorch
+
+```{r ScreenPorch Chart for Removal}
+house.clean %>%
+  mutate(Screen = ScreenPorch > 0) %>%
+  ggplot(aes(x = Screen, y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the ScreenPorch variable, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "FALSE" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### BedroomAbvGr
+
+```{r}
+house.clean %>%
+  ggplot(aes(x = as.factor(BedroomAbvGr), y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the BedroomAbvGr variable, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "3" category and the distribution of SalePrice is not significantly different between categories. <br>
+
+### HouseStyle
+
+```{r}
+house.clean %>%
+  ggplot(aes(x = reorder(HouseStyle, SalePrice), y = SalePrice)) +
+  geom_boxplot() +
+  geom_point(position = 'jitter', alpha = 0.2) +
+  scale_y_continuous(labels = scales::dollar)
+```
+
+When we reviewed the HouseStyle variable, the chart shows that the variable doesn’t contribute to the selling price as the majority of the data falls in the "1Story" and "2Story" categories and the distribution of SalePrice is not significantly different between categories. <br>
+
+### BsmtFinSF1, BsmtFinSF2, BsmtUnfSF
+
+The variables of BsmtFinSF1, BsmtFinSF2 and BsmtUnfSF were removed because they are redundant. The information is also a part of the BasementFin which is the square footage of the basement. <br>
+
+### BsmtFullBath, BsmtHalfBath
+
+The variables of BsmtFullBath and BsmtHalfBath were merged together because they are redundant. <br>
+
+### Exterior2nd
+The variable of Exterior2nd was removed because this is redundant. The information is also a part of the Exterior. <br>
+
+### GarageArea, GarageCars, GarageCond, GarageFinish, GarageQual, GarageType, GarageYrBlt
+
+These variables were removed because they were redundant. All of these variables are merged into 1 variable. <br>
+
+## Removed Variables
+### Condition1 (Removed! Hacksawed)
+Condition1: Proximity to various conditions
+       Artery	Adjacent to arterial street
+       Feedr	Adjacent to feeder street	
+       Norm	Normal	
+       RRNn	Within 200' of North-South Railroad
+       RRAn	Adjacent to North-South Railroad
+       PosN	Near positive off-site feature--park, greenbelt, etc.
+       PosA	Adjacent to postive off-site feature
+       RRNe	Within 200' of East-West Railroad
+       RRAe	Adjacent to East-West Railroad
+```{r warning=FALSE}
+#Condition1 
+ggplot(house.clean, aes( x = factor(Condition1))) +
+  geom_histogram(stat="count") 
+```
+
+## Feature Engineering - Creating the Final DataFrame
+```{r Feature Engineering Filtering Data, include = FALSE}
+house.feature = house.clean %>% 
+  mutate(BathAbove = FullBath + 0.5 * HalfBath,
+         BathAbove = ifelse(BathAbove <= 1, "1",
+                     ifelse(BathAbove >= 2.5, '2.5+', as.character(BathAbove))), 
+         BathBelow = BsmtFullBath + 0.5 * BsmtHalfBath,
+         # BathBelow = ifelse(BathBelow <= 1, "1-",
+         #             ifelse(BathBelow >= 3, "3+", "2-")),
+         BathBelow = BathBelow > 0,
+         Age = YrSold - (w_age * YearBuilt + (1-w_age) * YearRemodAdd),
+         ReModel = YearRemodAdd > YearBuilt,
+         YrSold = factor(YrSold),
+         MoSold = factor(MoSold),
+         IsNew = YrSold == YearBuilt,
+         Old = Age >= old_age,
+         #Old = ifelse(Age >= old_age, "Old", ifelse(Age <= new_age, "New", "Normal")),
+         Fire = Fireplaces > 0,
+         GarageCars = ifelse(GarageCars < 3, GarageCars, 3),
+         
+         SaleType = ifelse(SaleType == 'New',"New",
+                    ifelse(SaleType %in% c("WD", "CWD", "VWD", "COD"), "Deed", "Other")),
+         BasementCond = ifelse(BsmtCond %in% c("Gd", "TA"), "Good",
+                        ifelse(BsmtCond %in% c("Fa", "NoBase"), "Ave", "Bad")),
+         BasementFin = ifelse(BsmtFinType1 %in% c("ALQ", "BLQ", "LwQ", "Rec", "Unf"), "Ave",
+                       ifelse(BsmtFinType1 == "GLQ", "Good", "None")),
+         PorchSF = (OpenPorchSF + EnclosedPorch + X3SsnPorch + ScreenPorch),
+         OverallCond = ifelse(OverallCond >= 5, "Good", "Bad"),
+         GasFurnace = ifelse(Heating %in% c("GasA", "GasW"), "Gas", "NoGas"),
+         ExteriorCovering = ifelse(Exterior1st %in% c("ImStucc", "Stone"), "Good",
+                            ifelse(Exterior1st %in% c("AsbShng", "AsphShn", "BrkComm", "CBlock"), "Poor", "Average")),
+         Foundation = ifelse(Foundation == "PConc", Foundation, "Other"),
+         TotRmsAbvGrd = ifelse(TotRmsAbvGrd >= 7, "High", "Low"),
+         OverallQual = ifelse(OverallQual >= 9, "9+",
+                      ifelse(OverallQual <= 2, "0-",
+                      ifelse(OverallQual > 2 & OverallQual <= 4, "3-4", OverallQual))),
+         SaleCondition = ifelse(SaleCondition %in% c("Partial"),"Good", "Poor"),
+         PavedDrive = PavedDrive == "Y",
+         MSZoning = ifelse(MSZoning %in% c("RH", "RM"), "RH", MSZoning),
+         Neighborhood = ifelse(Neighborhood %in% c("NoRidge", "NridgHt", "StoneBr"), "a",
+                        ifelse(Neighborhood %in% c("Timber", "Veenker", "Somerst"), "b",
+                        ifelse(Neighborhood %in% c("ClearCr", "Crawfor"), "c",
+                        ifelse(Neighborhood %in% c("Blmngtn", "CollgCr", "Gilbert", "NWAmes"), "c",
+                        ifelse(Neighborhood %in% c("SawyerW"), "c",
+                        ifelse(Neighborhood %in% c("Mitchel", "NAmes", "NPkVill", "SWISU", "Blueste", "Sawyer"), "f",
+                        ifelse(Neighborhood %in% c("Edwards", "OldTown", "BrkSide"), "g", "h")))))))
+
+         ) %>%
+  select(-c(Id, 
+            Alley, 
+            BsmtCond, BsmtFinSF1, BsmtFinSF2,  BsmtUnfSF, BsmtFinType2, BsmtExposure, BsmtFullBath, BsmtHalfBath, BsmtFinType1,
+            Condition1, Condition2, Electrical, Exterior2nd, Fence,
+            X1stFlrSF, X2ndFlrSF, LowQualFinSF, 
+            FireplaceQu, Fireplaces,
+            FullBath, GarageArea, GarageCond, GarageFinish, GarageQual, GarageType, GarageYrBlt, HalfBath, HeatingQC, Heating,
+            KitchenAbvGr, 
+            LandContour, LandSlope, LotShape, LotConfig,
+            MasVnrArea, MasVnrType, MSSubClass,
+            MiscFeature, MiscVal,
+            OpenPorchSF, EnclosedPorch, X3SsnPorch, ScreenPorch,
+            PoolArea, PoolQC, RoofMatl, RoofStyle, Street,
+            Utilities,
+            YearRemodAdd, YearBuilt
+            )) %>%
+  filter(GrLivArea < 4000 | SalePrice > 200000) # this removes two data points which are clearly incorrect
+```
+
+#### Functional, BathBelow, BasementCond, GasFurnace, ExteriorCovering
+
+```{r warning=FALSE}
+p2 = ggplot(house.feature, aes(x=factor(Functional))) +
+  geom_histogram(stat="count")
+p3 = ggplot(house.feature, aes(x=factor(BathBelow))) +
+  geom_histogram(stat="count")
+p4 = ggplot(house.feature, aes(x=factor(BasementCond))) +
+  geom_histogram(stat="count")
+p5 = ggplot(house.feature, aes(x=factor(GasFurnace))) +
+  geom_histogram(stat="count")
+p6 = ggplot(house.feature, aes(x=factor(ExteriorCovering))) +
+  geom_histogram(stat="count")
+p7 = ggplot(house.clean, aes(x=factor(Condition1))) +
+  geom_histogram(stat="count")
+p8 = ggplot(house.clean, aes(x=factor(Condition2))) +
+  geom_histogram(stat="count")
+p9 = ggplot(house.clean, aes(x=factor(KitchenAbvGr))) +
+  geom_histogram(stat="count")
+p10 = ggplot(house.clean, aes(x=factor(LandContour))) +
+  geom_histogram(stat="count")
+p11 = ggplot(house.clean, aes(x=factor(LandSlope))) +
+  geom_histogram(stat="count")
+p12 = ggplot(house.clean, aes(x=factor(LotConfig))) +
+  geom_histogram(stat="count")
+p13 = ggplot(house.clean, aes(x=factor(PoolQC))) +
+  geom_histogram(stat="count")
+p14 = ggplot(house.clean, aes(x=factor(RoofMatl))) +
+  geom_histogram(stat="count")
+p15 = ggplot(house.clean, aes(x=factor(RoofStyle))) +
+  geom_histogram(stat="count")
+p16 = ggplot(house.clean, aes(x=factor(Street))) +
+  geom_histogram(stat="count")
+p17 = ggplot(house.clean, aes(x=factor(Utilities))) +
+  geom_histogram(stat="count")
+
+plot_grid(p2, p3, p4, p5, p6, p7, p8,  ncol=2)
+plot_grid(p9, p10, p11, p12,p13,p14, p15, p16, p17, ncol=2)
+```
+
+These histograms show there isn’t as wide enough spread in the distribution so we decided to remove the following variables:
+
+- Functional
+- BathBelow
+- BasementCond
+- GasFurnace
+- ExteriorCovering
+- Condition1
+- Condition2
+- KitchenAbvGr
+- LandContour
+- LandSlope
+- LotConfig
+- PoolQC
+- RoofMatl
+- RoofStyle
+- Street
+- Utilities
+
+When considering considering the Condition1 variable, there was not enough variance to consider as part of our model.
+
+## Sampling
+Since our data is naturally stratified, and stratified sampling is always a more precise estimation than simple random sampling, we are using stratified sampling.
+
+To further justify our use of stratified sampling we have created an ANOVA table which shows that the variation between our strata is greater than the variation within our strata.
+
+```{r}
+summary(aov(log(house.feature$SalePrice) ~ house.feature$Neighborhood))
+```
+
+## Regression Analysis
+
+# Results
+
+# Conclusion
+
+# References
+
+Cook, D. (2011, June). Ames, Iowa: Alternative to Boston Housing Data as an End of Semester Regression Project[Online].
+Available at: https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data (Retrieved January 20, 2020)

@@ -1,0 +1,658 @@
+---
+title: "DATA 602 Assignment 3"
+author: "Michael Ellsworth, ID  30101253"
+date: "September 30, 2019"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+```{r include = FALSE}
+# Load packages
+library(ggplot2)
+library(dplyr)
+library(binom)
+library(mosaic)
+library(mosaicData)
+```
+
+
+###Question 1
+*The data set **NCBirths2004** consists of the Weight (in grams) of $n = 1009$ babies born in the state of North Carolina in 2004. All babies appearing in this sample had a gesteration periods of at least 37 weeks and were single births. Other variables in this data set include the Age of the birth mother, whether or not the birth mother was a Smoker during the gestation period, used Alcohol during the gestation period, the Gender of the baby. To access these data, install the `resampledata` package. For example,*
+
+```{r}
+library(resampledata)
+head(NCBirths2004, 4)
+```
+
+*Let* $\mu_{NonSmoke}$ *be the mean birth weight of all babies born in North Carolina in 2004 to birth mothers who did not smoke during pregnancy, and* $\mu_{Smoke}$ *be the mean birth weight of all babies born in North Carolina in 2004 to birth mothers who did smoke during pregnancy.*
+
+
+####a.
+*Compute a 95% confidence interval for* $\mu_{NonSmoke}$ *using the* $t$*-interval.*
+```{r}
+nonsmoke <- NCBirths2004 %>%
+  filter(Smoker == "No")
+nonsmoke_weight_stats <- nonsmoke %>%
+  summarise(mean = mean(Weight), sd = sd(Weight))
+nsize_nonsmoke <- nrow(nonsmoke)
+lbave_nonsmoke_weight <- nonsmoke_weight_stats$mean - (qt(0.975, nsize_nonsmoke - 1)*(nonsmoke_weight_stats$sd)/sqrt(nsize_nonsmoke))
+ubave_nonsmoke_weight <- nonsmoke_weight_stats$mean + (qt(0.975, nsize_nonsmoke - 1)*(nonsmoke_weight_stats$sd)/sqrt(nsize_nonsmoke))
+cat("The lower bound of the 95% confidence interval is",
+    round(lbave_nonsmoke_weight, digits = 2),
+    "and the upper bound of the 95% confidence interval is",
+    round(ubave_nonsmoke_weight, digits = 2),
+    "")
+
+#alternative
+t.test(~Weight, data = nonsmoke)$conf
+```
+
+
+####b.
+*Compute the 95% confidence interval for* $\mu_{Smoke}$
+```{r}
+smoke <- NCBirths2004 %>%
+  filter(Smoker == "Yes")
+smoke_weight_stats <- smoke %>%
+  summarise(mean = mean(Weight), sd = sd(Weight))
+nsize_smoke <- nrow(smoke)
+lbave_smoke_weight <- smoke_weight_stats$mean - (qt(0.975, nsize_smoke - 1)*(smoke_weight_stats$sd)/sqrt(nsize_smoke))
+ubave_smoke_weight <- smoke_weight_stats$mean + (qt(0.975, nsize_smoke - 1)*(smoke_weight_stats$sd)/sqrt(nsize_smoke))
+cat("The lower bound of the 95% confidence interval is",
+    round(lbave_smoke_weight, digits = 2),
+    "and the upper bound of the 95% confidence interval is",
+    round(ubave_smoke_weight, digits = 2),
+    "")
+
+#alternative
+t.test(~Weight, data = smoke)$conf
+```
+
+
+####c. 
+*Compare the confidence intervals computed in parts (a) and (b). Can you infer that* $\mu_{NonSmoke}$ *is a different value than* $\mu_{smoke}$*? Explain your answer.*
+```{r}
+t.test(~Weight | Smoker, data = NCBirths2004)
+lbave_nonsmoke_weight - lbave_smoke_weight
+ubave_nonsmoke_weight - ubave_smoke_weight
+```
+
+
+The 95% confidence interval for $\mu_{NonSmoke}$ is $3441 \leq \mu_{NonSmoke} \leq 3503$ which does not overlap with the 95% confidence interval for $\mu_{smoke}$ which is $3159 \leq \mu_{smoke} \leq 3355$. As neither confidence interval overlaps, we can infer that $\mu_{NonSmoke}$ is a different value than $\mu_{smoke}$.
+
+####d.
+*Create the bootstrap distribution for* $\overline{X}_{NonSmoke} - \overline{X}_{Smoke}$.
+```{r}
+smoke_vector <- pull(smoke, Weight)
+nonsmoke_vector <- pull(nonsmoke, Weight)
+bootstrap_1d <- do(2000) * (mean(resample(nonsmoke_vector, nsize_nonsmoke)) - mean(resample(smoke_vector, nsize_smoke)))
+bootstrap_1d %>%
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 10) +
+  xlab("Bootstrap Statistic - Sample Proportion") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Proportion")
+```
+
+
+####e.
+*From your result in (e), find a 95% confidence interval for* $\mu_{NonSmoke} - \mu_{Smoke}$.
+```{r}
+nonsmoke_smoke_95 <- qdata(~result, c(0.025, 0.975), data = bootstrap_1d)
+cat("The lower bound of the 95% confidence interval is",
+    round(nonsmoke_smoke_95$quantile[1], digits = 2),
+    "and the upper bound of the 95% confidence interval is",
+    round(nonsmoke_smoke_95$quantile[2], digits = 2),
+    "")
+```
+$112 \leq (\mu_{NonSmoke} - \mu_{Smoke}) \leq 314$
+
+####f.
+*Consider your result in both (c) and (e). What can you infer from these data? Do children born to birth mother who did not smoke during pregnancy weigh more on average than babies born to birth mothers who did smoke during pregnancy?* 
+
+We can infer that children born to mothers who did not smoke during pregnancy weigh more on average than children born to mothers who did. We can say, with 95% confidence, that the children will be born between approximately 112 and 314 grams heavier from mothers who did not smoke during pregnancy. This is consistent with both the t-interval and the bootstrap.
+$$\mu_{NonSmoke} > \mu_{Smoke}$$
+
+</br>
+</br>
+
+###Question 2
+*Refer to Question 1.*
+
+####a
+*Create a distribution of the bootstrap statistic* $\frac{S_{Smoke}}{S_{NonSmoke}}$*. Use 2000 as the number of iterations/replications and provide the distribution.*
+```{r}
+bootstrap_2a <- do(2000) * (sd(resample(smoke_vector, nsize_smoke))/sd(resample(nonsmoke_vector, nsize_nonsmoke)))
+bootstrap_2a %>%
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.05) +
+  xlab("Bootstrap Statistic - S - Smoke / S - Non-Smoke") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - S - Smoke / S - Non-Smoke")
+```
+</br>
+
+####b
+*Create a normal probablity plot of the bootstrap statistic. Does the ratio of the sample standard deviations appear to follow a Normal distribution? Explain.*
+
+```{r}
+bootstrap_2a %>%
+  ggplot(aes(sample = result)) +
+  stat_qq(col='blue', na.rm=TRUE) +
+  stat_qqline(col='red',na.rm=TRUE)
+```
+</br>
+The ratio of the sample standard deviations appear to follow a Normal distribution as the Normal Probability Plot produces approximately a straight line through the middle of the points.
+
+####c
+*Compute a 95% bootstrap interval for* $\frac{\sigma_{Smoke}}{\sigma_{NonSmoke}}$.
+```{r}
+qdata(~result, c(0.025, 0.975), data = bootstrap_2a)
+```
+
+####d
+*Consider the result you obtained in part (c). Explain the practical meaning of this result with respect to the variable **Weight**.*
+The 95% confidence interval for the ratio of standard deviations of the weight of children born from mothers who smoked and didn't smoke is:
+$$0.93 \leq \frac{\sigma_{Smoke}}{\sigma_{NonSmoke}} \leq 1.24$$.
+
+From this confidence interval, we can say that the standard deviation of each weight is approximately the same as the confidence interval includes 1.
+</br>
+</br>
+
+###Question 3
+*Health Canada sets an action level for mercury in fish at 1 ppm (part per million). If mercury levels are higher than this value, then this value in commercial fish then Health Canada will take action to impose a moritorium on fishing in the area where the fish are harvested.*
+
+*Recently, there have been concerns about mercury levels in walleye fish populating the portion of the Athabaska River that is down stream from Whitecourt, where local First Nations harvest walleye as part of a commercial fishing operation.*
+
+*A biologist randomly picked $n = 31$ walleye in a from a recent commercial fishing catch downstream from Whitecourt, and measured the mercury (in ppm) from each walleye. The ppms, are provided below.*
+$$1.2, 1.1, 1.0, 1.0, 1.1, 1.0, 1.0, 1.0, 0.9, 1.1, 1.1, 1.2, 1.0, 1.1, 1.0 \\
+1.1, 1.0, 0.9, 1.0, 1.0, 1.1, 1.0, 1.0, 1.1, 1.2, 1.0, 1.1, 1.0, 1.0, 1.2, 1.1$$
+
+####a
+*Establish a statistical hypothesis that allows the biologist to see if mercury levels in walleye fish harvested from the Athabaska River (downstream of Whitecourt) exceed Heath Canada's action level.*
+
+$$\begin{aligned}
+\mu_{0} =& \ 1 \\
+{\rm H}_{0}: \mu =& \ \mu_{0} \\
+{\rm H}_{A}: \mu >& \ \mu_{0}
+\end{aligned}$$
+
+
+####b
+*Refer to your hypotheses in (a). In the context of your statistical hypotheses in part (a), explain **both** a Type I Error and a Type II Error.*
+Type I error is defined as: 
+
+$$\alpha = P({\rm Reject\:\:H_{0} | H_{0}\:\:is\:\:True}) $$
+
+$$\begin{aligned}
+{\rm Type\:\:I\:\:Error} = & \ \ \ P({\rm Reject\:\:}H_{0} | H_{0} {\rm is\:\:true}) \\
+                         = & \ \ \ P(\mu > \mu_{0} | \mu = \mu_{0}) \\
+\end{aligned}$$
+
+In the context of our statistical hypotheses, we can say that we rejected the null hypotheses by proving the mean mercury levels were greater than 1 ppm but in fact, the null hypotheses was true. This is known as a false positive.
+</br>
+Type II error is defined as: 
+
+
+$$\beta = P({\rm Fail\:\:To\:\:Reject\:\:H_{0} | H_{0}\:\:is\:\:False})$$
+
+
+$$\begin{aligned}
+{\rm Type\:\:II\:\:Error} = & \ \ \  P({\rm Fail\:\:To\:\;Reject\:\:}H_{0}|H_{0} {\rm is\:\:False}) \\
+                          = & \ \ \  P(\mu = \mu_{0} | \mu \not= \mu_{0})
+                             
+\end{aligned}$$
+
+
+In the context of our statistical hypotheses, we can say that we failed to reject the null hypotheses as we could not prove the mean mercury levels were greater than 1 ppm but in fact, the null hypotheses was false. This is known as a false negative.
+
+####c
+*Visualize these data with a boxplot, and comment on the disribution of mercury levels on walleye harvested from the Athabaska River downstream of Whitecourt.*
+```{r}
+walleye_sample <- as.data.frame(c(1.2, 1.1, 1.0, 1.0, 1.1, 1.0, 1.0, 1.0, 0.9, 1.1, 1.1, 1.2, 1.0, 1.1, 1.0, 1.1, 1.0, 0.9, 1.0, 1.0, 1.1, 1.0, 1.0, 1.1, 1.2, 1.0, 1.1, 1.0, 1.0, 1.2, 1.1))
+names(walleye_sample) <- "merc_level"
+n_walleye <- nrow(walleye_sample)
+walleye_sample %>%
+  ggplot(aes(x = "Walleye", y = merc_level)) +
+  geom_boxplot(col='red', fill= 'blue') +
+  ylab("Walleye Mercury Level (ppm)") +
+  xlab("") +
+  ggtitle("Boxplot of Mercury Levels on Walleye Harvested from the Athabaska River")
+```
+</br>
+The distribution of mercury levels on walleye harvested from the Athabaska River is largely between 1.0 and 1.1.
+
+####d
+*Do these data suggest that Health Canada should place a moritorium on commercial walleye fishing on the Athabaska River downstream of Whitecourt? In your finding, interpret the meaning of the $P$-value you have computed. **IF** you reject the null hypothesis, provide a 95% confidence interval for the mean mercury (in ppm) of walleye found downstream from Whitecourt.*
+```{r}
+favstats(~merc_level, data = walleye_sample)
+t_obs_3d <- (favstats(~merc_level, data = walleye_sample)$mean - 1)/ (favstats(~merc_level, data = walleye_sample)$sd/favstats(~merc_level, data = walleye_sample)$n**0.5)
+p_val_3d <- 1 - pt(t_obs_3d, n_walleye - 1)
+cat("The P value is ", p_val_3d)
+```
+$$T_{Obs} = \frac{\overline{X} - \mu_{0}}{\frac{S}{\sqrt{n}}} =  \frac{1.0516 - 1}{\frac{0.08112}{\sqrt{31}}} = 3.54246$$
+
+The $P$-value is $P(T_{30} > 3.54) \approx 0.0007$ meaning this test is highly significant (less than 0.05) and we can reject the null hypothesis.
+
+```{r}
+t.test(~merc_level, mu=1, alternative = "two.sided", data = walleye_sample)
+```
+From the above t.test, we can say that the 95% confidence interval for $\mu$ is $1.022 \leq \mu \leq 1.081$. Health Canada should place a moritorium on commercial Walleye fishing on the Athabaska River downstream of Whitecourt.
+
+</br>
+</br>
+
+###Question 4
+*Coffee markets that conform to organic standards focus on the environmental aspect of coffee growing, such as the use of shade trees, and reduced reliance on herbicides and pesticies. Researchers investigating organic coffee growers in Southern Mexico took a representative, random sample of* $n = 845$ *coffee growers, of which 475 were certified to sell organic coffee and 75 were transitioning to sell organic coffee.*  
+</br>
+</br>
+***In the United States**, 60% of all coffee growers are organically certified. Is there ample statistical evidence to confirm that the proportion of certified coffee growers in Southern Mexico who are either certified or in the process of being certified, is less than 60%?*
+*Ensure you completely justify your answer, using method(s) covered in DATA 602.*
+</br>
+</br>
+
+Formulate the statistical hypothesis:
+$$\begin{aligned}
+{\rm H}_{0}: p = & \ 0.6 \ \ \text{(This indicates that 60% of coffee growers in Southern Mexico are certified/being certified)} \\
+{\rm H}_{A}: p < & \ 0.6 \ \ \text{(This indicates that less than 60% of coffee growers in Southern Mexico are certified/being certified)}
+\end{aligned}$$
+
+Collect the data:
+
+
+- Random sample of coffee growers: $n = 845$
+- Certified organic coffee growers: 475
+- Soon to be certified organic coffee growers: 75
+
+
+Compute relevant statistics from the data:
+```{r}
+n_growers <- 845
+n_organic <- 475 + 75 # The value of the test statistic, X
+n_organic
+```
+
+Compute the distribution of the test statistic:
+If the null hypothesis is true, then the distribution of $X$ (the test statistic) will be similar to the following distribution:
+```{r warning=FALSE}
+df <- data.frame(x = 0:n_growers, y = dbinom(0:n_growers, n_growers, 0.6))
+df %>%
+  ggplot(aes(x, y)) +
+  geom_area(fill = 'red') +
+  geom_line() +
+  scale_x_continuous(limits = c(400, 600))
+```
+</br>
+If the null hypothesis is true, the expected value and standard deviation of $X$ (the test statistic) would be:
+```{r}
+expected_value <- n_growers * 0.6 # Expected value
+expected_value
+sd_4 <- (expected_value * (1 - 0.6))**0.5 # Standard deviation of the expected value
+```
+
+Compute the $P$-value to Weigh the Evidence:
+$$\begin{aligned}
+P-\text{value} = & P(X < 550|p = 0.6) \\
+              = & \sum_{x = 0}^{549}{845 \choose x}(0.6)^{x}(1-0.6)^{845 - x} \\
+              = & 0.9987
+\end{aligned}$$
+
+```{r}
+pbinom(n_organic - 1, n_growers, 0.6)
+```
+
+
+Make a decision:
+
+
+Since the P-Value is not even close to 0.05, we cannot reject the null hypothesis and therefore, we do not have enough evidence that the proportion of certified growers in Southern Mexico is less than 60%.
+
+###Question 5
+*Refer to Assignment 2, Question 6. Compute the 95% confidence interval for* $p_{HS} - p_{Uni}$*. In the context of these data, interpret the meaning of your interval.*
+
+$$
+\widetilde{p}_{Uni} = \frac{X_{Uni} + 1}{n_{Uni} + 2} \hspace{0.25in} {\rm and} \hspace{0.25in} \widetilde{p}_{HS} = \frac{X_{HS} + 1}{n_{HS} + 2} 
+$$
+
+$$
+(\widetilde{p}_{Uni} - \widetilde{p}_{HS}) \pm z_{\frac{\alpha}{2}}\sqrt{\frac{\widetilde{p}_{Uni}(1 - \widetilde{p}_{Uni})}{n_{Uni} + 2}  + \frac{\widetilde{p}_{HS}(1 - \widetilde{p}_{HS})}{n_{HS} + 2}   }
+$$
+
+```{r}
+n_HS <- 670
+X_HS <- 348
+n_Uni <- 376
+X_Uni <- 274
+p_tilde_HS <- (X_HS + 1) / (n_HS + 2)
+p_tilde_Uni <- (X_Uni + 1) / (n_Uni + 2)
+z_alpha <- qnorm(1-0.025)
+lower_95 <- (p_tilde_Uni - p_tilde_HS) - z_alpha * (p_tilde_Uni * (1 - p_tilde_Uni) / (n_Uni + 2) + p_tilde_HS * (1 - p_tilde_HS) / (n_HS + 2))**0.5
+upper_95 <- (p_tilde_Uni - p_tilde_HS) + z_alpha * (p_tilde_Uni * (1 - p_tilde_Uni) / (n_Uni + 2) + p_tilde_HS * (1 - p_tilde_HS) / (n_HS + 2))**0.5
+paste0("The lower bound of the 95% confidence interval for p_Uni - p_HS is ", round(lower_95, 2), " while the upper bound is ", round(upper_95, 2), ".")
+
+#alternative
+prop.test(c(X_Uni + 1, X_HS + 1), c(n_Uni + 2, n_HS + 2), conf.level=0.95, correct=FALSE)$conf
+```
+We can infer that the probability of people with a university education responding that they disagree that the science isn’t clear around vaccinations is higher than the probability of people with a high school education. This is because the lower bound of the 95% confidence interval calculated above is higher than 0. In addition, we can say the probability that people disagree that the science isn’t around vaccinations is 15% to 27% higher in university students than high school students.
+
+
+</br>
+</br>
+
+###Question 6
+*As a budding data scientist with much promise, a person who is considering running as a Member of Parliament (MP) for a certain riding hires you to conduct some polling. Due to the time investment and the cost (time and finances) of a political campaign, you decide to take a random sample of* $n = 50$ *voters who live within this particular riding. Each are to be asked "if, they would support this particular candidate if they ran as a representative for Party X in the next federal election".  If your polling/sampling suggests that they will receive at least 45% of the vote, then you will council this person to "run for office". In your preliminary statistical work, you have decided that there is enough statistical evidence to support the "minimum of 45%"-claim if out of* $n = 50$ *randomly chosen voters, at least 20 indicate they will vote for this candidate if they run.*
+
+####a
+*State the statistical hypotheses.*
+$$
+\begin{aligned}
+{\rm H}_{0}: p \geq & \ 0.45 \ \ \text{(This indicates that the candidate will receive less than 45% of the vote)} \\
+{\rm H}_{A}: p < & \ 0.45 \ \ \text{(This indicates that the candidate will receive at least 45% of the vote)}
+\end{aligned}
+$$
+The decision rule is to reject $H_0$ when $X \leq 19$.
+
+####b
+*Compute the value of* $\alpha$ *used in your derivation of the decision rule.*
+$$
+\begin{aligned}
+P({\rm Reject\:\:}H_{0} | H_{0} {\rm is\:\:true}) = & P(X \leq 19 | p = 0.45) \\
+                                                 = & {50 \choose 0}(0.45)^{0}(1 - 0.45)^{50-0} + {50 \choose 1}(0.45)^{1}(1 - 0.45)^{50-1} + \\
+                                                 + & \cdots + {50 \choose 19}(0.45)^{19}(1 - 0.45)^{50-19} \\
+                                           \approx & 0.197 \\
+\end{aligned}
+$$
+```{r}
+pbinom(19, 50, 0.45)
+```
+
+####c
+*What if? Suppose the candidate were to receive 42% of the vote. Compute the probability that you will conclude they should run for office. Interpret the meaning of this probability.*
+$$
+\begin{aligned}
+P(\text{Fail to Reject }H_{0} | H_{0} \text{ is false}) = & P(X \geq 20 | p = 0.42) \\
+                                                 = & {50 \choose 20}(0.42)^{20}(1 - 0.42)^{50-20} + {50 \choose 21}(0.42)^{21}(1 - 0.42)^{50-21} + \\
+                                                 + & \cdots + {50 \choose 50}(0.42)^{50}(1 - 0.42)^{50-50} \\
+                                           \approx & 0.554 \\
+\end{aligned}
+$$
+```{r}
+1 - pbinom(20, 50, 0.42)
+```
+The probability that was calculated above is the probability of committing a Type II error which means that 55% of the time, if the candidate were to receive 42% of the vote, we would conclude that they should run for office.
+
+####d
+*Repeat for (c) for these values of* $p$: $p = 0.41, p = 0.40, p = 0.39, p = 0.38, p = 0.35$* and *$p = 0.30$*. For each differing value of* $p$*, compute the probability computed in part (c). THEN, create a plot with the differing values of *$p$* on the *$x$*-axis and the probabilties computed on the *$y$*axis.* 
+```{r}
+probs <- c(0.41, 0.4, 0.39, 0.38, 0.35, 0.3)
+beta_dist <- c()
+for (i in probs){
+  beta_dist <- c(beta_dist, 1 - pbinom(20, 50, i))
+}
+df_6d <- data.frame(probs, beta_dist)
+df_6d
+df_6d %>%
+  ggplot(aes(x = probs, y = beta_dist)) +
+  geom_area(fill = "red") +
+  geom_line() +
+  xlab("Proportion of vote") +
+  ylab("Type II Error")
+```
+</br>
+
+####e
+*What does your plot/graph in part (d) tell you about your statistical test? How can you improve your test? Provide some suggestion(s), reasoning why each would make your statisical test better.*
+The plot above tells us that as the candidate receives less of the vote, we would become less and less likely to recommend that they run for office without the necessary 45% minimum vote threshold. We could improve our test by increasing the decision rule as this would result in fewer rejections of $H_0$ when $H_0$ is false.
+
+</br>
+</br>
+
+###Question 7
+*A random sample of textbooks at the University of Calgary bookstore was obtained a few years ago. The price of a used textbook was observed at both the U of Calgary bookstore and on Amazon.ca. The data can be found in the following [file](http://people.ucalgary.ca/~jbstall/DataFiles/bookprices.csv).*
+
+####a
+*Can you conclude that the price of a used textook at the University of Calgary Bookstore is more when compared to the price of a used text book on Amazon.ca? In your summary and analysis, ensure you address your statistical hypotheses.*
+The statistical hypotheses:
+$$
+\begin{aligned}
+{\rm H}_{0}: \mu_{d} = & 0 \ \ \text{(This indicates that there is no difference in textbook prices)} \\
+{\rm H}_{A}: \mu_{d} > & 0 \ \ \text{(This indicates that textbook prices are more than textbook prices on Amazon)}
+\end{aligned}
+$$
+
+Read in the data and create a new column:
+```{r}
+text_prices <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/bookprices.csv") %>%
+  mutate(price_diff = UsedBkStore - UsedAmazon)
+```
+
+Use the t.test to generate the value of $T_{Obs}$, the $P$-value, and the 95% confidence interval for $\mu_{d}$:
+```{r}
+t.test(~ price_diff, mu = 0, alternative = "greater", conf.level = 0.95, data = text_prices)
+```
+
+From the t.test, we can reject the null hypothesis and conclude that our alternative hypothesis - that the UofC bookstore is more expensive, is true.
+
+####b
+*The test you applied in part (a) requires a condition/assumption. Create the necessary data visualization that will check this assumption/condition. Comment on if this condition/assumption appears to hold.*
+
+The Normal probability plot can be observed below:
+```{r}
+text_prices %>% 
+  ggplot(aes(sample = price_diff)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qq_line(col = 'red')
+```
+</br>
+Since the points along the Normal probability plot follow a relatively straight line, we can conclude that differences in textbook prices follow a normal distribution and therefore, the test used in part a is valid.
+
+</br>
+</br>
+
+###Question 8
+*In 2014[^1], the Government of Alberta released information that indicated that 62% of Alberta residents between the ages of 25 - 64 had completed some level of post-secondary education. A certain statistics professor believes that this proportion of residents (aged 25 - 64) of a certain municipality is different than the provincial proportion.* 
+
+*He surveys a sample of* $n = 250$ *randomly chosen adults aged 25 - 64 living in this municipality, of which 145 have completed some form of post-secondary education. Do these data support the statistics professor's belief? Carry out the necessary statistical test. In this question, interpret the meaning of the* $P$*-value in the context of these data.*
+
+[^1]: https://open.alberta.ca/opendata/proportion-of-population-aged-25-64-with-post-secondary-education-alberta-and-canada#summary
+
+$$
+\begin{aligned}
+{\rm H}_{0}: p = & \ 0.62 \ \ \ (\text{This indicates that the municipality has the same proportion as the provincial proportion}) \\
+{\rm H}_{A}: p \not= & \ 0.62 \ \ \ (\text{This indicates that the municipality has a different proportion as the provincial proportion})
+\end{aligned}
+$$
+
+```{r}
+binom.confint(145, 250, conf.level = 0.95, method="agresti-coull")
+pbinom(144, 250, 0.62)
+1 - pbinom(146, 250, 0.62)
+```
+This data does not support the statistics professor's belief as the 95% confidence interval of his sample includes the provincial proportion of 0.62.
+
+Additionally, the P-Values calculated for p < 0.62 and p > 0.62 are over 0.05 which means we cannot reject the null hypothesis. This municipality has a proportion of adults that is consistent with the provincial proportion of 0.62.
+
+
+</br>
+</br>
+
+###Question 9
+*In 2012, an Angus Reid[^1] poll surveyed* $n = 1010$ *randomly chosen Canadians from which 601 supported a ban on singe-use plastics.*
+*A more recent survey of* $n= 1000$ *Canadians[^2] found that 561 supported a ban on single-use plastics.*
+</br>
+</br>
+
+####a
+*Compute a 95% confidence interval for* $p_{2019} - p_{2012}$*, the difference between the proportion of Canadians who currently support a ban on single-use plastics and the proportion of Canadians who supported such a ban in 2012.*
+$$
+\widetilde{p}_{2019} = \frac{X_{2019} + 1}{n_{2019} + 2} \hspace{0.25in} {\rm and} \hspace{0.25in} \widetilde{p}_{2012} = \frac{X_{2012} + 1}{n_{2012} + 2} 
+$$
+
+$$
+(\widetilde{p}_{2019} - \widetilde{p}_{2012}) \pm z_{\frac{\alpha}{2}}\sqrt{\frac{\widetilde{p}_{2019}(1 - \widetilde{p}_{2019})}{n_{2019} + 2}  + \frac{\widetilde{p}_{2012}(1 - \widetilde{p}_{2012})}{n_{2012} + 2}   }
+$$
+
+```{r}
+n_2019 <- 670
+X_2019 <- 348
+n_2012 <- 376
+X_2012 <- 274
+p_tilde_2019 <- (X_2019 + 1) / (n_2019 + 2)
+p_tilde_2012 <- (X_2012 + 1) / (n_2012 + 2)
+z_alpha <- qnorm(1-0.025)
+lower_95_9a <- (p_tilde_2019 - p_tilde_2012) - z_alpha * (p_tilde_2019 * (1 - p_tilde_2019) / (n_2019 + 2) + p_tilde_2012 * (1 - p_tilde_2012) / (n_2012 + 2))**0.5
+upper_95_9a <- (p_tilde_2019 - p_tilde_2012) + z_alpha * (p_tilde_2019 * (1 - p_tilde_2019) / (n_2019 + 2) + p_tilde_2012 * (1 - p_tilde_2012) / (n_2012 + 2))**0.5
+paste0("The lower bound of the 95% confidence interval for p_2019 - p_2012 is ", round(lower_95_9a, 2), " while the upper bound is ", round(upper_95_9a, 2), ".")
+
+#alternative
+prop.test(c(X_2019 + 1, X_2012 + 1), c(n_2019 + 2, n_2012 + 2), conf.level=0.95, correct=FALSE)$conf
+```
+
+
+####b
+*From your result in (a), can you infer there is a statistically significant difference between* $p_{2019}$* and *$p_{2012}$*. Why or why not?*
+
+
+There is a statistical difference between $p_{2019}$ and $p_{2012}$ because the 95% confidence interval does not include 0.
+
+[^1]: https://nationalpost.com/news/more-than-half-of-canadians-think-banning-sale-of-plastic-bags-a-good-idea-poll
+
+[^2]:https://www.theglobeandmail.com/politics/article-majority-of-canadians-support-a-ban-on-single-use-plastics-poll/
+
+</br>
+</br>
+
+###Question 10
+*Usman wonders how much cereal really appears in a box of his favourite cereal,* [Smores](https://www.google.com/search?q=smores+cereal&client=firefox-b-d&tbm=isch&source=iu&ictx=1&fir=H2NWnFX_YoV_hM%253A%252C1elcm_iyIJdQVM%252C_&vet=1&usg=AI4_-kS0SAe8BMVvAu-_K1jBgAYWt_aiYA&sa=X&ved=2ahUKEwixmr3Ut-XkAhVBvZ4KHbxlDmgQ_h0wDXoECA4QBA&biw=1920&bih=966#imgrc=H2NWnFX_YoV_hM:&vet=1)*. He randomly picks one box from each of eight different supermarkets/grocery stores, purchases the desired cereal, then weights the contents of each box. The content weight states on each box is 500 grams. Is Usman getting the amount of cereal as stated on the box?*
+</br>
+</br>
+*The amount of cereal in each box, to the nearest 10th of a gram, is provided below.*
+$$497.2, 499.9,495.8, 514.2, 490.0, 498.3, 495.1, 486.7$$
+
+####a
+*What do these data suggest? Ensure you address any conditions/assumptions you have made about these data.*
+$$\begin{aligned}
+\mu_{0} = & \ 500 \\
+{\rm H}_{0}: \mu = & \ \mu_{0} \ \ \ (\text{This indicates that the weight of the contents of each box is as stated})\\
+{\rm H}_{A}: \mu \not= & \ \mu_{0} \ \ \ (\text{This indicates that the weight of the contents of each box is different than as stated})
+\end{aligned}$$
+
+```{r}
+cereal_sample <- as.data.frame(c(497.2, 499.9,495.8, 514.2, 490.0, 498.3, 495.1, 486.7))
+names(cereal_sample) <- "weight"
+n_cereal <- nrow(cereal_sample)
+
+cereal_sample %>%
+  ggplot(aes(x = "Cereal", y = weight)) +
+  geom_boxplot(col='red', fill= 'blue') +
+  ylab("Actual cereal box weight") +
+  xlab("") +
+  ggtitle("Boxplot of random sample of cereal box weights")
+
+t.test(~weight, mu = 500, alternative = "two.sided", data = cereal_sample)
+```
+</br>
+Based on the results of the boxplot and the t.test, we can assume that the null hypothesis is rejected and that the true mean of the cereal weight in each box is not equal to 500 grams. As stated in the t.test, the "true mean is not equal to 500".
+
+```{r}
+cereal_sample %>% 
+  ggplot(aes(sample = weight)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qq_line(col = 'red')
+```
+</br>
+Since the majority of the points on the Normal probability plot follow a relatively straight line (5 out of the 8), we can assume the t.test is valid in this instance.
+
+####b
+*Consider the follwoing **bootstrap** statistic:*
+$$T^{Bootstrap} = \frac{\overline{X}^{Bootstrap} - \overline{X}}{\frac{S^{Bootstrap}}{\sqrt{n}}}$$
+
+*Using 1000 replications/iterations, create the distribution of* $T^{Bootstrap}$*. From this, compute *$t^{Boostrap}_{5}$. 
+```{r}
+nsize_cereal <- nrow(cereal_sample)
+cereal_vector <- pull(cereal_sample, weight)
+
+bootstrap_T <- (do(1000) * (mean(resample(cereal_vector, nsize_cereal)) - mean(cereal_vector)) / (sd(resample(cereal_vector, nsize_cereal)) / nsize_cereal**0.5))
+
+bootstrap_T %>%
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.5) +
+  xlab("Bootstrap Statistic - T") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - T")
+qdata(~result, 0.05, data = bootstrap_T)
+```
+
+####c
+*Refer to your result in (b): Compute the following value* $\overline{X}_{5} = \overline{X} - t^{Boostrap}_{5}\left(\frac{S}{n} \right)$*. **From this result**, can you infer the same thing as you did in part (a)? Explain.*
+```{r}
+mean(cereal_vector) - as.numeric(qdata(~result, 0.05, data = bootstrap_T)[2]) * (sd(cereal_vector) / 5)
+```
+We can still infer our result from part a as this value falls below 500. $H_0$ is rejected.
+
+
+</br>
+</br>
+
+
+###Question 11
+*Let *$x_{1}, x_{2}, \cdots, x_{6}$ *represent data observed from a random sample of *$n = 6$* taken from a population of values described by the following probability density function.*
+$$f(x_{i}; \beta) = e^{-(x_{i} - \beta)}  \hspace{0.5in} \beta \leq x_{i} < \infty$$
+
+*(Note: The notation* $f(x_{i}; \beta)$ *just represents that the density function depends on the value of the parameter* $\beta$.
+</br>
+</br>
+*This sample/data is used to test the following hypothesis:*
+$${\rm H}_{0}: \beta = 2 \hspace{0.5in} {\rm H}_{A}: \beta < 2$$
+
+*A statistical test has been developed to test the validity of the above null hypothesis. This tests states the following: Reject the null hypothesis if the smallest data point in the sample, represented by *$X_{Min}$*, is less than 2.018. In other words, reject the null hypothesis if* $X_{Min} < 2.018$. 
+</br>
+</br>
+*The probability density function of this statistic $X_{Min}$ is provided:*
+$$f(x_{Min}; \beta) = ne^{-n(x_{Min} - \beta)} \hspace{0.3in} \beta \leq x_{Min}$$
+
+####a
+*What value of* $\alpha$ *was used in the derivation of this statistical test?*
+$$
+\alpha = P(\text{Reject }H_{0} | H_{0} \text{ true}) = P(X_{Min} < 2.018 | \beta = 2)
+$$
+
+```{r}
+func_11a <- function(x){
+  6 * exp(-6 * (x - 2))
+}
+integrate(func_11a, lower = 2, upper = 2.018)$value
+```
+
+
+####b
+*The data below are the observed values of the sample, in ascending order:*
+$$2.95, 2.21, 2.43, 2.11, 2.77, 3.12$$
+
+*Does this sample support the null hypothesis above? Explain your answer.*
+
+$X_{Min} = 2.11$ therefore, this sample supports the null hypothesis as we would need $X_{Min} < 2.018$ for the null hypothesis to be rejected.
+
+####c
+*Revisiting the statistical test in (a), based on* $n = 6$ *and the found value of* $\alpha$*: compute the probability of concluding that *$\beta = 2$* when in fact *$\beta = 1.8$?
+$$
+\beta = P(\text{Fail to Reject }H_{0} | H_{0} \text{ false}) = P(X_{Min} > 2.018 | \beta = 1.8)
+$$
+
+```{r}
+func_11a <- function(x){
+  exp(-6 * (x - 1.8))
+}
+integrate(func_11a, lower = 2.018, upper = Inf)$value
+```
+
+####d
+*In an attempt to decrease the probability of committing a Type II error, the value of* $\alpha$ *was increased from the value in (a) to 0.20. From a sample of* $n = 6$ *and a* $\alpha = 0.20$*, what value(s) of*$X_{Min}$* would result in a rejection of the null hypothesis?*
+```{r}
+func_11a <- function(x){
+  6 * exp(-6 * (x - 2))
+}
+integrate(func_11a, lower = 2, upper = 2.037195)$value # Found 2.0372 through guess and check
+```
+The value of $X_{Min}$ would need to be 2.037 to result in an $\alpha \approx 0.2$.

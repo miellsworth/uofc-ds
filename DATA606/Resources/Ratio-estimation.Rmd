@@ -1,0 +1,86 @@
+---
+title: "Ratio Estimation"
+author: "Michael Ellsworth"
+date: '2020-01-13'
+output: html_document
+---
+
+```{r Load Packages}
+library(survey)
+library(sampling)
+```
+
+```{r}
+# Load the data associated with api from the "survey" package
+data(api)
+tail(apipop)
+
+# Pull values from "enroll" column and define as "temp"
+temp <- apipop[, 36]
+
+# Pull the index of the vector where there is an NA, define as "ind"
+ind <- which(temp %in% NA)
+
+# Remove values from apipop where "enroll" is NA
+mydata <- apipop[-ind, ]
+
+# 
+E_total<-sum(mydata$stype=="E")
+M_total<-sum(mydata$stype=="M")
+H_total<-sum(mydata$stype=="H")
+
+# take 100 E, 50 M and 50 H from mydata
+pw1<-E_total/100
+pw2<-M_total/50
+pw3<-H_total/50
+
+# A function computes the mean and standard deviation
+mean_sd<-function(T){
+  temp2=rep(0,T)
+  for(i in 1:T){
+    s<-sampling:::strata(mydata, stratanames=c("stype"), size=c(50,50,100), method="srswor")
+    newdata<-getdata(mydata,s)
+    temp2[i]=sum(newdata$api.stu)/sum(newdata$enroll)
+  }
+  return(temp2)
+}
+```
+
+```{r}
+# do this 10 times
+result=mean_sd(10)
+mean(result)
+sd(result)
+```
+
+```{r}
+# do this 20 times
+result=mean_sd(20)
+mean(result)
+sd(result)
+```
+
+```{r}
+# In apistrat, the strata is school type. 100 E, 50 M and 50 H are selected.
+dstrat <- svydesign(id=~1, strata=~stype, weights=~pw, data=apistrat, fpc=~fpc)
+
+# A direct result from another built-in function
+(com<-svyratio(~api.stu, ~enroll, dstrat))
+
+## domain means are ratio estimates, but available directly
+svyratio(~I(api.stu*(comp.imp=="Yes")), ~as.numeric(comp.imp=="Yes"), dstrat)
+svymean(~api.stu, subset(dstrat, comp.imp=="Yes"))
+```
+
+```{r}
+## separate and combined ratio estimates of total
+(com<-svyratio(~api.stu, ~enroll, dstrat))
+(sep<-svyratio(~api.stu, ~enroll, dstrat, separate=TRUE))
+stratum.totals <- list(E = 1877350, H = 1013824, M = 920298)
+predict(sep, total = stratum.totals)
+predict(com, total = sum(unlist(stratum.totals)))
+```
+
+
+
+

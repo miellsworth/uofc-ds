@@ -1,0 +1,791 @@
+---
+title: "DATA 603 Assignment 1"
+author: "Michael Ellsworth"
+date: "November 1st, 2019"
+output:
+  html_document:
+    df_print: paged
+---
+```{r Load Packages, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+## Problem 1
+
+*The amount of water used by the production facilities of a plant varies. Observations on water usage and other, possibility related, variables were collected for 250 months. The data are given in water.csv file. The explanatory variables are:*
+
+  - *TEMP= average monthly temperature (degree celsius)*
+  - *PROD=amount of production (in hundreds of cubic)*
+  - *DAYS=number of operationing day in the month (days)*
+  - *HOUR=number of hours shut down for maintenance (hours)*
+
+*The response variable is USAGE=monthly water usage (gallons/minute)*
+
+```{r Load Data 1, include=FALSE}
+water <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/water.csv")
+glimpse(water)
+```
+
+### a
+
+*Fit the model containing all four independent variables. What is the estimated multiple regression equation?*
+
+```{r Water Model Full}
+water_model_full = lm(data = water, USAGE ~ PROD + TEMP + HOUR + DAYS)
+coefficients(water_model_full)
+```
+
+
+From the coefficients above, the estimated regression equation is as follows:
+
+$$ \widehat{Usage} = 5.89 + 0.04 * Production + 0.17 * Temperature - 0.07 * Hours - 0.02 * Days$$
+
+### b
+
+*Test the hypothesis for the full model i.e the test of overall significance. Use significance level 0.05.*
+
+The hypothesis is:
+
+$$
+H_0: \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0 \\
+H_A: \text{at least one }\beta_i \text{ is not zero}
+$$
+
+```{r Full Model Test}
+# Create Model with only the intercept
+water_model_intercept <- lm(data = water, USAGE ~ 1)
+
+# Create ANOVA table inputs using anova function with our two models
+anova(water_model_intercept, water_model_full)
+```
+
+Since the P-value calculated above is $\approx 0$, which is less than 0.05, we can say the model is significant or we can reject the null hypothesis.
+
+### c
+
+*Would you suggest the model in part b for predictive purposes? Which model or set of models would you suggest for predictive purposes? Hint: Use Individual Coefficients Test (t-test) to find the best model.*
+
+By testing the individual coefficients for significance (individual t-test), we can see that the DAYS variable is not significant (P-value is greater than 0.05). This would suggest the model in part b should not be used for predictive purposes.
+```{r}
+summary(water_model_full)
+```
+
+```{r Reduced Water Model}
+# Drop the DAYS variable from the model
+water_model_reduced <- lm(data = water, USAGE ~ PROD + TEMP + HOUR)
+summary(water_model_reduced)
+coefficients(water_model_reduced)
+```
+
+By dropping the DAYS variable, each variable is now significant and the model I would suggest for predictive purposes becomes:
+
+$$ \widehat{Usage} = 5.31 + 0.04 * Production + 0.17 * Temperature - 0.07 * Hours$$
+
+
+### d
+
+*Use Partial F test to confirm that the independent variable (removed from part c) should be out of the model at significance level 0.05.*
+
+```{r Water Anova}
+# Test if H0: DAYS = 0
+anova(water_model_reduced, water_model_full)
+```
+
+By removing the DAYS variable from the model, we can test the effect that DAYS has in the full model. Since the P-value in the analysis of variance is greater than 0.05, we cannot reject $H_0$ and can drop DAYS from the model as it does not have a significant effect.
+
+
+### e
+
+*Obtain a 95% confidence interval of regression coefficient for TEMP from the model in part c. Give an interpretation.*
+
+```{r Interval Estimation}
+# Complete an interval estimation of the regression coefficients in the reduced model
+confint(water_model_reduced)
+```
+
+The 95% confidence interval of the regression coefficient for the variable TEMP is:
+
+$$0.153 \leq \beta \leq 0.185$$
+
+This would suggest that as the average monthly temperature increases by 1C, the water usage will increase between 0.153 and 0.185 gallons per minute with 95% confidence.
+
+
+### f
+
+*Use the method of Model Fit to calculate* $R^2_adj$ *and RMSE to compare the full model and the model in part c. Which model or set of models would you suggest for predictive purpose? For the final model, give an interpretation of* $R^2_adj$ *and RMSE*.
+
+```{r Model Fit}
+# Calculate the Adjusted R-Squared for the full and reduced models
+summary(water_model_full)$adj.r.squared
+summary(water_model_reduced)$adj.r.squared
+
+#Calculate the RMSE for the full and reduced models
+sigma(water_model_full)
+sigma(water_model_reduced)
+```
+
+
+As the Adjusted R-Squared is higher and the RMSE is lower for the reduced model compared with the full model, I would suggest the reduced model (without the DAYS variable) for predictive purposes. The $R^2_adj$ suggests that approximately 89% of the variance in water usage can be explained by the model described in part c. The RMSE for the reduced model is 1.77 gallons/minute which is the standard deviation of the unexplained variance of 
+
+
+### g
+
+*Build an interaction model to fit the multiple regression model from the model in part f. From the output, which model would you recommend for predictive purposes?*
+
+```{r Interaction Model 1}
+water_model_interaction <- lm(data = water, USAGE ~ (PROD + TEMP + HOUR)**2)
+summary(water_model_interaction)
+```
+
+From the summary above, it appears as though the interaction between TEMP and HOUR does not have a significant effect on the model. This interaction will be removed from the interaction model and a reduced interaction model will be proposed.
+
+```{r Interaction Model Reduced 1}
+water_model_interact_reduced <- lm(data = water, USAGE ~ PROD + TEMP + HOUR + PROD*TEMP + PROD*HOUR)
+summary(water_model_interact_reduced)
+```
+
+The model I would recommend for predictive purposes is as follows:
+
+$$\widehat{Usage} = 12.43 - 0.003 * PROD - 0.005 * TEMP - 0.2 * HOUR + 0.001 * PROD * TEMP + 0.0008 * PROD * HOUR$$
+
+
+## Problem 2
+
+*A collector of antique grandfather clocks sold at auction believes that the price received for the clocks depends on both the age of the clocks and the number of bidders at the auction.*
+
+*A sample of 32 auction prices of grandfather clocks, along with their age and the number of bidders, is given in data file GFCLOCKS.CSV*
+
+```{r Load Data 2, include = FALSE}
+clocks <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/GFCLOCKS.csv")
+glimpse(clocks)
+```
+
+### a
+
+*Use the method of least squares to estimate the unknown parameters* $\beta_0$, $\beta_1$, $\beta_2$ *of the model.*
+
+```{r Clocks Model Full}
+clocks_model_full <- lm(data = clocks, PRICE ~ AGE + NUMBIDS)
+clocks_model_full$coefficients
+```
+
+Based on the least square estimate, the model parameters are estimated as follows:
+
+$$\widehat{PRICE} = -1338.95 + 12.74 * AGE + 85.95 * NUMBIDS$$
+
+Where:
+
+$$
+\begin{aligned}
+\beta_0 &= -1338.95 \\
+\beta_1 &= 12.74 \\
+\beta_2 &= 85.95 \\
+\end{aligned}
+$$
+
+
+### b
+
+*Find the value of SSE that is minimized by the least squares method.*
+
+```{r SSE}
+clocks_model_intercept <- lm(data = clocks, PRICE ~ 1)
+anova(clocks_model_intercept, clocks_model_full)
+```
+
+Based on the anova function above, the SSE = 516727.
+```{r Define anova inputs, include = FALSE}
+SSE <- 516727
+SSR <- 4283063
+SST <- SSE + SSR
+p <- 2
+n <- 32
+```
+
+### c
+
+*Estimate s, the standard deviation of the model, and interpret the result.*
+
+```{r RMSE}
+# Calculate RMSE using SSE, n and p
+RMSE <- (SSE / (n - p - 1))**0.5
+RMSE
+
+# Alternative - calculated RMSE using the sigma function
+sigma(clocks_model_full)
+```
+
+Based on the calculations above, the RMSE = 133.48. This is the standard deviation of the unexplained variance meaning the unexplained variance in the auction price has a standard deviation of $133.48.
+
+### d
+
+*Find and interpret the adjusted coefficient of determination*
+
+```{r Adjusted R-Squared}
+# Calculate the adjusted r squared using SSE, SST, n and p
+adj_r_squared <- 1 - (SSE / (n - p - 1)) / (SST / (n - 1))
+adj_r_squared
+
+# Alternative - calculate the adjusted r squared using the summary function
+summary(clocks_model_full)$adj.r.squared
+```
+
+Based on the calculated adjusted R-squared value above, we can say that 88% of the variation in the clock price can be explained by the model described in part a.
+
+### e
+
+*Construct the Anova table for the model and test the global F-test of the model at the $\alpha$ = 0.05 level of significance.*
+
+```{r Anova Table}
+# Create anova table inputs
+df_resid <- n - p - 1
+MSR <- SSR / p
+MSE <- SSE / df_resid
+F_stat <- MSR / MSE
+
+# Create anova table
+header <- c("Source of Variation", "Df", "Sum of Squares", "Mean Squares", "F-Statistic")
+anova_table <- data.frame(rbind(c("Regression", p, SSR, MSR, F_stat),
+                                c("Residual", df_resid, SSE, MSE, ""),
+                                c("Total", n - 1, SSR + SSE, "", "")))
+names(anova_table) <- header
+anova_table
+```
+
+```{r Find P-value}
+anova(clocks_model_intercept, clocks_model_full)
+```
+
+From the anova function above, we can see the P-value (9.216e-15) is less than 0.05.
+
+### f
+
+*Test the hypothesis that the mean auction price of a clock increases as the number of bidders increases when age is held constant (i.e., when* $\beta_2 \not= 0$*). Use* $\alpha = 0.05$
+
+$$
+H_0: \beta_2 = 0 \\
+H_A: \beta_2 \not= 0
+$$
+
+```{r Partial F Test}
+clocks_model_reduced <- lm(data = clocks, PRICE ~ AGE)
+anova(clocks_model_reduced, clocks_model_full)
+```
+
+Since the P-value from the anova calculation above is less than 0.05, we can conclude that $\beta_1$ is not 0 (reject the null hypothesis). The mean auction price of a clock increases as the number of bidders increases when age is held constant.
+
+### g
+
+*Find a 95% confidence interval for $\beta_1 and interpret the result.*
+
+```{r Interval estimation}
+confint(clocks_model_full)
+```
+
+From the confidence interval function above, we can see that with 95% confidence, $\beta_1$, will be a positive number between 10.9 and 14.6. Because of this, we can say that the average auction price of a clock will increase as the age of clocks increases. Additionally, we can say with 95% confidence that the auction price of a clock will increase between $10.9 and \$14.6 when the age of the clock increases by 1 year.
+
+### h
+
+*Test the interaction term between the 2 variables at* $\alpa = 0.05$. *What model would you suggest to use for predicting y? Explain.*
+
+```{r Interaction}
+clocks_model_interact <- lm(data = clocks, PRICE ~ NUMBIDS + AGE + NUMBIDS * AGE)
+summary(clocks_model_interact)
+```
+
+From the summary of the interaction model, we can see that the P-value for the interaction term is less than 0.05 meaning we can use this interaction term to help us model the price of clocks. The model for predicting y would become:
+
+$$\widehat{PRICE} = 320.46 + 0.88 * AGE - 93.26 * NUMBIDS + 1.30 * NUMBIDS * AGE$$
+
+Based on the Adjusted R-squared value in the summary of the interaction model, it is 0.9489 which is higher than the Adjusted R-squared value calculated in part d for the model without the interaction term. Additionally, the RMSE is also lower in the model that includes the interaction term. This further supports us using the interaction model to predict the auction price of clocks.
+
+## Problem 3
+
+*Refer to the Journal of Engineering for Gas Turbines and Power (January 2005) study of a high pressure inlet fogging method for a gas turbine engine. The heat rate (kilojoules per kilowatt per hour) was measured for each in a sample of 67 gas turbines augmented with high pressure inlet fogging. In addition, several other variables were measured, including cycle speed (revolutions per minute), inlet temperature (degree celsius), exhaust gas temperature (degree Celsius), cycle pressure ratio, and air mass flow rate (kilograms persecond). The data are saved in the TURBINE.CSV file.*
+
+```{r Load Data 3, include=FALSE}
+turbines <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/TURBINE.csv")
+glimpse(turbines)
+names(turbines) <- c("ENGINE", "SHAFTS", "RPM", "CPRATIO", "INLET", "EXHAUST", "AIRFLOW", "POWER", "HEATRATE")
+```
+
+### a
+
+*Write a first-order model for heat rate (y) as a function of speed, inlet temperature, exhaust temperature, cycle pressure ratio, and air flow rate.*
+
+```{r First Order Model 3}
+turbines_model <- lm(data = turbines, HEATRATE ~ RPM + INLET + EXHAUST + CPRATIO + AIRFLOW)
+coefficients(turbines_model)
+```
+
+The model parameters are estimated as follows:
+
+$$\widehat{Heatrate} = 13614.46 + 0.09 * RPM - 9.2 * Inlet + 14.4 * Exhaust + 0.35 * CPR - 0.85 * Airflow $$
+
+### b
+
+*Test the overall significance of the model using* $\alpha = 0.01$
+
+```{r Model Summary}
+# Anova function
+turbines_model_intercept <- lm(data = turbines, HEATRATE ~ 1)
+anova(turbines_model_intercept, turbines_model)
+
+# Alternative
+summary(turbines_model)
+```
+
+The P-value from the anova function and the summary of the First Order model is < 2.2e-16 which is less than 0.01. The model is significant as a result.
+
+### c
+
+*Fit the model to the data using the method of least squares. (Suggestion! check both models with and without a predictor that has p-value close to 0.05, and propose the best model.)*
+
+From the summary in part b, we can see that the CPRATIO and AIRFLOW independent variables have P-values greater than 0.05. In order to determine the best model, adjusted R-squared values will be calculated for models without CPRATIO, without AIRFLOW and without both CPRATIO and AIRFLOW.
+
+```{r Partial F Tests}
+# Test model without CPRATIO
+turbines_model_reduced1 <- lm(data = turbines, HEATRATE ~ RPM + INLET + EXHAUST + AIRFLOW)
+summary(turbines_model_reduced1)$adj.r.squared
+
+# Test model without AIRFLOW
+turbines_model_reduced2 <- lm(data = turbines, HEATRATE ~ RPM + INLET + EXHAUST + CPRATIO)
+summary(turbines_model_reduced2)$adj.r.squared
+
+# Compare models
+turbines_model_reduced3 <- lm(data = turbines, HEATRATE ~ RPM + INLET + EXHAUST)
+summary(turbines_model_reduced3)$adj.r.squared
+
+summary(turbines_model_reduced1)
+```
+
+Since the adjusted R-squared value of the model without CPRATIO but with AIRFLOW, we will keep the AIRFLOW variable in our model. The P-value of AIRFLOW is close enough to 0.05 that it is significant enough to include in the model going forward.
+
+```{r Reduced Model}
+turbines_model_reduced1$coefficients
+```
+
+The reduced model now becomes:
+
+$$\widehat{Heatrate} = 13618 +0.09 * RPM - 9.2 * Inlet + 14.4 * Exhaust - 0.85 * Airflow$$
+
+### d
+
+*Test all possible interaction terms for the best model in part (c) at* $\alpha = 0.05$ *What is the final model would you suggest to use for predicting y? Explain.*
+
+```{r Interaction Model 3}
+turbines_model_interact <- lm(data = turbines, HEATRATE ~ (RPM + INLET + EXHAUST + AIRFLOW)**2)
+summary(turbines_model_interact)
+```
+
+Using the individual coefficients test (t-test) above, we can see that two interaction terms, $Exhaust * Airflow$ and $Inlet * Airflow$, are significant as they have P-values less than 0.05. The suggested model will drop the other interaction terms.
+
+```{r Interaction Model Reduced 3}
+turbines_model_interact_reduced <- lm(data = turbines, HEATRATE ~ RPM + INLET + EXHAUST + AIRFLOW + INLET * AIRFLOW + EXHAUST * AIRFLOW )
+summary(turbines_model_interact_reduced)
+coefficients(turbines_model_interact_reduced)
+```
+
+The final model for predicting heat rate becomes:
+
+$$\begin{aligned}
+\widehat{Heatrate} = 13603 &+ 0.046 * RPM - 12.8 * Inlet + 23.3 * Exhaust + 1.3 * Airflow \\
+                           &+ 0.016 * Inlet * Airflow - 0.04 * Exhaust * Airflow
+\end{aligned}$$
+
+This final model does not include other interaction terms because they are not close enough to 0.05 to remain significant.
+
+### e
+
+*Give practical interpretations of the* $\beta_i$ *estimates.*
+
+Based on the coefficient estimates calculated in part d, we can conclude that:
+
+    * Heat rate will increase when RPM increases and all other independent variables are held constant
+    * Heat value will decrease when inlet temperature increases and all other independent variables are held constant
+        * Heat value will only decrease if the ratio of airflow to inlet temperature is less than 800:1
+            * This is due to the interaction term of inlet temperature and airflow
+    * Heat value will increase if exhuast temperature increases
+        * Heat value will only increase if the ratio of airflow to exhaust temperature is less than 582.5:1
+            * This is due to the interaction term of exhaust temperature and airflow
+
+
+Additionally, the model can be simplified as:
+
+
+$$\begin{aligned}
+\widehat{Heatrate} =& 13603 + 0.046 * RPM +  \phi_1 * Inlet + \phi_2 * Exhaust \\
+            \phi_1 =& 0.16 * Airflow - 12.8 \\
+            \phi_2 =& 23.3 - 0.04 * Airflow
+\end{aligned}$$
+
+Looking at the $\phi$ terms closer:
+
+    * An increase in airflow will offset the reduction in heat rate as the inlet temperature increases
+    * An increase in airflow will offset the increase in heat rate as the exhuast temperature increases
+
+### f
+
+*Find RMSE, s, from the model in part (d)*
+
+From the summary of the `turbines_model_interact_reduced` model in part d, the RMSE is 401.4.
+
+### g
+
+*Find the adjusted* $R^2$ *value from the model in part (d) and interpret it.*
+
+From the summary of the `turbines_model_interact_reduced` model in part d, the Adjusted R-Squared is 0.9367. This means that 93.67% of the variation in the heat rate of a turbine with high pressure inlet fogging can be explained by the model described in part d.
+
+### h
+
+*Predict a heat rate (y) when a cycle of speed = 273,145 revolutions per minute, inlet temperature= 1240 degree celsius, exhaust temperature=920 degree celsius, cycle pressure ratio=10 kilograms persecond, and air flow rate=25 kilograms persecond.*
+
+```{r Predict Heat Rate}
+predict_df <- data.frame(RPM = 273145, INLET = 1240, EXHAUST = 920, AIRFLOW = 25)
+predict(turbines_model_interact_reduced, predict_df, interval = "predict")
+```
+
+Based on the results of the predict function above, we can make a point estimate of heat rate of 31,228 kilojoules per kilowatt per hour.
+
+## Problem 4
+
+*The file tires.csv provides the results of an experiment on tread wear per 160 km and the driving speed in km/hour. The researchers looked at 2 types of tires and tested 20 random sample tires. The response variable is the tread wear per 160 km in percentage of tread thickness and the quantitative predictor is average speed in km/hour.*
+
+```{r Load Data 4, include=FALSE}
+tires <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/tires.csv")
+glimpse(tires)
+tires$type <- factor(tires$type)
+```
+
+### a
+
+*Define the dummy variable that explains the two types of tires.*
+
+The dummy variable is the "type" variable. It is defined as "A" or "B". For the purpose of this problem, A = 0 and B = 1.
+
+### b
+
+*Test the additive model at* $\alpha = 0.05$ *and write a first-order model for the tread wear per 160 km as a function of average speed and type of tires.*
+
+```{r First Order Model 4}
+tires_model_full <- lm(data = tires, wear ~ ave + type)
+summary(tires_model_full)
+coefficients(tires_model_full)
+```
+
+Since the P-value for all coefficients are less than 0.05, we will keep all independent variables in the model. The First Order Model is as follows:
+
+$$\widehat{Wear} = -0.64 + 0.01 * Speed + 0.17 * Type$$
+
+Or, if the tire is Type B:
+
+$$\widehat{Wear} = -0.64 + 0.01 * Speed + 0.17$$
+
+And if the tire is Type A:
+
+$$\widehat{Wear} = -0.64 + 0.01 * Speed$$
+
+Where:
+
+$$\begin{aligned}
+\beta_0 = \ &-0.64 \\
+\beta_1 = \ &0.01 \\
+\beta_2 = \ &0.17
+\end{aligned}$$
+
+### c
+
+*Interpret all possible regression coefficient estimates.*
+
+Since the $\beta_0$ regression coefficient estimate is -0.64, we can assume that if driving speed were 0 and the Type of the tire was Type A, the tire would have a negative wear of -0.64 or -64% of tread thickness. This makes sense as a tire should not have any wear if it has not been used (average speed = 0).
+
+Additionally, if driving speed were 0, and the Type of the tire was Type B, the tire would have slightly more wear of -0.47 or -47% of tread thickness. $\beta_2$ in this case indicates that Type B tires have slightly more wear than Type A tires. In other words, Type B tires would have a wear increase of 17% of tread thickness.
+
+In regards to $\beta_1$, an average speed increase of 1 will increase the tire wear by 0.01 or 1% of tread thickness.
+
+### d
+
+*Test the interaction term between the 2 variables at* $\alpha = 0.05$. *What model would you suggest to use for predicting y? Explain.*
+
+```{r Interaction Model Tires}
+tires_model_interact <- lm(data = tires, wear ~ (ave + type)**2)
+summary(tires_model_interact)
+coefficients(tires_model_interact)
+```
+
+The summary above shows the interaction term between average speed and Type of tire is significant (P-value < 0.05) and therefore, we should use this interaction term for predicting y (tire wear).
+
+The model in this case would be:
+
+$$\widehat{Wear} = -0.39 + 0.01 * Speed - 1.08 * Type + 0.01 * Speed * Type$$
+
+Or, if the tire is Type B:
+
+$$\widehat{Wear} = -1.47 + 0.02 * Speed$$
+
+And if the tire is Type A:
+
+$$\widehat{Wear} = -0.39 + 0.01 * Speed$$
+
+### e
+
+*From the model in part (d) Find the adjusted-*$R^2$ *value and interpret it.*
+
+```{r Adjusted R-Squared Tires Interaction}
+summary(tires_model_interact)$adj.r.squared
+```
+
+From the adjusted r-squared calculation above, we can say that approximately 96% of a tires tread wear can be explained by the interaction model described in part d.
+
+### f
+
+*Predict the tread wear per 160 km in percentage of tread thickness for a car that has type A with an average speed 100 km/hour.*
+
+```{r Predict Tread Wear}
+predict_df_tires <- data.frame(ave = 100, type = "A")
+predict(tires_model_interact, predict_df_tires, interval = "predict")
+```
+
+The tread wear is approximately 49% of tread thickness with type A tires with an average speed of 100 km/hr.
+
+## Problem 5
+
+*A team of mental health researchers wishes to compare three methods (A, B, and C) of treating severe depression. They would also like to study the relationship between age and treatment effectiveness as well as the interaction (if any) between age and treatment. Each member of a simple random sample of 36 patients, comparable with respect to diagnosis and severity of depression, was randomly assigned to receive treatment A, B, or C. The data are given in MentalHealth.csv.*
+
+```{r Load Data 5, include=FALSE}
+health <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/MentalHealth.csv")
+glimpse(health)
+health$METHOD <- factor(health$METHOD)
+```
+
+### a
+
+*Which is the dependent variable?*
+
+The dependent variable is "EFFECT".
+
+### b
+
+*What are the independent variables?*
+
+The independent variables are "AGE" and "METHOD".
+
+### c
+
+*Draw a scatter diagram of the sample data with EFFECT on the y-axis and AGE on the x-axis using different symbols/colors for each of the three treatments. Comment.*
+
+```{r Scatter Plot}
+health %>%
+  ggplot(aes(x = AGE, y = EFFECT, col = METHOD)) +
+  geom_point()
+```
+
+For all three METHODs, there appears to be a general increase in EFFECT as AGE increases.
+
+### d
+
+*Is there any interaction between age and treatment? [Hint: Use dummy variable coding, the least square method and* $\alpha = 0.05$*]*
+
+The dummy coding for the following model will be as follows:
+
+    * Method A = 0, 0
+    * Method B = 1, 0
+    * Method C = 0, 1
+
+```{r Full First Order Model Health}
+health_full <- lm(data = health, EFFECT ~ METHOD + AGE)
+summary(health_full)
+coefficients(health_full)
+```
+
+Each variable appears to be significant. Test the interaction:
+
+```{r Interaction Test Health}
+health_interact <- lm(data = health, EFFECT ~ (METHOD + AGE)**2)
+summary(health_interact)
+```
+
+Based on the summary above, it appears as though the interaction of Method and Age is significant (P-value less than 0.05 for Method C and Age).
+
+The suggested model would then become:
+
+$$
+\begin{aligned}
+Y_i&=\beta_0+\beta_1X_{1i}+\beta_2X_{2i}+\beta_3X_{3i}+\beta_4X_{3i}X_{2i} + \beta_5X_{3i}X_{1i} + \epsilon\\
+\beta_0 &= 47.51\\
+\beta_1 &= -18.60\\
+\beta_2 &= -41.30\\
+\beta_3 &= 0.33\\
+\beta_4 &= 0.70\\
+\beta_5 &= 0.19\\
+{Effect_i}&=
+\begin{cases} 
+47.5 + 0.33*Age & \mbox{if } i^{th}\mbox{ person receives treatment A} \\
+28.9 + 0.52*Age & \mbox{if } i^{th}\mbox{ person receives treatment B} \\
+6.2 + 1.03*Age & \mbox{if } i^{th}\mbox{ person receives treatment C}
+\end{cases}
+\end{aligned}
+$$
+
+### e
+
+*How would you interpret the effect of treatment?*
+
+At lower ages, treatment A out performs treatment B and treatment C in terms of effectiveness. As age increases, the effect of treatment C approaches and eventually exceeds the effectiveness of both treatment A and treatment B. Additionally, at higher ages, the effect of treatment B would eventually out perform treatment A as the slope on the linear regression equation is higher on treatment B than treatment A.
+
+
+### f
+
+*Plot the three regression lines on the scatter diagram obtained in c. May one have the same conclusion as in question d.?*
+
+```{r Scatter with Linear Models}
+health %>%
+  ggplot(aes(x = AGE, y = EFFECT, col = METHOD)) +
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE)
+```
+
+Based on the differing slope of the regression lines, we can confirm that there is an interaction between age and treatment as the slope of the blue line is much more significant than the green and red lines.
+
+## Problem 6
+
+*Problem 6 [Optional]. Erecting boiler drums In a production facility, an accurate estimate of hours needed to complete a task is crucial to management in making such decisions as the proper number of workers to hire, an accurate deadline to quote a client, or cost-analysis decisions regarding budgets. A manufacturer of boiler drums wants to use regression to predict the number of hours needed to erect the drums in future projects. To accomplish this, data for 35 boilers were collected. In addition to hours (y), the variables measured were boiler capacity (𝑥1 =lb/hr), boiler design pressure (𝑥2 =pounds per square inch, or psi), boiler type (𝑥3 =1 if industry field erected, 0 if utility field erected), and drum type (x4 =1 if steam, 0 if mud).The data are saved in the BOILERS.csv file.*
+
+```{r Load Data 6, include = FALSE}
+boilers <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/1/BOILERS.csv")
+glimpse(boilers)
+boilers$Boiler <- factor(boilers$Boiler)
+boilers$Drum <- factor(boilers$Drum)
+```
+
+### a
+
+*Write the first order model for hours.*
+
+```{r First Order Model 6}
+boilers <- boilers %>%
+  mutate(Boiler = relevel(Boiler, ref = "utility"))
+contrasts(boilers$Boiler)
+contrasts(boilers$Drum)
+boilers_full <- lm(data = boilers, Manhrs ~ Capacity + Pressure + Boiler + Drum)
+coefficients(boilers_full)
+```
+
+$$\widehat{Hours} = -2021 + 7.576 * Capacity + 1.05 * Pressure + 2401 * Boiler + 1971 * Drum$$
+
+Or for Boiler = industry (1) and Drum = steam (1):
+
+$$\widehat{Hours} = 2352 + 7.576 * Capacity + 1.05 * Pressure$$
+
+For Boiler = utility (0) and Drum = steam (1):
+
+$$\widehat{Hours} = -49.77 + 7.576 * Capacity + 1.05 * Pressure$$
+
+For Boiler = industry (1) and Drum = mud (0)
+
+$$\widehat{Hours} = 380.2 + 7.576 * Capacity + 1.05 * Pressure$$
+
+For Boiler = utility (0) and Drum = mud (0):
+
+$$\widehat{Hours} = -2021 + 7.576 * Capacity + 1.05 * Pressure$$
+
+### b
+
+*Construct the Anova table for the first order model (the additive model).*
+
+```{r Anova Boilers}
+boilers_intercept <- lm(data = boilers, Manhrs ~ 1)
+anova(boilers_intercept, boilers_full)
+```
+
+
+```{r Define anova inputs 6, include = FALSE}
+SSE_6 <- 12709156
+SSR_6 <- 120693900
+SST_6 <- SSE_6 + SSR_6
+p_6 <- 4
+n_6 <- 35
+MSR_6 <- SSR_6 / p_6
+MSE_6 <- SSE_6 / (n_6 - p_6 - 1)
+F_6 <- MSR_6 / MSE_6
+```
+
+```{r Anova Table 6}
+# Create anova table
+header <- c("Source of Variation", "Df", "Sum of Squares", "Mean Squares", "F-Statistic")
+anova_table_6 <- data.frame(rbind(c("Regression", p_6, SSR_6, MSR_6, F_6),
+                                c("Residual", n_6 - p_6 - 1, SSE_6, MSE_6, ""),
+                                c("Total", n_6 - 1, SSR_6 + SSE_6, "", "")))
+names(anova_table_6) <- header
+anova_table_6
+```
+
+### c
+
+*Use the Anova table from part b to conduct a test for the full model (Use* $\alpha = 0.01$*).*
+
+$$
+H_0: \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0 \\
+H_A: \text{at least one }\beta_i \text{ is not zero}
+$$
+
+```{r Full Model Test Boilers}
+anova(boilers_intercept, boilers_full)
+```
+
+The P-value from the anova function above is less than 0.01. The full model is therefore significant and we can reject $H_0$.
+
+### d
+
+*Would you drop any predictors out of the full model? Explain.*
+
+Using the individual t-test:
+
+```{r Individual T-Test Boilers}
+summary(boilers_full)
+```
+
+Each of the predictors is significant as each P-value is below 0.05. Therefore, we should not drop any predictors.
+
+### e
+
+*Test individually the interaction terms* $\alpha = 0.05$. *What model would you suggest to use for predicting y? Explain.*
+
+```{r Boilers Interaction Model}
+boilers_interact <- lm(data = boilers, Manhrs ~ (Capacity + Pressure + Boiler + Drum)**2)
+summary(boilers_interact)
+```
+
+From the summary above, it appears as though the interaction between Capacity and Drum type is the only significant interaction. Therefore, we will include it in the final model without any other interaction.
+
+```{r Boilers Interaction Model Reduced}
+boilers_interact_reduced <- lm(data = boilers, Manhrs ~ Capacity + Pressure + Boiler + Drum + Capacity*Drum)
+summary(boilers_interact_reduced)
+coefficients(boilers_interact_reduced)
+```
+
+The final model to predict hours becomes:
+
+$$\widehat{Hours} = -753 + 5.16 * Capacity + 0.789 * Pressure + 1902 * Boiler + 1054 * Drum + 3.35 * Capacity * Drum$$
+
+### f
+
+*Write all possible submodels for two categorical variables (do not have to substitute values of* $\beta_i$*)*
+
+For Boiler = industry (1) and Drum = steam (1):
+
+$$\widehat{Hours} = -753 + 5.16 * Capacity + 0.789 * Pressure + 1902 + 1054 + 3.35 * Capacity$$
+
+For Boiler = utility (0) and Drum = steam (1):
+
+$$\widehat{Hours} = -753 + 5.16 * Capacity + 0.789 * Pressure + 1054 + 3.35 * Capacity$$
+
+For Boiler = industry (1) and Drum = mud (0)
+
+$$\widehat{Hours} = -753 + 5.16 * Capacity + 0.789 * Pressure + 1902$$
+
+For Boiler = utility (0) and Drum = mud (0):
+
+$$\widehat{Hours} = -753 + 5.16 * Capacity + 0.789 * Pressure$$

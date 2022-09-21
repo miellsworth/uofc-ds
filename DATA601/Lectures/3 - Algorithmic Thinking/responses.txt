@@ -1,0 +1,102 @@
+Python
+Tableau
+Power BI
+Data wrangling
+Data scraping
+Data visualization
+R
+Python
+Power BI
+Tableau
+Spotfire
+Python
+Spotfire
+Power BI
+JMP
+Predictive Analytics
+Neural Nets
+Neural Nets
+Machine Learning
+Power BI
+Tableau
+Matlab
+State of the art tool
+R
+Data scraping
+Data wrangling
+Power BI
+Tableau
+Python
+Data cleaning
+Data exploration
+Predictive modeling
+Machine Leaning
+Modeling
+Python
+Big Data
+Scikit-learn
+Machine learning
+R
+Tensorflow
+Tableau
+Python
+SQL
+SQL
+Power BI
+Spotfire
+R
+Python
+Data visualization
+Modelling and prediction
+Seaborn
+Matplotlib
+Scikit-learn
+Pandas
+Python
+Spotfire
+Hadoop
+Spark
+Python
+Data cleaning
+Statistical Modeling
+Mathematical modeling
+Tableau 
+Pandas
+Power BI
+Numpy
+Python
+Matplotlib
+Plotly
+seaborn
+Python
+Excel
+Power BI
+JMP
+Python
+R
+Tableau
+SQL
+VBA
+Python 
+R
+Tableau
+Data management
+Simulations
+Statistical analysis
+Report Automation
+Python
+Tableau
+SQL
+Data warehousing
+Automation of Machine Learning
+Feedback loops
+Rapidminer
+Power BI
+Tableau
+R
+Python
+SQL
+
+
+
+

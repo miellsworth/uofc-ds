@@ -1,0 +1,600 @@
+---
+title: "DATA 602 Project: Exploring the City of Calgary's Public Trees Dataset"
+author: Harneet Cheema, Michael Ellsworth
+output:
+  ioslides_presentation: default
+---
+
+## Introduction
+- Calgary has ~7 million trees
+- Calgary should not have ~7 million trees
+- Maintaining Public Trees is a costly endeavour
+- How could Calgary's tree population improve?
+- What insights can we gain from public tree data?
+
+## Dataset
+- Calgary has data on ~500,000 trees
+- 20 different features
+- Analysis on tree condition
+
+    - Common Name / Genus / Size
+  
+- Analysis on planting trends
+
+    - Proportions in Developing / Developed Communities
+  
+## Packages
+- dplyr
+- ggplot2
+- readr
+- stringr
+- mosaic
+
+```{r Load Packages, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(stringr)
+library(mosaic)
+```
+
+```{r Load Data, include=FALSE}
+#trees <- read_csv("https://data.calgary.ca/api/views/tfs4-3wwa/rows.csv?accessType=DOWNLOAD")
+#comm_info <- read_csv("https://data.calgary.ca/api/views/j9ps-fyst/rows.csv?accessType=DOWNLOAD")
+trees <- read_csv("Public_Trees.csv")
+comm_info <- read_csv("City_of_Calgary_Community_Areas.csv")
+```
+
+```{r Clean Data, include=FALSE}
+# Change column names in community info to upper case
+names(comm_info) <- toupper(names(comm_info))
+
+# Select columns to keep in each dataset
+trees_clean <- trees %>%
+  select(DECIDUOUS_EVERGREEN,
+         COMMON_NAME,
+         GENUS,
+         SPECIES,
+         DBH_CM,
+         MATURE_SIZE,
+         RATING,
+         TREE_CONDITION_RATING_PERC,
+         HERITAGE_TREES,
+         COMM_CODE)
+
+comm_info_clean <- comm_info %>%
+  select(CLASS,
+         COMM_CODE,
+         NAME,
+         SECTOR,
+         SRG)
+
+# Merge community information and trees
+public_trees <- inner_join(trees_clean, comm_info_clean, by = "COMM_CODE")
+
+# Convert all character strings to upper case
+public_trees$DECIDUOUS_EVERGREEN <- str_to_upper(public_trees$DECIDUOUS_EVERGREEN)
+public_trees$COMMON_NAME <- str_to_upper(public_trees$COMMON_NAME)
+public_trees$GENUS <- str_to_upper(public_trees$GENUS)
+public_trees$SPECIES <- str_to_upper(public_trees$SPECIES)
+public_trees$MATURE_SIZE <- str_to_upper(public_trees$MATURE_SIZE)
+public_trees$CLASS <- str_to_upper(public_trees$CLASS)
+```
+
+## Explore the data
+- Many different features to look at
+- Determine the most popular trees by name / genus
+
+    - Isolate the analysis on these types of trees
+    
+- Tree size
+
+## Explore - Common Tree Names
+- Top 10 Trees by Common Name in Calgary
+- Select "Green Ash"
+
+```{r List Top 10 Names, include=FALSE}
+# Tally number of trees per tree name and plot
+tree_names <- public_trees %>%
+  filter(!is.na(COMMON_NAME)) %>% # Filters NAs from species column
+  group_by(COMMON_NAME) %>%
+  tally() %>%
+  arrange(desc(n))
+names_top10 <- pull(tree_names %>% top_n(10), COMMON_NAME)
+```
+
+```{r Top 10 Trees, echo=FALSE, warning=FALSE}
+tree_names_plot <- tree_names %>%
+  filter(COMMON_NAME %in% names_top10) %>%
+  ggplot(aes(x = reorder(COMMON_NAME, n), y = n / 1000)) +
+  geom_col() +
+  xlab("Tree Name") +
+  ylab("Total Count (Thousands) - Calgary") +
+  ggtitle("Tree Count By Common Name - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+tree_names_plot
+```
+
+## Explore - Genus
+- Top 10 Trees by Genus in Calgary
+- Select "Picea"
+
+```{r List Top 10 Genus, include=FALSE}
+# Tally number of trees per Genus type and plot
+genus <- public_trees %>%
+  filter(!is.na(GENUS)) %>% # Filters NAs from species column
+  group_by(GENUS) %>%
+  tally() %>%
+  arrange(desc(n))
+genus_top10 <- pull(genus %>% top_n(10), GENUS)
+```
+
+```{r Top 10 Genus, echo=FALSE, warning=FALSE}
+genus_plot <- genus %>%
+  filter(GENUS %in% genus_top10) %>%
+  ggplot(aes(x = reorder(GENUS, n), y = n / 1000)) +
+  geom_col() +
+  xlab("Tree Genus") +
+  ylab("Total Count (Thousands) - Calgary") +
+  ggtitle("Tree Count By Genus - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+genus_plot
+```
+
+## Explore - Size
+- Large trees are most common, small are least common
+- For comparison, Large and Small trees are selected
+```{r Explore Size, include=FALSE}
+# Tally number of trees per Genus type and plot
+size <- public_trees %>%
+  filter(!is.na(MATURE_SIZE)) %>% # Filters NAs from species column
+  group_by(MATURE_SIZE) %>%
+  tally() %>%
+  arrange(desc(n))
+```
+
+```{r Size Plot, echo=FALSE, warning=FALSE}
+size_plot <- size %>%
+  ggplot(aes(x = reorder(MATURE_SIZE, n), y = n / 1000)) +
+  geom_col() +
+  xlab("Tree Size") +
+  ylab("Total Count (Thousands) - Calgary") +
+  ggtitle("Tree Count By Size") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+size_plot
+```
+
+## Difference of Tree Condition Means - Green Ash and Other
+- Test how average Green Ash condition compares against all other trees
+- Is there a reason why this is the most popular tree in Calgary?
+- Should it be the most popular tree in Calgary?
+
+## Difference of Tree Condition Means - Green Ash and Other
+$$
+\begin{array}{lcc}
+               &   {\rm Stastical \ Hypothesis}\\
+{\rm H}_{0}: & \mu_{\text{Tree Condition}(Green Ash)} \leq \mu_{\text{Tree Condition}(Other)}       \\
+{\rm H}_{A}: & \mu_{\text{Tree Condition}(Green Ash)}  > \mu_{\text{Tree Condition}(Other)} 
+\end{array}
+$$
+
+- Statistical Hypothesis is based on assumption that the most popular tree would have a better overall condition than other trees
+
+## Difference of Tree Condition Means - Green Ash and Other
+- Convential confidence interval estimation of the difference between two population means
+- Conditions can be relaxed since n = 450,632
+```{r echo=FALSE}
+# T-Test Dataframe (two parameter - Green ash versus other)
+# Create a Data Frame for all Tree Condition values EXCEPT Green Ash (name them OTHER)
+total_conditions_name <- public_trees %>%
+  filter(!is.na(COMMON_NAME), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(COMMON_NAME != "GREEN ASH") # Keeps all trees except Green Ash
+total_conditions_name$COMMON_NAME <- "OTHER" # Names all trees except Green Ash "OTHER"
+
+# Create a Data Frame for all Tree Condition values for Green Ash
+GA_conditions <- public_trees %>%
+  filter(!is.na(COMMON_NAME), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(COMMON_NAME == "GREEN ASH")
+
+# Bind the two data frames together and select only Condition and Name columns
+GA_and_total_conditions <- rbind(GA_conditions, total_conditions_name)
+GA_and_total_conditions <- GA_and_total_conditions %>%
+  select(TREE_CONDITION_RATING_PERC, COMMON_NAME)
+
+# T-Test - two parameter (Green Ash mean = Other mean)
+t.test(~ TREE_CONDITION_RATING_PERC | COMMON_NAME,
+       conf.level = 0.95,
+       alternative = "greater",
+       data = GA_and_total_conditions)
+```
+
+## Difference of Tree Condition Means - Green Ash and Other
+- The P-Value in the t-test is 1
+- Cannot reject our null hypothesis
+- Average tree condition of other trees is greater than average condition of Green Ash
+- Should Green Ash be the most popular tree if the condition doesn't out perform the others?
+
+```{r include=FALSE}
+# Checks for the normality condition although this condition can be relaxed since n > 25
+ggplot(data=GA_conditions, aes(sample = TREE_CONDITION_RATING_PERC)) + stat_qq(size=2, col='blue') + stat_qq_line(col='red')
+ggplot(data=total_conditions_name, aes(sample = TREE_CONDITION_RATING_PERC)) + stat_qq(size=2, col='blue') + stat_qq_line(col='red')
+```
+
+## Difference of Tree Condition Means - Picea and Other
+- Test how average Picea condition compares against all other trees
+- Is there a reason why this is the most popular tree Genus in Calgary?
+- Should it be the most popular tree Genus in Calgary?
+
+## Difference of Tree Condition Means - Picea and Other
+$$
+\begin{array}{lcc}
+               &   {\rm Stastical \ Hypothesis}\\
+{\rm H}_{0}: & \mu_{\text{Tree Condition}(Picea)} \leq \mu_{\text{Tree Condition}(Other)}       \\
+{\rm H}_{A}: & \mu_{\text{Tree Condition}(Picea)}  > \mu_{\text{Tree Condition}(Other)} 
+\end{array}
+$$
+
+- Statistical Hypothesis is based on assumption that the most popular tree would have a better overall condition than other trees
+
+## Difference of Tree Condition Means - Picea and Other
+- Convential confidence interval estimation of the difference between two population means
+- Conditions can be relaxed since n = 450,632
+```{r echo=FALSE}
+# T-Test Dataframe (two parameter - Picea versus other)
+# Create a Data Frame for all Tree Condition values EXCEPT Picea (name them OTHER)
+total_conditions_genus <- public_trees %>%
+  filter(!is.na(GENUS), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(GENUS != "PICEA") # Keeps all trees except Picea
+total_conditions_genus$GENUS <- "OTHER" # Names all trees except Picea "OTHER"
+
+# Create a Data Frame for all Tree Condition values for Picea
+picea_conditions <- public_trees %>%
+  filter(!is.na(GENUS), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(GENUS == "PICEA")
+
+# Bind the two data frames together and select only Condition and Name columns
+picea_and_total_conditions <- rbind(picea_conditions, total_conditions_genus)
+picea_and_total_conditions <- picea_and_total_conditions %>%
+  select(TREE_CONDITION_RATING_PERC, GENUS)
+
+# T-Test - two parameter (Picea mean = Other mean)
+t.test(~ TREE_CONDITION_RATING_PERC | GENUS,
+       conf.level = 0.95,
+       alternative = "less",
+       data = picea_and_total_conditions)
+```
+
+## Difference of Tree Condition Means - Picea and Other
+- The P-Value in the t-test is less than 0.05
+- Reject our null hypothesis
+- Average tree condition of Picea is greater than average condition of other trees
+- Picea appear to be a good pick for the most popular tree Genus in Calgary!
+
+## Difference of Tree Condition Means - Large and Small trees
+- Test how average tree condition compares between Large and Small trees
+- Should Calgary be planting more Small trees?
+
+## Difference of Tree Condition Means - Large and Small trees
+$$
+\begin{array}{lcc}
+               &   {\rm Stastical \ Hypothesis}\\
+{\rm H}_{0}: & \mu_{\text{Tree Condition}(Large)} \geq \mu_{\text{Tree Condition}(Small)}       \\
+{\rm H}_{A}: & \mu_{\text{Tree Condition}(Large)}  < \mu_{\text{Tree Condition}(Small)} 
+\end{array}
+$$
+
+- Statistical Hypothesis is based on our assumption that large trees would have lower tree condition because Calgary isn't a great climate for trees
+
+## Difference of Tree Condition Means - Large and Small trees
+```{r echo=FALSE}
+# T-Test Dataframe (two parameter - Large versus Small)
+# Create a Data Frame for all Tree Condition values for Large trees
+large_conditions <- public_trees %>%
+  filter(!is.na(MATURE_SIZE), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(MATURE_SIZE == "LARGE") # Keeps all Large
+
+# Create a Data Frame for all Tree Condition values for Small trees
+small_conditions <- public_trees %>%
+  filter(!is.na(GENUS), !is.na(TREE_CONDITION_RATING_PERC)) %>%
+  filter(TREE_CONDITION_RATING_PERC <= 100) %>%
+  filter(MATURE_SIZE == "SMALL")
+
+# Bind the two data frames together and select only Condition and Name columns
+large_and_small_conditions <- rbind(large_conditions, small_conditions)
+large_and_small_conditions <- large_and_small_conditions %>%
+  select(TREE_CONDITION_RATING_PERC, MATURE_SIZE)
+
+# T-Test - two parameter (Picea mean = Other mean)
+t.test(~ TREE_CONDITION_RATING_PERC | MATURE_SIZE,
+       conf.level = 0.95,
+       alternative = "less",
+       data = large_and_small_conditions)
+```
+
+## Difference of Tree Condition Means - Large and Small trees
+- The P-Value in the t-test is 0.0297
+- Reject our null hypothesis
+- Average tree condition of small trees is greater than average condition of large trees
+- Should small trees be planted more often than large trees?
+- The mean values are very close - is it negligible?
+
+## Tree Condition vs Size (Diameter of Trunk)
+```{r echo=FALSE}
+# Tree Condition vs Diameter of Trunk
+public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), !is.na(DBH_CM)) %>%
+  filter(TREE_CONDITION_RATING_PERC < 100,
+         TREE_CONDITION_RATING_PERC > 0,
+         DBH_CM > 0) %>%
+  ggplot(aes(x = DBH_CM, y = TREE_CONDITION_RATING_PERC)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm")
+```
+
+## Tree Condition vs Size (Diameter of Trunk)
+- Coefficient of determination is very low
+- Only 0.2% of the data can be described by this linear model
+```{r echo=FALSE}
+public_trees_predict <- public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), !is.na(DBH_CM)) %>%
+  filter(TREE_CONDITION_RATING_PERC < 100,
+         TREE_CONDITION_RATING_PERC > 0,
+         DBH_CM > 0)
+predictcondition = lm(TREE_CONDITION_RATING_PERC~DBH_CM, data = public_trees_predict)
+
+# Linear model coefficients
+predictcondition$coef
+
+# R squared
+rsquared(predictcondition)
+```
+
+## Green Ash Proportion
+- Determine if there is a difference between the proportions of Green Ash in developing and developed communities
+- Does the city know that they should be planting fewer Green Ash?
+- Bootstrapping to create confidence intervals
+
+```{r Setup Green Ash Bootstrap, include=FALSE}
+# Tally and proportion of trees per community type
+name_tally <- public_trees %>%
+  filter(!is.na(COMMON_NAME), #Filters NAs from name column
+         !is.na(SRG), # Filters NAs from community type column
+         SRG != "N/A") %>% # Filters "N/A"s from community type column
+  group_by(SRG, COMMON_NAME) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  mutate(proportion = n / sum(n))
+
+# Number of Green Ash trees in "Built-Out" Communities
+X_GA_built <- pull(name_tally %>% filter(SRG == "BUILT-OUT", COMMON_NAME == "GREEN ASH"), n)
+
+# Number of Green Ash trees in "Developing" Communities
+X_GA_developing <- pull(name_tally %>% filter(SRG == "DEVELOPING", COMMON_NAME == "GREEN ASH"), n)
+
+# Total number of trees in "Built-Out" Communities
+n_built <- public_trees %>%
+  filter(!is.na(COMMON_NAME),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "BUILT-OUT") %>%
+  pull(n)
+
+# Total number of trees in "Developing" Communities
+n_developing <- public_trees %>%
+  filter(!is.na(COMMON_NAME),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "DEVELOPING") %>%
+  pull(n)
+```
+
+## Green Ash Proportion Differences
+```{r Green Ash Prop Diff, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for difference in Green Ash proportion
+GA_built_vector <- c(rep(0, n_built - X_GA_built), rep(1, X_GA_built))
+GA_developing_vector <- c(rep(0, n_developing - X_GA_developing), rep(1, X_GA_developing))
+bootstrap_GA_diff <- do(1000) * (mean(resample(GA_developing_vector, n = n_developing)) - mean(resample(GA_built_vector, n = n_built)))
+bootstrap_GA_diff_plot <- bootstrap_GA_diff %>% 
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0001) +
+  xlab("Bootstrap Statistic - Difference in Sample Proportions of Green Ash") +
+  ylab("Counts") +
+  ggtitle("Distribution - Difference in Sample Proportions of Green Ash")
+bootstrap_GA_diff_plot
+```
+
+## Green Ash Proportion Differences
+```{r Green Ash Prop Diff stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~result, data = bootstrap_GA_diff)
+mosaic::qdata(~result, c(0.025, 0.975), data = bootstrap_GA_diff)
+```
+
+## Green Ash Proportion
+- There is a clear difference between the Green Ash proportion in developing and developed communities
+- Fewer Green Ash are being planted in developing communities
+- Is it because Green Ash condition is on average less than the average overall condition of other trees?
+
+## Picea Proportion
+- Determine if there is a difference between the proportions of Picea in developing and developed communities
+- Does the city know that they should be planting more Picea?
+- Bootstrapping to create confidence intervals
+- Fewer Genus categories (fewer naming inconsistencies than common names)
+
+```{r Setup Picea Bootstrap, warning=FALSE, include=FALSE}
+# Tally and proportion of trees per community type
+genus_tally <- public_trees %>%
+  filter(!is.na(GENUS), #Filters NAs from name column
+         !is.na(SRG), # Filters NAs from community type column
+         SRG != "N/A") %>% # Filters "N/A"s from community type column
+  group_by(SRG, GENUS) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  mutate(proportion = n / sum(n))
+
+# Proportion of Picea in Developing or Built Out Communities
+
+# Number of Picea trees in "Built-Out" Communities
+X_picea_built <- pull(genus_tally %>% filter(SRG == "BUILT-OUT", GENUS == "PICEA"), n)
+
+# Number of Picea trees in "Developing" Communities
+X_picea_developing <- pull(genus_tally %>% filter(SRG == "DEVELOPING", GENUS == "PICEA"), n)
+
+# Total number of trees in "Built-Out" Communities
+n_built_genus <- public_trees %>%
+  filter(!is.na(GENUS),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "BUILT-OUT") %>%
+  pull(n)
+
+# Total number of trees in "Developing" Communities
+n_developing_genus <- public_trees %>%
+  filter(!is.na(GENUS),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "DEVELOPING") %>%
+  pull(n)
+```
+
+## Picea Proportion Differences
+```{r Picea Prop Diff, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for difference in Picea proportion
+picea_built_vector <- c(rep(0, n_built_genus - X_picea_built), rep(1, X_picea_built))
+picea_developing_vector <- c(rep(0, n_developing_genus - X_picea_developing), rep(1, X_picea_developing))
+bootstrap_picea_diff <- do(1000) * (mean(resample(picea_developing_vector, n = n_developing_genus)) - mean(resample(picea_built_vector, n = n_built_genus)))
+bootstrap_picea_diff_plot <- bootstrap_picea_diff %>% 
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0005) +
+  xlab("Bootstrap Statistic - Difference in Sample Proportions of Picea") +
+  ylab("Counts") +
+  ggtitle("Distribution - Difference in Sample Proportions of Picea")
+bootstrap_picea_diff_plot
+```
+
+## Picea Proportion Differences
+```{r Picea Prop Diff stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~result, data = bootstrap_picea_diff)
+mosaic::qdata(~result, c(0.025, 0.975), data = bootstrap_picea_diff)
+```
+
+## Picea Proportion
+- There is a clear difference between the Picea proportion in developing and developed communities
+- Fewer Picea are being planted in developing communities
+- Why is this the case? Shouldn't the city be planting more?
+- Are there other reasons for the decline in proportion of Picea?
+
+## Mature Size Proportion
+- Determine if there is a difference between the proportions of Small trees in developing and developed communities
+- Does the city know that they should be planting more small trees?
+- Bootstrapping to create confidence intervals
+
+```{r Setup Size Bootstrap, warning=FALSE, include=FALSE}
+# Tally and proportion of trees per community type
+size_tally <- public_trees %>%
+  filter(!is.na(MATURE_SIZE),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG, MATURE_SIZE) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  mutate(proportion = n / sum(n))
+
+# Proportion of Picea in Developing or Built Out Communities
+
+# Number of Small trees in "Built-Out" Communities
+X_small_built <- pull(size_tally %>% filter(SRG == "BUILT-OUT", MATURE_SIZE == "SMALL"), n)
+
+# Number of Small trees in "Developing" Communities
+X_small_developing <- pull(size_tally %>% filter(SRG == "DEVELOPING", MATURE_SIZE == "SMALL"), n)
+
+# Total number of trees in "Built-Out" Communities
+n_built_size <- public_trees %>%
+  filter(!is.na(MATURE_SIZE),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "BUILT-OUT") %>%
+  pull(n)
+
+# Total number of trees in "Developing" Communities
+n_developing_size <- public_trees %>%
+  filter(!is.na(MATURE_SIZE),
+         !is.na(SRG),
+         SRG != "N/A") %>%
+  group_by(SRG) %>%
+  tally() %>%
+  filter(SRG == "DEVELOPING") %>%
+  pull(n)
+```
+
+## Small Proportion Differences
+```{r Small Prop Diff, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for difference in Picea proportion
+small_built_vector <- c(rep(0, n_built_size - X_small_built), rep(1, X_small_built))
+small_developing_vector <- c(rep(0, n_developing_size - X_small_developing), rep(1, X_small_developing))
+bootstrap_small_diff <- do(1000) * (mean(resample(small_developing_vector, n = n_developing_size)) - mean(resample(small_built_vector, n = n_built_size)))
+bootstrap_small_diff_plot <- bootstrap_small_diff %>% 
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0005) +
+  xlab("Bootstrap Statistic - Difference in Sample Proportions of Small Trees") +
+  ylab("Counts") +
+  ggtitle("Distribution - Difference in Sample Proportions of Small Trees")
+bootstrap_small_diff_plot
+```
+
+## Small Proportion Differences
+```{r Small Prop Diff stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~result, data = bootstrap_small_diff)
+mosaic::qdata(~result, c(0.025, 0.975), data = bootstrap_small_diff)
+```
+
+## Small Proportion
+- There is a clear difference between the proportions of Small trees in developing and developed communities
+- More Small trees are being planted in developing communities
+- Is it because the condition of Small trees is on average greater than the condition of Large trees?
+- We may need to check the proportions of Medium sized trees as well to make an accurate conclusion
+
+## Conclusions
+- The City of Calgary Public Trees dataset gives us an understanding of tree condition over a variety of variables
+- The most popular tree NAME appear to have a lower average tree condition than the average tree condition of all other trees
+- The most popular tree GENUS appear to have a higher average tree condition than the average tree condition of all other trees
+- Small trees on average have a higher tree condition than large trees
+
+## Conclusions
+- The proportion of Green Ash appears to be reducing in developing communities
+
+    - Good! Based on average tree condition of Green Ash, this is a good trend.
+    
+- The proportion of Picea appears to be reducing in developing communities
+
+    - Bad! Based on average tree condition of Picea, this is not a good trend.
+    
+
+- The proportion of Small trees appears to be increasing in developing communities
+
+    - Good! Based on average tree condition of Small trees, this is a good trend.
+
+## References
+- Public Trees
+
+    - City of Calgary (2019) Public Trees [Online]. Available at: https://data.calgary.ca/Environment/Public-Trees/tfs4-3wwa (Accessed: 28 September 2019)
+Community Points
+
+    - City of Calgary (2019) Community Points [Online]. Available at: https://data.calgary.ca/Base-Maps/Community-Points/j9ps-fyst (Accessed: 28 September 2019)

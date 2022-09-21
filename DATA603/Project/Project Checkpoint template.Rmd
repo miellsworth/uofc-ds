@@ -1,0 +1,23 @@
+---
+title: "DATA 603 Project Checkpoint"
+output:
+  html_document: default
+---
+
+# Question 1: Group members
+
+  1. Mark Dodd
+  2. Raymond Wong 
+  3. Dustin Tang 
+  4. Michael Ellsworth
+
+# Question 2: Research Topic
+**If you have a research topic in mind for this project, please briefly describe the topic and any background info I may need to understand the topic.** \n
+
+
+# Question 3: Data
+**Please briefly describe the data you have (or plan to acquire) to help answer the research topic above. Include: what type of variable or variables are included (quantitative, qualitative, etc.), how the variable or variables are measured (the measurement scale), and any other general info you may have on the variable(s).**\n
+
+
+# Question 4: Data permission
+**Is this your own data set (or the data of someone in the group) or is it "open"or "shared" data?**

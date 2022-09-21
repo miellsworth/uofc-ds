@@ -1,0 +1,42 @@
+Hockey Stat Abbrev.,Hockey Stat. Name,Description
+Corsi ,Corsi ,"Any shot attempt (goals, shots on net, misses and blocks) outside of the shootout"
+CF,Corsi For,Count of Corsi for that team.
+CA,Corsi Againist,Count of Corsi against that team.
+CF%,CF%,Percentage of total Corsi in games that team played that are for that team. CF*100/(CF+CA)
+Fenwick ,Fenwick,"Any unblocked shot attempt (goals, shots on net and misses) outside of the shootout"
+FF ,Fenwick For,Count of Fenwick for that team
+FA ,Fenwick Againist,Count of Fenwick against that team.
+FF%,Fenwick Pencentage,Percentage of total Fenwick in games that team played that are for that team. FF*100/(FF+FA)
+Shots ,Any shot attempt on net (goals and shots on net) outside of the shootout,
+SF,Shots For,Count of Shots for that team
+SA,Shots Againist,Count of Shots against that team.
+Goals ,"Any goal, outside of the shootout.","Any goal, outside of the shootout."
+GF ,Goals For,Count of Goals for that team.
+GA,Goals Againist,Count of Goals against that team
+GF%,Goals For %,Percentage of total Goals in games that team played that are for that team. GF*100/(GF+GA)
+SC,Scoring Chances,Each shot attempt (Corsi) taken in the offensive zone is assigned a value based on the area of the zone in which it was recorded
+SCF,Scoring Chances For,Count of Scoring Chances for that team.
+SCA ,Scoring Chances againist,Count of Scoring Chances against that team
+SCF%,Scoring Chances %,Percentage of total Scoring Chances in games that team played that are for that team. SCF*100/(SCF+SCA)
+SH%,Shots %,Percentage of Shots for that team that were Goals. GF*100/SF
+SV%,Save %,Percentage of Shots against that team that were not Goals. 100-(GA*100/SA)
+PDO ,Not defined,Shooting percentage plus save percentage. (GF/SF)+(GA/SA)
+Hits,Hits,Count of hits for a team in a game
+PIM,Penalty Minutes,The number of penalty minutes a team gets in a game
+PowerPlayOpportunities,PowerPlayOpportunities,The number of times a team goes on the Power Play
+powerPlayGoals,powerPlayGoals,The number of goals a team scores in a game
+faceOffWinPercentage,faceOffWinPercentage,Percent of the times a team wins a faceoff
+giveaways,giveaways,The number of times a team gives away the puck
+takeaways,takeaways,The number of times a team take away the puck from the other team
+z,Zone,"For the next variables, z is a prefix for zone. There are 3 types of zones.  Zone can be HighDanger (HD), Medium Danger (MD) or Low Danger (LD)"
+zCF ,"""zone"" Chances For",Count of zone Scoring Chances for that team.
+zCA ,"""zone"" Chances Againist",Count of zone Scoring Chances against that team.
+zCF%,"""zone"" Chances For Percent","Percentage of total ""Zone"" Scoring Chances in games that team played that are for that team. HDCF*100/(HDCF+HDCA)"
+zSF ,"""zone"" Shots For","Count of Shots that are in the ""Zone"" Scoring Chances for that team."
+zSA ,"""zone"" Shots Againist","Count of Shots that are in the ""Zone"" Scoring Chances against that team."
+zSF%,"""zone"" Shots for percent","Percentage of total Shots that are in the ""Zone"" Scoring Chances in games that team played that are for that team. zSF*100/(zSF+zSA)"
+zGF ,"""zone"" Goals For","Count of Goals off of a ""Zone"" Scoring Chances for that team."
+zGA,"""zone"" Goals Againist","Count of Goals off of a ""Zone"" Scoring Chances against that team."
+zGF%,"""zone"" Goals For Percentage","Percentage of total Goals off of a ""zone"" Scoring Chances in games that team played that are for that team. zGF*100/(zGF+zGA)"
+zSH%,"""zone"" Shots Percentage","Percentage of total Shots for a ""zone"" Scoring Chances in games that team played that are for that team. zGF*100/(zGF+zGA)"
+zSV%,"""zone"" Save Percentage","Percentage of total Shots for a ""zone"" Shots for that team that were Goals. zGF*100/zSF"

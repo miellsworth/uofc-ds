@@ -1,0 +1,39 @@
+---
+title: "DATA 603 - Lecture Notes Unit 2 Part 3""
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(readxl)
+library(ISLR)
+library(pROC)
+library(aod)
+library(lmtest)
+```
+
+```{r}
+cred <- read_xlsx("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 2/creditbility.xlsx")
+glimpse(cred)
+cred$Creditability <- as.factor(cred$Creditability)
+cred$Balance <- as.factor(cred$Balance)
+```
+
+```{r}
+cred_model <- glm(data = cred, Creditability ~ Balance + Duration + employment + Amount + Age, family = "binomial")
+summary(cred_model)
+```
+
+```{r}
+cred_model_reduced <- glm(data = cred, Creditability ~ Balance + Duration + employment, family = "binomial")
+cred_model_interact <- glm(data = cred, Creditability ~ (Balance + Duration + employment)**2, family = "binomial")
+summary(cred_model_interact)
+```
+
+```{r}
+cred_model_interact_reduced <- glm(data = cred, Creditability ~ (Balance + Duration + employment + employment*Balance), family = "binomial")
+summary(cred_model_interact_reduced)
+```
+

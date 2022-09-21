@@ -1,0 +1,12 @@
+DATA 604 Lecture 6
+\mysqlsh
+\connect root@localhost:33060
+<password>
+\sql
+\use Test
+create table left_table( x int, y int);
+create table right_table(a int, b int);
+insert into left_table (x, y) values (1, 2), (3, 4);
+select * from left_table;
+insert into right_table(a, b) values (1, 3), (2, 4);
+select * from right_table;

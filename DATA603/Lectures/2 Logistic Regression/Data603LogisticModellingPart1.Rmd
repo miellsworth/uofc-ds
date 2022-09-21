@@ -1,0 +1,334 @@
+---
+title: "DATA 603 - Lecture Notes Unit 2 Part 1"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(readxl)
+library(ISLR)
+library(pROC)
+```
+
+#Data 603: Statistical Modelling with Data Logistic Regression
+
+#Part I : Introduction to the Logistic Regression Model
+
+Example: The desire data show the distribution of 24 currently married and fecund women interviewed in the Fiji Fertility Survey, according to age, education, desire for more children (wife’s perception of husband’s desire for additional children). The data are provided in desire.xlsx file
+  - X1 = age (year)
+  - X2 = education (0=none, 1=some),
+  - Y = desire for more children (0=no more, 1=more),
+
+```{r}
+desire <- read_excel("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 2/desire.xlsx")
+desire %>%
+  ggplot(aes(x = age, y = desire)) + 
+  geom_point()
+```
+
+Using linear regression model
+
+```{r}
+desire %>%
+  ggplot(aes(x = age, y = desire)) +
+  geom_point() +
+  geom_smooth() +
+  geom_smooth(method = lm, se = F)
+```
+
+```{r}
+desire %>%
+  ggplot(aes(x = age, y = desire)) +
+  geom_point() +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE)
+```
+
+The linear regression model discussed in Multiple Regression assumes that the response variable $Y$ is **quantitative**. But in many situations, the response variable is instead **qualitative**. For example, eye color is qualitative, taking qualitative on values blue, brown, or green. Often qualitative variables are referred to as categorical.
+
+What distinguishes a logistic regression model from the linear regression model is that the outcome variable in logistic regression is **binary or dichotomous**.
+
+In this topic, we study approaches for predicting qualitative responses, a process that is known as classification. Predicting a qualitative response for an observation can be referred to as classifying that observation, since it involves assigning the observation to a category, or class. On the other hand, often the methods used for classification first predict the probability of each of the categories of a qualitative variable, as the basis for making the classification. In this topic we discuss simple Logistic Regression and Multiple Logistic Regression for a qualitative binary response.
+
+## What is Logistic Regression?
+
+Logistic Regression seeks to:
+  1. Model the probability of an event occurring depending on the value of the independent variables, which can be categorical or numeral.
+  2. Estimate the probability that an event occurs for a randomly selected observation versus the probability that the event does not occur.
+  3. Predict the effect of a series of variables on a binary response variable.
+  4. Classify observations by estimating the probability that an observation is in a particular category.
+
+## Why Not Linear Regression?
+  1. **Linear regression assumptions** The linear regression model is based on an assumption that the response $Y$ is continuous, with errors are normally distributed. If the response variable is binary, this assumption is clearly violated, and so in general we might expect our inferences to be invalid.
+  2. **Predicted values may be out of range** For a binary outcome, the mean is the probability of a 1, or success. If we use linear regression to model a binary outcome it is entirely possible to have a fitted regression which gives predicted values for some individuals which are outside of the (0,1) range or probabilities.
+
+We will also illustrate the concept of classification using the simulated **Default data** set. We are interested in predicting whether an individual will default on his or her credit card payment, on the basis of annual income and monthly credit card balance. In the Default data set, the response **default** falls into one of two categories, Yes or No. Rather than modeling this response $Y$ directly, a logistic regression models the probability that $Y$ belongs to a particular category.
+
+<insert image>
+<insert image>
+
+For the Default data, logistic regression models the probability of default. For example, the probability of default given balance can be written as
+
+$$
+\begin{aligned}
+Pr(default =& Yes|balance) \\
+where \\
+balance =& \text{ the independent variable} \\
+default =& \text{ the response variable which is a binary outcome (YES/NO)}
+\end{aligned}
+$$
+
+The values of $Pr(default = Yes|balance)$, will range between 0 and 1. Then for any given value of balance, a prediction can be made for default.
+
+For example, one might predict default = Yes for any individual for whom $Pr(default = Yes|balance) > 0.5$. Alternatively, if a company wishes to be conservative in predicting individuals who are at risk for default, then they may choose to use a lower threshold, such as $Pr(default = Yes|balance) > 0.1$.
+
+## The Logistic Model
+How should we model the relationship between $p(X) = Pr(Y = 1|X)$ and $X$? (For convenience we are using the generic 0/1 coding for the response). If we use the approach $p(X) = \beta_0 + \beta_1X$ to predict default = Yes using balance, then we obtain the model shown in the left-hand panel of Figure 2.1.
+
+Here we see the problem with this approach: for balances close to zero we predict a negative probability of default; if we were to predict for very large balances, we would **get values bigger than 1**. These predictions are not sensible, since of course the true probability of default, regardless of credit card balance, must fall between 0 and 1. This problem is not unique to the credit default data. Any time a straight line is fit to a binary response that is coded as 0 or 1, in principle we can always predict $p(x) < 0$ for some values of $X$ and $p(X) > 1$ for others (unless the range of $X$ is limited). To avoid this problem, we must model $p(X)$ using a function that gives outputs between 0 and 1 for all values of $X$. Many functions meet this description.
+
+## Simple Logistic Regression Model for a Binary Dependent Variable (Quantitative independent variable)
+
+$$
+\begin{aligned}
+E(y) =& P(y = 1|X) = \frac{e^{\beta_0 + \beta_1x}}{1 + e^{\beta_0 + \beta_1x}} \\
+where \\ 
+y =& 1 \text{ if category A occurs} \\
+y =& 0 \text{ if category B occurs} \\
+E(y) =& P(\text{Category A occurs}) = \pi \\
+\end{aligned}
+$$
+
+Note that the general logistic model is not a linear function of the $\beta_1$ parameter. Obtaining the parameter estimate of a nonlinear regression model, such as the logistic model, is a numerically tedious process and often requires sophisticated computer programs. We use a method called maximum likelihood estimation,to estimate the $\beta_1$ parameter.
+
+The right-hand panel of Figure 2.1 illustrates the fit of the logistic regression model to the Default data. Notice that for low balances we now predict the probability of default as close to, but never below, zero. Likewise, for high balances we predict a default probability close to, but never above, one.
+
+The logistic function will always produce an S-shaped curve of this form, and so regardless of the value of $X$, we will obtain a sensible prediction. We also see that the logistic model is better able to capture the range of probabilities than is the linear regression mode.
+
+<insert image>
+
+Focusing on the single predictor case, if the parameter $\beta_1 > 0$ then the basic logistic regression model assumes that the probability of success is a monotonically increasing function of $X$. That is, the probability never decreases as X gets large; it stays the same or increases. if the parameter $\beta_1 < 0$ the reverse is true.
+
+Figure 3(a) shows the regression line when $\beta_1 = 1$ and $\beta_0 = 0.5$. As it is evident, curvature is allowed and predicted probabilities always have a value between 0 and 1. Figure 3(b) shows the regression line when $\beta_1 = -1$ and $\beta_0 = 0.5$. So now, the regression line is monotonically decreasing. (The predicted probability never increases).
+
+Considering the logistic Regression Model, we find that
+
+$$
+\begin{aligned}
+\frac{P(y = 1|x)}{P(y = 0|x)} =& \frac{P(y = 1|x)}{1 - P(y = 1|x)} \\
+=& \frac{\pi}{1 - \pi} \\
+=& e^{\beta_0 + \beta_1x}
+\end{aligned}
+$$
+
+The quantity $\frac{\pi}{1 - \pi}$ is called the $odds$ and can take on any value between 0 and $\infty$.
+
+##What is the odds?
+
+
+To appreciate the logistic model, it’s helpful to have an understanding of odds. Most people regard probability as the “natural” way to quantify the chances that an event will occur. We automatically think in terms of numbers ranging from 0 to 1, with a 0 meaning that the event will certainly not occur and a 1 meaning that the event certainly will occur. But there are other ways of representing the chances of event, one of which *the odds* has a nearly equal claim to being “natural.”
+
+For example,
+
+An odds of 4 means we expect 4 times as many occurrences as non-occurrences.
+
+An odds of 1/5 means that we expect only one-fifth as many occurrences as non-occurrences.
+
+In general
+
+$$
+\text{Odds} = frac{P(y = 1|x)}{1 - P(y = 1|x)} = \frac{\text{Probability of event}}{\text{Probability of no event}}
+$$
+
+<insert image>
+
+Values of the odds close to 0 and ∞ indicate very low and very high probabilities of default, respectively.
+In general,
+    - If an odds > 1, then the probability of success is higher than failure.
+    - If an odds < 1, then the probability of success is lower than failure.
+    - If an odds = 1, then the probability of success is equal for failure
+
+For more example about Default data, on average 1 in 5 people with an odds of 1/4 will default, since p(y=1|X)=0.2 implies an odds of 0.2 = 1/4.
+1−0.2
+Likewise on average nine out of every ten people with an odds of 9 will default, since p(y=1|X)=0 .9 implies an odds of 0.9 = 9.
+1−0.9
+By taking the natural logarithm of both sides of the Logistic model, we arrive at
+𝑃(𝑦 = 1|𝑥) = 𝑃(𝑦 = 1|𝑥) 𝑃(𝑦 = 0|𝑥) 1 − 𝑃(𝑦 = 1|𝑥)
+=𝜋 1−𝜋
+= 𝑒𝛽0+𝛽1𝑥
+𝑙𝑛⟮ 𝑃(𝑦=1|𝑥) ⟯ =𝛽0+𝛽1𝑥−−−−−∗ 1−𝑃(𝑦 = 1|𝑥)
+The * is called the log-odds or the logit.
+
+This transformation is useful because it creates a variable with a range from −∞ to +∞. Hence, this transformation solves the problem we encountered in fitting a linear model to probabilities. Because probabilities (the dependent variable) only range from 0 to 1, we can get linear predictions that are outside of this range. If we transform our probabilities to logits, then we do not have this problem because the range of the logit is not restricted. In addition, the interpretation of logits is simple-take the exponential of the logit and you have the odds for the two groups in question.
+
+## Fitting the Logistic Regression Model
+In linear regression, the method used to estimate 𝛽𝑖 is least square. In that method we choose those values of 𝛽0, 𝛽1, . . . 𝛽𝑝 which minimize the sum of squared residuals. In logistic regression, we estimate 𝛽𝑖 by maximimizing the log likelihood expression.
+In this class, we will use R software to calculate the regression coefficients, so we do not need to concern with the details of the maximum likelihood fitting precedure.
+For example, using Default data to predict the probability of default using balance.
+
+```{r}
+library(ISLR)
+summary(Default)
+mylogit <- glm(default ~ balance, data = Default, family = "binomial")
+coefficients(mylogit)
+```
+
+The output shows the coefficient estimates and related information that result from fitting a logistic regression model on the Default data. The maximum likelihood estimates of 𝛽0
+̂̂
+and 𝛽 are 𝛽 =-10.6513 and 𝛽 =0.0055. Therefore,
+101
+The estimated logistic regression model is
+
+
+
+## A confidence Interval for the Logit
+A $100(1-\alpha)%$ confidence interval for $\beta_1$ would be:
+
+```{r}
+mylogit <- glm(default ~ balance, data = Default, family = "binomial")
+confint(mylogit)
+```
+
+## Interpretations of Logistic Regression Coefficients in the Logistic Model (Quantitative independent variable)
+
+In general, the coeffcient 𝛽 in the logistic model estimates the change in the log-odds
+(same concept as linear regression). For example, from the default output,
+̂
+𝛽 = 0.0055. This indicates that an increase in balance is associated with an increase in the
+probability of default. To be precise,
+a one-unit increase in balance is associated with an increase in the log odds of default by 0.0055 units or
+For every $1 increase in balance, we estimate the log odds of a default increase by 0.0055. What does it really mean??
+
+By computing 𝑒𝛽1 (antilog of the coefficient) , so we interpret in terms of the odds.
+̂
+𝛽1 = 0.0055
+̂
+𝑒𝛽1 = 𝑒0.0055 = 1.0055
+For every 1 dollar increases in balance, we estimate the odds of a default to be multiplied by about 1.005 i.e. there is an increase of 0.5% [=(1.005-1)*100%] of the odds of a default.
+
+Note! R funtion to calculate the antilog for 𝛽𝑖 is provided belo
+
+```{r}
+mylogit <- glm(default ~ balance, data = Default, family = "binomial")
+sum.coef<-summary(mylogit)$coef
+est<-exp(sum.coef[,1])
+print(est)
+```
+
+Note! R funtion to calculate the antilog for a confidence Interval for 𝛽𝑖 is provided below,
+
+```{r}
+mylogit <- glm(default ~ balance, data = Default, family = "binomial")
+est<-exp(confint(mylogit))
+print(est)
+```
+
+### Inclass Practice Problem 1
+*The desire data, showing the distribution of 24 currently married and fecund women interviewed in the Fiji Fertility Survey, according to age, education, desire for more children. the data are provided in desire.xlsx file*
+    - X1= age (year)
+    - X2= education (0=none, 1=some),
+    - Y= desire for more children (0=no more, 1=more),
+
+a) Fit the Logistic Regression Model to predict the probability of desire for more children using age.
+
+```{r}
+logit1 <- glm(desire ~ age, data = desire, family = "binomial")
+coefficients(logit1)
+```
+
+
+## Testing For The Significance of The Coefficients
+
+After estimating the coefficients, there are several steps involved in assessing the appropriateness, adequacy and usefulness of the model. Firstly, the importance of each of the explanatory variables is assessed by carrying out statistical tests of the significance of the coefficients. Secondly ,the overall goodness of fit of the model is then tested. Lastly, the model fit or the ability of the model to discriminate between the two groups defined by the response variable is evaluated.
+
+## Model Fit in Logistic Regression Model
+In linear regression, $R^2$ is a very useful quantity, describing the fraction of the variability in the response that the explanatory variables can explain There are a number of ways one can define an analog to $R^2$ in the logistic regression case, but none of them are as widely useful as $R2$ in linear regression. To evaluate the performance of a logistic regression model, you would work on, always look for:
+
+### 1. Deviance
+Deviance is a measure of goodness of fit of a generalized linear model (GLM). Or rather, R software reports two forms of deviance
+    - the null deviance and the residual deviance. The null deviance shows how well the response variable is predicted by a model that includes only the intercept.
+    - the residual deviance indicates how well the response is predicted by the model with independent variables.
+
+For our example, we have a value of 2920.6 points on 9999 degrees of freedom. Including the independent variable (balance) decreased the deviance to 1596.5 points on 9998 degrees of freedom, a significant reduction in deviance.
+
+The Residual Deviance has reduced by 1324.1 points with a loss of one degrees of freedom.
+
+### 2. AIC (Akaike Information Criteria)
+The Akaike Information Criterion (AIC) provides a method for assessing the quality of your model through comparison of related models. It’s based on the Deviance.
+However, unlike adjusted R-squared, the number itself is not meaningful. If you have more than one similar candidate models (where all of the variables of the simpler model occur in the more complex models), then you should select the model that has the smallest AIC, so it’s useful for comparing models, but isn’t interpretable on its own.
+
+Note!
+
+Fisher’s scoring algorithm is a derivative of Newton’s method for solving maximum likelihood problems numerically.
+
+### 3. ROC curve
+ROC stands for **Receiver Operating Characteristic**. To explain the ROC curve, we need to
+understand the important notions of sensitivity and specificity of a test or prediction rule.
+
+Sensitivity and specificity
+
+The sensitivity is defined as the probability of the prediction rule or model predicting an observation as ‘positive’ given that in truth (Y=1). In words, the sensitivity is the proportion of truly positive observations which is classified as such by the model or test. Conversely The specificity is the probability of the model predicting ‘negative’ given that the observation is ‘negative’ (Y=0).
+
+A model needs to not only correctly predict a positive as a positive, but also a negative as a negative.
+
+Our model or prediction rule is perfect at classifying observations if it has 100% sensitivity and 100% specificity. Unfortunately in practice this is (usually) not attainable. So how can we summarize the discrimination ability of our logistic regression model?
+
+The ROC curve does this by plotting the true positive rate (sensitivity), the probability of predicting a real positive will be a positive, against false positive rate (1-specificity), the probability of predicting a real negative will be a positive. The best decision rule is high on sensitivity and low on 1-specificity. It’s a rule that predicts most true positives will be a positive and few true negatives will be a positive.
+
+How to explore the ROC curve
+
+<insert image>
+
+    1. The further the curve is from the diagonal line, the better the model is at discriminating between positives and negatives in general.
+    2. There are useful statistics that can be calculated from this curve, the Area Under the Curve (AUC). This tells us how well the model predicts the probability of $Y$.
+
+### Inclass Pratice Problem 2
+From the default data,
+    a. write both the logistic regression model of Default on Income and the logit transformation of this logistic regression model.
+    b. Interpret the logistic regression coefficient $e^{\hat{\beta_1}}$ in logistic model
+    c. Test if The probability of default depends on Income at $/alpha = 0.05$
+    d. Find a 95% Confidence Interval for the logistic regression coefficient $e^{\hat{\beta_1}}$
+    e. Use the method of Model Fit in Logistic Regression Model to evaluate the performance of a logistic regression model
+    f. Predict the probability of default when Income = 60,000 dollars. Would you consider a person with $60,000 income defaults on payment?
+
+```{r}
+balancelogit <- glm(default ~ income, data = Default, family = "binomial")
+summary(balancelogit)
+```
+
+Logistic regression and logit model:
+$$
+\begin{aligned}
+\hat{\pi} =& \frac{e^{\beta_0 + \beta_1x}}{1 + e^{\beta_0 + \beta_1x}} \\
+\hat{\pi} =& \frac{e^{-3.09 - 0.00000835x}}{1 + e^{-3.09 - 0.00000835x}} \\
+\widehat{\text{logit}} =& -3.09 - 0.00000835x
+\end{aligned}
+$$
+
+b.
+```{r}
+exp(-0.00000835)
+```
+
+d.
+```{r}
+exp(confint(balancelogit))
+```
+
+e.
+```{r}
+prob <- predict(balancelogit, type = c("response"))
+```
+
+```{r}
+discrim <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 2/DISCRIM.csv")
+discrim$GENDER <- as.factor(discrim$GENDER)
+discrim$HIRE <- as.factor(discrim$HIRE)
+discrim_logit <- glm(data = discrim, HIRE ~ GENDER, family = "binomial")
+summary(discrim_logit)
+exp(1.7918)
+```
+
+
+

@@ -1,0 +1,757 @@
+---
+title: "Data 602 - Assignment Four"
+author: "Michael Ellsworth, ID 30101253"
+output:
+  html_document:
+    df_print: paged
+date: "October 7, 2019"
+---
+
+```{r include=FALSE}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(mosaic)
+library(mosaicData)
+library(ISLR)
+```
+
+
+
+###Question 1 
+*A pharmaceutical company conducted an experiment to compare the mean amount of time (in days) necessary for a patient to recover from the effects and complications that follow the onset of the common cold. In this experiment,  thirty-one healthy females between the ages of 25 and 34 years of age were randomly divided into two groups.*
+
+*In the first group, *$n_{VitC} = 15$ *females received a daily dose of 500 milligrams of Vitamin C. The second group consisted of* $n_{Placebo} = 16$ *females, each of which was given a **placebo**, or rather a "fake" Vitamin C tablet.  The recovery time - the time until the common cold symptoms had disappeared - for each of the thirty-one females was observed (in days). The data are provided below.*
+
+**Received 500 mgs of Vitamin C:** 6,  7, 7,  7,  8,  7,  7,  8,  7,  8, 10,  6,  8,  5,  6
+
+**Received a placebo:**  10, 12,  8,  6,  9,  8, 11,  9, 11,  8, 12, 11,  9,  8, 10,  9
+</br>
+</br>
+
+#### a.
+*Do these data indicate that the recovery time is quicker with Vitamin C than without? Carry out the appropriate statistical test with a permutation test. Ensure you show "where" your permutation test statistic lies on the distribution. Report your *$P$*-value and your statistical inference.*
+
+
+$$
+H_0 : \mu_{vitc} = \mu_{placebo} \\
+H_A : \mu_{vitc} < \mu_{placebo}
+$$
+
+
+```{r}
+vitc <- c(6, 7, 7, 7, 8, 7, 7, 8, 7, 8, 10, 6, 8, 5, 6)
+placebo <- c(10, 12, 8, 6, 9, 8, 11, 9, 11, 8, 12, 11, 9, 8, 10, 9)
+n_vitc <- length(vitc)
+n_placebo <- length(placebo)
+grouped <- c(rep("vitc", n_vitc), rep("placebo", n_placebo))
+rectime <- c(vitc, placebo)
+df_rectime <- data.frame(grouped, rectime)
+n_df_rectime <- nrow(df_rectime)
+
+xbar_vitc <- mean(~ rectime, data = filter(df_rectime, grouped == "vitc"))
+xbar_placebo <-  mean(~ rectime, data = filter(df_rectime, grouped == "placebo"))
+
+# Difference of average vitamin C recovery time and average placebo recovery time
+obsdiff_1a <- xbar_vitc - xbar_placebo
+N = as.numeric(10000 - 1)
+outcome_1a = numeric(N)
+for(i in 1:N){
+  index = sample(n_df_rectime, n_vitc, replace = FALSE)
+  outcome_1a[i] = mean(rectime[index]) - mean(rectime[-index])
+}
+
+data.frame(outcome_1a) %>%
+  ggplot(aes(x = outcome_1a)) +
+  geom_histogram(binwidth = 0.5) +
+  geom_vline(xintercept = c(obsdiff_1a))
+
+#P-Value
+sum(outcome_1a < obsdiff_1a) / N
+```
+
+*$P$*-value is $\approx$ 0.0001 which means the null hypothesis is rejected. The mean recovery time with Vitamin C is quicker than the mean recovery time with a placebo.
+
+
+#### b.
+*Re-test your statistical hypothesis in part (a) using the *$t$*-test. In doing so, state any assumptions about these data or conditions you are imposing on these data and conduct the necessary diagnostics to either confirm or refute such assumptions. Ensure you provide both the *$P$*-value and its interpretation related to these data.*
+
+```{r}
+t.test(rectime ~ grouped, alternative = "greater", data = df_rectime)
+```
+
+In this case, the t test is calculating $\mu_{placebo} - \mu_{vitc}$ which means the alternative hypothesis we need to set-up in the t test is "greater" or in other words, $H_A : \mu_{placebo} > \mu_{vitc}$ which is the same as the alternative hypothesis stated previously.
+
+Based on the results from the t test, the value for $T_\text{Obs}$ = 4.445 and the $P$-Value is $P(T_{27} > 4.445)$ = 0.000067.
+
+Since the *$P$*-value is $= 0.000067$, we can reject the null hypothesis. The mean recovery time with Vitamin C is quicker than the mean recovery time with a placebo.
+
+Given that the samples are small, the normality should be checked with a normal probability plot:
+
+```{r}
+df_rectime %>%
+  filter(grouped == "vitc") %>%
+  ggplot(aes(sample = rectime)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Vitamin C Recovery Time")
+
+df_rectime %>%
+  filter(grouped == "placebo") %>%
+  ggplot(aes(sample = rectime)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Placebo Recovery Time")
+```
+
+Based on the above plots, both the Vitamin C and Placebo recovery time are relatively normal.
+
+</br>
+</br>
+
+### Question 2
+*In a 1988[^1] case , **McCleskey v. Zant**, lawyers for the defendent demonstrated that amongst all African-American convicted murderers in the state of Georgia, 35% were found guilty of killing caucasians and 6% of those who killed African-Americans received the death penalty. As a result, the lawyers claimed that racial discrimination was a factor in sentencing. This was contested by lawyers for the State of Georgia. They argued that "murders of black victims were more likely to be unaggravated bar-room brawls, liquor-induced arguments, or lovers quarrels" - crimes that rarely result in a death sentence. But, amongst white-victims, there was a higher proportion of killings committed in the course of an armed robbery or involving torture - which more often result in death sentences.*
+
+*The table below summarizes data for all African-American convicted murders in Georgia, resulting from difference categories of crime. (For example, Agggravation Level 1 consists of bar-room brawls, liquor-induced arguments, etc., Aggravation Level 6 includes the most vicious, cold-blooded, unprovoked crimes).*
+
+$$
+\begin{array}{lcc}
+                    & \text{Sentenced to Death} &  \text{Not Sentenced to Death}  \\
+\text{Victim was Caucasian}   & 45            & 85                 \\
+\text{Victim was African-American}   & 14            & 218                 \\
+\end{array}
+$$
+
+
+###a.
+*Visualize these data with a bar-graph (see Assignment One) that appropriately summarizes these counts.*
+
+```{r}
+df_2a <- data.frame(race = c("Caucasian", "African American", "Caucasian", "African American"),
+                    death = c("Yes", "Yes", "No", "No"),
+                    value = c(45, 14, 85, 218))
+df_2a %>%
+  ggplot(aes(x = race, y = value, fill = death)) +
+  geom_col() +
+  ylab("Number of sentences") +
+  xlab("Race of victim") +
+  labs(fill = "Defendant received death sentence") +
+  theme(legend.position = "bottom")
+```
+
+
+
+####b.
+*Do these data suggest that the race of the victim does appear to affect whether an African-American convicted of murder in Georgia will receive a death sentence? Interpret your findings. Should you reject the null hypothesis, provide an interval with 95% coverage/confidence.*
+
+The statistical hypotheses is:
+
+
+$$
+H_0 :p_\text{Death sentence when victim is African American} = p_\text{Death sentence when victim is Caucasian} \\
+H_A :p_\text{Death sentence when victim is African American} \not= p_\text{Death sentence when victim is Caucasian}
+$$
+
+
+```{r}
+prop.test(c(45, 14), c(45 + 85, 14 + 218), correct = FALSE)
+```
+
+
+Based on the prop test, these data suggest that the race of the victim does appear to affect whether an African-American convicted of murder in Georgia will receive a death sentence. This is based on a $P$-value of almost 0 which is much less than 0.05. We can reject the null hypothesis
+
+
+Based on the prop test, the 95% confidence interval for $p_{AA} - p_{C}$ is: 
+$$
+0.198 \leq p_{AA} - p_{C} \leq 0.373
+$$
+
+
+[^1]:https://caselaw.findlaw.com/us-supreme-court/499/467.html
+
+</br>
+</br>
+
+
+###Question 3
+*The data appearing in this [file](http://people.ucalgary.ca/~jbstall/DataFiles/CloudSeedingData.csv) were collected in southern Florida between 1968 and 1972 to test the claim that a massive injection of silver iodide into cumulus clouds can lead to increased rainfall[^2]. On each of 52 days that were deemed suitable for cloud seeding, a random mechanism was used to decide whether to seed the target cloud on that day or to leave it unseeded as a control. An airplane flew through the cloud in **both instances**, since the experimenters and the pilot were themselves unaware of whether on a particular day the seeding mechanism in the plane was loaded or not.*
+</br>
+</br>
+*Precipitation was measured as the total rain volume falling from the cloud base following the airplane seeding run, as measured by radar. Did cloud seeding have an effect on rainfall in this experiment? If so, by how much?*
+
+####a. 
+*Carry out the **appropriate** statistical method that will investigate if, on average, cloud seeding does have an effect on rainfall. Should you find an effect, provide a 95% interval that will capture the amount of this effect. Ensure that your choice of statistical method is justified.*
+
+
+In order to test if the cloud seeding has an effect on rainfall, the following hypothesis was set up:
+
+
+$$
+H_0 : \mu_\text{seeded} = \mu_\text{unseeded} \\
+H_A : \mu_\text{seeded} > \mu_\text{unseeded}
+$$
+
+
+```{r}
+rainfall <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/CloudSeedingData.csv")
+t.test(RAINFALL ~ TREATMENT, alternative = "greater", data = rainfall)
+```
+
+
+Based on the results from the t test, the value for $T_\text{Obs}$ = 1.9982 and the $P$-Value is $P(T_{34} > 1.9982)$ = 0.02689. From the calculated $P$-Value, we can reject the null hypothesis and conclude that average rainfall increases when the clouds are seeded.
+
+
+The 95% confidence interval for $\mu_\text{seeded} - \mu_\text{unseeded}$ is:
+
+$$
+42.63 \leq \mu_\text{seeded} - \mu_\text{unseeded} \leq Inf
+$$
+
+
+In order to check if the t-test can be used as the statistical method, normal probability plots are created below:
+
+
+```{r}
+rainfall %>%
+  filter(TREATMENT == "SEEDED") %>%
+  ggplot(aes(sample = RAINFALL)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Seeded Rainfall")
+
+rainfall %>%
+  filter(TREATMENT == "UNSEEDED") %>%
+  ggplot(aes(sample = RAINFALL)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Unseeded Rainfall")
+```
+
+
+One could argue that this data does not appropriately follow a normal distribution but since $n_\text{seeded}$ and $n_\text{unseeded}$ are greater than 25, the normality condition can be relaxed and a t-test can be applied in this case.
+
+
+```{r}
+n_seeded <- rainfall %>%
+  filter(TREATMENT == "SEEDED") %>%
+  nrow()
+n_unseeded <- rainfall %>%
+  filter(TREATMENT == "UNSEEDED") %>%
+  nrow()
+n_seeded
+n_unseeded
+```
+
+
+With that being said, since the normality conditions are not met and the sample size is fairly close to 25, we should confirm our result with a permutation test as this test does not have any conditions and is a more appropriate statistical test in this case.
+
+
+```{r}
+xbar_seeded <- mean(~ RAINFALL, data = filter(rainfall, TREATMENT == "SEEDED"))
+xbar_unseeded <- mean(~ RAINFALL, data = filter(rainfall, TREATMENT == "UNSEEDED"))
+
+# Difference of average vitamin C recovery time and average placebo recovery time
+obsdiff_3a <- xbar_seeded - xbar_unseeded
+N_3a = as.numeric(10000 - 1)
+outcome_3a = numeric(N_3a)
+for(i in 1:N_3a){
+  index = sample(nrow(rainfall), n_seeded, replace = FALSE)
+  outcome_3a[i] = mean(rainfall$RAINFALL[index]) - mean(rainfall$RAINFALL[-index])
+}
+
+data.frame(outcome_3a) %>%
+  ggplot(aes(x = outcome_3a)) +
+  geom_histogram() +
+  geom_vline(xintercept = c(obsdiff_3a))
+
+#P-Value
+sum(outcome_3a > obsdiff_3a) / N_3a
+```
+
+
+Again, based on the $P$-value of 0.024 calcaulted above, we can reject the null hypothesis and conclude that average rainfall increases when the clouds are seeded. This permutation test confirms this and is the more appropriate statistical test in this case.
+
+####b.
+*You wish to test that the standard deviation in the rainfall amounts, in this case measured in acre-feet (the volume of water required to cover 1-acre of land with depth of 1-foot of water), between clouds that are seeded and unseeded is the same. Test this by carrying out a permutation test.*
+*(Hint: Review and consider your findings from Assignment 3, Question 2.)*
+
+The hypothesis test in this question is as follows:
+$$
+H_0 : \sigma_\text{seeded} = \sigma_\text{unseeded} \\
+H_A : \sigma_\text{seeded} \not= \sigma_\text{unseeded}
+$$
+
+```{r}
+sd_seeded <- sd(~ RAINFALL, data = filter(rainfall, TREATMENT == "SEEDED"))
+sd_unseeded <-  sd(~ RAINFALL, data = filter(rainfall, TREATMENT == "UNSEEDED"))
+
+# Difference of average vitamin C recovery time and average placebo recovery time
+obsratio_3b <- sd_seeded / sd_unseeded
+N = as.numeric(10000 - 1)
+outcome_3b = numeric(N)
+for(i in 1:N){
+  index = sample(nrow(rainfall), n_seeded, replace = FALSE)
+  outcome_3b[i] = sd(rainfall$RAINFALL[index]) / sd(rainfall$RAINFALL[-index])
+}
+
+data.frame(outcome_3b) %>%
+  ggplot(aes(x = outcome_3b)) +
+  geom_histogram() +
+  geom_vline(xintercept = c(obsratio_3b, obsratio_3b**(-1)))
+
+#P-Value
+(sum(outcome_3b < obsratio_3b**(-1)) + sum(outcome_3b > obsratio_3b)) / N
+```
+
+The $P$-value is greater than 0.05 which means we cannot reject the null hypothesis. We can assume the standard deviations of both populations is the same.
+
+
+####c.
+*Consider the following **statistical result**:*
+</br>
+</br>
+$\widetilde{X}_{1}$* and *$\widetilde{X}_{2}$* are medians computed from a random sample of *$n_{1}$*-items observed from Population 1 and *$n_{2}$*-items observed from Population 2. Consider the **transformed** data *$ln(X_{i})$* for *$i = 1, 2$*. If such **log**-transformed data produced symmetric distributions, then the following relationships hold:*
+
+*1. *$\overline{ln(X_{i})} = \widetilde{ln(X_{i})}$*, and since the *$ln$* transformation preserves the order of the data*
+
+*2. *$\widetilde{ln(X_{i})} = ln(\widetilde{X_{i}})$
+
+
+*This states that the **population median** of the log-transformation of the original data is the log of the **median** of the original/untransformed data. A result of this is that*
+
+
+$$
+\overline{ln(X_{1})} - \overline{ln(X_{2})} \:\:\:\: \text{estimates} \:\:\:\: ln\left(\frac{\widetilde{\mu}_{1}}{\widetilde{\mu}_{2}} \right)
+$$
+
+
+*Use this result to estimate how **many more times** as large is the median rainfall from seeded clouds as the median rainfall from unseeded clouds.*
+
+$$
+\overline{ln(X_\text{seeded})} - \overline{ln(X_\text{unseeded})} = ln(441.9846) - ln(164.5885) \\
+ln\left(\frac{\widetilde{\mu}_\text{seeded}}{\widetilde{\mu}_\text{unseeded}} \right) = 0.988 \\
+\frac{\widetilde{\mu}_\text{seeded}}{\widetilde{\mu}_\text{unseeded}} = 2.685
+$$
+
+```{r}
+log(441.9846) - log(164.5885)
+exp(log(441.9846) - log(164.5885))
+```
+
+
+From this result, we can estimate that the median rainfall from seeded clouds is 2.685 times larger than the median rainfall from unseeded clouds.
+
+[^2]: https://www.jstor.org/stable/1268346?seq=1#metadata_info_tab_contents
+
+</br>
+</br>
+
+###Question 4
+*Is there a remedy for male pattern baldness? Minoxidil - a compound that claimed to cure male pattern baldness - was investigated in a large experimental study where 619 males demonstrating male pattern baldness were randomly split into two groups: One group of males were to receive topical minoxidil, the other were to receive an identical-appearing placebo. Preliminary results produced the following: Of the 310 males who received the topical minoxidil, 99 demonstrated new hair growth. Of the 309 who received the placebo, 62 demonstrated new hair growth.*
+```{r}
+mino <- 310
+mino_growth <- 99
+placebo_4 <- 309
+placebo_4_growth <- 62
+```
+
+</br>
+</br>
+*Do these data suggest that minoxidil is effective in treating male pattern baldness (or stimulates new hair growth)? Carry out the appropriate statistical test. In your findings, ensure you provide your statistical hypotheses, *$P$*-value and its interpretation, and a confidence interval using an appropriate statistical method should you deem this to be necessary.*
+$$
+H_0 :p_\text{hair growth with Minoxidil} = p_\text{hair growth with placebo} \\
+H_A :p_\text{hair growth with Minoxidil} > p_\text{hair growth with placebo}
+$$
+
+
+```{r}
+prop.test(c(mino_growth, placebo_4_growth), c(mino, placebo_4), correct = FALSE, alternative = "greater")
+```
+
+
+From the proportion test above, the calculated $P$-Value is 0.0003811 which is less than 0.05 and suggests that we can reject our null hypothesis and conclude that the proportion of people with noticeable hair growth is larger if they were given Minoxidil versus a placebo. These data do suggest that Minoxidil is effective in treating male baldness.
+
+
+The 95% confidence interval for $p_\text{hair growth with Minoxidil} - p_\text{hair growth with placebo}$ is:
+
+$$
+0.0612 \leq p_\text{hair growth with Minoxidil} - p_\text{hair growth with placebo} \leq 1
+$$
+
+</br>
+</br>
+
+
+###Question 5
+*A study conducted by Youmans and Jee[^3] looked at students who took a research methods class in psychology. Two lecture sections of the same course were taught by the same instructor.  Students in each lecture section were required to register in one of two Friday afternoon discussion sections, or a  tutorial. During the ninth week of instruction, all students were asked to fill out an informal midsemester evaluation in their Friday afternoon discussion session.*
+
+*In half of the Friday afternoon discussion sections, the experimenter (not the professor/instructor!) passed around a bag containing small bars of chocolate that he simply had 'left-over' and 'wanted to get rid of'  so that students would not think the chocolate was a gift from their professor/instructor. The evaluation was a survey that contained nine questions. For each question the student provided a rating from 1 (very poor) to 5 (excellent).*
+
+*Question 9 posed the following:*
+
+</br>
+<center>
+**``Compared to other instructors you have had at this university, this instrutor is:''   1 (very poor) to 5 (excellent)**
+</center>
+</br>
+
+*Complements to the authors, they have provided me with the data in this particular study. In the [file](http://people.ucalgary.ca/~jbstall/DataFiles/chocnochocratings.csv) you will find the raw data providing the student responses for Question 9 (**Q9**) and the overall average response for Questions 1 through 9 (**Overall**) for each student.*
+
+####a.
+*Pertaining to Question 9: Do these data suggest there is a treatment effect? Test the existance of a treatment effect using a permutation test. If a treatment effect is discovered, explain its meaning in the context of these data.*
+
+If there is a treatment effect, than the average score on Question 9 will be greater for the group given chocolate than the group not given chocolate. This hypothesis is outlined below:
+
+
+$$
+{\rm H}_{0}: \mu_{C} = \mu_{NC} \\
+{\rm H}_{A}: \mu_{C} > \mu_{NC}
+$$
+
+
+```{r}
+responses <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/chocnochocratings.csv")
+xbar_choc <- mean(~ Q9, data = filter(responses, GroupName == "Chocolate"))
+xbar_nochoc <-  mean(~ Q9, data = filter(responses, GroupName == "NOChoc"))
+n_choc <- responses %>% filter(GroupName == "Chocolate") %>% nrow()
+n_nochoc <- responses %>% filter(GroupName == "NOChoc") %>% nrow()
+
+# Difference of average vitamin C recovery time and average placebo recovery time
+obsdiff_5a <- xbar_choc - xbar_nochoc
+N = as.numeric(10000 - 1)
+outcome_5a = numeric(N)
+for(i in 1:N){
+  index = sample(nrow(responses), n_choc, replace = FALSE)
+  outcome_5a[i] = mean(responses$Q9[index]) - mean(responses$Q9[-index])
+}
+
+data.frame(outcome_5a) %>%
+  ggplot(aes(x = outcome_5a)) +
+  geom_histogram() +
+  geom_vline(xintercept = c(obsdiff_5a))
+
+#P-Value
+sum(outcome_5a > obsdiff_5a) / N
+```
+
+
+Based on the results from the permutation, the $P$-Value is $\approx 0.111$.
+
+
+Since the $P$-Value is not less than 0.05, we cannot reject the null hypothesis. The chocolate does not affect the answer of Question 9 meaning the average score on Question 9 for the chocolate and non-chocolate group is the same.
+
+
+
+####b.
+*Consider the variable **Overall**. Is there a treatment effect with respect to the professor's overall rating as a teacher? Apply the *$t$*-test to these data. Interpret the meaning of the *$P$*-value.*
+
+
+If there is a treatment effect, than the average Overall score will be greater for the group given chocolate than the group not given chocolate. This hypothesis is outlined below:
+
+
+$$
+{\rm H}_{0}: \mu_{C} = \mu_{NC} \\
+{\rm H}_{A}: \mu_{C} > \mu_{NC}
+$$
+
+
+```{r}
+t.test(Overall ~ GroupName, alternative = "greater", data = responses)
+```
+
+The $P$-Value $= 0.04993$
+
+The $P$-Value in this case suggests that the difference in average Overall scores for the group given the chocolate is higher than the average Overall scores for the group not given chocolate. We can reject the null hypothesis and conclude that the average Overall score is higher for the group given chocolate.
+
+
+####c.
+*Consider the test suggested in part (a). Why would a *$t$*-test not be a recommended statistical method to carry out the test in part (a)? Explain your answer in a few sentences.*
+
+
+```{r}
+responses %>%
+  filter(GroupName == "Chocolate") %>%
+  ggplot(aes(sample = Q9)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Overall Rating given by group given Chocolate")
+
+responses %>%
+  filter(GroupName == "NOChoc") %>%
+  ggplot(aes(sample = Q9)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Overall Rating given by group not given Chocolate")
+```
+
+Based on the normal probability plot plotted above, it is difficult to suggest that the points follow a relatively straight line. Since this condition is not met, the t-test would not be a suitable statistical method to determine if there is a treatment affect to Question 9 **IF** the sample size was less than 25 for each group.
+
+Since the sample size in each group is greater than 25 in our case, this condition can be relaxed and the t-test can be used as a suitable statistical method to determine if there is a treatment affect.
+
+However, since the t test still requires conditions to be met, a permutation test is **recommended** as it does not require any conditions.
+
+
+[^3]:Fudging the Numbers: Distributing Chocolate Influences Student Evaluations in an Undergraduate Course, *Teaching of Psychology*, Volume 34, Number 7, pgs.~45 - 247, 2007.
+
+</br>
+</br>
+
+###Question 6
+*The Capital Asset Price Model (CAPM) is a financial model that attempts to predict the rate of return on a financial instrument, such as a common stock, in such a way that it is linearly related to the rate of return on the overal market. Specifically*
+
+
+$$
+R_{StockA,i} = \beta_{0} + \beta_{1}R_{Market, i} + e_{i}   
+$$
+
+
+*You are to study the relationship between the two variables and estimate the above model:*
+
+$R_{StockA, i}$* - rate of return on Stock A for month *$i$*, *$i = 1, 2, \cdots, 59$
+
+$R_{Market, i}$* - market rate of return for month *$i$*, *$i = 1, 2, \cdots, 59$
+
+
+$\beta_{1}$ *represent's the stocks `beta' value, or its **systematic risk**. It measure's the stocks volatility related to the market volatility.* $\beta_{0}$ *represents the risk-free interest rate.*
+
+
+*The data appearing in the* [file](http://people.ucalgary.ca/~jbstall/DataFiles/capm.csv) *contains the data on Suncor's rate of return and the Toronto Composite Index rate of return for 59 randomly selected months.* 
+
+
+*Therefore* $R_{SUNCOR, i}$ *represents the monthly rate of return for a common share of Suncor stock;* $R_{TSE, i}$ *represents the monthly rate of return (increase or decrease) of the TSE Index for the same month, month* $i$
+
+
+*The first column in this data file contains the monthly rate of return on Suncor stock; the second column contains the monthly rate of return on the TSE index for the **same month**.*
+
+*Read this data into R Studio and answer the questions posed below.*
+
+```{r}
+capmdata <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/capm.csv")
+head(capmdata, 6)  #to get a sense of what the data look like
+```
+
+**Note: You will be returning to this exercise for your fifth assignment.** 
+
+
+####a.
+*Appropriately visualize these data. What can you infer from your graph? Provide a brief commentary.*
+```{r}
+capmdata %>%
+  ggplot(aes(x = TSE.Index, y = Suncor)) +
+  geom_point() +
+  stat_smooth(method = "lm") +
+  xlab("Monthly rate of return of the TSE Index") +
+  ylab("Monthly rate of return for a common share of Suncor stock")
+```
+
+There appears to be a general trend in the month rate of return for the Suncor share and the TSE Index. As the TSE Index increases, so does the Suncor share. As the TSE Index decreases, so does the Suncor share.
+
+###b.
+*Estimate the model above.* 
+```{r}
+predict_suncor <- lm(Suncor ~ TSE.Index, data = capmdata)
+summary(predict_suncor)
+```
+
+Based on the results from the lm function above, the model is estimated below:
+
+
+$$
+\widehat{R}_{StockA,i} = 0.0166 + 0.5387*R_{TSE, i}
+$$
+
+
+####c.
+*In the context of these data, interpret the meaning of your estimates of *$\beta_{0}$* and *$\beta_{1}$*, in the context of these data.*
+
+The least-squares estimate of the $Y$-intercept of the model is:
+
+
+$$
+\beta_{0} = \overline{Y} - (\beta_{1}*\overline{X}) = 0.01664794
+$$
+
+
+In the context of these data, when the monthly rate of return for the TSE Index is 0, the average monthly rate of return for the Suncor share is 0.0166%.
+
+
+The least-squares estimate of the slope of the model is
+$$
+\beta_{1} = \frac{\sum_{i = 1}^{n}X_{i}Y_{i} -  n*\overline{X}*\overline{Y}}{\sum_{i =1 }^{n}X_{i}^{2} -  n\overline{X}^{2}} = r\left( \frac{S_{Y}}{S_{X}} \right) = 0.53869099
+$$
+
+
+In the context of these data, as the monthly rate of return for the TSE Index increases by 1%, the average monthly rate of return for the Suncor share will increase by 0.5387%.
+
+####d.
+*Refer to your answer in (b) In a certain month, the rate of return on the TSE Index was 4%. Predict the rate of return on Suncor stock for the same month.* 
+```{r}
+index <- 0.04
+predict_suncor_stock <- 0.01664794 + 0.53869099 * index
+predict_suncor_stock
+
+#alternative
+predict_suncor_stock <- lm(Suncor ~ TSE.Index, data = capmdata)
+predict(predict_suncor_stock, data.frame(TSE.Index = 0.04))
+```
+
+
+$$
+\widehat{R}_{StockA,i} = 0.0166 + 0.5387*R_{TSE, i} \\
+\widehat{R}_{StockA,i} = 0.0166 + 0.5387*0.04 \\
+\widehat{R}_{StockA,i} \approx 0.038
+$$
+
+
+####e.
+*Think about the conditions of this model **in the context** of these data. Create the visualizations that inspect each of the two conditions and provide commentary that addresses the validity (or invalidity) of each.*
+```{r}
+predict_suncor_stock_vector <- predict_suncor$fitted.values
+eismath_6e <- predict_suncor$residuals
+diagnosticdf_6e <- data.frame(predict_suncor_stock_vector, eismath_6e)
+
+diagnosticdf_6e %>%
+  ggplot(aes(sample = eismath_6e)) +
+  stat_qq(col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Residuals")
+
+diagnosticdf_6e %>%
+  ggplot(aes(x = predict_suncor_stock_vector, y = eismath_6e)) +
+  geom_point(size = 2, col = 'blue', position = "jitter") +
+  xlab("Predicted Suncor Monthyl Rate of Return") +
+  ylab("Residuals") +
+  ggtitle("Plot of Fits to Residuals") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed")
+```
+
+
+The residuals along the normal probability plot appear to follow a normal distribution. In addition, the residual plot does not appear to diverge as the Suncor monthly rate of return increases. The residuals appear to be evenly distributed around a residual = 0. This confirms homoscedasticity.
+
+
+</br>
+</br>
+
+###Question 7
+*Refer to the **Default** data set in the **ISLR** package. This data set consists of 10000 cases. There are four different variables in this data set. **default** is a categorical variable that indicates if a person has defaulted on their credit card debt (Yes) or has not (No); the variable **student** flags a respondent as a student (Yes) or not (No); the third variable is the person's credit card balancing they are carrying, and the last variable **income** is the person's annual income. You may need to install this package.*
+
+*You wish to build the model:*
+
+
+$$
+Balance_\text{Student, i} = A + (B *Income_\text{Student, i}) + e_{i}
+$$
+
+
+*Consider the two variables **balance** and **income** for **Students only** (**student =="Yes"**):*
+
+####a.
+*Visualize these data with a scatterplot, and comment on the nature of the relationship between these two variables.*
+
+
+```{r}
+Default %>%
+  filter(student == "Yes") %>%
+  ggplot(aes(x = income, y = balance)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+```
+
+The data does not appear to have to have any significant relationship.
+
+
+####b.
+*Compute the correlation coefficient, $r$.*
+```{r}
+cor(~balance, ~income, data = filter(Default, student == "Yes"))
+```
+
+
+####c.
+*Estimate the model above, interpreting your values of *$a$* and *$b$* in the context of these data.*
+```{r}
+options(scipen=999)
+lm(balance ~ income, filter(Default, student == "Yes"))$coef
+```
+
+$$
+\widehat{Balance_{Student, i}} = 1023 + (-0.002 * Income_{Student, i}))
+$$
+
+
+In the context of these data, the A value indicates that when a student's income is 0, the average balance on their credit card is 1023.
+
+
+In the context of these data, the B value indicates that when a student's income increases by $1, the average balance will decrease by \$0.002.
+
+
+
+####d.
+*A student has an income of $9000. Predict a student's credit card balance for such an income, and interpret your finding in the context of these data.*
+
+The given value of $x = 9,000$. We predict $y$, or compute $\widehat{y}$ for this particular value of $x$:
+
+$$
+\widehat{y}_{i} = 1023.0237719 + (-0.001961286*9000) = 1005.372 \approx 1005
+$$
+
+```{r}
+income <- 9000
+balance <- 1023.0237719 + -0.001961286 * income
+balance
+
+#alternative
+predict_balance <- lm(balance ~ income, filter(Default, student == "Yes"))
+predict(predict_balance, data.frame(salary = 9000))
+```
+
+
+Based on a relatively low correlation coefficient that was calculated in part b, our prediction is not very good but if we assume the model has some accuracy, we would expect the average balance on a students credit card to be approximately $1005 if their income is \$9,000.
+
+
+####e.
+*What is(are) the condition(s) required in the model estimation you participated in, in part (b)? State the condition(s) and provide **both** the visual diagnostic that checks each condition as well as a brief commentary about the condition's presence/absence.*
+```{r}
+predict_balance_vector <- predict_balance$fitted.values
+eismath_7e <- predict_balance$residuals
+diagnosticdf_7e <- data.frame(predict_balance_vector, eismath_7e)
+
+diagnosticdf_7e %>%
+  ggplot(aes(sample = eismath_7e)) +
+  stat_qq(col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Residuals")
+
+diagnosticdf_7e %>%
+  ggplot(aes(x = predict_balance_vector, y = eismath_7e)) +
+  geom_point(size = 2, col = 'blue', position = "jitter") +
+  xlab("Predicted Balance") +
+  ylab("Residuals") +
+  ggtitle("Plot of Fits to Residuals") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed")
+```
+
+
+Based on the above plots, we can confirm both the normality of the residuals and homoscedasticity. On the normal probability plot, the residuals follow a relatively straight line. In addition, the residuals do not diverge as the Predicted Balance increases. These are the two conditions required in our model estimation.
+
+
+In order to further our understanding of the significance of the model, we can perform an F-test.
+```{r}
+summary(aov(predict_balance))
+```
+
+
+Based on the results above:
+
+
+$$
+F_{obs} = \frac{\frac{232619}{1}}{\frac{686080187}{2942}} = 0.997
+$$
+
+
+$$
+P-\text{value} = P(F_{1, 2942} > 0.997) = 0.318
+$$
+
+
+Since the P-Value is greater than 0.05, we cannot assume that Balance can be expressed as a function of Income.

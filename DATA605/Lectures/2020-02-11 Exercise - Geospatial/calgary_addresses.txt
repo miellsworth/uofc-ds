@@ -1,0 +1,11 @@
+id;addr
+1000;1900 Heritage Dr SW, Calgary, AB T2V 2X3, Canada
+1001;2500 University Dr NW, Calgary, AB T2N 1N4, Canada
+1002;1410 Olympic Way SE, Calgary, AB T2G 2W1, Canada
+1003;210 St Georges Dr NE, Calgary, AB T2E 5T2, Canada
+1004;101 9 Ave SW, Calgary, AB T2P 1J9, Canada
+1005;88 Canada Olympic Road SW, Calgary, AB T3B 5R5, Canada
+1006;750 9 Ave SE, Calgary, AB T2G 5E1, Canada
+1007;4520 Crowchild Trail SW, Calgary, AB T2T 6E9, Canada
+1008;130 9 Ave SE, Calgary, AB T2G 0P3, Canada
+1009;2000 Airport Rd NE, Calgary, AB T2E 6W5, Canada

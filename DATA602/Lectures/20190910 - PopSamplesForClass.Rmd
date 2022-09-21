@@ -1,0 +1,570 @@
+---
+title: "DATA 602 - Exploring Data Through Statistical Visualizations"
+output:
+  html_document:
+    df_print: paged
+---
+
+&copy;  Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+#studentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+#attach(studentsurvey)
+```
+
+
+# Populations and Samples
+
+Any data investigation, aka "statistical study", is designed and data collected to answer the following inquiries:
+1. What group of persons or things is being studied?
+2. What is is about this group that is to be studied?
+
+
+The group is often referred to as the *population* and the aspect(s) of the group - the thing to be studied -  as a *variable*. 
+
+A **population** consists of a group of elements - persons or things - that share a commmon characteristics. Some illustrations of populations are
+
+* all students in the certificate or diploma program in Data Science
+* all Canadian citizens who are at least 18 years of age. That is, all voting Canadians
+* all persons who have a Amazon Prime Membership
+* households in the City of Calgary
+* customers a company data base
+
+In any instance, the aspect of the population is something that varies from one individual/element of the population to the next. So, the aspect of the population that an investigator wishes to study is called the **variable** of the population. Consider a few variables for each of the populations listed above:
+
+* the amount of debt of recent graduates from an undergraduate program at the University of Calgary
+* the voting preference of a Canadian voter in the next federal election
+* the total amount of purchases of a Amazon Prime Member in the month of September
+* the annual income households in Calgary
+* the incisor length of grizzly bears who inhabit Waterton National Park
+
+Variables can be classified into one of two types:
+
+1. Categorical
+2. Numerical
+
+**Categorical** variables are commonly associated with non-numerical aspects of a element/individual. Some examples of categorical variables are
+
+* eye-colour, hair colour, gender
+* the manufacturer of a smart phone
+* socio-economic (low income, middle income, upper income)
+* USRI
+
+For the sake of statistical analysis, categorical variables are "measured" numerically. A person's voting preference in the next federal election can be distinguished with the following measurement scale:
+$$
+1 - {\rm Conservative} \hspace{0.2in} 2 - {\rm Green\:\:Party} \hspace{0.2in} 3 - {\rm Liberal} \hspace{0.2in} 4 - {\rm NDP} \hspace{0.2in} 5 - {\rm Other}
+$$
+This type of assignment is called a *nominal* scale, as numerical values are simply assigned to different categories of a particular variable. 
+
+There is also the *ordinal* scale which involves the assignment of values to non-numeric responses that are increasing value. The USRI rating of instruction as an example: 
+$$
+1 - {\rm Unacceptable} \hspace{0.2in} 2 - {\rm Very\:\:Poor} \hspace{0.2in} 3 - {\rm Poor} \hspace{0.2in} 4 - {\rm Satisfactory} \hspace{0.2in} 5 - {\rm Good} \hspace{0.2in} 6 - {\rm Very Good} \hspace{0.2in} 7 - {\rm Excellent}
+$$
+
+**Numerical** variables are associated with a numeric aspect or response from the population element/individual. These types of variables either count or measure some aspect. Some examples include
+
+* a person's weight in kilograms
+* a household's annual income in $1000s
+* a cancer patient's survival time (in days) since initial diagnosis
+* a recent graduate's student debt level in $s
+
+## Population Parameters
+
+How would we best summarize the information collected from each object in the target population? We aggregate all the data into a numerical property of the population called a **parameter**. The parameter of a population can be (at this point) one of two:
+
+1. $\mu$ -the population average (or population mean). This aggregates all the measurements made from each object of the population into a single number, and summarized a numerical variable. 
+2. $p$ - the population proportion. This summarizes a variable that is categorical, determining what percentage of the objects in the population have a particular characteristic.
+3. $\sigma$ - the standard deviation in the population values; the typical distance each data point lies away from the population mean $\mu$.
+
+**Example 1:** The 2019 City of Calgary census[^1] found that the number of residences/dwellings in the city was 521,257. Of these, 489,062 were occupied. The proportion of *all occupied dwellings* that are occupied by the owner is $\frac{324,789}{489,062} = 0.6641$, or 66.41%. The population of interest consists of all residences/dwellings that are occupied, and the variable of interest is categorical: does the owner of the dwelling "occupy the dwelling" or "not occupy the dwelling". From the census, the value of $p = 0.6641$. 
+</br>
+</br>
+
+
+
+**Example 2:** The 2015 Statistics Canada census of residents of the City of Calgary found that the average annual (pre-tax) income was $
+69,070. In this instance, the population consits of all residents of the City of Calgary who are eligible to work (aged 15 years or older), and the population variable is numerical: what is being measured, what each data point reprsents is *how much* income each employed person earned in 2015. This numerical variable is summarized into the population mean, and $\mu = \$69,070$. 
+</br>
+</br>
+
+
+[^1]: (www.calgary.ca/census)
+
+----------------------
+
+
+# Data Visualization
+
+In Examples 1 and 2, data has been collected via a **census**, where an attempt is made to contact all elements/individuals in the population of interest and record the response on the variable of interest for each. In Examples 1 and 2 above, data was gathered, then processed to come up with values for the population proportion (Example 1) and the population mean (Example 2),
+</br>
+</br>
+
+Data visualization is the first step in the process of data analysis. It gives a sense of what is going on and also brings up many questions about what we do not know. For example, the graph below is a **scatterplot** of two variables: 1. a state's expenditure per student and 2. the state's average SAT math score. This data set is within the **mdsr** package.
+
+```{r}
+#install.packages("mdsr") #must install the package first
+library(mdsr)  #or click on the mdsr appearing in the Packages tab
+dim(SAT_2010) #gives us no. rows and columns of the SAT_2010 data frame
+head(SAT_2010, 4) #enables us to view the first three rows of the SAT_2010 data frame
+```
+
+The purpose for the scatterplot is to investigate if there is a relationship between per dollar spending per student and the mean SAT math score of the state. The code below enables us to create a such a scatterplot:
+
+```{r}
+SAT_2010 %>%
+ggplot(aes(x = expenditure, y = math)) +
+  geom_point(col='blue', size=2) +
+  xlab("Expenditure $ per Student") +
+  ylab("Average SAT Math Score") +
+  ggtitle("Plot of State Expenditure per Student to Average SAT Math Score")
+```
+
+
+Another look at this data, let's break it down by a *third* variable: the proportion of students in the state who write an SAT exam.
+
+```{r}
+SAT_2010 <- SAT_2010 %>%  #create a new  variable
+  mutate(SAT_class = cut(sat_pct, breaks=c(0,33,67,100), labels = c("low", "medium", "high")))
+```
+
+Let's look at the code above for a moment. What we are attempting to do is create a new variable called **SAT_class**. This is a categorical variable that will assign a response of *low* if the proportion of students writing the SAT exams is between 0% and less than or equal to 33%; a response of *medium* is assigned if the proportion of students in the state who write the SAT exam is between 33% to 67%; the final response is *high* if the proportion of a state's students writing the SAT exam is between 67% and 100%. 
+
+The `mutate` command enables us to create a new variable called SAT_class. This variable assigns each value appearing in the **sat_pct** variable, to one of three bins/classes: $(0 \leq 33, 33 \leq 67, 67 \leq 100)$. If the value of a **sat_pct** is between 0 and 33% it is assigned the label *low*"; *medium* if **sat_pct** is greater than 33% to 67%; *high* if the **sat_pct** is greater than 66% to 100%.  The "%>%" is a way of adding this variable onto the SAT_2010 data frame. 
+</br>
+</br>
+Let's take a look at the data frame with the addition of the new variable **SAT_class**. 
+
+```{r}
+head(SAT_2010, 4) #see the first four rows of the new data set with the new variable SAT_rate
+```
+
+The `table` command below counts how many of the 50 states have a low proportion of students writing the SAT in 2010, the medium proportion, and the proportion of states where between 67% and 100% of high school students wrote the SAT exam. 
+
+```{r}
+table(SAT_2010$SAT_class)
+```
+Re-creating the scatterplot, adding a third dimension that identifies which state had a low, medium, or high proportion of high school students writing the SAT exam in 2010. 
+```{r}
+ggplot(SAT_2010, aes(x = expenditure, y = math, color=SAT_class)) + geom_point(size=2) + 
+  xlab("Expenditure $ per Student") + 
+  ylab("Average SAT Math Score") + 
+  ggtitle("Plot of State Expenditure per Student to Average SAT Math Score")
+```
+
+If we count the number of <font color="orange">low data points</font>, we find there are <font color="orange">23</font>. This is because some of these data points are overlapping each other. To rid ourselves of this unsightly problem, add **position = "jitter"** as one of the parameters/arguments to the **geom_point()**. 
+
+```{r}
+ggplot(data=SAT_2010, aes(x = expenditure, y = math, color=SAT_class)) +
+  geom_point(size=2, position="jitter") + 
+  xlab("Expenditure $ per Student") + 
+  ylab("Average SAT Math Score") + 
+  ggtitle("Plot of State Expenditure per Student to Average SAT Math Score")
+```
+
+If we add the `facet_wrap(~ SAT_class)` to the end of the above ggplot command, what happens? 
+
+```{r eval=TRUE, include=TRUE}
+ggplot(data=SAT_2010, aes(x = expenditure, y = math, color=SAT_class)) +
+  geom_point(size=2, position="jitter") + 
+  xlab("Expenditure $ per Student") + 
+  ylab("Average SAT Math Score") + 
+  facet_wrap(~ SAT_class)
+```
+</br>
+</br>
+
+**Time to Play 1:** In this exercise, investigate if there is a relationship between the number of students per teacher in a state and the average salary of the state's teachers. The student to teacher ratio for state $i$ is held in the variable that is called **pupil_teacher_ratio**, the average teacher salary in the variable **salary** (in $s).
+
+(a) Create a scatterplot with the $X$-variable as **salary** and the $Y$-variable as **pupil_teacher_ratio**. What appears to be going on? 
+</br>
+</br>
+**Answer:**
+
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = pupil_teacher_ratio)) +
+  geom_point()
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Create a new variable called **sal_category** that categorizes the teacher salary in the following way:
+$$
+\begin{array}{lc}
+{\rm Average\:\:Teacher\:\:Salary}  & {\rm Categorical\:\:Variable} \\
+\hline
+40,000 < 50,000                     & {\rm low} \\
+50,000 < 60,000                     & {\rm med} \\
+60,000 < 70,000                     & {\rm medhigh} \\
+70,000 < 80,000                     & {\rm high}    \\
+\end{array}
+$$
+then, re-create your scatterplot that shows which states have low, medium, medium-high, or high average teacher salary.
+</br>
+</br>
+**Answer:**
+
+```{r}
+SAT_2010 %>%
+  mutate(sal_category = cut(salary,
+                            breaks = c(40000, 50000, 60000, 70000, 80000),
+                            labels = c("low", "med", "medhigh", "high"))) %>%
+  ggplot(aes(x = salary, y = pupil_teacher_ratio, col = sal_category)) +
+  geom_point()
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+## Some Common Statistical Data Visualizations
+
+We have just has some experience with the nuanced process of visualizing data that allow the data to reveal certain attributes about the data. 
+</br>
+</br>
+When obtaining data on one, but often many (as was done in the warm-up exercise), population variables we seek an initial understanding of the data. Some of the mysteries of the data we seek to uncover in the collected data are
+
+1. Are there tendencies or patterns in the data? Is one type of response - AKA data value or data point - more prominent than others? Do the data appear to have a certain structure, or are the data completely unstructured. 
+
+2. What about the tendencies of *two* variables? Are they related to each other, regardless of the nature of the variables? Are two categorical variables related? What about a categorical variable and a numerical variable? Are two numerical variables related? 
+
+As a basis for data visualization, we will start with a data set that consits of a population of 336,776 flights that either flew into or flew out of all three airports located in New York City area. To do so, we install the **nycflight13** package below. 
+
+```{r}
+#install.packages("dplyr") #installs package
+library(dplyr)  #adds the dplyr package
+#install.packages("nycflights13") #installs package
+library(nycflights13)  #adds the nycflights13 package
+```
+
+Within R studio, a quick look at this **flights** data set reveals data - both categorical and numerical - was collected on 13 different variables. The variable names are 
+```{r}
+names(flights)  # returns the variable names in the flights data frame
+head(flights, 4) #shows the first 4 rows of the flights data frame
+```
+
+Within this data set, we have information from all the flights arriving and leaving NYC airports, rather, the population of data. Consider the variable "departure delay" or "dep_delay". Let's strip this variable out, along with the variable year, month, day, and the airline, or "carrier", into a new data frame called **demoairline1**, using the data-wrangling command **select()**. 
+
+```{r}
+demoairline1 = select(flights, year, month, day, dep_delay, carrier, arr_delay)  #create a new data frame selecting the 6 variables
+head(demoairline1,4) #shows the first four rows
+```
+
+-----------------
+
+## Visual Displays of Univariate Data
+
+There are many ways to visualize data in R/R Studio. We will be supporting the **ggplot()** graphics *language* in this course. The basic stucture of this language is to (i) create the struture of the plot by specifying the dimension and (ii) adding onto the structure the type of plot. The plot below shows a distribution of minutes each flight was delayed in departing the three NYC airports.
+
+The first visualization of the data on the variable **departure delay** (in minutes), or **dep_delay**, is a histogram. In the creation of a histogram, each data point is assigned to a *bin* (or class). Then, a *count* of how many data points are in each class/bin is computed and a resulting **bar graph** of the distribution of counts is created. The second argument of the **geom_histogram()** comannd instructs R to create bins/classes/intervals that are 20 minutes in length. 
+
+The second visualziation of the data is a **density plot**. In this visualization there is an attempt to *model* the data to a probability density function. In doing so, the *total area beneath* the density plot is equal to 1.
+
+```{r include=FALSE}
+options(scipen=999)
+```
+
+```{r}
+ggplot(data=demoairline1, mapping=aes(x=dep_delay)) + 
+  geom_histogram(fill='blue', binwidth=40, na.rm=TRUE) + 
+  xlab("Minutes Flight Delayed in Departure") + 
+  ggtitle("Histogram of Minutes a Flight is Delayed in Departing 3-NYC Airports")
+
+ggplot(data=demoairline1, mapping=aes(x=dep_delay)) + 
+  geom_density(col='red', fill='purple', na.rm=TRUE) + 
+  xlab("Minutes Flight Delayed in Departure") + 
+  ylab("Density") + 
+  ggtitle("Density Graph of Minutes a Flight is Delayed in Departing 3-NYC Airports")
+```
+
+We can also create histograms and density plots broken down by airline. 
+
+```{r}
+ggplot(data=demoairline1, mapping=aes(x=dep_delay)) + 
+  geom_histogram(col='blue', binwidth=40, na.rm=TRUE) + 
+  xlab("Minutes Flight Delayed in Departure") + 
+  facet_wrap(~carrier)
+length(demoairline1$dep_delay)  #counts the number of data points in the variable "dep_delay"
+count(is.na(demoairline1$dep_delay)) #is.na will return each data point as TRUE if there is a N/A (missing data point)
+```
+The names of each airline associated with each **carrier** code is given below. 
+```{r}
+airlines  #returns the airline name associated with each airline code
+```
+
+Here is the coding for the [various airlines](https://github.com/hadley/nycflights13/blob/master/data-raw/airlines.csv) flying out of the three NYC-area airports. To obtain a breakdown of the various airlines flying out of the three NYC-area airports, we can view a bargraph of the data appearing in the "carrier" variable:
+
+```{r}
+ggplot(data=demoairline1, aes(x=carrier, fill=carrier)) + 
+  geom_bar() + 
+  xlab("Passenger Carrier") +
+  ggtitle("Distribution of Flights by Carrier")
+table(demoairline1$carrier)  #creates a table counting no. flights for each carrier
+ggplot(data=demoairline1, aes(x=carrier ,y=..prop.., group=1, fill=carrier)) +
+  geom_bar() + 
+  xlab("Passenger Carrier") + 
+  ylab("Proportion of Flights")  + 
+  ggtitle("Distribution of Flights by Carrier")
+ggplot(data=demoairline1, aes(x=carrier ,y=..prop.., group=1, fill=carrier)) +
+  geom_bar() + 
+  xlab("Passenger Carrier") + 
+  ylab("Proportion of Flights") + 
+  coord_flip()
+```
+
+**Time to Play 2:** Copy and paste the code below, then run the code. What do you think this code does? 
+
+```{r}
+#options(scipen=999)
+counts = as.data.frame(sort(table(demoairline1$carrier))) #create a data frame from the table() command
+counts
+ggplot(data=counts, aes(x=Var1, y=Freq, fill=Var1)) + 
+  geom_bar(stat="identity") + 
+  xlab("Airline") + 
+  ylab("Count")
+airprop = counts$Freq/sum(counts$Freq) #converts no of flights to proportion of flights
+countswithprop = data.frame(counts, airprop) #create a new data frame adding airprop variable to counts
+head(countswithprop, 4)  #returns the first four rows of the countswithprop data frame
+ggplot(data=countswithprop, aes(x=Var1, y=airprop, fill=Var1)) + geom_bar(stat="identity") + 
+  xlab("Airline") + 
+  ylab("Proportion")
+ggplot(data=countswithprop, aes(x=Var1, y=airprop, fill=Var1)) +
+  geom_bar(stat="identity") + 
+  xlab("Airline") + 
+  ylab("Proportion") + 
+  coord_flip()
+#barplot(counts, xlab=names(counts))
+```
+
+-------------------------------------
+
+Below is a scatterplot showing the relationship between the departure delay **dep_delay** and the arrival delay **arr_delay**. No surprise...
+```{r}
+ggplot(data=demoairline1, mapping = aes(x=dep_delay, y=arr_delay)) +
+  geom_point(color="blue", size=2, position="jitter", na.rm=TRUE) + 
+  xlab("Minutes Flights is Delayed from Taking Off") +
+  ylab("Minutes Flight is Late from Landing") + 
+  ggtitle("Scatterplot of Flight Delay to Arrival at Destination Airport")
+```
+
+The relationship broken down by carrier
+```{r}
+ggplot(data=demoairline1, mapping = aes(x=dep_delay, y=arr_delay, color=carrier)) +
+  geom_point(size=2, position="jitter", na.rm=TRUE) + 
+  facet_wrap(~ carrier) + 
+  xlab("Minutes Flights is Delayed from Taking Off") + 
+  ylab("Minutes Flight is Late from Landing")
+```
+
+Or, we can look at just one airline, like Delta Airlines:
+```{r}
+ggplot(data=filter(demoairline1, carrier =="DL"), aes(x = dep_delay, y = arr_delay)) +
+  geom_point(col="blue", size=2, position="jitter", na.rm=TRUE) + 
+  xlab("Minutes DL Flights is Delayed from Taking Off") + 
+  ylab("Minutes DL Flight is Late from Landing") + 
+  ggtitle("Scatterplot of Delta Airlines Delays and Subsequent Arrivals")
+```
+
+**Time to Play 3:** Use the above code to create a scatterplot that shows the relationship between United Airlines minutes a flight is delayed and minutes the flight arrives at its destination airport. Show the points as <font color='red'>red</font>. 
+</br>
+</br>
+How does this compare to Delta Airlines?
+</br>
+</br>
+<div style="margin-bottom:30px;">
+</div>
+
+```{r}
+demoairline1 %>%
+  filter(carrier == c("UA", "DL")) %>%
+  ggplot(aes(x = dep_delay, y = arr_delay)) +
+  geom_point(col = "red") +
+  facet_wrap(~carrier)
+```
+
+
+--------------------------
+
+Let's turn our attention to two of the largest air passenger carriers in the United States: United Airline and American Airlines. In the creation of the histograms and density plots, the command `filter(data, variable =="")` was used to strip out all records that are associated with United Airlines (UA) and American Airlines (AA). Copy and paste the code below into a R-chunk. 
+
+```{r}
+ggplot(data = filter(demoairline1, carrier=="UA"), aes(x = dep_delay)) +
+  geom_histogram(fill='blue', binwidth=25, na.rm=TRUE) +
+  xlab("Minutes Departure is Delayed for UA") +
+  ggtitle("Histogram of Flight Delays for United Airlines")
+#
+ggplot(data=filter(demoairline1, carrier=="AA"), aes(x=dep_delay)) +
+  geom_histogram(fill='red', binwidth=25, na.rm=TRUE) +
+  xlab("Minutes Departure is Delayed for AA") +
+  ggtitle("Histogram of Flight Delays for American Airlines")
+#
+ggplot(data=filter(demoairline1, carrier=="UA"),aes(x=dep_delay)) +
+  geom_density(fill='blue', na.rm=TRUE) +
+  xlab("Minutes Departure is Delayed for UA")
+#
+ggplot(data=filter(demoairline1, carrier=="AA"), aes(x=dep_delay)) +
+  geom_density(fill='red', na.rm=TRUE) +
+  xlab("Minutes Departure is Delayed for AA")
+```
+
+**Time to Play 4:** From the code you see above, create both a histogram and a density plot of the variable **dep_delay** for the Delta airlines, or `DL` airline.
+</br>
+</br>
+**Answer:**
+```{r}
+demoairline1 %>%
+  filter(carrier == "DL") %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram()
+
+demoairline1 %>%
+  filter(carrier == "DL") %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_density()
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+---------------------------------
+
+The data visualizations are multi-dimensional, as density curves and histograms created are *conditional* upon two specific carriers. A more appropriate, and simplier way, to compare the three attributes of a variable according to a secondary variable are through box-and-whisker plots, or more commonly called **boxplots**. 
+</br>
+</br>
+The code below creates a new data frame **demoairline2**, but I have included an addition variable named **distance**, which records the air miles of each flight leaving the three NYC-area airports.  
+
+```{r echo=TRUE}
+demoairline2 = select(flights, dep_delay, arr_delay, carrier, distance) #select the four named variables from flights
+head(demoairline2, 4)
+```
+
+Let's inspect the distribution of the variable **dep_delay** via *both* a density plot and a boxplot for United Airlines (UA). Copy and paste this code listed above to create the **demoairline2** data frame. 
+</br>
+</br>
+Then, copy and paste the code below into a new R-chunk. 
+
+```{r echo=TRUE}
+demoairline2 %>%
+  filter(carrier == "UA") %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_density(fill='blue', na.rm=TRUE) +
+  xlab("Minutes Flight is Delayed for United Flights") +
+  ggtitle("Density Plot of Departure Delays for United Airlines")
+```
+Boxplots are created below. 
+```{r}
+demoairline2 %>%
+  filter(carrier == "UA") %>%
+  ggplot(aes(x = "var", y = dep_delay)) +
+  geom_boxplot(fill = 'blue', na.rm=TRUE) +
+  xlab("") +
+  ylab("Minutes Flight is Delayed") +
+  scale_x_discrete(breaks=NULL) +
+  ggtitle("Boxplot of Flight Delays for United Airlines") #gives a vertical boxplot
+#
+demoairline2 %>%
+  filter(carrier == "UA") %>%
+  ggplot(aes(x = "var", y = dep_delay)) +
+  geom_boxplot(fill= 'blue', na.rm=TRUE) +
+  xlab("") +
+  ylab("Minutes Flight is Delayed") +
+  scale_x_discrete(breaks=NULL) +
+  coord_flip() +
+  ggtitle("Boxplot of Flight Delays for United Airlines")#provides a horizontal bp
+```
+
+With boxplots, we can compare the distribution of a particular variable for other "classification" variables, which are sometimes used to distinguish between different groups or *populations*. 
+
+The code below creates boxplots to compare the distribution of **dep_delay** between UA and AA. 
+```{r}
+demoairline2 %>%
+  filter(carrier == c("UA", "AA")) %>%
+  ggplot(aes(x = carrier, y=arr_delay)) +
+  geom_boxplot(fill='blue', na.rm=TRUE) +
+  coord_flip() +
+  ggtitle("Boxplots Compring United and American Airlines")
+```
+
+Alternatively, we could include another airline, such as JetBlue, coded B6:
+
+```{r}
+demoairline2 %>%
+  filter(carrier == c("UA", "AA", "B6")) %>%
+  ggplot(aes(x = carrier, y=arr_delay)) +
+  geom_boxplot(fill='blue', na.rm=TRUE) +
+  coord_flip() +
+  ggtitle("Boxplots Compring United, American, and JetBlue Airlines")
+```
+
+Or, all airlines for that matter!
+```{r}
+demoairline2 %>%
+  ggplot(aes(x=carrier, y=dep_delay, color = carrier)) +
+  geom_boxplot(na.rm=TRUE) +
+  ylab("Minutes Flight is Delayed")
+demoairline2 %>%
+  ggplot(aes(x=carrier, y=dep_delay, color = carrier)) +
+  geom_boxplot(na.rm=TRUE) +
+  ylab("Minutes Flight is Delayed") +
+  coord_flip()
+```
+
+**Time to Play 5:** Consider the **distance** variable in the **demoairline2** data. 
+
+(a) Visualize the data to see if there is a relationship between the minutes a flight that departs any one of the the three NYC-area airport is late in its arrival and the distance of the flight.
+</br>
+</br>
+**Answer:**
+
+```{r}
+demoairline2 %>%
+  ggplot(aes(x = dep_delay, y = distance)) +
+  geom_point(alpha = 0.01)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Create a histogram, density plot, and boxplot to inspect the distribution of the distance all JetBlue flights are from the three NYC-area airports. Use a binwidth of 500 miles here. The JetBlue code is B6. 
+</br>
+</br>
+**Answer:**
+
+```{r}
+demoairline2 %>%
+  filter(carrier == "B6") %>%
+  ggplot(aes(x = distance)) +
+  geom_histogram(binwidth = 500)
+
+demoairline2 %>%
+  filter(carrier == "B6") %>%
+  ggplot(aes(x = distance)) +
+  geom_density()
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+(c) Create a visualization of these data that enables you to compare the distribution of distance for airlines UA, AA, B6 (JetBlue), and DL. What story can you tell from this graph? 
+</br>
+</br>
+**Answer:**
+
+```{r}
+demoairline2 %>%
+  filter(carrier == c("UA", "AA", "B6", "DL")) %>%
+  ggplot(aes(x = carrier, y = distance, col = carrier)) +
+  geom_boxplot()
+```
+
+
+<div style="margin-bottom:30px;">
+</div>

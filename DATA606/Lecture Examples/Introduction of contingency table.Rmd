@@ -1,0 +1,114 @@
+---
+title: "Introduction to contingency table"
+output: html_notebook
+---
+
+```{r}
+library(MASS)
+data(Cars93)
+Cars93[1:15,]
+```
+
+```{r}
+# Get a two-way contingency table (joint table)
+tab1<-table(Cars93$Origin, Cars93$Type)
+tab1
+```
+
+```{r}
+# get the proportions in the joint table
+prop.table(tab1)
+```
+
+```{r}
+# get the row sums
+rowSums(tab1)
+margin.table(tab1,1)
+```
+
+```{r}
+# get the column sums
+colSums(tab1)
+margin.table(tab1,2)
+```
+
+```{r}
+# get the proportions in conditional table
+prop.table(tab1, margin=1)
+```
+
+**Question: could you give a two-way contingency table of "Type" and "Cylinders"? Calculate the row and column sums as well the proportion conditional table**
+```{r}
+# Your answer
+tabb<-table(Cars93$Type, Cars93$Cylinders)
+margin.table(tabb,1)
+margin.table(tabb,2)
+prop.table(tabb, margin=1)
+```
+
+
+```{r}
+# A three-way contingency (joint) table
+tab2<-table(Cars93$Origin, Cars93$Type, Cars93$Cylinders)
+ftable(tab2)
+```
+
+```{r}
+ftable(prop.table(tab2))
+```
+
+```{r}
+ftable(prop.table(tab2,margin = 2))
+```
+
+```{r}
+ftable(prop.table(tab2,margin = c(1,2)))
+```
+
+```{r}
+margin.table(tab2, margin = c(1,2))
+```
+
+**Question: get the marginal table of "Origin" and "Cylinders"?**
+```{r}
+# Your answer
+margin.table(tab2, margin = c(1,3))
+```
+
+
+**Now we have another table, which is constructed using Cars93**
+```{r}
+library(MASS)
+data(Cars93)
+M_price<-median(Cars93$Price)
+L1=sum(Cars93$Price<=M_price)
+mydata<-Cars93[order(Cars93$Price),]
+Yes<-c(rep(0,L1),rep(1,(length(Cars93$Price)-L1)))
+carDATA<-cbind(Yes,mydata)
+```
+
+```{r}
+# 0 means cheap car; 1 means luxury car
+tab<-table(carDATA$Origin, carDATA$Yes)
+tab
+```
+
+**Question: to check whether the origin and price are relavent, calculate the difference of proportions, relative risk and odds ratio between US cars and Non-US cars**
+```{r}
+tab_prop<-prop.table(tab,margin=1)
+tab_prop
+```
+```{r}
+# difference of proportions
+tab_prop[1,1]-tab_prop[2,1]
+```
+
+```{r}
+# relative risk
+tab_prop[1,1]/tab_prop[2,1]
+```
+
+```{r}
+# odds ratio
+tab_prop[1,1]*tab_prop[2,2]/(tab_prop[2,1]*tab_prop[1,2])
+```

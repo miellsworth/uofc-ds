@@ -1,0 +1,158 @@
+---
+title: "DATA 602 Assignment 1"
+output: html_notebook
+---
+
+#Probability exercise set one
+
+##Problem 1
+
+$P(M) = 0.8$
+
+$P(M^c) = 0.2$
+
+$P(U18) = 0.12$
+
+$P(U18^c) = 0.82$
+
+$P(M^c \cap U18) = 0.06$
+
+a.
+
+
+b.
+$P(M \cup U18) = P(M) + P(U18) - P(M \cap U18)$
+
+$0.8 + 0.12 - 0.06 = 0.86$
+
+c.
+$P(M^c \cup U18^c) = P(M^c) + P(U18^c) - P(M^c \cap U18^c)$
+
+$0.2 + 0.82 - 0.14 = 0.88$
+
+d.
+$P(M \cap U18^c)$
+
+```{r}
+x <- c()
+for(i in 6:10){
+  y <- choose(12, i)*choose(8, (10-i)) / choose(20, 10)
+  x <- c(x, y)
+}
+sum(x)
+```
+
+```{r}
+x <- c()
+for(i in 5:7){
+  y <- choose(7, i)*(1/6)**i*(5/6)**(7-i)
+  x <- c(x, y)
+}
+x
+sum(x)
+```
+
+```{r}
+x <- c()
+for(i in 0:7){
+  y <- i*choose(7, i)*(1/6)**i*(5/6)**(7-i)
+  x <- c(x, y)
+}
+sum(x)
+```
+
+```{r}
+x <- c()
+for(i in 0:7){
+  y <- i**2*choose(7, i)*(1/6)**i*(5/6)**(7-i)
+  x <- c(x, y)
+}
+(sum(x)-1.16666666**2)**0.5
+```
+
+```{r}
+exp(-15.3)*15.3^17/factorial(17)
+```
+
+```{r}
+x <- c()
+for(i in 0:4){
+  y <- exp(-5.1)*5.1^i/factorial(i)
+  x <- c(x, y)
+}
+1-sum(x)
+```
+
+```{r}
+den <- function(x){6*x*(1-x)}
+integrate(den, lower = 0.78, upper = 1)$value
+```
+
+```{r}
+den <- function(x){x*(6*x*(1-x))}
+integrate(den, lower = 0, upper = 1)$value
+```
+
+```{r}
+den <- function(x){x**2*(6*x*(1-x))}
+(integrate(den, lower = 0, upper = 1)$value - 0.5**2)**0.5
+```
+
+```{r}
+func <- function(x){x**2}
+integrate(func, lower = -0.5, upper = 0.5)$value
+```
+
+```{r}
+func_a <- function(a){1/4.4*exp(-a/4.4)}
+func_a_mean <- function(a){a*1/4.4*exp(-a/4.4)}
+func_a_sd <- function(a){a**2*1/4.4*exp(-a/4.4)}
+curve(func_a, 0, 100, n = 100)
+integrate(func_a_mean, lower = 0, upper = 1000)$value
+(integrate(func_a_sd, lower = 0, upper = 1000)$value - (integrate(func_a_mean, lower = 0, upper = 1000)$value)**2)**0.5
+integrate(func_a, lower = 4, upper = 6)
+integrate(func_a, lower = 7, upper = 1000)
+func_a_cum <- function(a){1-exp((-a)/4.4)}
+-4.4*log((1-0.5), base = exp(1))
+integrate(func_a, lower = 7, upper = 1000)$value / integrate(func_a, lower = 6, upper = 1000)$value
+```
+
+```{r}
+func_p <- function(x){192/x**4}
+func_p_mean <- function(x){x*(192/x**4)}
+func_p_sd <- function(x){x**2*(192/x**4)}
+integrate(func_p, lower = 4.6, upper = 7.7)$value
+integrate(func_p_mean, lower = 4, upper = Inf)$value
+((integrate(func_p_sd, lower = 4, upper = Inf)$value) - (integrate(func_p_mean, lower = 4, upper = Inf)$value**2))**0.5
+integrate(func_p, lower = 10, upper = Inf)$value / integrate(func_p, lower = 5, upper = Inf)$value
+```
+
+```{r}
+func_exp <- function(x){exp(-x/38)/38}
+integrate(func_exp, lower = 30, upper = 37)$value
+integrate(func_exp, lower = 30, upper = 45)$value / integrate(func_exp, lower = 30, upper = Inf)$value
+qexp(0.5, 1/38)
+```
+
+```{r}
+10/5.1
+func_poisson <- function(x){0.51*exp(-x*0.51)}
+integrate(func_poisson, lower = 0, upper = 1.5)$value
+integrate(func_poisson, lower = 1, upper = 3)$value
+integrate(func_poisson, lower = 3.5, upper = Inf)$value / integrate(func_poisson, lower = 1, upper = Inf)$value
+```
+
+```{r}
+pnorm(0.66, 0.63, 0.07)
+pnorm(0.82, 0.63, 0.07) - pnorm(0.71, 0.63, 0.07)
+qnorm(0.31, 0.63, 0.07)
+```
+
+```{r}
+pnorm(4.95, 4.15, 0.72) - pnorm(3.5, 4.15, 0.72)
+1 - pnorm(5, 4.15, 0.72)
+qnorm(0.1, 4.15, 0.72)
+(1 - pnorm(5, 4.15, 0.72))*215
+pnorm(4.15, 4.15, 0.72)
+choose(15, 7)*0.5**7*(1-0.5)**(15-7) * 0.5
+```

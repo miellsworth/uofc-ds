@@ -1,0 +1,79 @@
+---
+title: "DATA 603 - Lecture Notes Unit 2 Part 2"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(readxl)
+library(ISLR)
+library(pROC)
+library(aod)
+library(lmtest)
+```
+
+```{r}
+roadbids <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 2/ROADBIDS.csv")
+glimpse(roadbids)
+roadbids$STATUS <- as.factor(roadbids$STATUS)
+```
+
+a.
+```{r}
+roadbids_model <- glm(data = roadbids, STATUS ~ NUMBIDS + DOTEST, family = "binomial")
+summary(roadbids_model)
+```
+
+b.
+```{r}
+wald.test(b = coef(roadbids_model), Sigma = vcov(roadbids_model), Terms = 2:3)
+```
+
+c.
+```{r}
+roadbids_model_reduced <- glm(data = roadbids, STATUS ~ NUMBIDS, family = "binomial")
+anova(roadbids_model_reduced, roadbids_model, test = "Chisq")
+lrtest(roadbids_model_reduced, roadbids_model)
+```
+
+d.
+
+```{r}
+coefficients(roadbids_model)
+```
+
+e.
+```{r}
+summary(roadbids_model)
+summary(roadbids_model_reduced)
+```
+
+f.
+```{r}
+
+```
+
+
+Descrim
+```{r}
+discrim <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/Unit\ 2/DISCRIM.csv")
+glimpse(discrim)
+discrim$HIRE <- as.factor(discrim$HIRE)
+discrim$GENDER <- as.factor(discrim$GENDER)
+```
+
+```{r}
+discrim_model <- glm(data = discrim, HIRE ~ EDUC + EXP + GENDER, family = "binomial")
+summary(discrim_model)
+discrim_model_reduced <- glm(data = discrim, HIRE ~ EXP + GENDER, family = "binomial")
+anova(discrim_model_reduced, discrim_model, test = "Chisq")
+```
+
+
+
+
+
+
+

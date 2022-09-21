@@ -1,0 +1,312 @@
+---
+title: "DATA 602 - Bootstrapping within the Context of Regression"
+output: html_notebook
+---
+
+```{r include=FALSE}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(mosaic)
+library(mosaicData)
+library(ISLR)
+library(mdsr)
+```
+
+# Resampling for Correlation and Regression - the Bootstrap
+
+In the bootstrap method, we re-sample $n$ bivariate data points $(x_{1}, y_{1}), (x_{2}, y_{2}), \cdots, (x_{n}, y_{n})$, from which various *bootstrap statistics*, such as
+
+1. $r_{Boot}$
+
+2. $a_{Boot}$
+
+3. $b_{boot}$ 
+
+4. $\mu_{y|x}$ for $x = 60000$
+
+can be estimated. 
+
+## The Bootstrap and SAT Math Scores
+
+Recall the SAT_2010 data:
+```{r}
+SAT_2010high = select(filter(SAT_2010, sat_percategory=="high"), state, math, salary) #filter out 'high' states and assign as a subset
+SAT_2010high
+```
+
+There consists of $n = 14$ cases here, or 14 $(x,y)$ cases with respect to $y$ is the **math** data and $x$ is the **salary** data. In the bootstrap, we *resample* $n = 14$ bivariate data points, for each of which we compute the relevant statistic(s). This done many times over, say 1000 or 5000. This process ultimately will produce a *distribution* of the bootstrap statistic. We can then find percentiles, or cut-offs, which will then serve as a bootstrap confidence interval for the associated parameter.
+
+Here is the process in obtaining the bootstrap statistics $r_{Boot}$, $a_{Boot}$, and $b_{Boot}$ from the **SAT_2010high** data frame. 
+
+**Step 1: Write some code!**
+
+The code below, documented, demonstrates how to re-sample (or sample with replacement) $n = 14$ data points from the data above.
+
+```{r}
+Nbootstraps = 3000 #resample n =  14, 3000 times
+cor.boot = numeric(Nbootstraps) #define a vector to be filled by the cor boot stat
+a.boot = numeric(Nbootstraps) #define a vector to be filled by the a boot stat
+b.boot = numeric(Nbootstraps) #define a vector to be filled by the b boot stat
+ymean.boot = numeric(Nbootstraps) #define a vector to be filled by the predicted y boot stat
+```
+
+The above chunk is ran before we go any further, as we are setting up some "global" parameters for the code. 
+
+The code below is created to carry out the bootstrap:
+```{r}
+nsize = dim(SAT_2010high)[1]  #set the n to be equal to the number of bivariate cases, number of rows
+xvalue = 60000 #set x = 60000
+#start of the for loop
+for(i in 1:Nbootstraps)
+{   #start of the loop
+    index = sample(nsize, replace=TRUE)  #randomly picks n- number between 1 and n, assigns as index
+    SAT.boot = SAT_2010high[index, ] #accesses the i-th row of the SAT_2010High data frame
+    #
+    cor.boot[i] = cor(~salary, ~math, data=SAT.boot) #computes correlation for each bootstrap sample
+    SAT.lm = lm(math~salary, data=SAT.boot)  #set up the linear model
+    a.boot[i] = coef(SAT.lm)[1] #access the computed value of a, in position 1
+    b.boot[i] = coef(SAT.lm)[2] #access the computed valeu of b, in position 2
+    ymean.boot[i] = a.boot[i] + (b.boot[i]*xvalue)
+}
+#end the loop
+#create a data frame that holds the results of teach of he Nbootstraps 
+    bootstrapresultsdf = data.frame(cor.boot, a.boot, b.boot, ymean.boot)
+```
+
+An inspection of these results
+```{r}
+head(bootstrapresultsdf, 3)
+tail(bootstrapresultsdf, 3)
+```
+
+</br>
+</br>
+
+## 1. Bootstrap Distribution of $r_{boot}$
+
+`ggplot` is invoked to examine the disribution of the 3000 computed values of $r_{boot}$:
+```{r}
+bootstrapresultsdf %>%
+  ggplot(aes(x = cor.boot)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 0.1) +
+  xlab("Values of the Bootstrap Statistic: Correlation Coefficient") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: r")
+```
+We now use `favstats` to obtain the mean of the 3000 values of $r_{boot}$:
+```{r}
+favstats(~cor.boot, data = bootstrapresultsdf)
+```
+
+of which the mean of all $r_{boot}$ values is $0.4052$. Notice how this is similar to the computed correlation of $r_{high} = 0.4374$ (done previously). From the above, distribution we can compute an interval that contains 95% of the computed values of $r_{boot}$. This can be done with the `qdata` command:
+```{r}
+favstats(~cor.boot, data = bootstrapresultsdf)
+qdata(~cor.boot, c(0.025, 0.975), data = bootstrapresultsdf)
+```
+From which
+$$
+r_{boot, 2.5} = -0.1889 \hspace{0.5in} \text{and} \hspace{0.5in} r_{boot, 97.5} = 0.8375
+$$
+
+## 2. Bootstrap Disribution of $a_{boot}$
+
+Similar to our steps in 1, the bootstrap distribution of $a_{boot}$ is provided below
+```{r}
+bootstrapresultsdf %>%
+  ggplot(aes(x = a.boot)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 10) +
+  xlab("Values of the Bootstrap Statistic: y-Intercept Estimate") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: a")
+qdata(~a.boot, c(0.025, 0.975), data=bootstrapresultsdf)
+```
+
+and
+$$
+a_{boot, 2.5} = 393.9604 \hspace{0.5in} \text{and} \hspace{0.5in} a_{boot, 97.5} = 521.7103
+$$
+The mean of these 3000 different values of $a_{boot} = 458.1301$, which is computed below. 
+```{r}
+favstats(~a.boot, data=bootstrapresultsdf)
+```
+Compare this to our compute value of $a = 456.8362$ from the method of least-squares. 
+
+## 3. Bootstrap Disribution of $b_{boot}$
+
+Repeating, changing the **a.boot** to **b.boot** in the above, the bootstrap distribution of $b_{boot}$ is provided below
+```{r}
+bootstrapresultsdf %>%
+  ggplot(aes(x = b.boot)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 0.0005) +
+  xlab("Values of the Bootstrap Statistic: Slope Estimate") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: b")
+favstats(~b.boot, data = bootstrapresultsdf)
+qdata(~b.boot, c(0.025, 0.975), data = bootstrapresultsdf)
+```
+and
+$$
+b_{boot, 2.5} = -0.000242 \hspace{0.5in} \text{and} \hspace{0.5in} b_{boot, 97.5} = 0.001746
+$$
+The mean of many $b_{boot}$s is computed to be $0.000744$, compare this to our compute value of $b = 0.00076$ from the method of least-squares.
+</br>
+</br>
+Using the means of $a_{boot}$ and $b_{boot}$, our estimate of the model is
+$$
+\widehat{AverageSATMathScore}_{i} = 458.1301 + (0.000744*AverageTeacherSalary_{i})
+$$
+## 4. Bootstrap Disribution of $\mu_{y|x=60000}$
+
+The bootstrap distribution of the *mean of* of $y$ for $X = 60000$ is provided below
+```{r}
+bootstrapresultsdf %>%
+  ggplot(aes(x = ymean.boot)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 1) +
+  xlab("Values of the Bootstrap Statistic: Mean of Y Given X = 60000") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: Mean of Y for X = 60000")
+favstats(~ymean.boot, data = bootstrapresultsdf)
+qdata(~ymean.boot, c(0.025, 0.975), data = bootstrapresultsdf)
+```
+and
+$$
+Mean\:Y_{x = 60000, 2.5} = 495.5263 \hspace{0.5in} \text{and} \hspace{0.5in} MeanY_{x = 60000, 97.5} = 510.0175 
+$$
+Compared to the 95% confidence interval for $\mu_{y|X_{60000}}$ 
+```{r}
+predict(predictmathSAT, newdata = data.frame(salary = 60000), interval = "conf", conf.level = 0.95)
+```
+$$
+494.3102 \leq \mu_{y|x=6000} \leq 510.8693
+$$
+
+Both results are very close.
+</br>
+</br>
+
+**Time to Play Around:**
+
+As an extension to the problem at hand of prediction the home attendance (in millions) - **seasonattend** -  of an American League baseball team from its season winninng percentage (**winningpct**), create the distribution for each of the following bootstrap statistics:
+
+```{r}
+MLBattend <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/baseball.csv")
+MLBattend <- MLBattend %>%
+  mutate(winningpct = c(wins / (wins + losses)))
+MLBattend = MLBattend %>% 
+  mutate(seasonattend = (attendance/1000000))
+predictattendanceAL = lm(seasonattend~winningpct, data = filter(MLBattend, league == "AL"))
+```
+
+
+```{r}
+Nbootstraps_ttp = 3000 #resample n =  14, 3000 times
+cor.boot_ttp = numeric(Nbootstraps_ttp) #define a vector to be filled by the cor boot stat
+a.boot_ttp = numeric(Nbootstraps_ttp) #define a vector to be filled by the a boot stat
+b.boot_ttp = numeric(Nbootstraps_ttp) #define a vector to be filled by the b boot stat
+ymean.boot_ttp = numeric(Nbootstraps_ttp) #define a vector to be filled by the predicted y boot stat
+```
+
+The above chunk is ran before we go any further, as we are setting up some "global" parameters for the code. 
+
+The code below is created to carry out the bootstrap:
+```{r}
+nsize_ttp = dim(MLBattend)[1]  #set the n to be equal to the number of bivariate cases, number of rows
+xvalue_ttp = 60000 #set x = 60000
+#start of the for loop
+for(i in 1:Nbootstraps_ttp)
+{   #start of the loop
+    index = sample(nsize_ttp, replace=TRUE)  #randomly picks n- number between 1 and n, assigns as index
+    SAT.boot_ttp = MLBattend[index, ] #accesses the i-th row of the SAT_2010High data frame
+    #
+    cor.boot_ttp[i] = cor(~winningpct, ~seasonattend, data = SAT.boot_ttp) #computes correlation for each bootstrap sample
+    SAT.lm_ttp = lm(seasonattend~winningpct, data = SAT.boot_ttp)  #set up the linear model
+    a.boot_ttp[i] = coef(SAT.lm_ttp)[1] #access the computed value of a, in position 1
+    b.boot_ttp[i] = coef(SAT.lm_ttp)[2] #access the computed valeu of b, in position 2
+    ymean.boot_ttp[i] = a.boot_ttp[i] + (b.boot_ttp[i]*xvalue_ttp)
+}
+#end the loop
+#create a data frame that holds the results of teach of he Nbootstraps 
+    bootstrapresultsdf_ttp = data.frame(cor.boot_ttp, a.boot_ttp, b.boot_ttp, ymean.boot_ttp)
+```
+
+An inspection of these results
+```{r}
+head(bootstrapresultsdf_ttp, 3)
+tail(bootstrapresultsdf_ttp, 3)
+```
+
+1. $r_{boot}$, as well as its mean value
+`ggplot` is invoked to examine the disribution of the 3000 computed values of $r_{boot}$:
+```{r}
+bootstrapresultsdf_ttp %>%
+  ggplot(aes(x = cor.boot_ttp)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 0.01) +
+  xlab("Values of the Bootstrap Statistic: Correlation Coefficient") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: r")
+```
+We now use `favstats` to obtain the mean of the 3000 values of $r_{boot}$:
+```{r}
+favstats(~cor.boot_ttp, data = bootstrapresultsdf_ttp)
+```
+
+of which the mean of all $r_{boot}$ values is $0.437$. Notice how this is similar to the computed correlation of $r_{high} = 0.4374$ (done previously). From the above, distribution we can compute an interval that contains 95% of the computed values of $r_{boot}$. This can be done with the `qdata` command:
+```{r}
+favstats(~cor.boot_ttp, data = bootstrapresultsdf_ttp)
+qdata(~cor.boot_ttp, c(0.025, 0.975), data = bootstrapresultsdf_ttp)
+```
+From which
+$$
+r_{boot, 2.5} = 0.379 \hspace{0.5in} \text{and} \hspace{0.5in} r_{boot, 97.5} = 0.496
+$$
+
+2. $a_{boot}$ (as well as its mean value)
+Similar to our steps in 1, the bootstrap distribution of $a_{boot}$ is provided below
+```{r}
+bootstrapresultsdf_ttp %>%
+  ggplot(aes(x = a.boot_ttp)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 0.1) +
+  xlab("Values of the Bootstrap Statistic: y-Intercept Estimate") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: a")
+qdata(~a.boot_ttp, c(0.025, 0.975), data = bootstrapresultsdf_ttp)
+```
+
+and
+$$
+a_{boot, 2.5} = -0.9517 \hspace{0.5in} \text{and} \hspace{0.5in} a_{boot, 97.5} = -0.2904
+$$
+The mean of these 3000 different values of $a_{boot} = -0.616$, which is computed below. 
+```{r}
+favstats(~a.boot_ttp, data=bootstrapresultsdf_ttp)
+```
+
+3. $b_{boot}$ (and compute is mean value)
+Repeating, changing the **a.boot** to **b.boot** in the above, the bootstrap distribution of $b_{boot}$ is provided below
+```{r}
+bootstrapresultsdf_ttp %>%
+  ggplot(aes(x = b.boot_ttp)) +
+  geom_histogram(col = "red", fill = "blue", binwidth = 0.05) +
+  xlab("Values of the Bootstrap Statistic: Slope Estimate") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistics: b")
+favstats(~b.boot_ttp, data = bootstrapresultsdf_ttp)
+qdata(~b.boot_ttp, c(0.025, 0.975), data = bootstrapresultsdf_ttp)
+```
+and
+$$
+b_{boot, 2.5} = 4.106 \hspace{0.5in} \text{and} \hspace{0.5in} b_{boot, 97.5} = 5.4597
+$$
+The mean of many $b_{boot}$s is computed to be $4.79$
+</br>
+</br>
+Using the means of $a_{boot}$ and $b_{boot}$, our estimate of the model is
+$$
+\widehat{AverageSATMathScore}_{i} = 458.1301 + (0.000744*AverageTeacherSalary_{i})
+$$
+
+4. $Mean\:\;y_{x = 0.630}$ (and its mean value...)
+
+</br>
+</br>

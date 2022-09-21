@@ -1,0 +1,579 @@
+---
+title: DATA 602 - Bootstrapping to Create Confidence Intervals for the Difference
+  Between Two Population Proportions
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(mosaic)
+library(mosaicData)
+```
+
+
+## Bootstrapping: The Bootstrap Statistic is the Difference Between Two Sample Statistics
+
+**Illustration 1:** A business traveller needs to fly, direct, from JFK airport in the NYC-area to LAX - Los Angeles International Airport. They do not want to be late in arriving to LAX. The business traveller has many different credit cards, two of which are rewards programs for both United Airlines and American Airlines. 
+</br>
+</br>
+The data you see below resulted from a random sample of all flights leaving JFK to LAX, that are operated either by United Airlines or American Airlines. For each of the flights sampled, the number of mintues late the flight arrived at LAX was observed to the nearest minute. 
+
+$$
+{\rm United\:\:Flights}: -2,  65, -33,  -6, -14, -13,  -1,   0, -11, -40, -12, -28,  -1,  -2,  27, -21, -11, -15,  16,  -6,  -6, -17, 191,   6, -40
+$$
+$$
+{\rm American\:\:Flights}: 73,  93, -29,  -9, -39,  97,  33, -32,  -8, -15,   0, -35, 104,  -4,   0, -15,  -2, 180, -45,  12, -32,3
+$$
+
+The code below is to wrangle the data into a data frame called **twosampleex1**. Please **Copy and paste** this code into a R notebook/markdown file.
+
+```{r}
+uniteddelays = c(-2,  65, -33,  -6, -14, -13,  -1,   0, -11, -40, -12, -28,  -1,  -2,  27, -21, -11, -15,  16,  -6,  -6, -17, 191,   6, -40)
+aadelays = c(73,  93, -29,  -9, -39,  97,  33, -32,  -8, -15,   0, -35, 104,  -4,   0, -15,  -2, 180, -45,  12, -32,3)
+nuniteddelays = length(uniteddelays)
+naadelays = length(aadelays)
+minlatearriving = c(uniteddelays, aadelays) #combine the data into a data vector 
+airline = c(rep("UA", 25), rep("AA", 22))   #create airline tags for each data point 
+twosampleex1 = data.frame(airline, minlatearriving)  #create the twosampleex1 data frame
+head(twosampleex1, 3) #inspect the first three rows
+tail(twosampleex1, 3) #inspect the last three rows
+```
+
+Let's inspect this data via creation of boxplots. 
+
+```{r}
+ggplot(data=twosampleex1, aes(x = airline, y = minlatearriving)) +
+  geom_boxplot(fill='blue') +
+  xlab("Airline") +
+  ylab("Minutes Flight Arrives Late to LAX") +
+  coord_flip()
+```
+
+Statistically, does one of these airlines perform better - the flight arrives late less often or earlier more often - than another?
+</br>
+</br>
+
+To investigate this inquiry, and perhaps come up with an *almost* certain conclusion, we can look at a couple options:
+
+1. Is there a difference in the mean arrival delay between these two airlines? Is $\mu_{UA} \ne \mu_{AA}$?
+
+2. Is there a difference in the *median* arrival delay between these two airlines? Or is $\widetilde{\mu}_{UA} \ne \widetilde{\mu}_{AA}$? 
+
+
+### The Difference Between Two Population Means $\mu_{1}$ and $\mu_{2}$, or $\mu_{1} - \mu_{2}$
+
+We have learnt about the bootstrap method as a basis to make statistical inferences. Through the notion of resampling, we have the ability to create a bootstrap distribution of the (i) sample mean $\overline{X}$ (ii) sample proportion $\widehat{p}$ and (iii) sample variance $S^{2}$ or the sample standard deviation $S$.  
+</br>
+</br>
+
+Why not try looking at the bootstrap distribution for the *difference* between two sample means, $\overline{X}_{1} - \overline{X}_{2}$. In this illustration, population 1 represents all United Airlines flights from JFK to LAX; population 2 is all American Airlines flights from JFK to LAX. The variable of interest is the **minlatearriving** for each of these two airlines. 
+</br>
+</br>
+Below is the code used to run a simulation 1000 times, resampling $n_{UA} = 25$ and $n_{AA} = 22$ flights. **Copy and paste** this code into a R notebook and attempt to run. 
+
+```{r}
+nsims = 1000 #the number of simulations
+meanua = numeric(nsims) #hold the mean of each resampling from UA flights
+meanaa = numeric(nsims) #hold the mean of each resampling from AA flights
+diffmeans = numeric(nsims) #hold the difference between the sample means
+ua = filter(twosampleex1, airline == "UA")  #filters out all UA flights from data frame
+aa = filter(twosampleex1, airline == "AA")  #filters out all AA flights from data frame
+#head(ua, 3) will just check verify stripping out UA flights
+#head(aa, 3) vice versa
+for(i in 1:nsims)
+{   meanua[i] = mean(sample(ua$minlatearriving, nuniteddelays, replace = TRUE))  #computes the mean of 25 resampled UA flights
+    meanaa[i] = mean(sample(aa$minlatearriving, naadelays, replace = TRUE))  #computes the mean of 22 resampled AA flights
+    diffmeans[i] = meanua[i] - meanaa[i]  #computes the difference between the sample means
+}
+bootstrap1 = data.frame(meanua, meanaa, diffmeans)  #create a data frame holding all the means
+```
+
+```{r}
+head(bootstrap1, 3)
+bootstrap1 %>%
+  ggplot(aes(x = diffmeans)) +
+  geom_histogram(fill = 'blue', col = 'red', binwidth = 5) +
+  xlab("Mean Difference (UA - AA)") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap: Mean (UA) - Mean (AA)")
+```
+
+Above, the bootstrap distribution of the statistic that is the *difference* between the two sample means, $\overline{X}_{UA} - \overline{X}_{AA}$ has been generated.
+</br>
+
+Notice how the distribution of this difference is approximately Normal, perhaps with some slight skewness.  
+</br>
+It turns out that the difference between these two sample means is an *unbiased* estimator for the difference between the two population means $\mu_{UA} - \mu_{AA}$.
+
+$$
+E(\overline{X}_{UA} - \overline{X}_{AA}) =  E(\overline{X}_{UA}) - E(\overline{X}_{AA}) =  \mu_{UA} - \mu_{AA} 
+$$
+
+As we have done before, let's find an interval that will capture the difference between the two population means $\mu_{UA} - \mu_{AA}$ 95% of the time. Because the differences between the two sample means are stored in a data frame, let's use the `qdata` function rather than the singular-data vector friendly `quantile` command. 
+
+```{r}
+qdata(~ diffmeans, c(0.025, 0.975), data=bootstrap1) #returns both the 2.5 and 97.5 percentile of diffmeans
+```
+
+From the bootstrap distribution generated, 95% of the time the diffence between $\overline{X}_{UA} - \overline{X}_{AA}$ is between these two values. Since we *expect* the $(\overline{X}_{UA} - \overline{X}_{AA})$  to be equal to $\mu_{UA} - \mu_{AA}$, we can take into account the *spread* of this distribution and compute a 95% bootstrap interval for the difference between these two population means with the following: a 95% bootstrap confidence interval for the difference between the mean arrival delay for **all** United Airline flights from JFK to LAX and the mean arrival delay for *all* American Airlines flights from JFK to LAX is
+
+$$
+-42.94\:\:{\rm minutes} \leq \mu_{UA} - \mu_{AA} \leq 14.78 \:\:{\rm minutes}
+$$
+</br>
+</br>
+
+**Time to Play 1:** The [csv file](https://people.ucalgary.ca/~jbstall/DataFiles/studentsurvey.csv) consists of data collected from a random sample of $n = 109$ University of Calgary first-year students. 
+
+```{r}
+studentsurveydf = read.csv("https://people.ucalgary.ca/~jbstall/DataFiles/studentsurvey.csv")
+head(studentsurveydf, 4)
+```
+
+Students who responded to a "male" gender were assigned a value of 0 in the **Gender** variable, females assigned a value of 1. 
+</br>
+</br>
+Turn your attention to the variable **HSAverage**, which records a student's average grade/mark on the five university matriculation coures completed in Grade 12. 
+
+(a) Create a bootstrap distribution for $\overline{X}_{Male} - \overline{X}_{Female}$, the difference between the mean high school average for males and the mean high school average for females. Use 1000 as for the number of resamples. 
+</br>
+</br>
+**Answer:** 
+```{r}
+nfemales = count(studentsurveydf$Gender) #n_{F} = 58
+nmales = length(studentsurveydf$Gender) - nfemales #n_{M} = 51
+nfemales
+nmales
+```
+
+```{r}
+Nreps = 1000
+malemeans = numeric(Nreps)
+femalemeans = numeric(Nreps)
+genderdiff = numeric(Nreps)
+maledata = filter(studentsurveydf, Gender==0)
+femaledata = filter(studentsurveydf, Gender==1)
+for(i in 1:Nreps)
+{
+  malemeans[i] = mean(sample(maledata$HSAverage, nmales, replace=TRUE))
+  femalemeans[i] = mean(sample(femaledata$HSAverage, nfemales, replace=TRUE))
+  genderdiff[i] = malemeans[i] - femalemeans[i]
+}
+bootstrap_gendermeans = data.frame(malemeans, femalemeans, genderdiff)
+head(bootstrap_gendermeans, 3)
+```
+Histograms of the (i) **malemeans** (ii) **femalemeans** and (iii) **genderdiff** are provided below. 
+
+```{r}
+ggplot(bootstrap_gendermeans, aes(x = malemeans)) + geom_histogram(col='red', fill='blue', binwidth=0.25) + xlab("Values of Bootstrap Mean HS Average (Male)") + ylab("Count") + ggtitle("Histogram of Bootstrap Mean (Males)")
+ggplot(bootstrap_gendermeans, aes(x = femalemeans)) + geom_histogram(col='red', fill='blue', binwidth=0.25) + xlab("Values of Bootstrap Mean HS Average Female)") + ylab("Count") + ggtitle("Histogram of Bootstrap Mean (Females)")
+ggplot(bootstrap_gendermeans, aes(x = genderdiff)) + geom_histogram(col='red', fill='blue', binwidth=0.25) + xlab("Values of Bootstrap Mean HS Average (Male - Female)") + ylab("Count") + ggtitle("Histogram of Bootstrap Mean (Male - Female)")
+```
+
+
+<div style="margin-bottom:200px;">
+</div>
+
+(b) Based on your result in part (a), compute the 95% bootstrap interval for $\mu_{Male} - \mu_{Female}$. 
+</br>
+</br>
+**Answer:** 
+```{r}
+qdata(~genderdiff, c(0.025, 0.975), data=bootstrap_gendermeans)
+```
+From which, the 95% bootstrap interval for $\mu_{Male} - \mu_{Female}$ is
+$$
+-3.407 \leq \mu_{Male} - \mu_{Female} \leq 0.247
+$$
+<div style="margin-bottom:200px;">
+</div>
+
+
+(c) Consider the 90% bootstrap interval that will capture the unknown difference $\mu_{Male} - \mu_{Female}$. Compute this interval. 
+</br>
+</br>
+**Answer:**
+```{r}
+qdata(~genderdiff, c(0.05, 0.95), data=bootstrap_gendermeans)
+```
+From which, the 90% bootstrap interval for $\mu_{Male} - \mu_{Female}$ is
+$$
+-3.139\leq \mu_{Male} - \mu_{Female} \leq 0.021
+$$
+
+<div style="margin-bottom:200px;">
+</div>
+
+(d) Synthesize your results from parts (b) and (c). Can you infer that there is a difference, on average, between the average HS Grade 12 matriculation mark of first-year University of Calgary males and first-year University of Calgary females? Why or why not? 
+</br>
+</br>
+**Answer:** 
+<div style="margin-bottom:200px;">
+</div>
+
+### Conventional Confidence Interval Estimation of $\mu_{1} - \mu_{2}$. 
+
+Conventional statistics can compute a confidence interval estimate for the difference between two population means via a random sample of $x_{11}, x_{12}, \cdots, x_{1n_{1}}$ of data taken from Population 1 and $x_{21}, x_{22}, \cdots, x_{2n_{2}}$ of data taken from Population 2. 
+
+If these data can be modeled by a Normal probability model, then we invoke the Student's $t$-distribution to compute a $100(1 - \alpha)$% confidence interval for the difference between two population means $\mu_{1} - \mu_{2}$ can be found using the following formula:
+$$
+(\overline{X}_{1} - \overline{X}_{2}) \pm t_{1 - \frac{\alpha}{2}, df}\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}
+$$
+The value of the $t$-multiplier $t_{1 - \frac{\alpha}{2}, df}$ can be computed with **pt(1-alpha/2, df)**. 
+</br>
+</br>
+The degrees of freedom is found by the following:
+$$
+df = \frac{\left(\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}} \right)^{2}}{\frac{1}{n_{1} - 1}\left(\frac{S_{1}^{2}}{n_{1}}\right)^{2} + \frac{1}{n_{1} - 2}\left(\frac{S_{2}^{2}}{n_{2}}\right)^{2}}
+$$
+</br>
+
+**Application:** In the first example of today, we created various bootstrap intervals to estimate the true difference between the mean arrival delay of all UA flights and the mean arrival delay of all AA flights leaving from JFK to LAX. Suppose the variable **arr\_delay** can be modeled by the Normal distribution. I found (as your boostrap distribution will be slightly different) that 2.5% of the values of $\overline{X}_{UA} - \overline{X}_{AA}$ are below -42.93 minutes and 2.5% are above 14.78 minutes. 
+</br>
+</br>
+
+Let's find a 95% confidence interval for $\mu_{UA} - \mu_{AA}$ with the $t$-interval presented above. 
+</br>
+</br>
+**Answer:** First, we compute the various summary statistics from the two *independent* random samples of flights from each of the two population. Let's use the **favstats()** command to do so.
+
+```{r}
+favstats(~ minlatearriving | airline, data=twosampleex1)  #variable is minutes arriving on both UA and AA appearing in airline column
+```
+
+From the output above, we have
+$$
+\begin{array}{lcc}
+{\rm Airline}    &   {\rm Sample\:\:Mean}     & {\rm Sample\:\:Standard\:\:Deviation}   \\
+{\rm United:}     &    \overline{X}_{UA} = 1.04                    &    S_{UA} = 44.99859 \approx 45.0 \\
+{\rm American:}   &    \overline{X}_{AA} = 15.0                    &    S_{AA} = 58.21553  \\
+\end{array}
+$$
+
+We need the $t$-multiplier, which requires us to compute the degrees of freedom $df$:
+
+$$
+df = \frac{\left(\frac{(44.99859)^{2}}{22} + \frac{(58.21553)^{2}}{25} \right)^{2}}{\frac{1}{25 - 1}\left(\frac{(44.99859)^{2}}{25} \right)^{2} + \frac{1}{22 - 1}\left(\frac{(58.21553)^{2}}{22}\right)^{2}} = 39.366 = 39 \hspace{0.2in} ({\rm take\:\:integer\:\:part})
+$$
+
+
+The $t$-multiplier needs to come from the Student's $t$-distribution with $df = 39$. Since the level of confidence is 95%, $1 - \frac{\alpha}{2} = 1 - \frac{0.05}{2} = 0.975$. 
+</br>
+$t_{1-0.025, 39}$ is obtained from R:
+```{r}
+qt(0.975,39)
+```
+
+and $t_{0.975, 39} = 2.022691$. We have all we need to compute the 95% confidence interval that will capture the unknown value of $\mu_{UA} - \mu_{AA}$:
+
+$$
+(1.04 - 15.0) \pm (2.022691)\sqrt{\frac{(44.99859)^{2}}{25} + \frac{(58.21553)^{2}}{22}} \longrightarrow -13.96 \pm (31.0148) \longrightarrow -44.97 \leq \mu_{UA} - \mu_{AA} \leq 17.05
+$$
+
+Since this confidence interval captures 0, it could be the case that $\mu_{UA} - \mu_{AA}$ could be equal to zero and $\mu_{UA} = \mu_{AA}$. 
+</br>
+</br>
+
+All the steps above illustrate the process of *how* one goes about computing a confidence interval for the difference between two population means $\mu_{1} - \mu_{2}$. Rather than the "plug and chug" approach, we can use the `t.test` command in R to obtain this confidence interval. Below is the application of this command,  keeping in mind that our data frame **twosampleex1** consists of two columns or two variables, the first column is the **airline** variable that simply provides a tag for each data point in the **minlatearriving** variable, column 2. 
+
+
+```{r}
+t.test(~ minlatearriving | airline, data=twosampleex1, conf.level = 0.95, var.equal=FALSE)  #provides the df and the CI
+```
+
+From this output, we can see that the degrees of freedom is computed to be $df = 39.366$ and the confidence interval has a lower bound of -17.04086 and an upper bound of 44.96086. This is the 95% confidence interval for $\mu_{AA} - \mu_{UA}$; R simply flips the positioning of $\overline{X}_{UA} - \overline{X}_{AA}$ in the interval we computed above (because the airline code AA alphabetically precedes the airline code UA). R computes 
+
+$$
+(15.0 - 1.04) \pm (2.022691)\sqrt{\frac{(44.99859)^{2}}{25} + \frac{(58.21553)^{2}}{22}} \longrightarrow 13.96 \pm (31.0148) \longrightarrow -17.04 \leq \mu_{AA} - \mu_{UA} \leq 44.96
+$$
+
+
+**Time to Play 2:**  The City of Calgary has stated that all residences should be on water meters, claiming that such residences would
+be more likely to save water than those residences who are not on water meters. In order to test this claim, a water engineer
+working with the City of Calgary randomly selected 22 residences with water meters and 16 residences without. The water usage
+(in cubic meters) for last July was recorded for each residence in the sample. The collected data is presented:
+</br>
+</br>
+
+The data has been set up for you with water-usage for residences with meters being held in **m** and monthly usage for reidences with out meters being held in **wom**. 
+</br>
+</br>
+Copy and paste the code below into a R chunk. 
+```{r}
+m = c(25.29, 22.44, 25.56, 22.31, 24.61, 27.42, 21.73, 19.44, 16.04, 20.91, 23.61, 20.17, 27.10, 20.94, 25.97, 31.50, 24.39, 28.58, 23.75, 30.37, 17.94, 18.59)
+wom = c(31.85, 27.46, 24.52, 28.64, 32.81, 30.0, 23.66, 29.60, 15.86, 32.0, 35.9, 26.89, 31.14, 21.82, 24.38, 34.39)
+waterusage = c(m, wom)
+house = c(rep("meter", length(m)), rep("nometer", length(wom)))
+residentialusage = data.frame(house, waterusage)
+head(residentialusage, 3)
+tail(residentialusage, 3)
+withmeters_vector <- residentialusage %>%
+  filter(house == "meter") %>%
+  select(waterusage) %>%
+  pull(waterusage)
+nsize_with <- length(withmeters_vector)
+withoutmeters_vector <- residentialusage %>%
+  filter(house == "nometer") %>%
+  select(waterusage) %>%
+  pull(waterusage)
+nsize_without <- length(withoutmeters_vector)
+```
+
+(a) Compute a 95% bootstrap interval that will estimate the difference between the mean monthly water consumption of households without meters and the mean monthly water consumption of households with meters, $\mu_{Meter} - \mu_{NoMeter}$ Ensure you visualize the distribution of the difference of means. 
+</br>
+</br>
+**Answer:** 
+```{r}
+bootstrap_2a <- do(1000) * (mean(resample(withmeters_vector, nsize_with)) - mean(resample(withoutmeters_vector, nsize_without)))
+head(bootstrap_2a)
+bootstrap_2a %>%
+  ggplot(aes(x = result)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.5) +
+  xlab("Bootstrap Statistic - Sample Proportion") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Proportion")
+qdata(~result, c(0.025, 0.975), data = bootstrap_2a)
+```
+and the 95% bootstrap interval is
+$$
+-7.461 \leq \mu_{Meter} - \mu_{NoMeter} \leq -1.379
+$$
+
+
+
+<div style="margin-bottom:200px;">
+</div>
+
+(b) Compute the 95% *t* confidence interval. What can you infer from this result? 
+</br>
+</br>
+**Answer:** 
+
+```{r}
+favstats(~waterusage|house, data=residentialusage)
+```
+To compute the 95% confidence interval for $\mu_{Meter} - \mu_{NoMeter}$, the `t.test` command is employed.
+```{r}
+t.test(~waterusage | house, data=residentialusage, conf.level=0.95, var.equal=TRUE)
+```
+
+From this output, the 95% confidence interval for $\mu_{Meter} - \mu_{NoMeter}$ is
+$$
+-7.63 \leq \mu_{Meter} - \mu_{NoMeter} \leq -1.58
+$$
+
+<div style="margin-bottom:200px;">
+</div>
+
+---------------------------------------------
+
+### The Difference Between Two Sample Proportions as the Bootstrap Statistic.
+
+**Illustration 2:**. A survey of $n = 109$ students taking a first-year statistics class revealed that 17 of 51 male students have used marijuana in the past six months, 9 of 58 female students have used marijuana in the past six months. Assuming the response of each student is independent of the response of all other students, the two sample proportions are 
+
+$$
+\widehat{p}_{M} = \frac{17}{51} = 0.3333 \hspace{0.25in} {\rm and} \hspace{0.25in} \widehat{p}_{F} = \frac{9}{58} = 0.15517
+$$
+
+How can we create a bootstrap distribution of the *difference* between $\widehat{p}_{M} - \widehat{p}_{F}$? We set up a few data vectors that will enable use to create a data frame called **bootstrap2**.
+
+```{r}
+m = rep(c(0,1), c(51-17, 17)) #create a vector with 34 0s and 17 1s
+f = rep(c(0,1), c(58-9, 9))   #create another vector with 49 0s and 9 1s
+sex = c(rep(c("male"), 51), rep(c("female"), 58)) #create a vector to tag which response is male and female
+used = c(m,f)
+illustration2 = data.frame(sex, used) #create data frmme with sex in column 1 and usage in column 2
+head(illustration2, 3)
+tail(illustration2, 3)
+males = filter(illustration2, sex == "male") #pull out males for one data frame
+females = filter(illustration2, sex == "female") #pull out females for another data frame
+head(males, 3)
+tail(females, 3)
+```
+
+Below is the distribution of the bootstrap statistic $\widehat{p}_{M}$ - $\widehat{p}_{F}$, based on resampling of 51 males and 58 females.
+
+```{r}
+# start the simulation at 1000 times
+nmales = 51  #resample size for males
+nfemales = 58 #resample size for females
+nsims = 1000  #no of simulations
+propmales = numeric(nsims)
+propfemales = numeric(nsims)
+diffprops = numeric(nsims)
+# Start the for loop
+for(i in 1:nsims)
+  {   propmales[i] = sum(sample(males$used, nmales, replace=TRUE))/nmales  #compute male sample proportion
+      propfemales[i] = sum(sample(females$used, nmales, replace=TRUE))/nfemales #compute female sample proportion
+      diffprops[i] = propmales[i] - propfemales[i] #compute difference between phat(male) and phat(female)
+}
+bootstrap2 = data.frame(propmales, propfemales, diffprops) #create a data frame to hold the phat(male), phat(female), phat(male) - phat(female)
+head(bootstrap2, 4)
+tail(bootstrap2, 3)
+```
+
+
+```{r}
+ggplot(data=bootstrap2, aes(x = diffprops)) + geom_histogram(fill='blue', col='red', binwidth=0.05) + xlab("Distribution of Difference SamPer(Male) - SamPer(Female)") + ggtitle("Bootstrap Distribution of Prop(Male) - Prop(Female)")
+```
+
+From the distribution of this bootstrap statistic ($\widehat{p}_{M} - \widehat{p}_{F}$), we can find the 2.5 percentile and the 97.5 percentile.
+
+```{r}
+qdata(~ diffprops, c(0.025, 0.975), data=bootstrap2)
+```
+
+We now have a 95% bootstrap confidence interval for $p_{M} - p_{F}$:
+
+$$
+0.0533 \leq p_{M} - p_{F} \leq 0.35
+$$
+<div style="margin-bottom:200px;">
+</div>
+
+**Time to Play 3:** Find the bootstrap distribution of $\widetilde{p}_{M} - \widetilde{p}_{M}$ where
+$$
+\widetilde{p}_{M} = \frac{X_{M} + 1}{n_{M} + 2} \hspace{0.25in} \text{and} \hspace{0.25in} \widetilde{p}_{F} = \frac{X_{F} + 1}{n_{F} + 2}.
+$$
+From this boostrap distribution,
+</br>
+
+(a) compute the 95% bootstrap confidence interval for $p_{M} - p_{F}$ from this particular bootstrap statistic. 
+</br>
+</br>
+**Answer:** Some of what you see below is code that appears in the class/lecture notes:
+```{r echo=TRUE}
+m = rep(c(0,1), c(51-17, 17)) #create a vector with 34 0s and 17 1s
+f = rep(c(0,1), c(58-9, 9))   #create another vector with 51 0s and 9 1s
+sex = c(rep(c("male"), 51), rep(c("female"), 58)) #create a vector to tag which response is male and female
+used = c(m,f)
+illustration2 = data.frame(sex, used) #create data frmme with sex in column 1 and usage in column 2
+males = filter(illustration2, sex == "male") #pull out males for one data frame
+females = filter(illustration2, sex == "female") #pull out females for another data frame
+```
+
+```{r}
+nmales = 51  #resample size for males
+nfemales = 58 #resample size for females
+nsims = 1000  #no of simulations
+prop2males = numeric(nsims)
+prop2females = numeric(nsims)
+diffprops2 = numeric(nsims)
+# Start the for loop
+for(i in 1:nsims)
+  {   prop2males[i] = (sum(sample(males$used, nmales, replace=TRUE)) + 1)/(nmales + 2)  #compute male (X + 1)/(n + 2)
+      prop2females[i] = (sum(sample(females$used, nmales, replace=TRUE)) + 1)/(nfemales  + 2)#compute female (X + 1)/(n + 2)
+      diffprops2[i] = prop2males[i] - prop2females[i] #compute difference between phat(male) and phat(female)
+}
+bootstrap3 = data.frame(prop2males, prop2females, diffprops2) #create a data frame to hold the phat(male), phat(female), phat(male) - phat(female)
+head(bootstrap3, 4)
+tail(bootstrap3, 3)
+```
+The distribution of bootstrap statistic $\widetilde{p}_{M} - \widetilde{p}_{F}$ is 
+```{r}
+ggplot(bootstrap3, aes(x = diffprops2)) + geom_histogram(col='red', fill='blue', binwidth=0.02) + xlab("Values of Difference in P-Tilde (male - Female)") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistic")
+```
+
+
+<div style="margin-bottom:200px;">
+</div>
+
+
+(b) compute the 99% bootstrap confidence interval for $p_{M} - p_{F}$
+</br>
+</br>
+
+```{r}
+qdata(~diffprops2, c(0.005, 0.995), data=bootstrap3)
+```
+and
+$$
+-0.0214 \leq p_{M} - p_{F} \leq 0.4050
+$$
+
+
+<div style="margin-bottom:200px;">
+</div>
+
+------------------
+
+### Conventional Confidence Interval for $p_{1} - p_{2}$
+
+There are two different types of conventional confidence intervals for the unknown value of the difference between two population proportions $p_{1} - p_{2}$. We will be using the **Agresti-Coull** version of confidence interval, which is sometimes called the *plus-1/plus-2* confidence interval. 
+</br>
+
+In this version of confidence interval, we observed the number of successes in both samples $X_{1}$ and $X_{2}$. We then compute the *plus-1/plus-2* versions of sample proportions:
+
+$$
+\widetilde{p}_{1} = \frac{X_{1} + 1}{n_{1} + 2} \hspace{0.25in} {\rm and} \hspace{0.25in} \widetilde{p}_{2} = \frac{X_{2} + 1}{n_{2} + 2} 
+$$
+
+
+The $100(1-\alpha)\%$ confidence interval for the difference between two unknown values of the population proportions $p_{1} - p_{2}$ is then computed with
+
+$$
+(\widetilde{p}{1} - \widetilde{p}_{2}) \pm z_{\frac{\alpha}{2}}\sqrt{\frac{\widetilde{p}_{1}(1 - \widetilde{p}_{1})}{n_{1} + 2}  + \frac{\widetilde{p}_{2}(1 - \widetilde{p}_{2})}{n_{2} + 2}   }
+$$
+
+
+where the *z*-multiplier is obtained with the **qnorm(1-alpha/2)**.
+</br>
+</br>
+**Example 1:** Consider the data presented in today's first example. Let's compute a 95% confidence interval for $p_{M} - p_{F}$ using the "conventional" confidence interval estimation method for the difference between the two unknown values of the population proportions.
+</br>
+</br>
+**Answer**. First, we compute the "plus-1/plus-2" versions of the sample proportions.
+$$
+\widehat{p}_{M} = \frac{X_{M} + 1}{n_{M} + 2} = \frac{17 + 1}{51 + 2} = 0.3396,  \hspace{0.5in} \widehat{p}_{F} = \frac{X_{F} + 1}{n_{F} + 2} = \frac{9 + 1}{58 + 2} = 0.16667,
+$$
+Now we find the value of the  $z$-muliplier $z_{0.025}$ with the **qnorm(1-alpha/2)** command.
+
+```{r}
+qnorm(1-0.025)
+```
+
+$z_{0.025} = 1.96$
+
+Let's see how the confidence interval works:
+$$
+(0.3396 - 0.16667) \pm (1.96)\sqrt{\frac{0.3396(1 - 0.3396)}{51 + 2}  + \frac{0.16667(1 - 0.16667)}{58 + 2}} \\
+\longrightarrow 0.1729 \pm 0.1586\\
+\longrightarrow 0.014 \leq p_{M} - p_{F} \leq 0.3315
+$$
+The 95% confidence interval for $p_{M} - p_{F}$ has a lower bound of 0.014 and an upper bound of 0.3315. 
+
+This interval can be computed in R with the `prop.test(c(X1 + 1, X2 + 2), c(n1 + 2, n2 + 2), conf.level=0.95, correct=FALSE)` command.
+
+```{r echo=TRUE}
+prop.test(c(18,10), c(53, 60), conf.level=0.95, correct=FALSE)$conf 
+```
+
+**Time to Play 4:** Researchers wish to investigate the effectiveness of a new drug to alleviate hives due to math anxiety. Seven hundred math students are randomly assigned to either take either this drug or the placebo. After the random assignment and the running of this clinical trial, 34 of the 350 students who took the drug break out in hives compared to 56 of the 350 who took the placebo.
+</br>
+</br>
+Using a level of confidence of 95%, compute a confidence interval that will capture the true value of $p_{Drug} - p_{Placebo}$, the difference between the proportion of all students with math anxiety who develop hives after taking the drug and the proportion of all students who develop hives by taking the placebo.
+</br>
+</br>
+What can you conclude from this confidence interval? 
+</br>
+</br>
+**Answer:**
+```{r}
+prop.test(c(34 + 1, 56 + 1), c(350 + 2, 350 + 2), correct=FALSE)$conf
+```
+The confidence interval is 
+$$
+-0.1121 \leq p_{Drug} - p_{Placebo} \leq -0.0129
+$$
+
+
+<div style="margin-bottom:400px;">
+</div>
+
+
+
+
+

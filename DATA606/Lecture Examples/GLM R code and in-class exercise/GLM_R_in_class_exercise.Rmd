@@ -1,0 +1,307 @@
+---
+title: "GLM examples"
+output: html_notebook
+---
+
+### Example: snoring and heart diease
+**Using identity function as the link function**
+```{r}
+library(ggplot2)
+library(dplyr)
+y<-c(rep(1,24),rep(0,1355),rep(1,35),rep(0,605),rep(1,21),rep(0,192),rep(1,30),rep(0,224))
+x<-c(rep(0,1379),rep(2,640),rep(4,213),rep(5,254))
+bi_data<-data.frame(x,y)
+
+fit1<-glm(y ~ x,data = bi_data, family = binomial(link = "identity"), start = c(0.1, 0.1))
+summary(fit1)
+```
+```{r}
+sum(residuals(fit1, type = "deviance")^2)
+```
+
+```{r}
+# Visualize the fitting result
+pi_hat<-c(24,35,21,30)/c(1379,640,213,254)
+explan4<-c(0,2,4,5)
+data_explan=data.frame(x=explan4)
+pi_fit<-predict(fit1, newdata=data_explan, type="response")
+BIDATA<-data.frame(explan4,pi_fit_hat,pi_fit)
+ggplot()+geom_point(data = BIDATA, aes(explan4, pi_hat))+geom_line(data = BIDATA, aes(explan4, pi_fit), colour='red')
+```
+
+**Use logit function as link function**
+```{r}
+# the default link function for binomial is "logit"
+fit2<-glm(y~x, data = bi_data, family = binomial)
+summary(fit2)
+```
+```{r}
+pi_fit2<-predict(fit2, newdata=data_explan, type="response")
+explan4<-c(0,2,4,5)
+BIDATA2<-data.frame(explan4,pi_hat,pi_fit2)
+ggplot()+geom_point(data = BIDATA2, aes(explan4, pi_hat))+geom_line(data = BIDATA2, aes(explan4, pi_fit2), colour='red')
+```
+
+**In-class practice 1: use log function as link function**
+```{r}
+# Part 1: fit the model
+fit3 <- glm(y ~ x, data = bi_data, family = binomial(link = "log"))
+summary(fit3)
+# Part 2: visualize your result
+pi_fit3<-predict(fit3, newdata=data_explan, type="response")
+explan4<-c(0,2,4,5)
+BIDATA3<-data.frame(explan4,pi_hat,pi_fit3)
+ggplot()+geom_point(data = BIDATA3, aes(explan4, pi_hat))+geom_line(data = BIDATA3, aes(explan4, pi_fit3), colour='red')
+```
+
+**split the dataset into train and test, check the prediction accuracy**
+```{r}
+y<-c(rep(1,24),rep(0,1355),rep(1,35),rep(0,605),rep(1,21),rep(0,192),rep(1,30),rep(0,224))
+x<-c(rep(0,1379),rep(2,640),rep(4,213),rep(5,254))
+bi_data<-data.frame(x,y)
+
+library(sampling)
+# proportional stratified sampling
+N=round(c(1379, 640, 213, 254)*0.05)
+cl=sampling:::strata(bi_data, stratanames=c("x"), N, method="srswor")
+test=getdata(bi_data,cl)
+train=bi_data[-cl$ID_unit,]
+model_try<-glm(y~x, data = train, family = binomial)
+summary(model_try)
+```
+```{r}
+# test the prediction
+fitted.results<-predict(model_try,newdata=test,type='response')
+fitted.results <- ifelse(fitted.results > 0.5,1,0)
+misClasificError <- mean(fitted.results != test$y)
+print(paste('Accuracy',1-misClasificError))
+```
+
+
+**Example 2: explore the "Titanic" data**
+```{r}
+training.data.raw <- read.csv('Titanic_train.csv',header=T,na.strings=c(""))
+data<-subset(training.data.raw,select=c(2,3,5,6,7,8))
+# There are some NA in the age column, use sample mean to replace them
+data$Age[is.na(data$Age)] <- mean(data$Age, na.rm=T)
+contrasts(data$Sex)
+```
+
+**In-class practice 2**
+```{r}
+# split the dataset into two parts, train and test.
+# use "pclass" variable to select the test set.
+# use proportion 0.05 in stratified sampling
+library(caret)
+training.samples = createDataPartition(data$Pclass, p = 0.95, list = FALSE)
+train.data = data[training.samples, ]
+test.data  = data[-training.samples, ]
+
+# Step 1: apply logistic regression to train data
+fit4 <- glm(Survived ~ factor(Pclass) + factor(Sex) + Age + factor(SibSp) + factor(Parch), data = train.data, family = binomial)
+
+# Step 2: apply the fitted model to test and get the prediction accuracy
+fitted.results <- predict(fit4, newdata = test.data, type = 'response')
+fitted.results <- fitted.results > 0.5
+mean(fitted.results == test.data$Survived)
+```
+
+
+
+
+
+
+
+______________________________________________
+
+### A Poisson regression example (with identity function as the link function)
+```{r chunk}
+explan<-seq(1,3,length.out = 21)
+mu_vec<-1+1*explan
+resp<-rpois(length(explan),explan)
+poidata<-data.frame(explan, mu_vec, resp)
+ggplot()+geom_point(data = poidata, aes(explan, resp))+geom_line(data = poidata, aes(explan, mu_vec), colour='red')
+```
+
+```{r}
+fit3<-glm(resp~explan, family = poisson(link = "identity"), data = poidata, start = c(0,1))
+summary(fit3)
+```
+
+**The estimated parameters seem not very good, shall we believe them?**
+**In-class practice 3**
+**Question: please use "mle" function to verify the estimates**
+```{r}
+# Step 1: construct the likelihood function
+# hint: use "dpois" function (the probability mass function of Poisson)
+
+
+# Step 2: use "mle" function
+
+
+```
+
+**What if we increase the observations?**
+```{r}
+explan2<-rep(seq(2,8,length.out = 61),10)
+mu_vec2<-1+1*explan2
+resp2<-rpois(length(explan2),explan2)
+poidata2<-data.frame(explan2, mu_vec2, resp2)
+ggplot()+geom_point(data = poidata2, aes(explan2, resp2))+geom_line(data = poidata2, aes(explan2, mu_vec2), colour='red')+ylim(0,20)
+```
+
+```{r}
+fit4<-glm(resp2~explan2, family = poisson(link = "identity"), data = poidata2, start = c(-1,1))
+summary(fit4)
+```
+
+### Poission regression (link function is log())
+```{r}
+explan3<-rep(seq(0.1,3,length.out = 30),5)
+mu_vec3=exp(-1+1*explan3)
+resp3<-rpois(length(explan3),mu_vec3)
+poidata3<-data.frame(explan3, mu_vec3, resp3)
+ggplot()+geom_point(data = poidata3, aes(explan3, resp3))+geom_line(data = poidata3, aes(explan3, mu_vec3), colour='red')+ylim(0,20)
+```
+
+```{r}
+fit5<-glm(resp3~explan3, family = poisson(), data = poidata3)
+summary(fit5)
+```
+
+
+
+
+____________________________________
+
+### Example: horseshoe crab
+```{r}
+crabDATA<-read.table('Horseshoe Crab data.txt', header = TRUE)
+crabDATA[1:15,]
+```
+
+Classify those observations according to the width:
+```{r}
+bin=c(min(crabDATA$width),23.25,24.25,25.25,26.25,27.25,28.25,29.25,max(crabDATA$width))
+# Check the variance, compare it with mean
+sample_mean<-rep(0,(length(bin)-1))
+sample_variance<-sample_mean
+num_obs<-sample_mean
+for (i in 1:(length(bin)-1)){
+  ind=intersect(which(crabDATA$width<=bin[i+1]), which(crabDATA$width>=bin[i]))
+  num_obs[i]=length(ind)
+  sample_mean[i]=mean(crabDATA$satell[ind])
+  sample_variance[i]=sd(crabDATA$satell[ind])^2
+}
+
+#newdata<-data.frame(num_obs,sample_mean,sample_variance)
+#newdata
+# Create bins
+#bin <- crabDATA %>% mutate(width_bin = cut(width, breaks = c(0, 23.25,24.25,25.25,26.25,27.25,28.25,29.25, 100)))
+
+# Check the variance, compare it with mean
+#newdata <- bin %>%
+#  group_by(width_bin) %>%
+#  summarise(count = n(), mean = mean(satell), variance = var(satell))
+```
+
+```{r}
+bin_p<-rep(0,8)
+for (i in 1:8){
+  bin_p[i]=(bin[i]+bin[i+1])/2
+}
+NEWDATA<-crabDATA[order(crabDATA$width),]
+explan5<-rep(bin_p[1],num_obs[1])
+for (i in 2:8){
+  temp=rep(bin_p[i],num_obs[i])
+  explan5<-c(explan5,temp)
+}
+mydata<-cbind(explan5,NEWDATA)
+mydata[1:15,]
+```
+
+```{r}
+ggplot()+geom_point(data=mydata, aes(explan5,satell))
+```
+
+```{r}
+fit6<-glm(satell~explan5, data = mydata, family = poisson())
+summary(fit6)
+```
+
+```{r}
+mu_fit<-exp(-2.882+0.148*explan5)
+mynewdata<-cbind(mu_fit,mydata)
+ggplot()+geom_point(data=mynewdata, aes(explan5, satell))+geom_line(data = mynewdata, aes(explan5, mu_fit), color="red")
+```
+**However, when I plot the sample mean, it seems to be more reasonable to use an identity function as the link function.**
+```{r}
+# mu_fitt<-exp(-2.882+0.148*bin_p)
+data_explan1<-data.frame(explan5=bin_p)
+mu_fitt<-predict(fit6, newdata = data_explan1, type = "response")
+scatter.smooth(bin_p,sample_mean)
+lines(bin_p, mu_fitt, col="red")
+```
+
+**In-class practice 4**
+**Question: what is the result of applying identity function as the link function? **
+```{r}
+# use "mydata" as the data source
+
+```
+**Question: please visualize your result and compare it with that obtained using "log" link function** 
+```{r}
+
+```
+
+```{r}
+# Negative binomial regression
+library(MASS)
+fit7<-glm.nb(satell~explan5, data = mydata)
+summary(fit7)
+```
+
+```{r}
+mu_fittt<-predict(fit7, newdata = data_explan, type = "response")
+```
+
+```{r}
+mu_fitt<-predict(fit6, newdata = data_explan, type="response")
+scatter.smooth(bin_p,sample_mean)
+lines(bin_p, mu_fitt, col="red")
+lines(bin_p, mu_fittt, col="blue")
+```
+
+**GLM for rate data**
+```{r}
+Year=seq(2003, 1975, by=-1)
+Train_collisions<-c(0,1,0,1,1,0,1,2,1,2,0,1,2,1,4,2,1,2,0,5,2,2,2,2,3,2,1,2,5)
+Train_road_coll<-c(3,3,4,3,2,4,1,2,2,4,4,4,6,2,4,4,6,13,5,3,7,3,2,2,3,4,8,12,2)
+Train_length<-c(518,516,508,503,505,487,463,437,423,415,425,430,439,431,436,443,397,414,418,389,401,372,417,430,426,430,425,426,436)
+British_train<-data.frame(Year, Train_collisions, Train_road_coll, Train_length)
+British_train[1:10,]
+```
+
+```{r}
+Yr_num<-Year-1975
+mydata<-data.frame(Yr_num, Train_collisions, Train_road_coll, Train_length)
+fit7<-glm(Train_road_coll~offset(log(Train_length))+Yr_num, family=poisson())
+summary(fit7)
+```
+```{r}
+fit_mu<-exp(log(Train_length)-4.211-0.033*Yr_num)
+newdata<-data.frame(Year, Train_road_coll, fit_mu)
+ggplot()+geom_line(data = newdata, aes(Year, Train_road_coll), colour='blue')+geom_line(data = newdata, aes(Year, fit_mu), colour='red')
+```
+
+**In-class practice 5**
+```{r}
+DATA<-read.table('Smoke and death.txt', header = TRUE)
+```
+
+```{r}
+# "Death" is the response, "Age_level" and "Smoke_status" are explanatoty variables
+# Using Poisson regression for rate data
+fit8 <- glm(data = DATA, Death~offset(log(Pop))+Age_level+Smoke_status, family = poisson())
+summary(fit8)
+```

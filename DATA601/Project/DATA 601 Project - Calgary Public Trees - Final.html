@@ -1,0 +1,2925 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head></head><body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+
+  <div class="border-box-sizing">
+    <div class="container">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1>Data 601 - Project<a rel="noopener" class="anchor-link" href="#Data-601---Project">&#182;</a></h1><h2>Exploring the City of Calgary&#39;s Public Trees Dataset<a rel="noopener" class="anchor-link" href="#Exploring-the-City-of-Calgary&#39;s-Public-Trees-Dataset">&#182;</a></h2><p>Michael Ellsworth</p>
+<p>Jennifer Leslie-Panek</p>
+<p>Christy Sarmiento</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Introduction<a rel="noopener" class="anchor-link" href="#Introduction">&#182;</a></h3><ul>
+<li><p>Trees are an asset to Calgarians as they improve community aesthetics, filter the air we breathe, capture carbon, prevent erosion and are homes for a variety of creatures.</p>
+</li>
+<li><p>In Calgary, there are approximately 7 million trees within city limits.</p>
+</li>
+<li><p>Calgary is an arid prairie type climate that is not necessarily conducive to growing trees.</p>
+</li>
+<li><p>The challenge is that the majority of trees are publicly owned and hence the cost and maintenance of them fall on the municipality. Additionally, understanding the value of investing resources into trees is not particularly intuitive for citizens.</p>
+</li>
+<li><p>The purpose of this project is to analyze the City of Calgary’s public tree data to present insight and understanding of Calgary’s public trees for greater understanding and support of this shared asset.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Public Trees Dataset<a rel="noopener" class="anchor-link" href="#Public-Trees-Dataset">&#182;</a></h3><ul>
+<li>Public Trees<ul>
+<li>City of Calgary (2019) Public Trees [Online]. Available at: <a rel="noopener" href="https://data.calgary.ca/Environment/Public-Trees/tfs4-3wwa">https://data.calgary.ca/Environment/Public-Trees/tfs4-3wwa</a> (Accessed: 28 September 2019) </li>
+</ul>
+</li>
+<li>DECIDUOUS_EVERGREEN: A distinction of the type of tree, either &quot;Deciduous&quot; or &quot;Evergreen&quot;</li>
+<li>COMMON_NAME: The non-scientific name given for a tree</li>
+<li>GENUS: The first part in the binomial species name of a tree</li>
+<li>SPECIES: The second part in the binomial species name of a tree</li>
+<li>TREE_MAINTENANCE: The current general maintenance level provided to the tree based on tree stage of life</li>
+<li>DBH_CM: The diameter at breast height (approximately 1.4 m) of a tree in centimeters</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Public Trees Dataset<a rel="noopener" class="anchor-link" href="#Public-Trees-Dataset">&#182;</a></h3><ul>
+<li>MATURE_SIZE: The expected size of a tree at full maturity: small, medium or large</li>
+<li>RATING: Numberic value between 50-100</li>
+<li>TREE_CONDITION_RATING_PERC:  Percentage value between 0-100 assigned by trained Urban Forestry staff</li>
+<li>COMM_CODE: The short-hand code used to identify the community an asset resides in</li>
+<li>longitude: The longitude of the tree</li>
+<li>latitude: The latitude of the tree</li>
+<li>location: A column with the combined longitude and latitude of the tree</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Community Dataset<a rel="noopener" class="anchor-link" href="#Community-Dataset">&#182;</a></h3><ul>
+<li>Community Points<ul>
+<li>City of Calgary (2019) Community Points [Online]. Available at: <a rel="noopener" href="https://data.calgary.ca/Base-Maps/Community-Points/j9ps-fyst">https://data.calgary.ca/Base-Maps/Community-Points/j9ps-fyst</a> (Accessed: 28 September 2019)</li>
+</ul>
+</li>
+<li>Census by Community 2019<ul>
+<li>City of Calgary (2019) Census by Community 2019 [Online]. Available at: <a rel="noopener" href="https://data.calgary.ca/Demographics/Census-by-Community-2019/rkfr-buzb">https://data.calgary.ca/Demographics/Census-by-Community-2019/rkfr-buzb</a> (Accessed: 28 September 2019)</li>
+</ul>
+</li>
+<li>CLASS: Community class definition: &#39;Residential&#39;, &#39;Industrial&#39;, &#39;Major Park&#39;, &#39;Residual Sub Area&#39;</li>
+<li>COMM_CODE: Community identifier used to merge with tree dataset</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Community Dataset<a rel="noopener" class="anchor-link" href="#Community-Dataset">&#182;</a></h3><ul>
+<li>NAME: The name of the community</li>
+<li>SECTOR: The sector in which the community is in</li>
+<li>longitude: The longitude of the centroid of the community</li>
+<li>latitude: The latitude of the centroid of the community</li>
+<li>location: A column with the combined longitude and latitude of the centroid of the community</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Guiding Questions<a rel="noopener" class="anchor-link" href="#Guiding-Questions">&#182;</a></h3><h4>Data Cleaning<a rel="noopener" class="anchor-link" href="#Data-Cleaning">&#182;</a></h4><ul>
+<li>Are there noticeable gaps in the data? </li>
+<li>Is there anything about the missing data that would help provide context for further analysis?</li>
+</ul>
+<h4>Tree Maintenance and Condition<a rel="noopener" class="anchor-link" href="#Tree-Maintenance-and-Condition">&#182;</a></h4><ul>
+<li>Do certain types of species require more maintenance? </li>
+<li>Does size affect the condition of trees? </li>
+</ul>
+<h4>Visualizing Tree Density<a rel="noopener" class="anchor-link" href="#Visualizing-Tree-Density">&#182;</a></h4><ul>
+<li>What does the general tree density look like across the city? </li>
+<li>Is it apparent where the highest density of good condition trees resides? </li>
+</ul>
+<h4>Quantifying Tree Value<a rel="noopener" class="anchor-link" href="#Quantifying-Tree-Value">&#182;</a></h4><ul>
+<li>How much value does each tree provide? </li>
+<li>What is the density of the value in each community? </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1>Packages<a rel="noopener" class="anchor-link" href="#Packages">&#182;</a></h1><ul>
+<li>Pandas</li>
+<li>Numpy</li>
+<li>Matplotlib</li>
+<li>Plotly</li>
+<li>Plotly Express</li>
+<li>Geopandas</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Load packages</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
+
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Import Public Tree data and Community Points data</span>
+<span class="n">public_trees_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Public_Trees.csv&quot;</span><span class="p">)</span>
+<span class="n">community_info_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Community_Points.csv&quot;</span><span class="p">)</span>
+<span class="n">community_info_raw</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;longitude&#39;</span><span class="p">:</span><span class="s1">&#39;LONGITUDE_CTR&#39;</span><span class="p">,</span><span class="s1">&#39;latitude&#39;</span><span class="p">:</span><span class="s1">&#39;LATITUDE_CTR&#39;</span><span class="p">,</span><span class="s1">&#39;location&#39;</span><span class="p">:</span><span class="s1">&#39;LOC_CTR&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Join dataframes</span>
+<span class="n">public_trees</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_trees_raw</span><span class="p">,</span> <span class="n">community_info_raw</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+<span class="c1">## Clean data and drop columns</span>
+
+<span class="c1"># Change all columns (features) to upper case</span>
+<span class="n">public_trees</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">public_trees</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Change all rows (observations) to upper case</span>
+<span class="n">public_trees_cleaned</span> <span class="o">=</span> <span class="n">public_trees</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+<span class="c1"># Drop columns that are not needed in the analysis</span>
+<span class="n">public_trees_cleaned</span> <span class="o">=</span> <span class="n">public_trees_cleaned</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;ASSET_TYPE&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;HORT_CODE&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;CULTIVAR&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;TREE_ASSET_CD&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;CLASS_CODE&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;LONGITUDE_CTR&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;LATITUDE_CTR&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;LOC_CTR&#39;</span><span class="p">],</span>
+                                                 <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Data Cleaning<a rel="noopener" class="anchor-link" href="#Data-Cleaning">&#182;</a></h3><ul>
+<li>Removed unnecessary columns</li>
+<li>Converted all text data to upper case</li>
+<li>Merged datasets together</li>
+<li>Explored data and removed non-existing trees (stumps)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Based on the values in the TREE_MAINTENANCE column, there may be some trees that are no longer trees</span>
+<span class="n">display</span><span class="p">(</span><span class="n">public_trees_cleaned</span><span class="o">.</span><span class="n">TREE_MAINTENANCE</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+<span class="c1"># Remove stumps from the dataset in order to limit the data to living trees</span>
+<span class="n">public_trees_no_stumps</span> <span class="o">=</span> <span class="n">public_trees_cleaned</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">public_trees_cleaned</span><span class="p">[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;STUMP REMOVAL&#39;</span><span class="p">,</span> <span class="c1"># The &quot;~&quot; infront of public_trees_cleaned filters</span>
+                                                                     <span class="c1"># the stumps out of the dataframe. If this </span>
+                                                                     <span class="c1"># was not included, only the stumps would remain</span>
+                                                                     <span class="c1"># in the dataframe</span>
+                                                   <span class="s1">&#39;REMOVE STUMP&#39;</span><span class="p">])</span>
+<span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_text output_subarea">
+<pre>array([&#39;MAINTAIN TREE&#39;, &#39;MAINTAIN SHRUB&#39;, &#39;ESTABLISH TREE&#39;, &#39;NAN&#39;,
+       &#39;PLANT SITE&#39;, &#39;STUMP REMOVAL&#39;, &#39;REMOVE STUMP&#39;], dtype=object)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>Started by getting a sense of what level of detail is available</li>
+<li>Determined that trees were classified primarily by &quot;Maintain&quot; or &quot;Establish&quot;</li>
+<li>Maintain = less maintenance</li>
+<li>Establish = more maintenance</li>
+<li>This served as a valuable distinction between trees that required and didn&#39;t require maintenance</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># In order to get a sense of the level of maintenance that is required for Calgary trees,</span>
+<span class="c1"># we can create a bar graph with the counts of each maintenance level</span>
+
+<span class="c1"># Start out by excluding all other columns to just capture the maintenance information in a Pandas Series</span>
+<span class="n">maintenance_groups</span> <span class="o">=</span> <span class="n">public_trees_no_stumps</span><span class="p">[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">]</span>
+
+<span class="c1"># Drop &quot;NAN&quot; values from the series</span>
+<span class="n">maintenance_groups_cleaned</span> <span class="o">=</span> <span class="n">maintenance_groups</span><span class="p">[</span><span class="n">maintenance_groups</span> <span class="o">!=</span> <span class="s2">&quot;NAN&quot;</span><span class="p">]</span>
+
+<span class="c1"># Use the &quot;value_counts&quot; function to count the unique values in the newly created column</span>
+<span class="n">maintenance_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">maintenance_groups_cleaned</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">maintenance_counts</span> <span class="o">=</span> <span class="n">maintenance_counts</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">:</span> <span class="s2">&quot;COUNT&quot;</span><span class="p">})</span>
+
+<span class="c1"># Create a bar chart to visualize the counts in each category</span>
+<span class="n">maintenance_counts_bar_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">maintenance_counts</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;COUNT&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maintenance_counts_bar_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+        
+        
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>Based on the limited trees classified as &quot;Maintain Shrub&quot; or &quot;Plant Site&quot;, we excluded these classifications in our analysis</li>
+<li>This decision was made prior to Leanne&#39;s lecture on Ethics and Privacy</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Since it&#39;s unclear what the MAINTAIN SHRUB and PLANT SITE amounts are, we can plot these separately</span>
+
+<span class="c1"># Drop &quot;NAN&quot;, &quot;MAINTAIN TREE&quot; and &quot;ESTABLISH TREE&quot; values from the series</span>
+<span class="n">maintenance_groups_small</span> <span class="o">=</span> <span class="n">maintenance_groups</span><span class="p">[</span><span class="o">~</span><span class="n">maintenance_groups</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">,</span>
+                                                                        <span class="s1">&#39;MAINTAIN TREE&#39;</span><span class="p">,</span>
+                                                                        <span class="s1">&#39;ESTABLISH TREE&#39;</span><span class="p">])]</span>
+<span class="n">maintenance_groups_small_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">maintenance_groups_small</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">maintenance_groups_small_counts</span> <span class="o">=</span> <span class="n">maintenance_groups_small_counts</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">,</span>
+                                                                                    <span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">:</span> <span class="s2">&quot;COUNT&quot;</span><span class="p">})</span>
+<span class="n">maintenance_groups_small_counts_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">maintenance_groups_small_counts</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;COUNT&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maintenance_groups_small_counts_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Since there is a relatively small amount of maintenance level data from &quot;MAINTAIN SHRUB&quot;</span>
+<span class="c1"># and &quot;PLANT SITE&quot;, we will drop these from further analysis</span>
+
+<span class="n">public_trees_for_maintenance</span> <span class="o">=</span> <span class="n">public_trees_no_stumps</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">public_trees_no_stumps</span><span class="p">[[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">,</span> <span class="s1">&#39;SPECIES&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">,</span><span class="s1">&#39;MAINTAIN SHRUB&#39;</span><span class="p">,</span><span class="s1">&#39;PLANT SITE&#39;</span><span class="p">])]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>Next step:<ul>
+<li>Explore maintenance requirements for differenet Species types</li>
+<li>Determine which Species require the most maintenance in terms of:<ul>
+<li>Total counts</li>
+<li>Proportions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#########################################################################</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1">#    Explore how maintenance level changes based on the Species type    #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1">#########################################################################</span>
+
+<span class="c1"># Take the &quot;TREE_MAINTENANCE&quot; and &quot;SPECIES&quot; column from our cleaned dataset</span>
+<span class="n">maintenance_by_species</span> <span class="o">=</span> <span class="n">public_trees_for_maintenance</span><span class="p">[[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">,</span> <span class="s1">&#39;SPECIES&#39;</span><span class="p">]]</span>
+
+<span class="c1">## TOTAL COUNTS</span>
+<span class="c1"># Group the data by &quot;SPECIES&quot; and obtain counts for trees that do and do not require maintenance</span>
+<span class="n">maintenance_by_species_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">maintenance_by_species</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">TREE_MAINTENANCE</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="c1"># Change the new column we created to &quot;MAINTAIN COUNT&quot;</span>
+<span class="n">maintenance_by_species_counts</span> <span class="o">=</span> <span class="n">maintenance_by_species_counts</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">:</span> <span class="s2">&quot;MAINTAIN COUNT&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset the index in order to use in future plots</span>
+<span class="n">maintenance_by_species_counts</span> <span class="o">=</span> <span class="n">maintenance_by_species_counts</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1">## PROPORTION</span>
+<span class="c1"># Group the data by &quot;SPECIES&quot; and obtain the proportion of trees that do and do not require maintenance</span>
+<span class="n">maintenance_by_species_proportions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">maintenance_by_species</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">TREE_MAINTENANCE</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">))</span>
+
+<span class="c1"># Change the new column we created to &quot;MAINTAIN PROPORTION&quot;</span>
+<span class="n">maintenance_by_species_proportions</span> <span class="o">=</span> <span class="n">maintenance_by_species_proportions</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TREE_MAINTENANCE&quot;</span><span class="p">:</span> <span class="s2">&quot;MAINTAIN PROPORTION&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset the index in order to use in future plots</span>
+<span class="n">maintenance_by_species_proportions</span> <span class="o">=</span> <span class="n">maintenance_by_species_proportions</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#################################################################</span>
+<span class="c1">#                                                               #</span>
+<span class="c1">#    Plot the TOTAL COUNTS for MAINTAIN TREE per SPECIES type   #</span>
+<span class="c1">#                                                               #</span>
+<span class="c1">#################################################################</span>
+
+<span class="c1"># Filter the &quot;TREE_MAINTENANCE&quot; column to include only trees classified as &quot;MAINTAIN TREE&quot;</span>
+<span class="n">species_maintenance_counts_plot</span> <span class="o">=</span> <span class="n">maintenance_by_species_counts</span><span class="p">[</span><span class="n">maintenance_by_species_counts</span><span class="p">[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MAINTAIN TREE&#39;</span><span class="p">]</span>
+
+<span class="c1"># Sort the count values so that they are in descending order</span>
+<span class="n">species_maintenance_counts_plot</span> <span class="o">=</span> <span class="n">species_maintenance_counts_plot</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">maintenance_counts_by_species_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">species_maintenance_counts_plot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maintenance_counts_by_species_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">####################################################################################</span>
+<span class="c1">#                                                                                  #</span>
+<span class="c1">#    Plot the TOTAL COUNTS for MAINTAIN TREE per SPECIES type for counts &gt; 10,000  #</span>
+<span class="c1">#                                                                                  #</span>
+<span class="c1">####################################################################################</span>
+
+<span class="c1"># Filter the maintenance counts to include only values greater than 10,000</span>
+<span class="n">species_maintenance_counts_plot2</span> <span class="o">=</span> <span class="n">species_maintenance_counts_plot</span><span class="p">[</span><span class="n">species_maintenance_counts_plot</span><span class="p">[</span><span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">]</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">maint_counts_species_top_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">species_maintenance_counts_plot2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maint_counts_species_top_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#####################################################################################</span>
+<span class="c1">#                                                                                   #</span>
+<span class="c1">#    Plot the TOTAL COUNTS for ESTABLISH TREE per SPECIES type for counts &gt; 10,000  #</span>
+<span class="c1">#                                                                                   #</span>
+<span class="c1">#####################################################################################</span>
+
+<span class="c1"># Filter the &quot;TREE_MAINTENANCE&quot; column to include only trees classified as &quot;ESTABLISH TREE&quot;</span>
+<span class="n">species_establish_counts_plot</span> <span class="o">=</span> <span class="n">maintenance_by_species_counts</span><span class="p">[</span><span class="n">maintenance_by_species_counts</span><span class="p">[</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ESTABLISH TREE&#39;</span><span class="p">]</span>
+
+<span class="c1"># Sort the count values so that they are in descending order</span>
+<span class="n">species_establish_counts_plot</span> <span class="o">=</span> <span class="n">species_establish_counts_plot</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Filter the maintenance counts to include only values greater than 10,000</span>
+<span class="n">species_establish_counts_plot</span> <span class="o">=</span> <span class="n">species_establish_counts_plot</span><span class="p">[</span><span class="n">species_establish_counts_plot</span><span class="p">[</span><span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">]</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">establish_counts_species_top_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">species_establish_counts_plot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MAINTAIN COUNT&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">establish_counts_species_top_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>Although Pungens is the species type that has the highest count of trees requiring no maintenance and Americana is the species type that has the highest count of trees that require maintenance, these numbers are skewed based on total tree counts</li>
+<li>It is difficult to conclude whether these trees need or do not need a lot of maintenance</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>In order to normalize the data based on tree counts, each species type was compared based on maintenance proportion</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">##########################################################################</span>
+<span class="c1">#                                                                        #</span>
+<span class="c1">#    Plot the PROPORTIONS for MAINTAIN/ESTABLISH TREE per SPECIES type   #</span>
+<span class="c1">#                                                                        #</span>
+<span class="c1">##########################################################################</span>
+
+<span class="c1"># Sort the proportion values so that they are in descending order</span>
+<span class="n">maintenance_by_species_proportions_plot</span> <span class="o">=</span> <span class="n">maintenance_by_species_proportions</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;MAINTAIN PROPORTION&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">maint_species_prop_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">maintenance_by_species_proportions_plot</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MAINTAIN PROPORTION&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maint_species_prop_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Create a top 10 list of trees by Species type</span>
+
+<span class="c1"># value_counts() creates an ordered list (descending) which we can pull the first 10 values from</span>
+<span class="n">maintenance_by_species_top10</span> <span class="o">=</span> <span class="n">maintenance_by_species</span><span class="o">.</span><span class="n">SPECIES</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+
+<span class="c1"># Create a list</span>
+<span class="n">species_top_10_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">maintenance_by_species_top10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#################################################################################</span>
+<span class="c1">#                                                                               #</span>
+<span class="c1">#    Plot the PROPORTIONS for MAINTAIN/ESTABLISH TREE for top 10 SPECIES type   #</span>
+<span class="c1">#                                                                               #</span>
+<span class="c1">#################################################################################</span>
+
+<span class="c1"># Filter the Species to include only the top 10 Species in Calgary by count</span>
+<span class="n">maintenance_by_species_proportions_plot2</span> <span class="o">=</span> <span class="n">maintenance_by_species_proportions</span><span class="p">[</span>
+    <span class="n">maintenance_by_species_proportions</span><span class="p">[</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">species_top_10_list</span><span class="p">)]</span>
+
+<span class="c1"># Sort the proportion values so that they are in descending order</span>
+<span class="n">maintenance_by_species_proportions_plot2</span> <span class="o">=</span> <span class="n">maintenance_by_species_proportions_plot2</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;MAINTAIN PROPORTION&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">maint_species_prop_top_10_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">maintenance_by_species_proportions_plot2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MAINTAIN PROPORTION&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;TREE_MAINTENANCE&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">maint_species_prop_top_10_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance<a rel="noopener" class="anchor-link" href="#Tree-Maintenance">&#182;</a></h3><ul>
+<li>Of the top 10 Species types in Calgary, Jackii appear to require the least maintenance while Macrocarpa require the most</li>
+<li>Of the top 10 Species types in Calgary, the ones requiring the most maintenance tend to be deciduous trees<ul>
+<li>Should Calgary focus on planting less deciduous trees as they require more maintenance?</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>Although the Tree Maintenance data has uncovered some interesting trends, there are only two types of observations available<ul>
+<li>Maintain tree</li>
+<li>Establish tree</li>
+</ul>
+</li>
+<li>Tree condition appears to be a more descriptive statistic for evaluating how much maintenance would be required on a tree<ul>
+<li>If tree condition is lower, tree maintenance would intuitively be higher</li>
+</ul>
+</li>
+<li>Tree condition ranges between 0 and 100</li>
+<li>This condition is determined by Urban Forestry staff</li>
+<li>In this analysis, we will attempt to see how different variables affect Tree Condition<ul>
+<li>Species type</li>
+<li>Mature size</li>
+<li>Tree density</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#########################################################################</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1">#    Plot the Average Tree Condition per Species type (Top 10 Species)  #</span>
+<span class="c1">#                                                                       #</span>
+<span class="c1">#########################################################################</span>
+
+<span class="c1"># From the public trees dataset, create a new dataframe with only Tree Condition and Species</span>
+<span class="n">condition_by_species</span> <span class="o">=</span> <span class="n">public_trees_no_stumps</span><span class="p">[[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;SPECIES&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Filter NANs from Tree Condition column</span>
+<span class="n">condition_by_species</span> <span class="o">=</span> <span class="n">condition_by_species</span><span class="p">[</span><span class="o">~</span><span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">])]</span>
+
+<span class="c1"># Filter for Top 10 Species in Calgary using list created earlier</span>
+<span class="n">condition_by_species</span> <span class="o">=</span> <span class="n">condition_by_species</span><span class="p">[</span><span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">species_top_10_list</span><span class="p">)]</span>
+
+<span class="c1"># Ensure Tree Condition column is numeric</span>
+<span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">])</span>
+
+<span class="c1"># Filter out any 0 values and values over 100</span>
+<span class="n">condition_by_species</span> <span class="o">=</span> <span class="n">condition_by_species</span><span class="p">[</span><span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">condition_by_species</span> <span class="o">=</span> <span class="n">condition_by_species</span><span class="p">[</span><span class="n">condition_by_species</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Group by Species type and find the mean tree condition per Species type. Sort the values in descending order</span>
+<span class="n">condition_by_species_means</span> <span class="o">=</span> <span class="n">condition_by_species</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Rename the Tree Condition column</span>
+<span class="n">condition_by_species_means</span> <span class="o">=</span> <span class="n">condition_by_species_means</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TREE_CONDITION_RATING_PERC&quot;</span><span class="p">:</span> <span class="s2">&quot;AVERAGE TREE CONDITION&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset the index of the Grouped DataFrame in order to make plotting easier</span>
+<span class="n">condition_by_species_means</span> <span class="o">=</span> <span class="n">condition_by_species_means</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">condition_by_species_means_bar</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">condition_by_species_means</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;SPECIES&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">condition_by_species_means_bar</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>Of the top 10 Species types, Tremula appears to have the best average condition<ul>
+<li>Based on the the Tree Maintenance data, this Species of tree also does not regularly require maintenance</li>
+<li>This tree species is a deciduous tree</li>
+<li>This tree appears to be a good pick for future tree planting in Calgary</li>
+</ul>
+</li>
+<li>Of the top 10 Species types, Padus appears to have the worst average condition</li>
+<li>Jackii also has relatively poor condition which is consistent with the Tree maintenance data presented above<ul>
+<li>This tree species is a coniferous tree</li>
+<li>Jackii may not be a good pick for future tree planting in Calgary</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Use plotly express to create a box plot to visualize the data</span>
+<span class="n">condition_by_species_box</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">condition_by_species</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;SPECIES&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;TREE_CONDITION_RATING_PERC&quot;</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">condition_by_species_box</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>Although we have determined the best condition trees in Calgary, we can see based on the boxplot that the difference in average tree condition is quite small</li>
+<li>Although the variation in the data isn&#39;t as wide, the tree maintenance data was potentially more useful for this type of analysis</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>The next step in this analysis is to determine if tree size has a considerable impact on tree condition</li>
+<li>Is it clear whether Calgary should plant fewer of a specific type of tree?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#########################################################</span>
+<span class="c1">#                                                       #</span>
+<span class="c1">#    Plot the Average Tree Condition per Tree size      #</span>
+<span class="c1">#                                                       #</span>
+<span class="c1">#########################################################</span>
+
+<span class="c1"># From the public trees dataset, create a new dataframe with only Tree Condition and Mature Size</span>
+<span class="n">condition_by_size</span> <span class="o">=</span> <span class="n">public_trees_no_stumps</span><span class="p">[[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;MATURE_SIZE&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Filter NANs in Tree Condition and Mature Size columns. Also, remove Shrubs from Mature Size column</span>
+<span class="n">condition_by_size</span> <span class="o">=</span> <span class="n">condition_by_size</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">condition_by_size</span><span class="p">[[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;MATURE_SIZE&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">,</span> <span class="s1">&#39;SHRUB&#39;</span><span class="p">])]</span>
+
+<span class="c1"># Ensure Tree Condition column is numeric</span>
+<span class="n">condition_by_size</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">condition_by_size</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">])</span>
+
+<span class="c1"># Filter out any tree condition 0 values and values over 100</span>
+<span class="n">condition_by_size</span> <span class="o">=</span> <span class="n">condition_by_size</span><span class="p">[</span><span class="n">condition_by_size</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">condition_by_size</span> <span class="o">=</span> <span class="n">condition_by_size</span><span class="p">[</span><span class="n">condition_by_size</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Group by Mature Size and find the mean tree condition per size. Sort the values in descending order</span>
+<span class="n">condition_by_size_means</span> <span class="o">=</span> <span class="n">condition_by_size</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;MATURE_SIZE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Rename the Tree Condition column</span>
+<span class="n">condition_by_size_means</span> <span class="o">=</span> <span class="n">condition_by_size_means</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TREE_CONDITION_RATING_PERC&quot;</span><span class="p">:</span> <span class="s2">&quot;AVERAGE TREE CONDITION&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset the index of the Grouped DataFrame in order to make plotting easier</span>
+<span class="n">condition_by_size_means</span> <span class="o">=</span> <span class="n">condition_by_size_means</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data</span>
+<span class="n">condition_by_size_means_bar</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">condition_by_size_means</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;MATURE_SIZE&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use plotly express to create a box plot to visualize the data</span>
+<span class="n">condition_by_size_box</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">condition_by_size</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;MATURE_SIZE&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;TREE_CONDITION_RATING_PERC&quot;</span><span class="p">,</span> <span class="n">points</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">condition_by_size_means_bar</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>Based on the above chart, we can see that smaller trees have a better tree condition on average than other trees</li>
+<li>This difference is quite small though and requires zooming in on plotly to see the differences</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">condition_by_size_box</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Condition<a rel="noopener" class="anchor-link" href="#Tree-Condition">&#182;</a></h3><ul>
+<li>This difference in average tree condition is apparent in the boxplot above</li>
+<li>There are only subtle differences in the tree condition of different sizes of trees</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Maintenance and Condition<a rel="noopener" class="anchor-link" href="#Tree-Maintenance-and-Condition">&#182;</a></h3><p>Summary:</p>
+<ul>
+<li>Based on the tree maintenance and tree condition data, deciduous trees tend to be in better condition than coniferous trees but they require more maintenance<ul>
+<li>The best trees based on average tree condition were mostly deciduous trees</li>
+<li>The trees with a requiring more maintenance were mostly deciduous trees</li>
+</ul>
+</li>
+<li>There does not appear to be any significant difference between the size of trees and tree condition<ul>
+<li>Although small trees had the best average condition, the differences between the average tree condition was very small</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>The next section aims to determine where the highest tree density in Calgary is</li>
+<li>Based on tree count and area of each community, density was calculated</li>
+<li>From there, we could sort to find the highest tree density communtiies</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">############################################</span>
+<span class="c1">#                                          #</span>
+<span class="c1">#    Plot the Tree Density per Community   #</span>
+<span class="c1">#                                          #</span>
+<span class="c1">############################################</span>
+
+<span class="c1"># Load in the Community Area data (area of communities in km2)</span>
+<span class="n">comm_area</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;City_of_Calgary_Community_Areas.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Change case of column names to upper case</span>
+<span class="n">comm_area</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">comm_area</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Drop unnecessary columns from Community Areas Data Frame</span>
+<span class="n">comm_area</span> <span class="o">=</span> <span class="n">comm_area</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;FID&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;SHAPE&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;CLASS&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;CLASS_CODE&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;COMM_STRUC&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;NAME&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;SECTOR&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;SRG&#39;</span><span class="p">],</span>
+                            <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">## NEW DATA FRAME FOR TREE COUNTS PER COMMUNITY</span>
+<span class="c1"># Create a Data Frame of public tree counts by community (grouping by &quot;COMM_CODE&quot;)</span>
+<span class="n">public_trees_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">public_trees_cleaned</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">NAME</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+<span class="c1"># Rename newly created column to TREE COUNT</span>
+<span class="n">public_trees_counts</span> <span class="o">=</span> <span class="n">public_trees_counts</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;TREE COUNT&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset index to make plotting and merging easier</span>
+<span class="n">public_trees_counts</span> <span class="o">=</span> <span class="n">public_trees_counts</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Merge the Data Frame of Tree Counts and the Data Frame of Community Areas</span>
+<span class="n">public_trees_by_comm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_trees_counts</span><span class="p">,</span> <span class="n">comm_area</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+<span class="c1"># Calculate Tree Density column by dividing TREE COUNT and Community Area (km2). Sort in descending order</span>
+<span class="n">public_trees_by_comm</span><span class="p">[</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">public_trees_by_comm</span><span class="p">[</span><span class="s1">&#39;TREE COUNT&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">public_trees_by_comm</span><span class="p">[</span><span class="s1">&#39;AREA_SQ_M&#39;</span><span class="p">])</span><span class="o">*</span><span class="mi">10000</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">public_trees_by_comm</span> <span class="o">=</span> <span class="n">public_trees_by_comm</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;DENSITY&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Use plotly express to create a bar chart to visualize the data (top 10 communities by density)</span>
+<span class="n">comm_tree_density_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">public_trees_by_comm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">)</span> <span class="c1"># Select only the top 10</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">comm_tree_density_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Based on the visualization above, Queens Park Village has the highest tree density in Calgary</li>
+<li>It also seems like a lot of inner city communities have the highest tree density - is this clear on a map?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Next, we wanted to determine if there was a reason why the tree density was so high in these communities</li>
+<li>Is there any correlation between tree condition and tree density?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">####################################################################################</span>
+<span class="c1">#                                                                                  #</span>
+<span class="c1">#    Create new Data Frame for average tree condition and diameter per community   #</span>
+<span class="c1">#                                                                                  #</span>
+<span class="c1">####################################################################################</span>
+
+<span class="c1">### NEW DATA FRAME FOR AVERAGE TREE CONDITION PER COMMUNITY</span>
+
+<span class="c1"># Select tree condition and community code columns</span>
+<span class="n">public_trees_means</span> <span class="o">=</span> <span class="n">public_trees_cleaned</span><span class="p">[[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;COMM_CODE&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Drop NANs</span>
+<span class="n">public_trees_means</span> <span class="o">=</span> <span class="n">public_trees_means</span><span class="p">[</span><span class="o">~</span><span class="n">public_trees_means</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">])]</span>
+
+<span class="c1"># Convert to numeric</span>
+<span class="n">public_trees_means</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">public_trees_means</span><span class="p">[</span><span class="s1">&#39;TREE_CONDITION_RATING_PERC&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create a Data Frame of public tree condition by community (grouping by &quot;COMM_CODE&quot;)</span>
+<span class="n">public_trees_means</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">public_trees_means</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="c1"># Rename newly created column to TREE MEAN</span>
+<span class="n">public_trees_means</span> <span class="o">=</span> <span class="n">public_trees_means</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TREE_CONDITION_RATING_PERC&quot;</span><span class="p">:</span> <span class="s2">&quot;AVERAGE TREE CONDITION&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset index to make plotting and merging easier</span>
+<span class="n">public_trees_means</span> <span class="o">=</span> <span class="n">public_trees_means</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1">### NEW DATA FRAME FOR AVERAGE TREE DIAMETER PER COMMUNITY</span>
+
+<span class="c1"># Select tree diameter and community code columns</span>
+<span class="n">public_trees_diameters</span> <span class="o">=</span> <span class="n">public_trees_cleaned</span><span class="p">[[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">,</span> <span class="s1">&#39;COMM_CODE&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Drop NANs</span>
+<span class="n">public_trees_diameters</span> <span class="o">=</span> <span class="n">public_trees_diameters</span><span class="p">[</span><span class="o">~</span><span class="n">public_trees_diameters</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">])]</span>
+
+<span class="c1"># Convert to numeric</span>
+<span class="n">public_trees_diameters</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">public_trees_diameters</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create a Data Frame of public tree condition by community (grouping by &quot;COMM_CODE&quot;)</span>
+<span class="n">public_trees_diameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">public_trees_diameters</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="c1"># Rename newly created column to TREE DIAMETER</span>
+<span class="n">public_trees_diameters</span> <span class="o">=</span> <span class="n">public_trees_diameters</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DBH_CM&quot;</span><span class="p">:</span> <span class="s2">&quot;TREE DIAMETER&quot;</span><span class="p">})</span>
+
+<span class="c1"># Reset index to make plotting and merging easier</span>
+<span class="n">public_trees_diameters</span> <span class="o">=</span> <span class="n">public_trees_diameters</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Merge all Data Frames (Count, Density, Average Condition, Diameter)</span>
+<span class="n">public_tree_stats_by_comm</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_trees_by_comm</span><span class="p">,</span> <span class="n">public_trees_means</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">public_tree_stats_by_comm_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_tree_stats_by_comm</span><span class="p">,</span> <span class="n">public_trees_diameters</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;COMM_CODE&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#########################################################</span>
+<span class="c1">#                                                       #</span>
+<span class="c1">#    Plot the Average Tree Condition by Tree Density    #</span>
+<span class="c1">#                                                       #</span>
+<span class="c1">#########################################################</span>
+
+<span class="n">density_top_10</span> <span class="o">=</span> <span class="n">public_trees_by_comm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">][</span><span class="s1">&#39;NAME&#39;</span><span class="p">]</span>
+<span class="n">density_top_10_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">density_top_10</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">density_top_10_list</span><span class="p">)</span>
+
+<span class="n">public_tree_stats_top_10</span> <span class="o">=</span> <span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">density_top_10_list</span><span class="p">)]</span>
+<span class="n">public_tree_stats_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">public_tree_stats_top_10</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;DENSITY&#39;</span><span class="p">,</span>
+                                <span class="n">color_continuous_scale</span> <span class="o">=</span> <span class="s1">&#39;Greens&#39;</span><span class="p">,</span>
+                                <span class="n">range_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_text output_subarea">
+<pre>[&#39;QUEENS PARK VILLAGE&#39;,
+ &#39;EAU CLAIRE&#39;,
+ &#39;ERLTON&#39;,
+ &#39;GARRISON GREEN&#39;,
+ &#39;ROSEDALE&#39;,
+ &#39;SCARBORO&#39;,
+ &#39;ROXBORO&#39;,
+ &#39;SUNNYSIDE&#39;,
+ &#39;DOWNTOWN WEST END&#39;,
+ &#39;CHARLESWOOD&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">public_tree_stats_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Based on the plot above, Roxboro is the community with the best tree condition out of the communities with the highest density of trees</li>
+<li>There doesn&#39;t appear to be a clear correlation between tree density and tree condition though - tree condition is quite variable amongst these communities</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>The next step was to determine the best way to visualize this data on a map<ul>
+<li>Tested three classification types:<ul>
+<li>Equal interval</li>
+<li>Fisher jenks</li>
+<li>Quartiles</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>From there, we could visualize tree density per community to determine where the highest tree density communities are relative to each other</li>
+<li>Tree count and tree density are not very useful variables on their own as they do not say anything about the tree itself, except for location.  It&#39;s best to combine these data with other vairiables such as tree condition and tree diameter.</li>
+<li>Hence, we can create an interactive map that has all of this data available</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">##############################################################</span>
+<span class="c1">#                                                            #</span>
+<span class="c1">#    Plot the Tree Density in a Choropleth Map of Calgary    #</span>
+<span class="c1">#                                                            #</span>
+<span class="c1">##############################################################</span>
+
+<span class="c1"># Load in the 2019 Census geojson file</span>
+<span class="n">census_file</span> <span class="o">=</span> <span class="s1">&#39;./Census by Community 2019.geojson&#39;</span>
+<span class="n">census_gpd</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">census_file</span><span class="p">)</span>
+
+<span class="c1"># Change case of column names to upper case</span>
+<span class="n">census_gpd</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">census_gpd</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Select &quot;NAME&quot; and &quot;GEOMETRY&quot; columns for merging with other Data Frames</span>
+<span class="n">census_gpd</span> <span class="o">=</span> <span class="n">census_gpd</span><span class="p">[[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;GEOMETRY&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Filter out rows with 0 values</span>
+<span class="n">public_tree_stats_by_comm_all</span> <span class="o">=</span> <span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">public_tree_stats_by_comm_all</span> <span class="o">=</span> <span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">public_tree_stats_by_comm_all</span> <span class="o">=</span> <span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">[</span><span class="s1">&#39;TREE DIAMETER&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Merge geopandas dataframe with stats by community data frame</span>
+<span class="n">density_map</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">,</span> <span class="n">census_gpd</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">density_map</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">crs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;init&#39;</span><span class="p">:</span> <span class="s1">&#39;epsg:3395&#39;</span><span class="p">}</span>
+<span class="n">density_map</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">density_map</span><span class="p">,</span> <span class="n">crs</span> <span class="o">=</span> <span class="n">crs</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="s1">&#39;GEOMETRY&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Density (Equal Interval)</span>
+<span class="n">density_map_plot_EI</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">,</span><span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;equal_interval&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span><span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Tree Density (trees per hectare)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>The above plot doesn&#39;t appear to clearly show areas of higher density trees</li>
+<li>Equal interval does not seem like the best classification type for this map</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Density (Fisher Jenks)</span>
+<span class="n">density_map_plot_FJ</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fisher_jenks&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Tree Density (trees per hectare)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>The above plot is an improvement over the previous plot but still isn&#39;t completely clear</li>
+<li>Fisher jenks does not seem like the best classification type for this map</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Density (Quantiles)</span>
+<span class="n">density_map_plot_Q</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;DENSITY&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Tree Density (trees per hectare)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning:
+
+Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>The above plot is a clear improvement over the previous plots</li>
+<li>Quantiles seems like the best classification type for this map and will be used for further analysis</li>
+<li>Additionally, from this map we can see that tree density appears to be highest in the inner city communities<ul>
+<li>This is consistent with our analysis of the 10 most tree dense communities</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Now that we have an understanding where the most tree dense communities are, are there any consistencies with other features in the Public Trees dataset?</li>
+<li>We can answer this question using the same maps but plotting different variables<ul>
+<li>Tree Count</li>
+<li>Tree Condition</li>
+<li>Tree Diameter</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Tree Count</span>
+<span class="n">tree_count_map_plot</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;TREE COUNT&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Tree Count&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning:
+
+Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Based on the map above, we can see that the highest tree counts are in NW and SE communities which have larger community areas</li>
+<li>This is not consistent with our tree density map but this is likely more a function of community size than tree count</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Average Tree Condition</span>
+<span class="n">tree_condition_map_plot</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Tree Condition&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning:
+
+Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Based on the map above, it doesn&#39;t appear as though there are any regions with clear tree condition differences than others</li>
+<li>Tree condition is fairly variable across the city but there are some communities in the south that appear to have better tree condition.  This could be due to more favorable weather conditions in the south than the north.</li>
+<li>This is consistent with the analysis on tree condition versus tree density<ul>
+<li>The communities in the inner city tended to have variable tree condition with no apparent correlation between tree condition and tree density</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Create Choropleth Map of Calgary by Average Tree Diameter</span>
+<span class="n">tree_diameter_map_plot</span> <span class="o">=</span> <span class="n">density_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">axis</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;TREE DIAMETER&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span>
+                                    <span class="n">k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;2019 Calgary Community Average Tree Diameter (CM)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning:
+
+Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea">
+<img loading="lazy" src="javascript://"/>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><ul>
+<li>Based on the map above, the largest trees are in the inner city, in the older and more established communities</li>
+<li>These are also the areas with the highest tree density</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">community_lat_lon</span> <span class="o">=</span> <span class="n">community_info_raw</span><span class="p">[[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;LONGITUDE_CTR&#39;</span><span class="p">,</span> <span class="s1">&#39;LATITUDE_CTR&#39;</span><span class="p">]]</span>
+<span class="n">public_trees_plotly</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">public_tree_stats_by_comm_all</span><span class="p">,</span> <span class="n">community_lat_lon</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;NAME&#39;</span><span class="p">)</span>
+
+<span class="n">px</span><span class="o">.</span><span class="n">set_mapbox_access_token</span><span class="p">(</span><span class="s1">&#39;pk.eyJ1IjoibWllbGxzd29ydGgiLCJhIjoiY2sxOXh2M3A5MDJhcjNtcWRhaG9hOW1lcyJ9.ucvS3juZz9j_XSHQyzB5Eg&#39;</span><span class="p">)</span>
+
+<span class="n">tree_stats_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter_mapbox</span><span class="p">(</span><span class="n">public_trees_plotly</span><span class="p">,</span>
+                        <span class="n">lat</span><span class="o">=</span><span class="s2">&quot;LATITUDE_CTR&quot;</span><span class="p">,</span>
+                        <span class="n">lon</span><span class="o">=</span><span class="s2">&quot;LONGITUDE_CTR&quot;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
+                        <span class="n">size</span><span class="o">=</span><span class="s2">&quot;TREE COUNT&quot;</span><span class="p">,</span>
+                        <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;TREE DIAMETER&#39;</span><span class="p">,</span> <span class="s1">&#39;AVERAGE TREE CONDITION&#39;</span><span class="p">],</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">sequential</span><span class="o">.</span><span class="n">Plasma</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">size_max</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                        <span class="n">zoom</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">tree_stats_plot</span> <span class="o">=</span> <span class="n">tree_stats_plot</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">title_text</span> <span class="o">=</span> <span class="s1">&#39;2019 YYC Tree Stats per community&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">tree_stats_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Tree Density<a rel="noopener" class="anchor-link" href="#Tree-Density">&#182;</a></h3><p>Summary:</p>
+<ul>
+<li>Highest tree density in the inner city - smaller community areas</li>
+<li>Highest tree counts in the NW and SE residential areas - larger community areas</li>
+<li>Higher tree condition values toward the south</li>
+<li>Inner city communities have older and bigger diameter trees</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li><p>In order to determine the value of trees, we assessed the carbon captured of each tree in Calgary</p>
+</li>
+<li><p>Most part of this project was spent in research for the appropriate method to utilize based on the chosen dataset.</p>
+</li>
+<li><p>Paper that evaluates four methods in the estimation of carbon sequestration.[<a rel="noopener" href="https://www.fs.fed.us/psw/publications/mcpherson/psw_2011_mcpherson009.pdf">https://www.fs.fed.us/psw/publications/mcpherson/psw_2011_mcpherson009.pdf</a>]</p>
+</li>
+<li><p>Adopted the Urban General Equations:</p>
+<ul>
+<li><p>biomass of Broad leaf (only dbh) 0.16155*(dbh) 2.310647</p>
+</li>
+<li><p>biomass of Conifer (only dbh) 0.035702*(dbh) 2.580671</p>
+</li>
+</ul>
+</li>
+<li><p>To detemine the weight if carbon dioxide sequestered in the tree, multiply biomass by 3.6663. This is the CO2 ratio to C. Where the atomic weight of Carbon is 12.001115 and Oxygen is 15.9994. That is, 43.999915/12.001115=3.6663. [<a rel="noopener" href="https://medcraveonline.com/FREIJ/FREIJ-02-00040.pdf">https://medcraveonline.com/FREIJ/FREIJ-02-00040.pdf</a>]</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#select columns for biomass computations</span>
+<span class="n">public_trees_cleaned_BM</span> <span class="o">=</span> <span class="n">public_trees_cleaned</span><span class="p">[[</span><span class="s1">&#39;DECIDUOUS_EVERGREEN&#39;</span><span class="p">,</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">,</span> <span class="s1">&#39;WAM_ID&#39;</span><span class="p">]]</span>
+
+<span class="c1">#change DBH_CM to numeric</span>
+<span class="n">public_trees_cleaned_BM</span> <span class="o">=</span> <span class="n">public_trees_cleaned_BM</span><span class="p">[</span><span class="o">~</span><span class="n">public_trees_cleaned_BM</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;NAN&#39;</span><span class="p">])]</span>
+<span class="n">public_trees_cleaned_BM</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">public_trees_cleaned_BM</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">])</span>
+
+<span class="c1">#group EVERGREEN and CONIFEROUS together</span>
+<span class="n">ndf</span> <span class="o">=</span> <span class="n">public_trees_cleaned_BM</span>
+<span class="n">ndf</span><span class="p">[</span><span class="s1">&#39;DECIDUOUS_EVERGREEN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ndf</span><span class="p">[</span><span class="s1">&#39;DECIDUOUS_EVERGREEN&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;EVERGREEN&#39;</span><span class="p">,</span><span class="s1">&#39;CONIFEROUS&#39;</span><span class="p">)</span>
+
+<span class="c1">#delete records that had no diameter at breast height data</span>
+<span class="n">df_new</span> <span class="o">=</span> <span class="n">ndf</span><span class="p">[</span><span class="n">ndf</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1">#calculate biomass of each tree</span>
+<span class="n">dec</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">df_new</span><span class="p">[</span><span class="s1">&#39;DECIDUOUS_EVERGREEN&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;DECIDUOUS&quot;</span><span class="p">]</span>
+<span class="n">dec</span><span class="p">[</span><span class="s1">&#39;BIOMASS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dec</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">0.16155</span><span class="p">)</span><span class="o">**</span><span class="mf">2.310647</span>
+
+<span class="n">con</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">df_new</span><span class="p">[</span><span class="s1">&#39;DECIDUOUS_EVERGREEN&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CONIFEROUS&quot;</span><span class="p">]</span>
+<span class="n">con</span><span class="p">[</span><span class="s1">&#39;BIOMASS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">con</span><span class="p">[</span><span class="s1">&#39;DBH_CM&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">0.035702</span><span class="p">)</span><span class="o">**</span><span class="mf">2.580671</span>
+
+<span class="n">dec_con_biomass</span> <span class="o">=</span> <span class="n">dec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">con</span><span class="p">)</span>
+
+<span class="c1">#get carbon capture by multiplying biomass with 3.6663 in tons</span>
+
+<span class="n">dec_con_biomass</span><span class="p">[</span><span class="s1">&#39;CC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dec_con_biomass</span><span class="p">[</span><span class="s1">&#39;BIOMASS&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">3.6663</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+                         
+<span class="c1">#merge CO2captured with public trees to get tree coordinates</span>
+
+<span class="n">CO2captured</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dec_con_biomass</span><span class="p">,</span> <span class="n">public_trees_cleaned</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;WAM_ID&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">CO2captured</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;DECIDUOUS_EVERGREEN_y&#39;</span><span class="p">,</span> <span class="s1">&#39;DBH_CM_y&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">CO2captured</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;DECIDUOUS_EVERGREEN_x&#39;</span><span class="p">:</span> <span class="s2">&quot;TREE TYPE&quot;</span><span class="p">,</span> <span class="s1">&#39;CC&#39;</span><span class="p">:</span> <span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">,</span>
+                           <span class="s1">&#39;DBH_CM_x&#39;</span><span class="p">:</span><span class="s2">&quot;DBH_CM&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:17: SettingWithCopyWarning:
+
+
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:20: SettingWithCopyWarning:
+
+
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#TOP 10 Trees</span>
+<span class="n">CO2captured</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+<span class="n">CO2captured_by_comm</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="p">[[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">]]</span>
+<span class="n">CO2captured_by_comm</span> <span class="o">=</span> <span class="n">CO2captured_by_comm</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;NAME&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">CO2captured_by_comm</span> <span class="o">=</span> <span class="n">CO2captured_by_comm</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">CO2captured_by_comm</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">comm_carbon_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">CO2captured_by_comm</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">)</span> <span class="c1"># Select only the top 10</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NAME</th>
+      <th>CARBON CAPTURED</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>MOUNT PLEASANT</td>
+      <td>872.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>BOWNESS</td>
+      <td>813.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>CHARLESWOOD</td>
+      <td>798.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>CAPITOL HILL</td>
+      <td>755.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>CRESCENT HEIGHTS</td>
+      <td>644.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>THORNCLIFFE</td>
+      <td>598.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>HILLHURST</td>
+      <td>572.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>COLLINGWOOD</td>
+      <td>560.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>ELBOW PARK</td>
+      <td>559.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>MAPLE RIDGE</td>
+      <td>552.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">comm_carbon_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>Inner city, well established areas have highest carbon captured</li>
+<li>These are the areas with the highest tree value</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>The next step in this analysis was to map carbon capture on a map to understand regional trends in Carbon Capture<ul>
+<li>Coloured by Carbon Capture</li>
+<li>Sized by Density</li>
+<li>Centered on Community</li>
+<li>Size of a community affects density of trees in the area.</li>
+</ul>
+</li>
+<li>Does this map confirm the analysis completed above? Do inner city areas have the highest tree value?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#merged carbon capture table with density for mapping</span>
+<span class="n">CO2captured_density</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">CO2captured_by_comm</span><span class="p">,</span><span class="n">density_map</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;NAME&#39;</span> <span class="p">)</span>
+<span class="n">community_lat_lon</span> <span class="o">=</span> <span class="n">community_info_raw</span><span class="p">[[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;LONGITUDE_CTR&#39;</span><span class="p">,</span> <span class="s1">&#39;LATITUDE_CTR&#39;</span><span class="p">]]</span>
+<span class="n">public_trees_plotly</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">CO2captured_density</span><span class="p">,</span> <span class="n">community_lat_lon</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;NAME&#39;</span><span class="p">)</span>
+
+<span class="n">px</span><span class="o">.</span><span class="n">set_mapbox_access_token</span><span class="p">(</span><span class="s1">&#39;pk.eyJ1IjoibWllbGxzd29ydGgiLCJhIjoiY2sxOXh2M3A5MDJhcjNtcWRhaG9hOW1lcyJ9.ucvS3juZz9j_XSHQyzB5Eg&#39;</span><span class="p">)</span>
+<span class="n">tree_stats_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter_mapbox</span><span class="p">(</span><span class="n">public_trees_plotly</span><span class="p">,</span>
+                        <span class="n">lat</span><span class="o">=</span><span class="s2">&quot;LATITUDE_CTR&quot;</span><span class="p">,</span>
+                        <span class="n">lon</span><span class="o">=</span><span class="s2">&quot;LONGITUDE_CTR&quot;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">,</span>
+                        <span class="n">size</span><span class="o">=</span><span class="s2">&quot;DENSITY&quot;</span><span class="p">,</span>
+                        <span class="n">hover_name</span> <span class="o">=</span> <span class="s2">&quot;NAME&quot;</span><span class="p">,</span>            
+                        <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span> <span class="s1">&#39;DENSITY&#39;</span><span class="p">],</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="n">px</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">sequential</span><span class="o">.</span><span class="n">Plasma</span><span class="p">[::</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span>
+                        <span class="n">size_max</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                        <span class="n">zoom</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">tree_cc_plot</span> <span class="o">=</span> <span class="n">tree_stats_plot</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">title_text</span> <span class="o">=</span> <span class="s1">&#39;2019 YYC Carbon Captured(t) and Density per community&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">tree_cc_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>Based on the above map, it is clear that the highest carbon captured is in the inner city</li>
+<li>These are areas with the largest trees and areas with the highest tree density</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>The next part of this analysis determines which types of trees capture the most carbon</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#Show correlation of Tree types to Carbon Capture</span>
+<span class="n">CO2captured_by_type</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="p">[[</span><span class="s1">&#39;TREE TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">]]</span>
+<span class="n">CO2captured_by_type</span> <span class="o">=</span> <span class="n">CO2captured_by_type</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;TREE TYPE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">CO2captured_by_type</span> <span class="o">=</span> <span class="n">CO2captured_by_type</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">CO2captured_by_type</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CO2captured_by_type</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">CO2captured_by_type</span><span class="p">)</span>
+<span class="n">type_carbon_plot</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">CO2captured_by_type</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;TREE TYPE&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span>
+                         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;TREE TYPE&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>TREE TYPE</th>
+      <th>CARBON CAPTURED</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>DECIDUOUS</td>
+      <td>29420.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>CONIFEROUS</td>
+      <td>17.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">type_carbon_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>Based on the above analysis we can conclude that:<ul>
+<li>Deciduous trees can capture and store more CO2</li>
+<li>Deciduous trees have more leaves and larger trunks that require and store more CO2</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">CO2captured_by_type1</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="p">[[</span><span class="s1">&#39;COMM_STRUCTURE&#39;</span><span class="p">,</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">]]</span>
+<span class="n">CO2captured_by_type1</span><span class="p">[</span><span class="s1">&#39;COMM_STRUCTURE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CO2captured_by_type1</span><span class="p">[</span><span class="s1">&#39;COMM_STRUCTURE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;NAN&#39;</span><span class="p">,</span><span class="s1">&#39;OTHER&#39;</span><span class="p">)</span>
+<span class="n">CO2captured_by_type1</span> <span class="o">=</span> <span class="n">CO2captured_by_type1</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;COMM_STRUCTURE&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">CO2captured_by_type1</span> <span class="o">=</span> <span class="n">CO2captured_by_type1</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1">#CO2captured_by_type1[&quot;CARBON CAPTURED&quot;] = CO2captured_by_type1[&quot;CARBON CAPTURED&quot;].round(2)</span>
+
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="n">cc_by_comm_structure</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">CO2captured_by_type1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;COMM_STRUCTURE&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">,</span> <span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span>
+             <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">CO2captured_by_type1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:2: SettingWithCopyWarning:
+
+
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>COMM_STRUCTURE</th>
+      <th>CARBON CAPTURED</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1950S</td>
+      <td>11450.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>INNER CITY</td>
+      <td>7231.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1960S/1970S</td>
+      <td>6764.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1980S/1990S</td>
+      <td>1731.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>EMPLOYMENT</td>
+      <td>757.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>CENTRE CITY</td>
+      <td>613.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>PARKS</td>
+      <td>370.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>BUILDING OUT</td>
+      <td>217.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>OTHER</td>
+      <td>153.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2000S</td>
+      <td>151.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>UNDEVELOPED</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">cc_by_comm_structure</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:400px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">#total carbon captured by sector</span>
+<span class="n">CO2captured_by_sector</span> <span class="o">=</span> <span class="n">CO2captured</span><span class="p">[[</span><span class="s1">&#39;SECTOR&#39;</span><span class="p">,</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">]]</span>
+<span class="n">CO2captured_by_sector</span><span class="p">[</span><span class="s1">&#39;SECTOR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CO2captured_by_sector</span><span class="p">[</span><span class="s1">&#39;SECTOR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;NAN&#39;</span><span class="p">,</span><span class="s1">&#39;OTHER&#39;</span><span class="p">)</span>
+<span class="n">CO2captured_by_sector</span> <span class="o">=</span> <span class="n">CO2captured_by_sector</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;SECTOR&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">CO2captured_by_sector</span> <span class="o">=</span> <span class="n">CO2captured_by_sector</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">CO2captured_by_sector</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CO2captured_by_sector</span><span class="p">[</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">CO2captured_by_sector</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;SECTOR&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;CARBON CAPTURED&quot;</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">,</span> <span class="n">hover_data</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CARBON CAPTURED&#39;</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">CO2captured_by_sector</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/global/software/jupyterhub-spark/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:3: SettingWithCopyWarning:
+
+
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SECTOR</th>
+      <th>CARBON CAPTURED</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>CENTRE</td>
+      <td>13298.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>EAST</td>
+      <td>730.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NORTH</td>
+      <td>1047.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NORTHEAST</td>
+      <td>1133.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NORTHWEST</td>
+      <td>4664.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>OTHER</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>SOUTH</td>
+      <td>5433.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>SOUTHEAST</td>
+      <td>943.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>WEST</td>
+      <td>2189.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[52]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea">
+<div>
+        
+        
+            <div class="plotly-graph-div" style="height:600px;width:100%;"></div>
+            
+        </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Carbon Capture - Tree Value Assessment<a rel="noopener" class="anchor-link" href="#Carbon-Capture---Tree-Value-Assessment">&#182;</a></h3><ul>
+<li>Approximately 30,000 tonnes of carbon captured by trees owned by City of Calgary!</li>
+<li>This provides the city with a lot of value and may justify the expense of mainting and keeping trees in good condition</li>
+<li>Deciduous trees sequestered the most carbon and provide the most value for the City but require more maintenance costs<ul>
+<li>The Tremula species, which is also a deciduous tree, is the species type that has the best average condition but requires more maintenance</li>
+<li>It require more resources to maintain, but it provides a lot of value in terms of carbon capture</li>
+</ul>
+</li>
+<li>This is the paradox:  deciduous trees have the most value but require the most resources to maintain.  As such, the public needs to be aware of the costs and benefits of maintaining these trees</li>
+<li>Inner city communities have older and more established trees hence higher carbon capture<ul>
+<li>Maintaining and keeping trees in good condition allow trees provide more value to the City in terms of carbon catpure capacity</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3>Conclusions<a rel="noopener" class="anchor-link" href="#Conclusions">&#182;</a></h3><ul>
+<li>From the preceeding analysis, we can conclude that deciduous trees tend to require the most amount of maintenance but are in the best overall condition. </li>
+<li>We can also conclude that the greatest number of trees reside in the inner city. Additionally, this area has the largest and oldest trees and do not necessarily have the best condition.</li>
+<li>Additionally, the value of Calgary trees in terms of carbon capture is significant, especially in the inner city. If Calgary wants to maintain this value, maintaining the condition of these trees is beneficial.</li>
+<li>The public needs to be aware of the benefits and value of the trees in Calgary in order to support the funding required for their maintenance.</li>
+</ul>
+<h4>Tree Maintenance and Condition<a rel="noopener" class="anchor-link" href="#Tree-Maintenance-and-Condition">&#182;</a></h4><ul>
+<li>Of the Tree Species analyzed, deciduous trees appears to have the best overall tree condition and require the most maintenance</li>
+<li>Tree size does not have a significant impact on tree condition</li>
+</ul>
+<h4>Visualizing Tree Density<a rel="noopener" class="anchor-link" href="#Visualizing-Tree-Density">&#182;</a></h4><ul>
+<li>Highest tree density in the inner city - smaller community areas</li>
+<li>Highest tree counts in the NW and SE residential areas - larger community areas</li>
+<li>Higher tree condition values toward the south</li>
+<li>Inner city communities have older and bigger diameter trees</li>
+</ul>
+<h4>Quantifying Tree Value<a rel="noopener" class="anchor-link" href="#Quantifying-Tree-Value">&#182;</a></h4><ul>
+<li>Approximately 30,000 tonnes of carbon captured by trees owned by City of Calgary.</li>
+<li>Deciduous trees sequestered most.</li>
+<li>Inner city communities have older and more established trees hence higher carbon capture.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&#160;[&#160;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    </div>
+  </div>
+
+
+ 
+
+
+
+<script type="text/javascript" src="/d2l/common/math/MathML.js?v=20.19.11.19145-98 "></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() { D2LMathML.DesktopInit('https://s.brightspace.com/lib/mathjax/2.6.1/MathJax.js?config=MML_HTMLorMML','https://s.brightspace.com/lib/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'); });</script></body></html>

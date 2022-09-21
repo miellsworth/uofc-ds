@@ -1,0 +1,147 @@
+---
+title: "DATA 606 Assignment 2"
+author:
+- "Michael Ellsworth"
+- 'UCID: 30101253'
+date: "Februrary 9th, 2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Explore the dataset: Arthritis
+```{r Load Packages, include = FALSE}
+library(vcd)
+library(dplyr)
+library(fmsb)
+data(Arthritis)
+head(Arthritis)
+```
+
+*Now in the "Improved" column, there are three response values: "None", "Some" and "Marked". Next we construct another column indicating whether or not the arthritis gets improved.*
+
+```{r Create new Data Frame with Indicator column}
+newDATA <- Arthritis %>%
+  mutate(Indicator = ifelse(Improved == "None", "No", "Yes"))
+head(newDATA)
+```
+
+# Question 1
+
+*Please create a table and use three different tests (risk difference, risk ratio, odds ratio) to test whether the treatment can help improve arthritis.*
+
+```{r Question 1}
+# Load in the Publish package
+library(Publish)
+
+# Create a table with Treatment and Indicator
+newDATA_table <- table(newDATA$Treatment, newDATA$Indicator)
+
+# Use the table2x2 function to output tests
+table2x2(newDATA_table)
+```
+
+From the `table2x2` function, we can output all of the desired tests.
+
+The estimated risk difference from the `table2x2` output is 35.7% with a 95% confidence interval ranging from 15.5% to 55.7%.
+
+The estimate risk ratio from the `table2x2` output is 2.127 with a 95% confidence interval ranging from 1.297 and 3.489.
+
+The estimated odds ratio from the `table2x2` output is 4.462 with a 95% confidence interval ranging from 1.785 and 11.154.
+
+# Question 2
+
+*Now we doubt if the treatment is conditional independent with the improvement. Use odds ratio test to test whether the treatment can improve arthritis conditional on the sex.*
+
+```{r Question 2}
+# Create a new table for Treatment and Indicator where sex is equal to male
+male <- newDATA %>% filter(Sex == "Male")
+male_table <- table(male$Treatment, male$Indicator)
+
+# Create a new table for Treatment and Indicator where sex is equal to female
+female <- newDATA %>% filter(Sex == "Female")
+female_table <- table(female$Treatment, female$Indicator)
+
+# Compute the odds ratio for both the male and female tables
+male_odds <- oddsratio(male_table, conf.level = 0.95, p.calc.by.independence = TRUE)
+female_odds <- oddsratio(female_table, conf.level = 0.95, p.calc.by.independence = TRUE)
+male_odds
+female_odds
+```
+
+Both odds ratio estimates are significant (p-value is < 0.05). Improvement is not conditional on sex.
+
+*To explore the influence of age to the improvement, we do the following things first.*
+
+```{r Create new Data Frame with Age Level column}
+# We order the dataset as per the age
+DATA<-Arthritis[order(Arthritis$Age),]
+# We group the patients as per their ages (20-39, 40-59, 60-79)
+l1=sum(as.numeric(DATA$Age<=39))
+l2=sum(as.numeric(DATA$Age<=59))-l1
+l3=dim(DATA)[1]-l1-l2
+Age_level<-c(rep('20-39', l1), rep('40-59', l2), rep('60-79', l3))
+myDATA<-cbind(Arthritis, Age_level)
+head(myDATA)
+```
+
+# Question 3
+
+*Apply Pearson Chi-square test to test whether or not Age_level affects the improvement (based on myDATA)*
+
+```{r Question 3}
+age_improvement_tab <- table(myDATA$Improved, myDATA$Age_level)
+chisq.test(age_improvement_tab)
+```
+
+Based on a p-value > 0.05, we cannot say that age level affects the improvement.
+
+# Question 4
+
+*Following Q3, can you compute the Pearson standardized residuals to see which cell deviates most from the independence assumption*
+
+```{r}
+library(questionr)
+chisq.residuals(age_improvement_tab, std = TRUE)
+```
+
+Based on the standardized residuals, the 60-79 age level deviates most from the independence assumption.
+
+# Question 5
+
+*Following Q3, as both row and column variables are ordinal, please also perform Mantel-Haenszel test (choose the scores by yourself). Compare your result with the Chi-square test*
+
+```{r}
+pears.cor=function(table, rscore, cscore)
+{ 
+	dim=dim(table) 
+	rbar=sum(margin.table(table,1)*rscore)/sum(table) 
+	rdif=rscore-rbar 
+	cbar=sum(margin.table(table,2)*cscore)/sum(table) 
+	cdif=cscore-cbar 
+	ssr=sum(margin.table(table,1)*(rdif^2)) 
+	ssc=sum(margin.table(table,2)*(cdif^2)) 
+	ssrc=sum(t(table*rdif)*cdif) 
+	pcor=ssrc/(sqrt(ssr*ssc)) 
+	pcor 
+	M2=(sum(table)-1)*pcor^2
+	M2
+	result=c(pcor, M2, (1-pchisq(M2,1)))
+	result=as.table(result)
+	names(result)=c('Pearson correlation','MH statistic', 'P-Value')
+	result
+}
+pears.cor(age_improvement_tab, c(1, 2, 3), c(30, 50, 70))
+```
+
+Since the p-value is > 0.05, we cannot say that age level affects the improvement. This is similar to the Chi-square test.
+
+# Question 6
+
+*Did Chi-square test give you an accurate test result? If not, use Fisher's exact test to justify the conclusion from Chi-square test.*
+
+```{r}
+fisher.test(age_improvement_tab, alternative = "two.sided")
+```
+
+The fisher test confirms the result from the Chi-square test. Age level does not affect improvement.

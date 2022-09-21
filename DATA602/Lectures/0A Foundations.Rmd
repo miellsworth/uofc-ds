@@ -1,0 +1,835 @@
+---
+title: "DATA 602 - Review of Probability Theory"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+```
+
+#Foundations
+
+In order to (re)discuss the notion of probability, we need to revisit the ideas of 
+1. random experiments
+2. sample spaces
+3. event
+
+A **random experiment** is a process that produces one of many possible, and unpredictable outcomes. 
+
+On a daily basis, you are part of many random experiments. A few examples 
+
+- the amount of time (minutes and seconds) it takes to you to commute to work or school on any given day
+- in any given minute, your systolic/dystolic blood pressure
+- the amount of funds in your chequing account at the end of today
+- the amount of income tax you pay in a given year
+
+These are just a few examples of where the *outcome*
+
+- number of minutes and seconds (20 minutes and 10 seconds, 52 minutes and 28 seconds, etc.)
+- the values of the systolic and dystolic (120 over 70, 120 over 75, etc.)
+
+are examples of 'different ways' in which an experiment can end. Notice how they vary from one 'run' of the experiment to another?
+
+Now, consider the process of randomly picking a card from a deck. The outcome of this experiment is that the observed card can be any one of 52 possible cards. There is *variation* in the outcomes. Also, the card is to be chosen card is unpredictable - in the sense that one cannot be 100% accurate in predicting which card will be chosen. Therefore, the outcome is **random**. 
+
+A **sample space**, denoted by the *notation* $\cal S$, is simply a list of all possible outcomes from a random experiment. IN the previous illustration, the card that can be chosen is any one of 52. The sample space is then
+$$
+\cal S = \{A \heartsuit, 2 \heartsuit, \cdots, K \heartsuit, A \diamondsuit, 2 \diamondsuit, \cdots, A \spadesuit, \cdots, K \spadesuit, A \clubsuit, \cdots, K \clubsuit\}
+$$
+In these instances, it is customary to imagine *how many* ways this process can end. To do so, we simply count the number of different outcomes, or the number of outcomes in the sample space $\cal S$. This is represented by $n(\cal S)$. In the above, $n(\cal S) = 52$. 
+
+When faced with an random experiment, we are often interested in a particular type of outcome. How many ways can we observe the card being a heart? How many of the days does it take one more than 45 minutes to commute to work/school Or how many possible ways can the randomly chosen card by a spade? Each one of these illustrates the notion of an *event*.
+
+An **event** is a collection of outcomes that share a common attribute. Simply stated an event is a subset of the sample space. From a notation standpoint, let's say an event is $A$, where $A \subseteq \cal S$.
+
+Suppose $A$ is to represent the event that the card chosen is an Ace. Then $A = \{A \heartsuit, A \diamondsuit, A \spadesuit, A \clubsuit \}$. There are 4 ways in which the outcome of an Ace can occur, $n(A)=4$.
+
+**Example 1:** Consider a different event $B$ that represents the card chosen is a Spade $\spadesuit$. There are various ways in which $B$ can occur:
+
+$$
+B = \{A \spadesuit, 2 \spadesuit, 3 \spadesuit, \cdots, Q \spadesuit, K \spadesuit \}
+$$
+
+If you were to list them all, you would find that there are 13 different ways to observe a $\spadesuit$, or the number of ways in which $B$ can occur is
+
+$$
+n(B) = 13
+$$
+
+
+**Example 2:** Let's consider the amount of time it takes a certain professor to bike to work. This professor lives not far from the university. Experience has shown that the professor *has never* completed the trip in less than 7 minutes and it is has never take more than 10 minutes. If we denote $X$ as the amount of time in minutes and seconds, where seconds are expressed as a *fraction* of minutes, then we say that the number of ways in which the professor can bike to the university is
+
+$$
+{\cal S} = \{X: 7 \leq X \leq 10\}
+$$
+$X$, the amount of time to bike to work in minutes and seconds, where seconds are expressed as a fraction of a minute, *such that* $X$ can assume any value between 7 minutes and 12 minutes. One is to observe $X$, where $X$ can be any *real number* between 7 and 10, *including* both 7 and 10. 
+
+Suppose and event $A$ is to be it takes the professor more than 9 minutes to bike to the university. Of all possible outcomes, you are interested in those were $X > 9$. The event $A$ is then defined to be
+$$
+A = \{X: 9 < X \leq 12\}
+$$
+
+## Probability
+The *probability* of an event is the expected frequency of times the event will occur when the random experiment that can produce this event is repeated a large number of times. There are conditions however. 
+
+Suppose a sample space ${\cal S} = \{ o_{1}, o_{2}, \cdots, o_{N} \}$, where $n({\cal S} = N$, and $P(o_{1}) = P(o_{2}) = \cdots = P(o_{N})$. This means that each *outcome* of $\cal S$ is equally probable. 
+
+
+1. $P(o_{i}) >  0$
+2. $\sum_{o_{i} \epsilon \cal S}P(o_{i}) = 1$
+3. For an event $A$, 
+
+$P(A) = \sum_{a_{i} \epsilon A}P(a_{i}) = \frac{n(A)}{n{\cal S)}}$
+
+This is how the *mathematical* probability of an event is computed. This differs from the *frequentist* method of computing the probability of an event.
+
+**Illustration of Frequentist Probability**: Consider a six-sided die, each side is equally probable to show up as the top-side of the die after it is thrown. You have no idea how many outcomes can occur on each throw and you wish to find the probability of tossing a four, $P(4)=$? Well, we can start with the first 10 throws. On each throw of the die, we are interested in whether the top side is a six, nor anything but a six. The sequence below shows what happened when this die was tossed 10 times.
+$$
+0, 0, 1, 0, 0, 0, 0, 0, 0, 0
+$$
+Each of the first two tosses did not produce a six, a six was observed on toss 3, and tosses 4 through 10 were something other than a 6. So, the probability of observing a six using this frequentest approach is $P(6) = \frac{1}{10}= 0.10$. This is shown in the graph below. 
+
+```{r echo=FALSE}
+d <- c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0)  #creates a vector that stores the output
+e <- 1:10                             #creates a vector storing the toss index
+holder1 <- numeric(10)                  #creates a numeric vector to be filled with a cumulative sum
+holder2 <- numeric(10)                  #creates a numeric vector to be filled with a cumulative proportion
+for(j in 1:10){
+ holder1[j] <- sum(d[1:j])
+ holder2[j] <- (holder1[j]/j) }
+```
+
+```{r echo=FALSE}
+plot(e,holder2,type="l", xlab = "Toss Number", ylab="Percent", ylim=c(0,1), main="Cumulative Proportion of Observing a Six")
+```
+
+We can see how in after these 10 tosses, the cumulative percentage of times a six was observed is 0.10, and we then estimate 
+
+$P(Six) = \frac{1}{10} = 0.10$
+
+But, suppose we continued this process many, many times over, suppose we did this 1000 times? What would happen then? 
+
+We can see that as the number of die tosses increases, the proportion/percentage of times the outcome settles down, or is said to *converge*, to a certain value. It is no surprise then that this proportion is converging to a value of $\frac{1}{6} = 0.16667$. What we are observing here is the **Law of Large Numbers**. This process of repeating a random experiment many, many times over to compute the probability of an event is used when the number of ways the random experiment can end - the sample space -is unknown, $n(\cal S) = $?. 
+
+In computing the $P(Six)$, we can determine that $\cal S = \{1, 2, 3, 4, 5, 6\}$, and the probability of observing the top side of the die as a six is
+$$
+P(Six) = \frac{n(Six)}{n(\cal S)} = \frac{1}{6} = 0.16667
+$$
+
+### Compound Events
+
+Think of two *different events* that result from the outcome of a random experiment. These can be represented by $A$ and $B$, where $A \subseteq \cal{S}$, $B \subseteq \cal{S}$. Consider two different events that are varying combinations of $A$ and $B$
+
+- an event that considers $A$ *or* $B$ occurs
+- an event where $A$ *and* $B$ occur together
+
+These two types of combinations are presented below. 
+
+#### The Union of $A$ and $B$
+
+The **union** of $A$ and $B$, represented notationally by $A \cup B$: The union of events $A$ and $B$ - denoted
+by $(A \cup B)$ - is a subset of the sample space which consists of elements found in $A$ or elements found in $B$ or elements found in BOTH $A$ and $B$. A Venn diagram of $(A \cup B)$ is given below.
+
+**Example 3(a)**: When randomly picking a card out of a standard deck, the event $A$ was defined to be the chosen card is a Ace and $B$ as the card is a $\spadesuit$. How many ways can you observed $A$ or $B$?
+
+<font color='blue'>
+**Answer:** The *union* of $A$ and $B$ is a subset of the sample space that consists of outcomes that satisfy $A$ or $B$:
+$$
+A \cup B = \{\underbrace{A \heartsuit, A \diamondsuit, A \spadesuit, A \clubsuit}_{A}, \underbrace{A \spadesuit, 2 \spadesuit, 3 \spadesuit, \cdots, Q \spadesuit, K \spadesuit}_{B} \: \}
+$$
+Notice how the $A\spadesuit$ outcome has been including twice. Accounting for this, the outcomes that satisfy `an Ace' or `a $\spadesuit$' are 
+$$
+A \cup B = \{A \heartsuit, A \diamondsuit, A \spadesuit, A \clubsuit, 2 \spadesuit, 3 \spadesuit, \cdots, Q \spadesuit, K \spadesuit \}
+$$
+and the number of ways to observe an Ace or $\spadesuit$ is then 
+$$
+n(A \cup B) = 16
+$$
+</font>
+**Example 3(b)**: Compute the probability of observing an Ace or a $\spadesuit$. 
+
+<font color='blue'>
+**Answer:** To compute the probability of observing an Ace or a $\spadesuit$, you are interested in all outcomes that satisfy $A$ or $B$, or both! $A \cup B$ means $A$ or $B$ or *both*. In Example 3(a), it was shown that $n(A \cup B) = 16$. To compute the probability of observing an Ace or a $\spadesuit$, 
+$$
+P(\text{Ace or}\:\:\spadesuit) = P(A \cup B) = \frac{n(A \cup B)}{n({\cal S})} = \frac{16}{36} = \frac{4}{9}=0.4444444 = 0.4444 \:\:\text{(four decimals is enough)}
+$$
+The probability of observing an Ace or a $\spadesuit$ is 0.4444, or 44.44%. 
+</font>
+
+#### The Intersection of $A$ and $B$
+
+The **intersection** of $A$ and $B$, represented by the notation $A \cap B$: The intersection of events $A$ and $B$ - denoted
+by $(A \cup B)$ - is a subset of the sample space which consists of outcomes found in $A$ *AND* outcomes found in $B$.  A Venn diagram of $(A \cap B)$ is provided below.
+
+In Example 3(a), the intersection of $A$ (observe an Ace) and $B$ (observe a $\spadesuit$) is an event where both conditions of observing an ace *AND* observing a $\spadesuit$ are met:
+$$
+A \:\: \text{and}\:\: B = A \cap B = \{A\spadesuit \} 
+$$
+There is one way to observe both an Ace and a $\spadesuit$, or $n(A \cap B) = 1$. To compute the probability of observing an Ace and a $\spadesuit$, you proceed to compute a probability in the same way the probability in Example 3(b) was computed.
+$$
+P(A \:\: \text{and}\:\: B) = P(A \cap B) = \frac{n(A \cap B)}{n({\cal S})} = \frac{1}{36} = 0.0277778 = 0.0278
+$$
+The probability of observing an Ace and a $\spadesuit$, or $A\spadesuit$, is 0.0278, or 2.78%. 
+
+<div style="margin-bottom:50px;">
+</div>
+
+Below is another example to further illustrate the computation of $P(A\cup B)$ and $P(A \cap B)$.
+
+<div style="margin-bottom:50px;">
+</div>
+
+**Example 4:** A standard deck of 52 cards is shuffled, then a card is chosen at random. The following events are defined: $A$ represents the card chosen is a \heartsuit, $B$ is the card chosen is a *face-card*. A face-card is card with a face on it. For each suit, there are three face-cards: J (jack), Q (queen), and K (king).
+
+Compute the probability of
+
+(a) the chosen card is a $\heartsuit$ ($A$) and a face-card $(B)$.
+<font color='blue'>
+</br>
+</br>
+**Answer:** First, consider the number of ways to observe a $\heartsuit$ and a face-card, *separately*:
+$$
+n(\heartsuit) = n(A) = n(\{A\heartsuit, 2\heartsuit, 3\heartsuit, \cdots, Q\heartsuit, K\heartsuit \}) = 13 \\
+n(\text{face-card}) = n(B) = n(\{J\heartsuit, Q\heartsuit, K\heartsuit, J\diamondsuit, Q\diamondsuit, K\diamondsuit,  \cdots Q\spadesuit, K\spadesuit \}) = 12
+$$
+The intersection of these two event consists of the outcomes that are common to *both* $A$ and $B$:
+$$
+\heartsuit \:\: \text{and}\:\:\text{face-card} = A \cap B = \{J\heartsuit, Q\heartsuit, K\heartsuit\}
+$$
+The probability of observing a $\heartsuit$ and a face-card is then computed as
+$$
+P(\heartsuit \:\: \text{and} \:\; \text{face-card}) = P(A \cap B) = \frac{3}{52} = 0.057692307 = 0.0577
+$$
+The probability of observing a $\heartsuit$ and a face-cards is 0.0577, or 5.77%.  
+</font>
+
+<div style="margin-bottom:10px;">
+</div>
+
+(b) the chosen card is an ace $(A)$ or a heart $(B)$. 
+<font color='blue'>
+</br>
+</br>
+**Answer:** You are interested in all outcomes where the card is a $\heartsuit$ *or* a face-card. Notationally, $A \cup B$. The union of these two events is represented by
+$$
+\heartsuit \:\: \text{or}\:\:\text{face-card} = A \cup B = \{A\heartsuit, 2\heartsuit, 3\heartsuit, \cdots, J\heartsuit, Q\heartsuit, K\heartsuit, J\diamondsuit, Q\diamondsuit, K\diamondsuit,  \cdots Q\spadesuit, K\spadesuit       \}
+$$
+The number of ways to observe a $\heartsuit$ *or* a face-cards is 
+$$
+n(\heartsuit \:\: \text{or} \:\: \text{face-card}) = n(A \cup B) = 22
+$$
+The probability of observing a $\heartsuit$ or a face-card is computed as
+$$
+P(\heartsuit \:\: \text{or} \:\: \text{face-card}) = P(A \cup B) = \frac{n(A \cup B)}{52} = \frac{22}{36} = \frac{11}{26} = 0.4230769 = 0.4231
+$$
+The probability of observing a $\heartsuit$ or a face-cards is 0.4231, or 42.31%.
+</font>
+
+---------------
+
+The probability computed in part (b) of Example 1 can also be computed with the **Addition Law**:
+$$
+P(A \cup B) = P(A) + P(B) - P(A \cap B)
+$$
+
+The usage of the Addition Law, pertaining to Example 4(b), will be demonstrated below. 
+
+**Illustration of Addition Law**: From the information in Example 4, we have
+$$
+P(\heartsuit) = P(A) = \frac{13}{52}, \hspace{0.2in} P(\text{face-card}) = P(B) =\frac{12}{52}, \hspace{0.2in} P(A \cap B) = \frac{3}{52}
+$$
+Placing these results in to the Addition Law below,
+
+$$
+\begin{align}
+P(A \cup B) = & P(A) + P(B) - P(A \cap B) \\
+            = & \frac{13}{52} + \frac{12}{52} - \frac{3}{52} \\
+            = & \frac{22}{52} \\
+            = & 0.4230769 \\
+            = & 0.4231
+\end{align}
+$$
+The Addition Law is simply a different tool that can be used to compute $P(A \cup B)$ 
+
+<div style="margin-bottom:50px;">
+</div>
+
+---------------------
+
+### Mutually Exclusive Events
+
+At this point, you have seen how two different events can occur together. When this happens, the $0 < P(A \cap B) \leq 1$. 
+
+Sometimes, two events *cannot* occur together. When this happens the $P(A \cap B) = 0$. This only occurs when two events are said to be *mutually exclusive*. 
+
+Two events $A$ and $B$ are said to be **mutually exclusive** when $A \cap B$ is an empty, or null, set. Probabilistically then, if $A$ and $B$ are mutually exclusive events, then
+$$
+P(A \cap B) = 0
+$$
+From Example 1, you can see that the events $A$ (observing an ace) and $B$ (observing a $\spadesuit$) are not mutually exclusive, as $P(A \cap B) = \frac{1}{52} = 0.0278\ne 0$. 
+
+From Example 4, you can determine that $A$ ($\heartsuit$) and $B$ (face-card) are not mutually exclusive because $P(A \cap B) =\frac{3}{52} = 0.05769 \ne 0$. 
+
+**Example 5:** Suppose events are redefined such that $A$ represented a $\heartsuit$ but $B$ represented a $\diamondsuit$. Are these events $A$ and $B$ mutually exclusive? 
+<font color='blue'>
+
+**Answer:** 
+$$
+P(A) = \frac{n(A)}{n({\cal S})} = \frac{n(\{A\heartsuit, 2\heartsuit, \cdots, K\heartsuit \})}{52} = \frac{13}{52} = 0.25
+$$
+and
+$$
+P(B) = \frac{n(B)}{n({\cal S})} = \frac{n(\{A\diamondsuit, 2\diamondsuit, \cdots, K\diamondsuit \})}{52} = \frac{13}{52} = 0.25
+$$
+What about $A \cap B$?
+$$
+A \cap B = \{ (A\heartsuit, 2\heartsuit, \cdots, K\heartsuit)   \cap (A\diamondsuit, 2\diamondsuit, \cdots, K\diamondsuit)        \} = \text{empty-set}
+$$
+As a result, the number of ways to observe *both* a $\heartsuit$ and a $\diamondsuit$ is 
+$$
+n(\heartsuit \cap \diamondsuit) = n(A \cap B) = 0
+$$
+and
+$$
+P(\heartsuit \cap \diamondsuit) = P(A \cap B) = \frac{n(A \cap B)}{52} = \frac{0}{52} = 0
+$$
+Because the probability of observing both a $\heartsuit$ and a $\diamondsuit$ is 0, these two events are mutually exclusive. In other terms, these two events are impossible of occurring at the same time because $P(A \cap B) = 0$. 
+</font>
+
+----------
+
+### The Complement of an Event 
+
+The **complement** of an event, denoted by $A^{c}$, is a subset of the sample space consisting of all outcomes in ${\cal S}$ which are not found in $A$. In short, $A^{c}$ can be
+thought of as everything but $A$. A Venn diagram showing the relation between $A$, $A^{c}$, and $\cal S$ is provided below.
+
+ 
+$$
+\begin{align}
+P(A^{c}) & = \frac{n(A^{c})}{n(\cal S)} \\
+         & = \frac{n({\cal S) - n(A)}}{n(\cal S)} \\
+         & = 1 - \frac{n(A)}{n(\cal S)} \\
+P(A^{c}) & = 1 - P(A)
+\end{align}
+$$
+This is called the **Law of complement**. 
+
+A couple of more results that can make the computation of probabilities simpler are called **DeMorgan's Laws**
+
+1. $P(A \cup B)^{c} = P(A^{c} \cap B^{c})$ 
+2. $P(A \cap B)^{c} = P(A^{c} \cup B^{c})$ 
+
+To demonstrate the first law, start with the left-hand side of the equation:
+$$
+\begin{align}
+P(A \cup B)^{c} = & 1 - P(A \cup B) \hspace{0.2in} \text{(use of the Law of Complement)} \\
+                = & 1 - \left(\underbrace{P(A) + P(B) - P(A \cap B)}_{P(A \cup B)}   \right) \\
+P(A \cup B)^{c}   = & 1 - P(A) - P(B) + P(A \cap B)
+\end{align}
+$$
+The right-hand side of #1 can be re-stated as
+$$
+\begin{align}
+P(A^{c} \cap B^{c}) =& P({\cal S}) - P(A \cup B) \\
+                    = & 1 - (P(A) + P(B) - P(A \cap B)) \\
+P(A^{c} \cap B^{c})  = & 1 - P(A) - P(B) + P(A \cap B)
+\end{align}
+$$
+Notice how the left-hand side $P(A \cup B)^{c}$ and the right-hand side $P(A^{c} \cap B^{c})$ are the same:
+$$
+\begin{align}
+P(A \cup B)^{c} \overbrace{=}^{?} & P(A^{c} \cap B^{c}) \\
+1 - P(A) - P(B) + P(A \cap B) = & 1 - P(A) - P(B) + P(A \cap B) \\
+\end{align}
+$$
+
+For a demonstration of DeMorgan's Law #2, that $P(A \cap B)^{c} = P(A^{c} \cup B^{c})$, refer to the Venn Diagram below. Note that the $event^{`}$ notation below is a different way of expressing the complement of an $event$, or $event^{c}$: 
+
+Now consider the white-space from (1). This region represents everything *outside* of the lime-colored space in (1). From this the lime-colour space in (2) is the complement of the lime-coloured space in (1) and it can be observed that $P(A \cap B)^{c}$ consists of all the lime-coloured space in (2). 
+
+Now consider the three Venn diagrams below.
+
+
+Panel (3) shows the complement of $P(A)$, $P(A^{c})$. (4) shows $P(B^{c})$. If $P(A^{c})$ and $P(B^{c})$ are combined through the union, the result is $P(A^{c} \cup B^{c})$ which is the lime-coloured space appearing in (5). 
+
+Notice how the lime-coloured space in (2) - $P(A \cap B)^{c}$, is the *same* as the lime-coloured space in (5) - $P(A^{c} \cup B^{c})$ and 
+ 
+$$
+P(A \cap B)^{c} = P(A^{c} \cup B^{c})
+$$
+
+------------------------------
+
+**Example 6:** A certain undergraduate statistics course has 60 students, of which
+- 28 are 2nd-year students
+- 34 are Statistics majors 
+- 7 are 2nd-year students that are not Statistics majors
+
+A student is chosen at random. Compute the probability that this chosen student is
+
+(a) not a 2nd-year student.
+</br>
+</br>
+<font color='blue'>
+**Answer 1** From above, if you are to randomly pick one student from the 60, the probability this student will (i) be a 2nd-year student is $\frac{28}{60}$ (ii) a Statistics major is $\frac{34}{60}$ and (iii) a 2nd-year student whom (and) is *NOT* a Statistics major is $\frac{7}{60}$.
+$$
+P(2nd) = \frac{28}{60}, \hspace{0.2in} P(Stat) = \frac{34}{60}, \hspace{0.2in} P(2nd \cap Stat^{c}) = \frac{7}{60}
+$$
+From this information, you need to compute $P(2nd^{c})$. Using the Law of Complement, 
+$$
+\begin{align}
+P(2nd^{c}) = & 1 - P(2nd) \\
+           = & 1 - \frac{28}{60} \\
+           = & \frac{32}{60} \\
+           = & 0.53333 \\
+           \approx & 0.5333
+\end{align}
+$$
+The probability that a randomly chosen student from this class of 60 is not a 2nd-year student is 0.5333, or 53.33%.
+</br>
+</br>
+**Answer 2:**  Create a R-chunk within your R Studio session. To do so, select Insert -> R. Within this chunk, assign probabilities in the manner below. 
+```{r echo=TRUE}
+psecond = 28/60 #assign P(2nd) as 28/60
+pstat = 34/60   # assgin P(Stat) as 34/60
+psecondnotstat = 7/60 #assign P(Stat^{c} and 2nd) = 7/60
+```
+Next, compute the probability of the event that you are interested in finding the probability of. In this instance, we wish to find $P(2nd^{c})$. Within R Studio, 
+```{r echo=TRUE}
+pnotsecond = 1 - psecond #apply the law of complement
+pnotsecond
+```
+<div style="margin-bottom:50px;">
+</div>
+
+</font>
+
+(b) a Statistics major and a second year student.
+</br
+</br>
+<font color='blue'>
+**Answer 1:** Here the computation of $P(Stat \cup 2nd)$ is required. Using the Addition Law below,
+$$
+\begin{align}
+P(Stat \cup 2nd) = & P(Stat) + P(2nd) - P(Stat \cap 2nd) \\
+                 = & \frac{34}{60} + \frac{28}{60} - P(Stat \cap 2nd)
+\end{align}
+$$
+From the data provided in the question, $P(Stat \cap 2nd)$ is missing, How can this missing probability be computed?
+There are two different ways for a student to be a 2nd-year student: They can be a 2nd-year student AND a Statistics major, *OR* they can be a 2nd-year student AND not a Statistics major. From this notation, the $P(2nd)$ can be expressed as the sum of these two 'ways':
+$$
+\begin{align}
+P(2nd) = & P(Stat \cap 2nd) + P(Stat^{c} \cap 2nd) \\
+\frac{28}{60} = & P(2nd \cap Stat) + \frac{7}{60} \\
+\frac{28}{60} - \frac{7}{60} = & P(2nd \cap Stat) \\
+\frac{21}{60} = & P(Stat \cap 2nd)
+\end{align}
+$$ 
+Now, return to the application of the Addition Law above:
+$$
+\begin{align}
+P(Stat \cup 2nd) = & P(Stat) + P(2nd) - P(Stat \cap 2nd) \\
+                 = & \frac{34}{60} + \frac{28}{60} - P(Stat \cap 2nd) \hspace{0.5in} \text{(where you left off...)} \\
+                 = & \frac{34}{60} + \frac{28}{60} - \frac{21}{60} \\
+                 = & \frac{41}{60} \\
+                 = & 0.68333333 \\
+                 \approx & 0.6833
+\end{align}
+$$
+The probability that a randomly chosen student from this class is a Statistics major or a second-year student, meaning one or the other or both, is 0.6833 or 68.33%. 
+</br>
+</br>
+**Answer 2:** Building upon the probabilities used in R code chunk used in part (a)
+</font>
+```{r echo=TRUE}
+psecondstat = psecond - psecondnotstat #P(second AND Stat = P(2nd) - P(2nd AND not Stat)
+psecondstat #returns P(2nd And Stat)
+answerb = pstat + psecond - psecondstat #computes P(2nd or Stat)
+answerb #returns P(2nd or Stat)
+```
+<div style="margin-bottom:50px;">
+</div>
+
+(c) a Statistics major and not a 2nd year student.
+</br>
+</br>
+<font color='blue'>
+**Answer 1:** To compute the probability of interest, $P(2nd^{c} \cap Stat)$, one can use the same approach demonstrated in part (b). There are two different ways in which a student can be a Statistics student: they are a Statistics student *and* a 2nd-year student, or they are a Statistics student *and not* a 2nd-year student. 
+$$
+\begin{align}
+P(Stat) = & P(Stat \cap 2nd) + P(Stat \cap 2nd^{c}) \\
+\frac{34}{60} = & \frac{21}{60} + P(Stat \cap 2nd^{c}) \\
+\frac{34}{60} - \frac{21}{60} =  & \frac{21}{60} + P(Stat \cap 2nd^{c}) \\
+\frac{13}{60} = & \frac{21}{60} + P(Stat \cap 2nd^{c}) \\
+0.21666667 = & P(Stat \cap 2nd^{c}) \\
+0.2167 \approx & P(Stat \cap 2nd^{c}) \\
+\end{align}
+$$
+The probability that a student chosen from this class at random will be a Statistics major and *not* a 2nd-year student is 0.2167, or about 21.67%.
+</br>
+</br>
+**Answer 2:** Subsequently, the R commands below can be used to compute this probability. 
+```{r echo=TRUE}
+answerc = pstat - psecondstat  #P(Stat and not 2nd) = P(Stat) - P(Stat AND 2nd)
+answerc
+```
+</font>
+<div style="margin-bottom:50px;">
+</div>
+
+(d) neither a Statistics major nor a second year student.
+</br>
+</br>
+<font color='blue'>
+**Answer 1:** The event`neither Statistics major nor second year student' means that the outcome of the student chosen at random it not a Statistics major *nor* are they a 2nd-year student, meaning the event of interest is $P(Stat^{c} \cap 2nd^{c})$ Recall from DeMorgan's Laws that this probability can be re-expressed as
+$$
+\begin{align}
+P(Stat^{c} \cap 2nd^{c}) = & P(Stat \cup 2nd)^{c} \hspace{0.2in} (\text{applying}\:\: P(A^{c} \cap B^{c}) = P(A \cup B)^{c}) \\
+                        = & 1 - P(Stat \cup 2nd) \\
+                        = & 1 - \frac{41}{60} \hspace{0.2in} (\text{recall from (b) that} \:\:P(Stat \cup 2nd) = \frac{41}{60}) \\
+                        = & \frac{19}{60} \\
+                        =& 0.316666 \\
+                        \approx & 0.3167
+\end{align}
+$$
+The probability of a randomly chosen student from this class is neither a Statistics student nor a 2nd-year student - satisfies neither of these two events -  is 0.3167, or 31.67%.
+</br>
+</br>
+**Answer 2:** Carrying forward with R, 
+```{r echo=TRUE}
+answerd = 1 - answerb #P(not Stat AND not 2nd) = P(Stat OR 2nd)^{c} = 1 - P(Stat OR second)
+answerd
+```
+
+</font>
+
+<div style="margin-bottom:50px;">
+</div>
+
+**Example 3:** Consider a group of persons living in a large Canadian city. Health Canada data indicate that 20% of persons will develop illness $A$, 25% will develop illness $B$. 70% will develop neither illness $A$ nor illness $B$. A person randomly chosen from this city is picked. User R Studio to compute the probability they will develop both illnesses $A$ and $B$.
+
+<div style="margin-bottom:50px;">
+</div>
+
+<font color='red'>
+
+#### A Non-formulae Driving Approach to Example 2
+
+Within the text below, you will be presented an non formula based approach to solving probability problems similar to those experienced in Examples 1 and 2. Firstly, a probability table is created with three rows and three columns.
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(Stat)         & P(Stat^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(2nd)        &                 &                      &          \\[0.5ex]
+\hline
+P(2nd^{c})        &                 &                      &          \\[0.5ex]
+\hline
+\text{Column Proobabilities} &               &                        &    1     \\[0.5ex]
+\end{array}
+$$
+All probabilities in this table will sum to 1, hence the 1 in the bottom left-hand corner. 
+
+First, you implement all the probabilities provided/given in the preamble of Example 2. 
+$$
+P(2nd) = \frac{28}{60}, \hspace{0.5in} P(Stat) = \frac{34}{60}
+$$
+and
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(Stat)         & P(Stat^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(2nd)        &                 &                      &      \frac{28}{60}    \\[0.5ex]
+\hline
+P(2nd^{c})        &                 &                      &          \\[0.5ex]
+\hline
+\text{Column Proobabilities} &  \frac{34}{60}             &                        &    1     \\[0.5ex]
+\end{array}
+$$
+The column/row probabilities are completed, as the sum of the row probabilities $P(2nd) + P(2nd^{c}) = 1$ and the column probabilities $P(Stat) + P(Stat^{c}) = 1$. 
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(Stat)         & P(Stat^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(2nd)        &                 &                      &      \frac{28}{60}    \\[0.5ex]
+\hline
+P(2nd^{c})        &                 &                      &   \frac{32}{60}       \\[0.5ex]
+\hline
+\text{Column Proobabilities} &  \frac{34}{60}             &     \frac{26}{60}                &    1     \\[0.5ex]
+\end{array}
+$$
+A third probability was provided, $P(2nd \cap Stat^{c}) = \frac{7}{60}$. This probability belongs in the intersection between the $2nd$ row and the $Stat^{c}$ column.
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(Stat)         & P(Stat^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(2nd)        &                 &   \frac{7}{60}               &      \frac{28}{60}    \\[0.5ex]
+\hline
+P(2nd^{c})        &                 &                      &   \frac{32}{60}       \\[0.5ex]
+\hline
+\text{Column Proobabilities} &  \frac{34}{60}             &     \frac{26}{60}                &    1     \\[0.5ex]
+\end{array}
+$$
+All remaining cells are filled to ensure (i) row totals and (ii) column totals are satisfied. 
+\begin{array}{l|c|c|r}
+\hline
+                & P(Stat)                & P(Stat^{c})             &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(2nd)           & \frac{21}{60}         &   \frac{7}{60}         &      \frac{28}{60}    \\[0.5ex]
+\hline
+P(2nd^{c})        &      \frac{13}{60}                &    \frac{19}{60}                    &   \frac{32}{60}       \\[0.5ex]
+\hline
+\text{Column Probabilities} &  \frac{34}{60}      &     \frac{26}{60}                &    1     \\[0.5ex]
+\end{array}
+
+You can then draw the probabilities from this table:
+$$
+P(Stat \cap 2nd) = \frac{21}{60} = 0.35, \hspace{0.05in} P(Stat \cap 2nd^{c}) = \frac{13}{60} = 0.2167 \\
+\hspace{0.05in} P(Stat^{c} \cap 2nd) = \frac{28}{60} = 0.4667, \hspace{0.05in} P(Stat^{c} \cap 2nd^{c}) = \frac{19}{60} = 0.3167 
+$$
+
+</font>
+
+```{r eval=FALSE, include=FALSE}
+pA = 0.20  #P(A) = 0.20
+pB = 0.25  #P(B) = 0.25
+pnotAandnotB = 0.70 #P(notA AND notB) = 0.70
+pAorB = 0.30  #P(A OR B) = 1 - p(notA AND notb)
+Ex3answer = pA + pB - pAorB #P(A AND B) = P(A) + P(B) - P(A OR B)
+Ex3answer
+```
+--------------------
+
+##  Counting Methods - Permutations and Combinations
+
+### Permutations
+
+**Illustration 2:** A small local lottery consists 15 ping-pong balls, numbered 1 through 15, in rolling container. After the container is rotated a few times, a ball is chosen from the rolling container, then removed. This is repeated two more times, after which three balls are picked out. A person playing this lottery has to correctly identify which ball is the first to be chosen, the 2nd, and the 3rd to to chosen. Compute the maximum number of lottery tickets to be sold.
+
+To compute the answer, simulate the selection of three ping-pong balls, one taken out after the other *without replacement*. 
+$$
+n(\text{ways to select 3 ping-pong balls from 15}) = \underbrace{\underline{15}}_{1st} * \underbrace{\underline{14}}_{2nd} * \underbrace{\underline{13}}_{3rd} = 15 * 14 * 13 = 2730
+$$
+There are a total of 2730 lottery tickets that can be sold. Be reminded here that the order in which the numbers appear matters. A #1, #10, and #12 arrangement is a  *different ticket* than (12, 1, 10) ticket/arrangement.  This brings us to the definition of a *permutation*. 
+</br>
+
+A **permutation** is an ordered arrangement of $n$-distinct objects. The number of ways to permutate $n$-distinct objects is $n! = n(n - 1)(n - 2)*\cdots*2*1$.  
+
+**Example 1:** Consider a deck of standard cards that have been well-shuffled and are presumed to be in random order. 
+How many ways can a deck of cards be arranged? That is, how many different orderings are there of a deck of cards? 
+</br>
+</br>
+<font color='blue'>
+**Answer:** There are 52 distinct cards. The top card can be any one of 52 possible cards, the 2nd card from the top can be any of 51 possible cards, etc. Thus, 
+$$
+\underbrace{52}_{Top\:\:card} * \underbrace{51}_{2nd} * 50 * \cdots \underbrace{2}_{2nd\:\:from\:\;bottom}*\underbrace{1}_{Bottom\:\:card} = 52! = {\rm large\:\:number}
+$$
+</font>
+This can be also be computed in R Studio with the `factorial()` function.
+```{r}
+factorial(52) #computes 52!
+```
+$52! = 8.065818\:\:x\:\:10^{67}$ 
+
+
+**Extention of Illustration 2**. Suppose you purchased two different lottery tickets. Compute the probability that one of your two tickets is a winning ticket.
+</br>
+</br>
+<font color='blue'>
+**Answer:** You are purchasing two *different* tickets, out of a total number of $15*14*13 = 2730$ different lottery tickets. The probability that *one* of these two will be the winning ticket can occur *two* different ways: The first ticket you purchase is the winning ticket *AND* the second is not, or the reverse: the first ticket purchased is not the winning ticket *AND* the second ticket purchased *is* the winning ticket. The probability of you observing a winning outcome is computed with
+$$
+\begin{aligned}
+P({\rm one\:\:of\:\:2\:\:tickets\:\:is\:\:winning\:\:ticket}) = & P(T1\:\:is\:\:Winning \cap T2 \:\:is\:\:not\:\:Winning) \\
+                                                                & + P(T1\:\:is\:\:not \:\:Winning \cap T2 \:\:is\:\:Winning\\
+                                                              = & P(T1\:\:Winning)* P(T2\:\:is\:\:not\:\:Winning) \\
+                                                                & + P(T1\:\:is\:\:not\:\:Winning)* P(T2\:\:is\:\:Winning)\\
+                                                              = & \left(\frac{1}{2730}\right) \left(\frac{2729}{2729}\right) + \left(\frac{2729}{2730}\right) \left(\frac{1}{2729}\right) \\ 
+                                                              = & \frac{2}{2730} \\
+                                                              = & 0.0007326
+\end{aligned}
+$$
+This can be computed in R Studio with
+```{r}
+pwin = (1/2730)*(2729/2729) + (2729/2730)*(1/2729)  #set up the equation in R 
+pwin #returns the answer
+```
+</font>
+
+<div style="margin-bottom:50px;">
+</div>
+There is result you can use to more easily compute the number ways to arrange three different ping-pong balls when chosen from 15 different ping-pong balls.  
+
+The number of ways to permutate $r$ distinct objects chosen from $n$ distinct objects is
+$$
+nP_{r} = \frac{n!}{(n - r)!}
+$$
+
+In reference ti Illustration #1, there are $n = 15$ distinct ping-pong balls, of which $r = 3$ are to be chosen where the order of the selection matters. Using the result above,
+$$
+15P_{3} = \frac{15!}{(15 - 3)!}= \frac{15*14*13*(12*11*10* \cdots * 3*2*1)}{(12*11*10*9*\cdots * 3* 2 * 1)} = 15*14*13 = 2730
+$$
+
+
+**Example 2:** There are 10 books on a shelf, of which 5 are fiction, 3 are history, and 2 are statistics. These books are arranged in a random order. You are to look at the arrangement from left to right. Compute the probability that the first two books on the left are statistics books. 
+</br>
+</br>
+<font color='blue'>
+**Answer** There are 10 distinct books, therefore 10! different arrangements or $n(\cal S) = 10! = 3,628,800$ Of these, there are $2!*8! = 80,640$ where the first two books on the left-side of the arrangement are the two statistics books which can be arranged in $@! = 2$ different ways, the *other* 8 non-Statistics books can be arranged in $8!$ ways. The probability of the first two books on the left-hand side being statistics books is then
+$$
+P(first\:\:two\:\;are\:\:statistics\:\:books) = \frac{2!*8!}{10!} = \frac{2!}{9*10} = \frac{2}{90} = \frac{1}{45} = \frac{2!}{9*10} = 0.02222
+$$
+This probability can be computed in R Studio via
+```{r}
+numerator = factorial(2)*factorial(8) #computes the number of ways to arrange the booksso the first two are stat books
+denominator = factorial(10) #computes the total number of arrangements
+numerator/denominator #computes the probability of interest
+```
+</font>
+
+**Example 3:** Consider a condensed deck of 40 cards, *excluding face cards*. The deck of cards is shuffled and *four* cards are chosen. Use R Studio to compute the probability that four aces are all adjacent, or side-by-side.
+</br>
+</br>
+<font color='blue'>
+**Answer:** There are 40 distinct cards. The number of ways to permutate/arrange 40 distinct cards is $40!$.
+</br>
+</br>
+To compute the probability that four aces are adjacent, consider one possible way this can occur:
+$$
+card: \underbrace{\underline{A\spadesuit}}_{Top-card} \hspace{0.1in} \underbrace{\underline{A\heartsuit}}_{2nd} \hspace{0.1in} \underbrace{\underline{A\clubsuit}}_{3rd} \hspace{0.1in} \underbrace{\underline{A\diamondsuit}}_{4th} \hspace{0.1in} \underbrace{\underline{A^{c}}}_{5th} \cdots \hspace{0.1in} \underbrace{\underline{A^{c}}}_{Bottom-Card}
+$$
+There are $4!$ ways to arrange the Aces in spots 1 through 4, there are $36!$ ways to arrange the other 36 *distinct* cards that occupy the 5th from the top to the bottom card. So, the number of ways the arrangement appearing above can occur is $4!*36!$.
+</br>
+In the scenario above, the first four cards have been set to be Aces. But, this group of Aces can be moved through the deck. Cards 2 through 5 are Aces, or cards 3 through 6 are Aces, etc., to cards 36 to the bottom card are Aces. The number of ways one can slide the group of Aces through the deck is $(40 - 4 + 1) = 37$. To account for this, the $4!*36!$ is multiplied by 37 to count the number of arrangements where the Aces are together/adjacent.  
+</br>
+</br>
+Therefore, the probability that all aces are adjacent is
+$$
+\begin{aligned}
+P(Aces\:\:adjacent) = & \frac{4!*36!*37}{40!} \\
+                    = & \frac{4!*37!}{40!} \\
+                    = & \frac{4!}{38*39*40} \\
+                    = & \frac{24}{38*39*40} \\
+                    = & 0.000404858
+\end{aligned}
+$$
+
+Below is the R code that computes this probability:
+
+```{r echo=TRUE}
+numerator = factorial(4)*factorial(36)*37
+denominator = factorial(40)
+numerator/denominator
+```
+</font>
+</br>
+
+### Combinations
+
+To consider this change to the lottery outlined in **Illustration 1**, and the order in which the numbers are chosen is not longer relevant/does not matter. How many different tickets can be purchased in this scenario? 
+</br>
+The answer to this question, suppose that your ticket is numbered (1, 10, 12). Now, the order in which these three numbers appear is irrelevant, so a (1, 10, 12) is the same as a (1, 12, 10). Considering all possible arrangements of 1, 10 and 12, there are 3! = 1*2*3 = 6 different ways to arrange the three distinct numbers of 1, 10, and 12. We apply a correction to the $15*14*13$ computation, as each of these arrangements can occur in $3!$ different ways. The number of different tickets that exist when the order of the selection does not matter is then
+$$
+\frac{15*14*13}{3!} = 455
+$$
+When the order in which the numbers of the ping-pong balls chosen do longer is of importance, there are 455 tickets possible compared to 2730 tickets. 
+</br>
+
+The difference between the order of the selection matters and the current situation where the order of the selection does not matter is the distinction between a *permutation* and a *combination*. 
+
+A **combination** occurs when $r$ distinct objects are chosen from $n$ distinct objects $(r \leq n)$ in such a way that the order of the section *does not matter*. The number of combinations when selecting $r$ from $n$ is given by the result
+$$
+{n \choose r} = \frac{n!}{r!(n - r)!}
+$$
+Note our lottery example with the order of selection relaxed, we compute the number of different tickets as 
+$$
+{15 \choose 3} = \frac{15!}{3!12!} = \frac{15*14*13}{3*2*1} = \frac{13*7*5}{1} = 455
+$$
+In R studio, this can be this is computed with the command `choose(n,r)`
+
+```{r}
+choose(15,3) #n = 15, r = 3
+```
+
+**Example 4:** A cooler sits in the middle of a hockey locker room. There are 12 cans of beer, 7 bottles of water, and 5 cans of soda pop. After a game, one of the players randomly picks 6 items from this cooler (without replacement). Compute the probability that there are 4 bottles of water amongst the six drinks chosen.
+</br>
+</br>
+<font color='blue'>
+**Answer** First, there are 24 items of which 6 are to be chosen. The number of ways this can occur is ${24 \choose 6} = 134,596$. Confirm this in R Studio. 
+```{r echo=TRUE}
+choose(24,6) #computes the no. of ways to pck 6 items out of 24, order of selection irrelevant
+```
+Second, how many of all possible outcomes will satisfy the event "4 of the 6 are bottles of water"?
+</br>
+</br>
+If this events occurs, then of the 7 bottles of water in the cooler, *any 4* need to be chosen. The number of ways to do this is ${7 \choose 4} = 35$. Confirm this in R Studio. 
+```{r}
+choose(7,4) #no. of ways to pick 4 water bottles from teh sub-pool of 7
+```
+</br>
+Now, the 2 remaining items are *not bottles of water*, meaning they can be either cans of beer or cans of soda pop. Of the 19 cans of beer and pop, there needs to be 2 chosen. The number of ways to do this is ${17 \choose 2} = \frac{17*16}{2} = 17*8 = 136$.
+</br>
+To compute this probability, we put all of these together in R Studio:
+```{r echo=TRUE}
+(choose(7,4)*choose(17,2))/(choose(24,6)) #choose(17,2) counts the no. of ways to pick 2 out of 17 nonwater items
+```
+In short, you have computed the probability appearing in the expression
+$$
+\frac{{7 \choose 4}*{17 \choose 2}}{{24 \choose 6}} = 0.03536509 \approx 0.0354
+$$
+</font>
+
+
+
+**Example 4(b)** After the six items were chosen, all turned out to be cans of beer. How likely is this outcome? 
+</br>
+</br>
+<font color='blue'>
+To compute the probability of the event 'all six items are cans of beer', consider the probability expression below.
+$$
+P(\text{six cans of beer are chosen}) = \frac{\overbrace{{12 \choose 6}}^{\text{6 cans from 12 beer}}*\overbrace{{12 \choose 0}}^{\text{0 items from the other 12}}}{{24 \choose 6}} = 0.006864989 \approx 0.0069
+$$
+This probability is computed with R Studio. 
+```{r echo=TRUE}
+choose(12,6)/choose(24,6)
+```
+Now, carefully consider the probability/likelihood of this particular event: 0.0069. If you were to randomly select 6 beverages from a cooler that consisted of 12 cans of beer, 5 cans of soda, and 7 bottles of water a total of $10,000$ times you would expect to select observe 6 beers being chosen in about 69 of these 10,000 random experiments. Or, put it in this context, is this an event you would bet your hard-earned dollars on occurring?
+
+Given the small probability of occurrence, one of three things could be happening:
+<font color='red'>
+
+- more than 12 cans of beer exist in the cooler of 24 items. This would result in $P(\text{six cans of beer are chosen})$ to be more likely/probable
+- the makeup of the cooler is as is, but the selection is not random
+- one simply 'got lucky'
+
+</font>
+
+From a probabilistic thinking approach, either the first or second 'scenario' would be pointed at. 
+</font>
+
+<div style="margin-bottom:10px;">
+</div>
+
+**Example 5: ** There are 20 people to participate in a clinical trial, where 10 are to receive a treatment and the other 10 are to receive a placebo. You randomly pick 8 persons in the clinical trial. Compute the probability that 6 of these 8 received the treatment and 2 received the placebo.
+</br>
+</br>
+<font color='blue'>
+**Answer:** The approach to this question is similar to Example 4. Imagine each person as a unique ball in a pool, ten of which are grouped in the treatment part of the pool, the other ten are corded off in the placebo part of the pool. In picking 8 from the 20, there are ${20 \choose 8}$ different possible ways to pick 8 people out of the 20. Again, order does not matter in the selection. 
+
+In order for this particular event to occur, you must pick 6 of the ten from the treatment-area of the pool of which there are ${10 \choose 6}$ ways; then you must pick 2 from the ten that are in the placebo-part of the pool, of which there are ${10 \choose 2}$ ways to do so. he probability is computed to be
+$$
+P(\text{6 of the 8 chosen are received the treatment}) = \frac{{10 \choose 6}*{10 \choose 2}}{{20 \choose 8}} = 0.07501786 \approx 0.0750
+$$
+This probability is also computed in R/R Studio below. 
+```{r echo=TRUE}
+(choose(10,6)*choose(10,2))/(choose(20,8))
+```
+</font>
+<div style="margin-bottom:300px;">
+</div>

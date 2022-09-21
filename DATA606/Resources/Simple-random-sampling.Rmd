@@ -1,0 +1,75 @@
+---
+title: "Simple Random Sampling"
+author: "Michael Ellsworth"
+date: '2020-01-08'
+output: html_document
+---
+
+```{r Class Notes}
+library(sampling)
+x <- seq(1, 10)
+sample(x, 3, replace = FALSE) #base R sampling
+srswor(3, 10) #from sampling library
+x[srswor(3, 10) == 1] #mimics base R sampling
+```
+
+```{r Simple Random Sampling Notes}
+library(truncnorm)
+N=1000  # number of students
+x<-seq(1,N)  # label these students
+y<-rtruncnorm(N,0,100,mean=80, sd=3)  # simulate 1000 midterm marks
+n<-20  # sample size
+
+# show histogram
+hist(y, main="Histogram plot of midterm grades", xlab="Grade interval", freq = TRUE)
+
+# simple random sampling
+ind=sample(x,n, replace=FALSE)
+sample_mean=mean(y[ind])
+sample_sd=sd(y[ind])
+sample_mean
+sample_sd
+# estimated average v.s. population average
+sample_mean
+sum(y)/N
+# estimated sd v.s. population sd
+sample_sd
+sd(y)
+# A funcion computes the estimated mean and sd
+mean_SD<-function(s,n){
+  sam_mean<-rep(0,s)
+  sam_sd<-sam_mean
+  for (i in 1:s){
+    ind=sample(x,n, replace=FALSE)
+    sam_mean[i]=mean(y[ind])
+    sam_sd[i]=sd(y[ind])
+  }
+  es_mean<-mean(sam_mean)
+  es_var<-sam_sd[1]^2/n*(1-n/N)
+  es_var2<-sd(sam_mean)^2
+  print(es_mean)
+  print(es_var)
+  print(es_var2)
+}
+mean_SD(10,20)
+mean_SD(10,50) # Increase sample size improves standard deviation
+mean_SD(50,20) # Increasing number of samples does not improve standard deviation
+# 95% confidence interval for population mean
+mean_CI<-function(n){
+  ind<-sample(x,n,replace=FALSE)
+  sample_m<-mean(y[ind])
+  CI_left<-sample_m-qt(0.975,n-1)*sd(y[ind])*sqrt((1-n/N)/n)
+  CI_right<-sample_m+qt(0.975,n-1)*sd(y[ind])*sqrt((1-n/N)/n)
+  print(c(CI_left, CI_right))
+}
+# check whether the population mean locates within the CI
+mean(y)
+mean_CI(20)
+mean_CI(20)
+mean_CI(20)
+mean_CI(50)
+mean_CI(50)
+```
+
+
+

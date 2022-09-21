@@ -1,0 +1,529 @@
+---
+title: "DATA 602 - Introduction to Multi-Population Hypothesis Testing"
+output:
+  html_document:
+    df_print: paged
+---
+&copy; Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+library(dplyr)
+library(ggplot2)
+```
+# Hypothesis Testing to Compare Two Distinct Groups or Populations
+
+We have experienced how to compare (i) two population means ($\mu_{1}$ and $\mu_{2}$) and (ii) two population proportions ($p_{1}$ and $p_{2}$) via confidence interval estimation.
+</br>
+</br>
+Through either a confidence interval computation of $\mu_{1} - \mu_{2}$ or $p_{1} - p_{2}$, we could determine the range of possible values for the difference between the two parameters. If confidence interval captured 0, then we could conclude that either $\mu_{1} - \mu_{2} = 0$ or $p_{1} - p_{2} = 0$. 
+</br>
+</br>
+
+We will build on our current comprehension the random nature of the statistics $\overline{X}_{1}, \overline{X}_{2}, \widehat{p}_{1}$, and $\widehat{p}_{2}$ and our understanding of confidence interval estimation to see how we carry out a statistical hypotheses that compares two unknown values of (i) $\mu_{1}$ and $\mu_{2}$, (ii) $p_{1}$ and $p_{2}$ or (iiI) $\sigma_{1}$ and $\sigma_{2}$. 
+
+## Permutation Tests
+
+A permutation test is a statistical technique that is effectively used because it is *condition free*. 
+</br>
+</br>
+**Illustration:** A **Beer and Hot Wings Case Study** was interested in determining if males eat more hot wings than females, on average. Here we have two distinct groups or populations, Population 1 consisting of males and Population 2 consisting of females. For each of these populations, we are interested in the same variables, the # of hot wings consumed in an evening at "pub". 
+</br>
+</br>
+The data appearing in the text has been read into a data frame called **hotwings**.
+```{r}
+fems = c(4,5,5,6,7,7,8,9,11,12,12,13,13,14,14) # reads in the hwing consumption of females
+males = c(7,8,8,11,13,13,14,16,16,17,17,18,18,21,21) # hwing consumption for males
+group = c(rep("f", 15), rep("m",15)) # creates a population variable
+hwconsume = c(fems, males) # combines hwing consumption into one vector
+hotwings = data.frame(group, hwconsume)
+head(hotwings, 4) # first four cases
+tail(hotwings, 4) # last four cases
+```
+
+```{r}
+hotwings %>%
+  ggplot(aes(x = group, y = hwconsume)) +
+  geom_boxplot(col='red', fill='blue') +
+  xlab("Sex") +
+  ylab("Hot Wing consumption") +
+  coord_flip() +
+  ggtitle("Hot Wing consumption: Females to Males")
+```
+Presuming these data are random samples of $n_{F} = 15$ females and $n_{M} = 15$ males, what is the *observed difference* between the two sample means, $\overline{X}_{F} - \overline{X}_{M}$? The following R command will give us such an observed difference.
+```{r}
+favstats(~hwconsume | group, data = hotwings)  #computes various statistics broken down by the categories in variable group
+```
+The difference between $\overline{X}_{F} - \overline{X}_{M} = 9.3333 - 14.5333 = -5.2$. The question we can ask ourselves is this: is this difference between the two sample means indicate that females will on average consume less hot wings than males, or is this difference simply due to randomness?
+</br>
+</br>
+We never want to let the data dictate our statistical hypothesis, so we start the statistical investigation *prior to collecting the data* with a statistial hypotheses:
+</br>
+</br>
+There is no difference between the number of hotwings females consume on average, and the number of hotwings males consume on average. If this is the case, then 
+$$
+\mu_{F} = \mu_{M} \longrightarrow \mu_{F} - \mu_{M} = 0
+$$
+Lacking data (at this point), there is no reason for us to believe this not the case. so let's assume that females and males consume, on average, an equal number of hot wings in an evenign at a local pub:
+$$
+{\rm H}_{0}: \mu_{F} = \mu_{M} \hspace{0.25in} {\rm or} \hspace{0.25in} {\rm H}_{0}: \mu_{F} - \mu_{M} = 0
+$$
+The alternative can be any one of three possibilies, either females consume (i) unequal amounts (ii) consume less or (iii) consume more than males. For now, let's go with case (i):
+$$
+{\rm H}_{A}: \mu_{F} \ne \mu_{M} \hspace{0.25in} {\rm or} \hspace{0.25in} {\rm H}_{A}: \mu_{F} - \mu_{M} \ne 0
+$$
+If the null hypothesis of equal consumption, on average, is true, then we can say that one's gender (female or male) *does not affect* the population variable $X$, the number of hot wings consumed in an evening. 
+</br>
+</br>
+If the null hypothesis of "no gender effect" on hot wing consumption is true, how likely is the observed difference of -5.2?
+</br>
+</br>
+If we took all 30 cases - hot wing consumption values - and *randomly* them to the 15 "females" and 15 "males", there would be ${30 \choose 15} = 155,117,520$ different *permutations* of these data and the same number of differences between $\overline{X}_{F} - \overline{X}_{M}$. We can generate some (not all 155,117,520 - 1) of these differences by randomly assigning the 30 data values to the two different groups of 15, compute the difference $\overline{X}_{F} - \overline{X}_{M}$ *each* time, and see where the current observed difference of $-5.2$ lies on such a distribution of differences.
+</br>
+</br>
+If the observed difference of $-5.2$ falls in the extreme tail of such a distribution, then such an observed difference is not likely and the null hypothesis of "no gender effect" on hot wing consumption would appear not to be the case. 
+</br>
+</br>
+Let's walk through the steps of conducting a **permutation test** of these data. 
+</br>
+</br>
+
+**Permutation Test, Step 1:** We pool the data together. This step we have completed as all the data appears in the **hwconsume** column of the data frame **hotwings**. The data appears below. 
+```{r}
+hotwings$hwconsume
+```
+</br>
+</br>
+
+**Permutation Test, Step 2:** From these data, we randomly sample $n_{F} = 15$ without replacement. These 15 data values will be assigned to females, the remaining 15 - by default - will be assigned to males. We then compute $\overline{X}_{F} - \overline{X}_{M}$, we then repeat this process many times to generate a distribution of $\overline{X}_{F} - \overline{X}_{M}$. 
+</br>
+</br>
+The R code that will enable this process is provided below. 
+
+
+```{r echo=TRUE}
+obsdiff = mean(~ hwconsume, data=filter(hotwings, group=="f")) - mean(~ hwconsume, data=filter(hotwings, group=="m")) #computes current difference of sample means
+N = (10000 - 1) #10000 different permutations minus the difference we have observed
+outcome = numeric(N) #create a vector to store differences of means
+for(i in 1:N)
+{ index = sample(30, 15, replace=FALSE) #randomly pick 15 nos. from 30 data in these are values for female
+  outcome[i] = mean(hwconsume[index]) - mean(hwconsume[-index]) #difference between means
+}
+```
+
+```{r}
+# I used the hist command here as the outcome is a vector at this point, and I wanted to incorporate the red vertical line
+hist(outcome, xlab="Difference Between Mean of Females and Mean of Males", ylab="Frequency", main="Outcome of 10000 Permutation Tests", col='blue')
+abline(v = obsdiff, col="red")
+(sum(outcome <= obsdiff) + sum(outcome >= (-1*obsdiff)))/(N)  #computes P-value
+```
+
+The empirical $P$-value was computed to be $\underline{0.0016}$.
+</br>
+</br>
+
+**Permutation Test, Step 3:** Because of *where* the observed difference between the samples means $\overline{X}_{F} - \overline{X}_{M} = -5.2$ falls from the actual, non-permutated data, occurs in the distribution of differences of sample means, we can see that it is not a likely outcome, implying the observed difference between these two sample means is larger than would be expected if a person's sex (male or female) did not affect one's hot wing consumption. As a result, the null hypothesis is rejected in favour of the alternative hypothesis.
+</br>
+</br>
+We can then infer from these data that $\mu_{F} \ne \mu_{M}$.
+</br>
+</br>
+
+<div  margin-bottom:30px>
+</div>
+
+---------------------------------------------------------------------
+
+**Time to Play 1:** AZT was the first drug approved by the FDA used in the treatment of HIV-infected persons. A common dosage was 300 mg twice day. Higher doses caused more side effects, but are higher doses more effective? 
+</br>
+</br>
+A study conducted in 1990 compared a twice-a-day 300 mg treatment to a once-a-day 600 mg treatment. Twenty persons afflicted with HIV were randomly divided into two treatment groups. one group received the twice-a-day 300 mg dose, the other group received the 600 mg dose just once a day. After a period of time, the p24 antigen was observed for each person, with lower p24 antigen numbers indicating an improved immunity response. The data are provided.
+$$
+\begin{array}{lcccccccccc}
+\hline
+{\rm Dosage} &  &   &   &  &   &    &   &   &   &    &    \\
+\hline
+{\rm 300\:\:mg} & 284 & 279 & 289 & 292 & 287 & 295 &  285 & 279 & 306  & 298 \\
+{\rm 600\:\:mg} & 298 & 307 & 297 & 279 & 291 & 335 &  299 & 300 & 306  & 291 \\
+\hline
+\end{array}
+$$
+From these data, can you conclude that the increased dosage of 600 mg is more effective, AKA produces lower p24 antigen levels when compared to the standard twice-a-day 300 mg dosage?
+</br>
+</br>
+
+Copy and past the R commands into a R-markdown "r-chunk" shell. These commands simply wrangle the data from its tabular form about and place it into a data frame called **hivdata**. 
+```{r}
+mg300 <- c(284, 279, 289, 292, 287, 295,  285, 279, 306, 298)
+mg600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
+p24levels <- c(mg300, mg600)
+treat <- c(rep("300mg", 10), rep("600mg", 10))
+hivdata <- data.frame(treat, p24levels)
+head(hivdata, 4)
+favstats(~ p24levels | treat, data = hivdata) #computes the various statistics broken down by dose
+
+xbar_300 <- mean(~p24levels, data=filter(hivdata, treat=="300mg"))
+xbar_600 <- mean(~p24levels, data=filter(hivdata, treat=="600mg"))
+p24diff =  xbar_300 - xbar_600 #computes diff in sample means
+p24diff  #mean(300mg) - mean(600mg)
+```
+
+(a) State the appropriate statistical hypothesis that will test is the increased dosage of 600mg is more effective than the 300mg dosage.
+</br>
+</br>
+**Answer:**
+$$
+{\rm H}_{0}: \mu_{300mg} \leq \mu_{600mg} \hspace{0.5in} \text{to} \hspace{0.5in} {\rm H}_{A}: \mu_{300mg} > \mu_{600mg}
+$$
+<div style="margin-bottom:30px;">
+</div>
+
+(b) Compute the observed difference $\overline{X}_{300mg} - \overline{X}_{600mg}$.
+</br>
+</br>
+**Answer:** The observed difference between $\overline{X}_{300mg} - \overline{X}_{600mg}$ is computed as
+```{r}
+favstats(~p24levels | treat, data=hivdata) #from which one can take the difference between the two values in the mean column
+#OR
+favstats(~p24levels | treat, data=hivdata)$mean[1] - favstats(~p24levels | treat, data=hivdata)$mean[2]
+```
+and the observed difference is
+$$
+\overline{X}_{300mg} - \overline{X}_{600mg} = -10.9
+$$
+<div style="margin-bottom:30px;">
+</div>
+
+(c) The following R commands are created to carry out a permutation test, computing *3000 - 1* different permutation tests. 
+</br>
+</br>
+```{r}
+p24diff
+M = (3001 - 1)  #subtract 1 from 3001 to do 3000
+outcome2 = numeric(M)
+for(i in 1:M)
+{ index1 = sample(length(p24levels), 10, replace=FALSE) #randomly pick the indices to asign the (i) 300mg and (ii) 600 mg treatments to
+  outcome2[i] = mean(p24levels[index1]) - mean(p24levels[-index1])
+}
+```
+
+```{r}
+hist(outcome2, col='blue', xlab="Difference of Mean(300mg) - Mean(600mg)", main="Outcome of Permutation Test")
+abline(v=p24diff, col="red")
+1 - (sum(outcome2 <= p24diff))/(M)
+```
+
+
+(d) Here, you are computing the empirical $P$-value. In our permutation test, the empirical $P$-value is computed to be $0.9813$. If the null hypothesis is true, and the observed difference between $\overline{X}_{300mg} - \overline{X}_{600mg} = -10.9$ is due to *randomness*, then there is an approximate probability of 0.9813 of observed stronger evidence to suggest that the observed difference *is* due to randomness. 
+</br>
+</br>
+In fact, if one were to consider ${\rm H}_{A}: \mu_{300mg} < \mu_{600mg}$, the $P$-value would be $0.0187$. 
+<div style="margin-bottom:400px;">
+</div>
+
+-----------------------------------------
+
+## Parameteric Tests
+
+Permutation tests assume nothing about the raw data, but rather look at all possible outcomes if the data are thought of as randomly assigned to two different populations or groups. YOu will also notice that in each of the previous illustration and Example 2, *no where* is the hypothesized difference between the two populations means $\mu_{1} - \mu_{2}$ *incorporated*. 
+
+In a *parametric test*, the value of the population parameter is *assummed* to be equal to a certain value, and this is assumed value is incorporated into the statistical test. For example, the one-sample from a population problem that is used to test ${\rm H}_{0}: \mu = \mu_{0}$ has the test statistic
+$$
+T_{obs} = \frac{\overline{X} - \mu_{0}}{\frac{S}{\sqrt{n}}} \sim T_{df = n - 1}
+$$
+The ensuring compuation of $T_{Obs}$, $P$-value computation and decision is an applicaton of a parametric test, as the assumed value of the hypothesized value of the population mean $\mu_{0}$ is used in the computation of the test statistic. 
+</br>
+</br>
+
+We will encounter two different parametric tests, each of which will test the following 
+
+1. ${\rm H}_{0}; \mu_{1} = \mu_{2}$, or ${\rm H}_{0}: \mu_{1} - \mu_{2} = 0$
+
+2. ${\rm H}_{0}; p_{1} = p_{2}$, or ${\rm H}_{0}: p_{1} - p_{2} = 0$
+
+
+### 1. Parametric Testing of Two Population Means $\mu_{1} = \mu_{2}$
+
+We have seen how to compute a $100(1-\alpha)$% confidence interval that will capture the true difference between two population means $\mu_{1} - \mu_{2}$, which was derived from the following pivotal quantity
+$$
+T_{obs} = \frac{(\overline{X}_{1} - \overline{X}_{2}) - (\mu_{1} - \mu_{2})}{\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}} \hspace{0.2in} {\rm where\:\:}  df  =  \frac{\left(\frac{S_{1}^{2}}{n_{1}} +  \frac{S_{2}^{2}}{n_{2}}\right)^{2}}{\frac{1}{n_{1} - 1}\left(\frac{S_{1}^{2}}{n_{1}}\right)^{2} + \frac{1}{n_{2} - 1}\left(\frac{S_{2}^{2}}{n_{2}}\right)^{2}}
+$$
+
+
+If we have two random samples of data, $X_{11}, X_{12}, X_{13}, \cdots, X_{1n_{1}}$ being the data appearing in the random sample from Group or Population 1, and $X_{21}, X_{22}, X_{13}, \cdots, X_{2n_{2}}$ being the data appearing in the random sample from Group or Population 2, then the test statistic is of the form
+$$
+T_{obs} = \frac{(\overline{X}_{1} - \overline{X}_{2}) - (0)}{\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}}
+$$
+There are some conditions to the usage of $T_{obs}$. 
+
+1. When the random samples are small $(n_{1} < 25, n_{2} < 25)$ then the data must appear to come from populations of data that can be modeled by the Normal distribuiton. 
+
+2. Once the samples sizes are large enough ($\geq 25$), the Normality "condition" mentioned in #1 above can be relaxed. 
+</br>
+</br>
+
+**Example 1:** Returning the first Time to Play statistical investigation of today, carry out statistical testing at 0.05 to determine if the increased once-a-day dosage of 600 mg produces higher p24 levels on average when compared to the twice-a-day dosage of 300 mg. 
+</br>
+</br>
+**Answer:** We wish to test the hypothesis of $\mu_{300mg} < \mu_{600mg}$. The statistical hypotheses is
+$$
+{\rm H}_{0}: \mu_{300mg} \leq \mu_{600mg} \hspace{0.5in} {\rm H}_{A}: \mu_{300mg} > \mu_{600mg}
+$$
+Given that the sample sizes are small, $n_{300mg} = 10$ and $n_{600mg} = 10$, the Normality condition of these data should be checked. Below are Normal Probability Plots of each sample.
+
+```{r}
+hivdata %>%
+  filter(treat=="300mg") %>%
+  ggplot(aes(sample = p24levels)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of 300 mg")
+hivdata %>%
+  filter(treat=="600mg") %>%
+  ggplot(aes(sample = p24levels)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of 600 mg")
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+We now turn to the computation of the test statistic $T_{Obs}$. We can find the various $\overline{X}_{300mg}, \overline{X}_{600mg}, S_{300mg}, S_{600mg}$ and "plug and chug", or we can use the previously covered `t.test` command, with the data frame **hivdata** having a "treat" column and a "p24levels" column. Since the data is stored in the later, and is broken up by the type of dosage in the former, we use the **p24levels ~  dosage** in the argument. 
+```{r}
+t.test(p24levels ~ treat, alternative = "greater") #perform t-test with the greater in the alternative, var.equal=FALSE is the default
+```
+
+From this R-output, $T_{obs} = -2.034$ with a degrees of freedom $df = 14.509 \approx 14$. The $P$-value is $P(T_{14} > -2.034) = 0.9697$.
+</br>
+</br>
+If we would to consider ${\rm H}_{A}: \mu_{300mg} < \mu_{600mg}$, then the $P$-value $= P(T_{14} < -2.034) = 1 - 0.9697 = 0.0303$ or
+```{r}
+t.test(p24levels ~ treat, alternative = "less")
+```
+
+</br>
+</br>
+
+
+**Let's Play with More Data 2: ** Does one's caloric intake decrease if they have a high fibre diet? The data appearing in the [data](people.ucalgary.ca/~jbstall/DataFiles/dieteffects.csv) are data produced from an experiment, the aim of which was to test the claim that persons who eat a high-fibre breakfast will consume less calories a lunch than people *do not* eat a high-fibre breakfast. 
+</br>
+</br>
+The data is read into the data frame called **fibredata** below.
+```{r}
+fibredata = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/dieteffects.csv") #read the data from .csv into data frame
+head(fibredata, 4) #the first 4 rows
+tail(fibredata, 4) #the last 4 rows
+```
+
+Do these data suggest that, on average, people who have a high-fibre breakfast will consume less calories during lunch when compared to those who do not have a high-fibre breakfast? Ensure you carry out the necesssary diagnostics needed for the statistical procedure you are to employ.  
+
+```{r}
+fibredata %>%
+  filter(diet == "hf") %>%
+  ggplot(aes(sample = caloricintake)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of High Fibre")
+fibredata %>%
+  filter(diet == "nohf") %>%
+  ggplot(aes(sample = caloricintake)) +
+  stat_qq(size = 2, col = 'blue') +
+  stat_qqline(col = 'red') +
+  ggtitle("Normal Probability Plot of Not High Fibre")
+```
+
+</br>
+</br>
+Create the statistical hypotheses then carry it out the statistical analysis of these data. State your conclusion. Ensure you carry out the necesssary diagnostics needed for the statistical procedure you are to employ.
+
+
+
+```{r}
+t.test(~caloricintake | diet, alternative = "less", data = fibredata)
+```
+
+</br>
+</br>
+
+What can you infer from these data? 
+</br>
+</br>
+The statistical hypotheses is 
+$$
+{\rm H}_{0}: \mu_{hf} = (\text{or}\:\:\geq)\:\: \mu_{nohf} \hspace{0.2in} \text{to} \hspace{0.2in} {\rm H}_{0}: \mu_{hf} < \mu_{nohf}
+$$
+The normal probability plots would suggest that the caloric intake fo those who did not have high fibre breakfasts and those that *did* can be modeled by the Normal distribution, but the large $n$s here do not require this condition to hold. 
+</br>
+</br>
+To compute the $T_{obs}$, the `t.test` command is used with the **alternative="less"** option: 
+```{r}
+t.test(~caloricintake | diet, alternative="less", data=fibredata)
+```
+The observed value of the test statistic is
+$$
+T_{obs} = -2.0911
+$$
+with a $P$-value of $P(T_{122} < -2.0911) = 0.01929$. 
+</br>
+</br>
+From these data, one would reject the null hypothesis of *equal caloric intakes*, and conclude that on average, those who consume a high fibre diet will consume less calories when compared to those who do not consume a high fibre breakfast. 
+</br>
+</br>
+The 95% *upper bound* for $\mu_{hf} - \mu_{nohf}$ is
+$$
+- \infty < \mu_{hf} - \mu_{nohf} \leq -6.058
+$$
+which states that on average, those who eat a high fibre breakfast consume on average at least 6.058 calories less (for lunch) compared to those who do not eat high fibre for breakfast.
+
+<div style="margin-bottom:300px;">
+</div>
+
+------------------------------------------------------------------
+
+
+### 2. Tests Comparing Two Population Proportions
+
+Similar to carrying out a hypothesis test that compares the unknown values of two different population means, we can also carry out a hypothesis test to compare if the proportion of elements/individuals in Population 1 that have a certain attribute or characteristic of interest, $p_{1}$ is the same as the proportion of elements/individuals in Population 2 that have the *same* attribute/characteristic, $p_{2}$. 
+</br>
+</br>
+We test the statistical hypotheses
+
+$$
+{\rm H}_{0}: p_{1} = p_{2} {\rm \:\: or \:\:} p_{1} - p_{2} = 0 \\
+{\rm H}_{A}: p_{1} (<, >, \ne) p_{2} {\rm \:\: or \:\:} p_{1} - p_{2} (<, >, \ne)\:\:0 
+$$
+
+In this test, we asume that $p_{1} = p_{2} = p_{Common} = ?$. Since both of these  are unknown quantities, we have to come up with an estime of this *common proportion* shared between these two distinct groups or populations. The unbiased statistic that is used to estimate this is called the **pooled sample proportion** and is computed with
+
+$$
+\widehat{p} = \frac{X_{1} + X_{2}}{n_{1} + n_{2}}
+$$
+where $X_{1}$ counts the number of $n_{1}$ items randomly sampled that have the attribute. Similarly, $X_{2}$ counts how many of $n_{2}$ randomly sampled have the same attribute. 
+</br>
+</br>
+Once this is computed, the value of the following test statistic is computed.
+
+$$
+Z_{obs} = \frac{\widehat{p}_{1} - \widehat{p}_{2} - (p_{1} - p_{2})}{\sqrt{\widehat{p}(1 - \widehat{p})\left(\frac{1}{n_{1}} + \frac{1}{n_{2}} \right)}} \sim Normal(0,1)
+$$
+
+**Example 1:** A recent poll conducted by Abacus Data[^1] randomly selected one-thousand Canadian voters, and found that 432 preferred the Liberals to be re-elected in the upcoming Federal Election. A similar poll taken in July of 2019 found that 502 of $n = 1003$ randomly chosen Canadian voters preferred the Liberals to be re-elected in the next Federal Election. Carry out the statistical test necessary to determine if voter preference towards the Liberal Party has declined since this July.
+</br>
+</br>
+**Answer:** We start by creating a statistical hypotheses. If voter preference *had declined* over the past year, then $p_{2018} < p_{2017}$. We then have the statistical hypotheses
+$$
+{\rm H}_{0}: p_{now} \geq p_{July} \:\:\text{(no decline)}\hspace{1in} {\rm H}_{A}: p_{now} < p_{July}\:\:\text{(decline)}
+$$
+
+</br>
+Now, compute the value of the statistic that estimates the assumed "common proportion" in ${\rm H}_{0}$. 
+$$
+\widehat{p} = \frac{X_{now} + X_{July}}{n_{now} + n_{July}} = \frac{432 + 502}{1000 + 1003} = 0.4663 
+$$
+We now compute the test statistic $Z_{Obs}$
+$$
+Z_{obs} = \frac{\widehat{p}_{1} - \widehat{p}_{2} - (p_{1} - p_{2})}{\sqrt{\widehat{p}(1 - \widehat{p})\left(\frac{1}{n_{1}} + \frac{1}{n_{2}} \right)}} = \frac{\frac{432}{1000} - \frac{502}{1003} - (0)}{\sqrt{0.4663(1-0.4663)\left(\frac{1}{1000} + \frac{1}{1003} \right)}} = -3.07264
+$$
+The $P$-value is then $P(Z < -3.07264)$ which is computed to be 0.00106.
+```{r}
+pnorm(-3.07264)
+```
+
+<div style="margin-bottom:100px;">
+</div>
+
+The computation of the test statistic above can be completed with the `prop.test` command.  
+```{r}
+prop.test(c(432, 502), c(1000, 1003), alternative = "less", correct = FALSE)
+```
+
+In this R output, the test statistic is provided to be 9.441, this is **not the value** of $Z_{Obs}$, but rather the value of a $\chi^{2}_{Obs} = 9.441$. To obtain
+$Z_{obs} = \sqrt{\chi^{2}_{1}} = \sqrt{9.441} = 3.07262$. 
+</br>
+</br>
+Now, since the difference between the two sample proportions is negative
+$(\frac{432}{10000} - \frac{502}{1003}) = -0.06849$, assign a "-" to the 3.07262 to get $Z_{obs} = -3.0726$.
+
+</br>
+</br>
+
+**Time to Play 3:** Data previously encountered (last Thursday) was a random sample of $n = 109$ students randomly chosen from a first-year statistics course. Of these 109, $n_{M} = 51$ and $n_{F} = 58$. Each student was asked the following question:
+<center> "Do you support or oppose students in professional faculties (such as Engineering, Business, Medicine) having to pay higher tuition fees then students in non-professional faculties?"</center>
+</br>
+</br>
+Let's do some data wrangling. These data can be read into R then, then we will select the two variables **sex** and **DiffFees** out an into a data frame called **fees**. You may already have this data frame in your R Environment, but to be safe:
+
+```{r}
+example2df = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/studentsurvey.csv")
+head(example2df, 4)
+fees = select(example2df, Gender, DiffFees)  # 0 - male, 1 - female; 0 - do not suppot, 1 - support
+head(fees, 4) 
+```
+```{r}
+table(fees$Gender, fees$DiffFees)
+```
+Or use the `tally` function from the **mosaic** package:
+```{r}
+tally( ~ Gender + DiffFees, margins=TRUE, data=fees)
+```
+
+(a) State the statistical hypotheses that formulates the notation that there is a *relationship* between the a student's sex in a first-year statistics class and their opinion on differential tuition fees. 
+</br>
+</br>
+**Answer:**
+If there is *no relationship* between a student's sex and their opinion about students from professional faculties having to pay differential tuition fees, then
+$$
+\text{proportion of females who support differential tuition fees} = \text{proportion of females who support differential tuition fees}
+$$
+
+or
+$$
+p_{F} = p_{M}
+$$
+As a result, the statistical hypotheses is
+$$
+{\rm H}_{0}: p_{F} = p_{M} \hspace{0.2in} \text{versus} \hspace{0.2in} {\rm H}_{A}: p_{F} \ne p_{M}
+$$
+
+(b) Use the R-command **prop.test()** (as illustrated in Example 1) to carry out the statistical test. Obtain the value of the test statistic $Z_{obs}$ and the $P$-value from the output.
+</br>
+</br>
+**Answer:**
+The $\chi^{2}_{obs}$ test statistic is produced with the `prop.test` command below, where 29 out of 51 females supported differential tuition fees and 26 out of 58 males supported differential tuition fees:
+```{r echo=TRUE}
+prop.test(c(26,29), c(58,51), correct=FALSE)
+```
+
+From which $X_{obs} = -\sqrt{1.5724} = -1.2539$. The $P$-value is $P(Z < -1.2539)*2 = 0.2098794 \approx 0.2099$.
+```{r}
+pnorm(-1.2539)*2
+```
+
+
+(c) In the context of these data, interpret the meaning of the $P$-value.
+</br>
+</br>
+**Answer:**
+If the null hypothesis is true and a student's opinion about differential tuition fees is independent from their sex, then the probability that another random sampel of $n_{F} = 58$ and $n_{M} = 51$ would produce stronger statistical evidence against the null hypothesis is 0.9186, or 91.86%. 
+</br>
+</br>
+
+(d) What can you conclude from these data? 
+</br>
+</br>
+**Answer:**
+From these data, one can conclude that a first-year student's opinion about differential fees is independent of their sex. For the sake of statistical commentary, a 95% confidence interval for $p_{F} - p_{M}$  is computed below. 
+
+$$
+-0.0663 \leq p_{F} - p_{M} \leq 0.3071
+$$
+
+
+
+[^1]:(http://abacusdata.ca/liberals-and-conservatives-neck-and-neck-as-the-race-to-2019-takes-shape/)
+
+
+
+

@@ -1,0 +1,23 @@
+---
+title: "DATA 603 - Project Report"
+author: "Mark Dodd, Raymond Wong, Dustin Tang, Michael Ellsworth"
+date: '2019-12-03'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+Formulate objectives of the studies. State the problems and why this topic is of your interest. Specify a software that you use to analyze the project topic.
+
+# Methodology
+Define variables and their type of measurement (Qualitative or Quantitative variable, Discrete or Continue variable). Clearly state what is dependent variable and what are independent variables. Describe all methods for modelling to your data.
+
+# Results
+Provide software codes and run all methods mentioned in Chapter 2 with summary table of the results.
+
+# Conclusion
+Choose the best model with clearly provide why this model is the best fit for data. Interpret each coefficient of your best model. Mention all assumptions if they are met with detail.
+

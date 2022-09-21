@@ -1,0 +1,66 @@
+---
+title: "Quiz"
+author: "Michael Ellsworth"
+date: '2019-12-05'
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(aod)
+library(lmtest)
+library(ROCR)
+library(pROC)
+library(agricolae)
+library(FSA)
+library(kableExtra)
+```
+
+```{r}
+restaurants <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Quiz/restaurant.csv")
+restaurants$rater <- as.factor(restaurants$rater)
+restaurants$Restaurant <- as.factor(restaurants$Restaurant)
+glimpse(restaurants)
+levels(restaurants$Restaurant)
+levels(restaurants$rater)
+```
+
+```{r}
+restaurants %>%
+  ggplot(aes(x = Restaurant, y = scale)) +
+  geom_boxplot()
+boxplot(scale ~ Restaurant, data = restaurants)
+```
+
+```{r}
+CRD <- aov(scale ~ Restaurant, data = restaurants)
+summary(CRD)
+```
+
+```{r}
+TukeyHSD(CRD)
+```
+
+```{r}
+plot(CRD)
+bptest(CRD)
+bartlett.test(scale ~ Restaurant, data = restaurants)
+shapiro.test(residuals(CRD))
+```
+
+
+intercept = 7.24
+sex b1 = -6.93
+age b2 = -0.19
+b3 = 0.16
+
+```{r}
+exp(7.24638 - 6.92805 - 0.19407 * 30 + 0.1616 * 30) / (1 + exp(7.24638 - 6.92805 - 0.19407 * 30 + 0.1616 * 30))
+exp(-0.19407 + 0.16)
+exp(0.1616)
+exp(-0.19407)
+```
+
+

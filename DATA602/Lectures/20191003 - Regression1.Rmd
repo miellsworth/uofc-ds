@@ -1,0 +1,883 @@
+---
+title: DATA 602 - Introduction to Statistical Modeling from Bivariate Data (October
+  3)
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+library(dplyr)
+library(ggplot2)
+library(mdsr)
+```
+
+# Bivariate Data 
+
+Many statistical investigations center on bivariate data. Bivariate data is simply the observed values on two distinct/different
+population variables pertaining to each unit/individual in the population of interest. From a notation standpoint, the two
+variables of interest are represented by:
+</br>
+$X_{i}$ -  the observed value of Variable $X$ from population element/individual $i$, $i = 1, 2, \cdots, n$.
+</br>
+$Y_{i}$ -  the observed value of Variable $Y$ from population element/individual $i$, $i = 1, 2, \cdots, n$.
+</br>
+
+Some examples of data that are bivariate in nature:
+
+1. a Data 602 student's Assignment Two mark and Assignment Three mark.
+2. the number of years of post-secondary education an individual has and their annual income.
+3. a year's inflation and interest rate.
+4. the average price of oil in a month and the average price of the Canadian dollar (relative to the U.S.~dollar).
+
+
+What is the motivation for studying (quanitative) bivariate data? It is all about relationships. When an experimental study or
+random sampling method produces data on two different variables, there are three research questions that are posed.
+
+1. **Is there a relationship between the two variables?** Is there a relationship between a Statistics 323 student's midterm
+mark and their final exam mark? Is there a relationship between how much post-secondary education one has and their income? Is there
+a relationship between your parent's IQ and your own? If there is a relationship, what is the direction of the relationship? Is
+the relationship positive? negative (or inverse)? Is the relationship seem to be linear? non-linear? 
+
+2. **If a relationship exists between $X$ and $Y$, how strong is this relationship?** Is the relationship between a student's
+midterm exam mark and their final exam mark strong or weak? What about the relationship, should one exists, between your parent's IQ
+and your own? Is such a relationship subtle, or strong?
+
+3. **If the relationship between $X$ and $Y$ is strong**, can the existing relationship be used to predict what will happen
+in the future?** If the data suggests that there is a strong relationship between the number of minutes a flight is delayed leaving its depature destination and the number of minutes it is late arriving at the destination airport, perhaps we can build on this existing relationship to create a statistical model that will enable one to predict how many minutes their flight will be late in arriving ($Y$) based on the number of minutes the flight is early, or late, in departing ($X$).
+
+
+## 1. Relationship Between the $X$-Variable and $Y$-Variable
+
+A method if data visualization that is used to determine if two numerical variables are related is a scatterplot. Recall the various scatterplots we created when we first encountered this type of data visualization.
+
+The scatterplot below was from the **SAT_2010** data set. A quick recall of the variables in this data set.
+
+### Visualization of Bivariate Data Via `ggplot`
+
+Below is a scatterplot created from a built in data set called **SAT_2010**. This is specific to the **mosaic** package. To get a sense of these data
+```{r}
+head(SAT_2010, 4) #enables to view the first four cases/rows of these data
+tail(SAT_2010, 3) #enables to view teh last three cases/rows of these data
+```
+
+Consider two variables of these data, **math** and **salary**. The **math** variable holds the mean/average score of all students in the state that wrote the SAT College Prep Exam in 2013; the **salary** variable measures the mean/average salary of all public school teachers in the respective state. 
+</br>
+</br>
+The scatterplot of these data is provided below with `ggplot`
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = math)) +
+  geom_point(col = "blue", size = 2, position = "jitter") +
+  xlab("Average Teacher Salary") +
+  ylab("Average State SAT Math score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT Math Score")
+```
+An attempt to re-create this scatterplot with a linear axis that represents the "central axis" of these data:
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = math)) +
+  geom_point(col = "blue", size = 2) +
+  xlab("Average Teacher Salary") +
+  ylab("Average State SAT Math score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT Math Score") +
+  stat_smooth(method = "lm", col = 'red')
+```
+
+The scatterplot below shows the relationship between a state's mean/average teacher **salary** and the state's **sat_pct**: 
+
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = sat_pct)) +
+  geom_point(col = "orange", size = 2) +
+  xlab("Average Teacher Salary") +
+  ylab("Proportion of State Students Writing SAT Exam") +
+  ggtitle("Scatterplot of Average Teacher Salary to Proportion of Students Writing SAT") +
+  stat_smooth(method = "lm", col = 'purple')
+```
+
+The creation of a new variable using the `mutate` function and the `%>%` operator. the command below creates a new variable based on the varying proportions of students across all 50 states that write the SAT college prep exam. Observe (hit the arrow that points to your right located next to the sat_pct variable name) the new variable called **sat_percategory**
+
+```{r}
+head(SAT_2010, 4)
+SAT_2010 = SAT_2010 %>%
+  mutate(sat_percategory = cut(sat_pct,
+                               breaks = c(0, 33, 67, 100),
+                               labels = c("low", "med", "high")))
+```
+
+Adding this additional dimension to these data, a new scatter plot can be created:
+
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = math, color = sat_percategory)) +
+  geom_point(size = 2, position = "jitter") +
+  xlab("Average Teacher Salary") +
+  ylab("Average State SAT Math score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT Math Score") +
+  stat_smooth(method = "lm", col = "red")
+```
+
+We can separate out these data by the three different classes of **sat_pct**, as we defined previously, using the `facet_wrap` option:
+
+```{r}
+SAT_2010 %>%
+  ggplot(aes(x = salary, y = math, color = sat_percategory)) +
+  geom_point(size = 2, position = "jitter") +
+  xlab("Average Teacher Salary") +
+  ylab("Average State SAT Math score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT Math Score") +
+  stat_smooth(method = "lm", col = "red") +
+  facet_wrap(~sat_percategory)
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+---------------
+
+
+## 2. Quantifying the Relationship between $X$ and $Y$ - the Correlation Coefficient
+
+We have seen how we can get a sense about the strength of the relationship between the two numerical variables through an examination of the scatterplot. This strength, or lack of strength, between the two variables can be quantified through the computation of the correlation coefficient, or simply the **correlation**. 
+</br>
+</br>
+The correlation is a statistic that computes the degree of linear association between variables $X$ and $Y$. To formula used to compute the correlation is
+$$
+\begin{aligned}
+r = & \frac{\sum_{i=1}^{n}(X_{i} - \overline{X})(Y_{i} - \overline{Y})}{\sqrt{\sum_{i =1}^{n}(Y_{i} - \overline{Y})^{2}} \sqrt{\sum_{i =1}^{n}(X_{i} - \overline{X})^{2}}} \\
+r  = & \frac{\sum_{i = 1}^{n}X_{i}Y_{i} - n(\overline{X}*\overline{Y}) }{(n - 1)S_{X}S_{Y}} \hspace{0.5in} {\rm where\:\:} -1 \leq r \leq 1
+\end{aligned}
+$$
+Let's see how this formula works and compute the correlation coefficient $r$ between the SAT Math Score and the state expenditure per student for all states where the proportion of studentes writing the SAT exam was between 0% and 33%, a **sat_percategory** that was categorized as **low**. We need to find the various sample statistics $\overline{X}, S_{X}, \overline{Y}, S_{Y}$. For now, let's say that the **expenditure** is variable $X$ and the Math SAT score is variable $Y$.
+
+Below all the **sat_percategory =="low"** have been stripped out with the `filter` function.
+```{r}
+favstats(~ salary, data = filter(SAT_2010, sat_percategory == "low")) #stats on the x-variable salary
+favstats(~ math,  data = filter(SAT_2010, sat_percategory == "low"))  #stats for the y-variable math
+```
+
+From this output,
+$$
+\overline{X} = 51037.19 \hspace{0.2in} S_{X} = 5156.845 \hspace{0.2in} \overline{Y} = 570.8846 \hspace{0.2in} S_{Y} = 28.40469
+$$
+```{r}
+head(SAT_2010, 3)
+tail(SAT_2010, 1)
+```
+
+We now need to find the cross-product term $\sum_{i=1}^{26}X_{i}Y_{i} = (49948*550) + (62654 * 515) + \cdots + (58652*567) = 758334731$. 
+
+```{r}
+SAT_2010LOW = SAT_2010 %>%
+  filter(sat_percategory == "low") %>%
+  select(math, salary)
+```
+
+The sum of the cross product terms is computed below: 
+```{r}
+sum(SAT_2010LOW$salary * SAT_2010LOW$math)
+```
+
+Now, let's see how the correlation coefficient is computed.
+
+
+$$
+\begin{aligned}
+r  = & \frac{\sum_{i = 1}^{n}X_{i}Y_{i} - n(\overline{X}*\overline{Y}) }{(n - 1)S_{X}S_{Y}} \\
+   = & \frac{758334731 - 26(51037.19*570.8846) }{(26 - 1)*(5156.845)*(28.40469)} \\
+   = & 0.21566
+\end{aligned}
+$$
+
+The correlation coefficient, often represented by $r$, computes the degree of linear association between two variables. The correlation coefficients are computed with the R function `cor`
+```{r}
+cor(~math, ~salary, data=filter(SAT_2010, sat_percategory == "low"))
+```
+For all states where the proportion of students who write the SAT is between 0 and 33% (**sat_percateogry = low**), the correlation is 
+$$
+r_{low} = 0.2156
+$$
+Similary, we can compute the correlations for those states that are classified as **med** or **high** in terms of the proportion of state's high school students who write the SAT Exam. 
+```{r}
+cor(~math, ~salary, data = filter(SAT_2010, sat_percategory == "med"))
+cor(~math, ~salary, data = filter(SAT_2010, sat_percategory == "high"))
+```
+$$
+r_{med} = 0.3048 \hspace{0.5in} r_{high} = 0.4374
+$$
+
+</br>
+</br>
+
+------------------------
+
+**Time to Play, Part 1:** 
+
+The data below was taken from an article appearing in the Journal of Statistical Education[^1] which provides the annual attendance of major league baseball teams from 1968 to up and including the 2000 MLB season. 
+
+
+#### The Data
+
+**Step 1:** Use the chunk of R below (copy and paste) to read the data appearing in the [csv file](http://people.ucalgary.ca/~jbstall/DataFiles/baseball.csv) into a data frame called **MLBattend**. 
+</br>
+</br>
+Inspect the various variable names and the number of cases/data vectors that exist in these data using the `head` and `tail` command(s)
+```{r}
+MLBattend <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/baseball.csv")
+head(MLBattend, 3)
+tail(MLBattend, 3)
+```
+<div style="margin-bottom:50px;">
+</div>
+
+[^1]: https://ww2.amstat.org/publications/jse/v10n2/datasets.cochran.html
+
+**Step 2:** Create a new variable **winningpct**, which computed the proportion of games a team wins in a season and ad to the **MLBattend** data frame.
+
+```{r}
+MLBattend <- MLBattend %>%
+  mutate(winningpct = c(wins / (wins + losses)))
+```
+
+Use the  `mutate` function to create a second new variable called **seasonattend**, which converts the annual **attendance** and re-expressing this information/data in millions of persons. Ensure you add this variable onto your **MLBattend** data frame. When you have finished, use view the first four rows of your data.
+```{r}
+MLBattend = MLBattend %>% 
+  mutate(seasonattend = (attendance/1000000))
+head(MLBattend, 2)
+```
+
+<div style="margin-bottom:50px;">
+</div>
+
+**Step 3A:** Is there a relationship between a major league baseball teams annual attendence (in millions)? Create a scatterplot by a copy-and-paste the `ggplot` code previously provided, and note that the name of your dataframe is **MLBatend**, the $x$-variable **winningpct** and **seasonattend** is the $y$-variable.
+
+After you have obtained the scatterplot, change the **size=2** setting to **size = 1**, then re-run. This can be done by selecting the **play** button appearing on the top right-hand side of your R chunk. 
+
+<div style="margin-bottom:100px;">
+</div>
+
+```{r}
+MLBattend %>%
+  ggplot(aes(x = winningpct, y = seasonattend)) +
+  geom_point(size = 1, col = "blue", position = "jitter") +
+  stat_smooth(method = "lm", col = "red") +
+  xlab("Season Winning Percentage") +
+  ylab("Season Home Attendance (1,000,000s)") +
+  ggtitle("Season Winning Percentage and Home Attendence (in millions")
+```
+<div style="margin-bottom:100px;">
+</div>
+
+
+**Step 3B:** There are two confences in major league baseball, the National League and the American League. This data can be found in the **league** variable:
+```{r}
+table(MLBattend$league)  #provides a count of the categorial data
+```
+
+Create a scatterplot, similar to the one you created above, provides the season winning percentage and home attendence by **league**. What observation(s) can you make? 
+```{r}
+MLBattend %>%
+  ggplot(aes(x = winningpct, y = seasonattend, color = league)) +
+  geom_point(size = 1, position = "jitter") +
+  xlab("Season Winning Percentage") +
+  ylab("Season Home Attendance (1,000,000s)") +
+  stat_smooth(method = "lm", col = "red") +
+  facet_wrap(~ league) +
+  ggtitle("Plot of Winning Percentage to Home Attendence")
+```
+
+**Step 4:** Compute three correlations:
+
+1. The correlation of **winningpct** and **seasonattend** for all baseball teams.
+2. The correlation of **winningpct** and **seasonattend** for all *National League* baseball teams.
+3. The correlation of **winningpct** and **seasonattend** for all *American League* baseball teams.
+
+```{R}
+cor(~winningpct, ~seasonattend, data = MLBattend)
+cor(~winningpct, ~seasonattend, data = filter(MLBattend, league == "NL"))
+cor(~winningpct, ~seasonattend, data = filter(MLBattend, league == "AL"))
+```
+From which
+$$
+r = 0.4366 \hspace{0.5in} r_{NL} = 0.4532 \hspace{0.5in} r_{AL} = 0.4239
+$$
+
+<div style="margin-bottom:100px;">
+</div>
+
+--------------------
+
+## 3.Modeling the Relationship Between $X$ and $Y$
+
+Once one has determined that the linear relationship between the $X$ variable and the $Y$ variable is one that is significant - or somewhat strong - regardless of the direction of the relationship, an attempt can be made to construct a "statistical crystal ball" - a statistical/mathematical model which attempts to predict what will happen in the future based on what has happened in the past, the latter being what is happening "in" the bivariate data.
+</br>
+
+Simple linear regression is a statistical technique which aims to construct a "statistical crystal ball." Specifically, simple linear regression is a statistical method that attempts to build a statistical prediction model, one that will attempt  to predict the value of one variable based entirely on its *historical relationship* with another variable. 
+</br>
+</br>
+The value of the variable that is being predicted is called the **response variable**, denoted by $Y$. The variable
+being used as the basis for the prediction is called the **predictor variable** or **explanatory variable**, denoted by $X$. 
+n some texts, the response variable is referred to as the dependent variable $Y$; the predictor variable is commonly referred to as the independent variable $X$. 
+
+</br>
+</br>
+For a given value of the predictor variable $X_{i}$ and its corresponding value of the response variable $Y_{i}$, there exists is an unknown model that demands estimation from the bivariate data collected. This model can be one of two forms: 
+
+1. The Deterministic Model
+2. The Probabilistic Model
+
+
+The **deterministic model** attempts to express the response variable $Y$ as a linear function of the predictor variable $X$ in the following manner:
+$$
+Y_{i} = A + (B*X_{i})  \hspace{0.5in} {\rm for\:\:} i = 1, 2, \cdots, n
+$$
+The **probabilistic model** attempts to express the response variable $Y$ as a linear function of the predictor variable $X$ in the following manner:
+$$
+Y_{i} = A + (B* X_{i})+ e_{i}  \hspace{0.5in} {\rm for\:\:} i = 1, 2, \cdots, n
+$$
+
+We wish to estimate the probabilistic model in such a way that the *square* of these vertical distances is as small as possible, a method that invokes **least-squares** estimation. 
+</br>
+</br>
+Consider the sum of the squared distances/errors, $SSE$, each bivariate data point lies away from the imaginary linear line
+
+$$
+SSE = \sum_{i = 1}^{n}e_{i}^{2} = \sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i})^{2} 
+$$
+where $\widehat{Y}_{i}$ is an *estimate* of the mdoel that is in the form
+$$
+\widehat{Y}_{i} = a + (b * X_{i})
+$$
+To find the least-squares estimate for the $Y$-intercept term $A$, we {\it minimize} this sum of the squares of the errors, or $SSE$:
+
+$$
+\begin{aligned}
+\frac{\partial SSE}{\partial A}   = & \frac{\partial}{\partial A}\sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i})^{2} \\
+                                                    = & \frac{\partial}{\partial A}\sum_{i = 1}^{n}(Y_{i} - a - b*X_{i})^{2} \\
+																										= & -2\sum_{i = 1}^{n}(Y_{i} - a - b X_{i}) 				
+\end{aligned}
+$$
+
+
+We set $\frac{\partial SSE}{\partial A} = 0$:
+$$
+\begin{aligned}
+ 0 	= & -2\sum_{i = 1}^{n}(Y_{i} - a - b X_{i}) \\
+ 0  = & \sum_{i = 1}^{n}Y_{i} - na - b \sum_{i = 1}^{n}X_{i} \\
+n*a = & \sum_{i = 1}^{n}Y_{i} 		- b \sum_{i = 1}^{n}X_{i} \\
+a = & \overline{Y} - (b*\overline{X}) \hspace{0.5in} ({\rm divide}\:\:{\rm sides}\:\:{\rm by}\:\: n) 	
+\end{aligned}
+$$
+
+The least-squares estimate of the $Y$-intercept of the model is then 
+$$
+a = \overline{Y} - (b*\overline{X})
+$$
+
+To find the least-squares estimate for the slope of the model, $b$, we repeat the above partial differentiation by finding $\frac{\partial SSE}{\partial B}$:
+
+$$
+\begin{aligned}
+\frac{\partial SSE}{\partial B}  = & \frac{\partial}{\partial B}\sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i})^{2} \\
+                                                   = & \frac{\partial}{\partial B}\sum_{i = 1}^{n}(Y_{i} - a- bX_{i})^{2} \\
+																									 = & -2\sum_{i = 1}^{n}(Y_{i} - a -  b_{1}X_{i}) X_{i} \\
+																									= & -2\left(\sum_{i = 1}^{n}X_{i}Y_{i} - a\sum_{i = 1}^{n}X_{i} - b\sum_{i = 1}^{n}X_{i}^{2}\right)
+	\end{aligned}
+$$
+
+Again, we set $\frac{\partial SSE}{\partial B} = 0$:
+$$
+\begin{aligned}
+0 	 = & -2\left(\sum_{i = 1}^{n}X_{i} Y_{i} - a\sum_{i = 1}^{n}X_{i} - b\sum_{i = 1}^{n}X_{i}^{2}\right) \\
+0  = & \sum_{i = 1}^{n}X_{i}Y_{i} - a\sum_{i = 1}^{n}X_{i} - b\sum_{i = 1}^{n}X_{i}^{2} \hspace{0.5in} (a = \overline{Y} - (b*\overline{X})) \\
+0  = &  \sum_{i = 1}^{n}X_{i}Y_{i} - (\overline{Y} - b\overline{X})\sum_{i = 1}^{n}X_{i} - b\sum_{i = 1}^{n}X_{i}^{2} \\
+b\left(\sum_{i =1 }^{n}X_{i}^{2} -  \overline{X}\sum_{i = 1}^{n}X_{i}\right)        = &   \sum_{i = 1}^{n}X_{i}Y_{i} - \overline{Y}\sum_{i = 1}^{n}X_{i} \hspace{0.5in} (\sum_{i =1}^{n}X_{i} = n\overline{X})   \\
+b\left(\sum_{i =1 }^{n}X_{i}^{2} -  \overline{X}n\overline{X}\right)        = &   \sum_{i = 1}^{n}X_{i}Y_{i} - n \overline{Y}*\overline{X}    \\
+b  = & \frac{\sum_{i = 1}^{n}X_{i}Y_{i} -  n\overline{Y}*\overline{X}}{\sum_{i =1 }^{n}X_{i}^{2} -  n\overline{X}^{2}} \\
+b  =  & \frac{\sum_{i=1}^{n}(X_{i} - \overline{X})(Y_{i} - \overline{Y})}{\sum_{i =1}^{n}(X_{i} - \overline{X})^{2}}  \\
+b = & \frac{\widehat{Cov(X,Y)}}{S_{X}^{2}}
+\end{aligned}
+$$
+
+The least-squares estimate of the slope of the model is then
+$$
+b = \frac{\sum_{i = 1}^{n}X_{i}Y_{i} -  n*\overline{X}*\overline{Y}}{\sum_{i =1 }^{n}X_{i}^{2} -  n\overline{X}^{2}} = r\left( \frac{S_{Y}}{S_{X}} \right)
+$$
+
+and the *estimate* of the probabilistic model is $\widehat{Y}_{i} = a + (b*X_{i})$. 
+</br>
+</br>
+
+The estimates for the true value of the $Y$-intercept term and the slope term of the model, $a$ and $b$, respectfully, also are **maximum likelihood estimates** for their respective parameters $A$ and $B$. 
+</br>
+</br>
+
+**Back to Our SAT Math Scores and Average Teacher Salary:** Consider the *sub-population* of states that consists of only those where the proportion of high school students who write the SAT exam is "high". The scatterplot with the correlation coefficient is provided below:
+
+First, we filter out all states where the proportion of students who have written the SAT exam is **high**. The scatterplot is provided below. 
+```{r}
+SAT_2010 %>%
+  filter(sat_percategory == "high") %>%
+  ggplot(aes(x = salary, y = math)) +
+  geom_point(size = 2, col = "blue", position = "jitter") +
+  xlab("Average Teacher Salary") +
+  ylab("Average State SAT Math score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT Math Score (r = 0.4374)") +
+  stat_smooth(method = "lm", col = "red") 
+```
+
+Consider the model that attempts to predict a state's **average** SAT math score as a linear function of the state's teacher **salary**,
+</br>
+</br>
+The *statistical model* is 
+$$
+\underbrace{AverargeSATMathScore_{i}}_{Y-variable} = A + (B*\underbrace{AverageSalary_{i}}_{X-variable}) + e_{i}
+$$
+
+The *estimate the model* is found by first computing the least-squares estimate/statistic of the model's slope term $b$:
+```{r}
+favstats(~salary, data=filter(SAT_2010, sat_percategory == "high")) #statistics for the x-variable salary
+favstats(~math, data=filter(SAT_2010, sat_percategory == "high"))   #statistics for the y-variable math
+```
+
+$$
+b = r\left( \frac{S_{Y}}{S_{X}} \right) = (0.4374)\left(\frac{15.14781}{8688.841}\right) = 0.0007625
+$$
+
+
+
+We now compute the value of $a$:
+$$
+a = \overline{Y} - (b*\overline{X}) = 503.0714 - (0.0007625*60631.64) = 456.83624\approx 456.8362
+$$
+
+and the estimate of the model is then
+$$
+\widehat{AverageSATMathScore}_{i} = 456.8362 + 0.00076*AverageSalary_{i}
+$$
+This estimate can be computed with R using the `lm` function, which stands for *linear model*. The code below creates a linear model called **predictmathSAT**.
+```{r}
+predictmathSAT <- lm(math~salary, filter(SAT_2010, sat_percategory == "high"))  #math is the y-variable, salary is the x-variable of the SAT_2010 data frame 
+```
+
+The above command **DOES** the computations for us. We just need to access the computations. To access the computed values of $a$ and $b$
+```{r}
+options(scipen=999)
+predictmathSAT$coef
+```
+
+The value of $a$ and $b$ ar $a = 456.836237540$ and $b = 0.0007625588$. From the training data, we have an estimate of the model
+$$
+\widehat{AverageSATMathScore}_{i} = 456.83624 + (0.000763*AverageSalary_{i})
+$$
+
+### Application of the Statistical Model
+
+The motivation in the creation and estimation of the model that expresses a state's the average math score as a linear function of its average teacher salary is to have to model learn from the training data, in this case the data appearing in **SAT_2010**. 
+
+Suppose we pick a state where the proportion of its high school students who wrote the SAT exam in 2019 was 68%. This state is then classified as **high** according the our categorization of the **sat_percategory**. Moreover, the average teacher salary in this state is $62,500. Predict this state's average SAT math score.
+</br>
+</br>
+**Answer:** The given value of $x = 62,500$. We predict $y$, or compute $\widehat{y}$ for this particular value of $x$:
+$$
+\widehat{y}_{i} = 456.83624 + (0.000763*62500) = 504.4962 \approx 504.50
+$$
+
+This prediction can be completed in R with the `predict` command:
+```{r}
+predict(predictmathSAT, data.frame(salary=62500))  #predicts y for a singular value of x (data.frame(salary=42600))
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+------------
+
+**Time to Play Around, Part 2**
+
+Recall the scatterplots you created in the previous "play time" exercise and the various correlations computed for $r_{National}$ and $r_{American}$.
+This season, the Toronto Blue Jays has a winning percentage of 0.408. The Toronto Blue Jays play in the American League. Predict the their home season attendence for the 2019 season.
+</br>
+</br>
+**Answer:** We wish to model $Y_{i} = A + BX_{i} + e_{i}$, and estimate this model with $\widehat{y}_{i} = a + bx_{i}$. In this instance, the $y$-variable is the **seasonattend** and the $x$-variable is the **winningpct**. We may also want to keep this to the sub-population of American League teams, or **league==AL**.
+
+```{r}
+predictattendanceAL = lm(seasonattend~winningpct, data = filter(MLBattend, league == "AL"))
+predictattendanceAL$coef
+```
+Our learning from the training data is
+$$
+\widehat{y}_{i} = a + bx_{i} = -0.5505391 + 4.53525127x_{i}
+$$
+For the Toronto Blue Jays 2019 Season, we are attempting to predict $y$ for the value of $x = 0.408$. 
+```{r}
+predict(predictattendanceAL, data.frame(winningpct = 0.408))
+```
+and
+$$
+\widehat{y}_{i} = -0.5505391 + 4.53525127(0.408) = 1.299844 \: \text{million people}
+$$
+<div style="margin-bottom:100px;">
+</div>
+
+------------------------------
+
+## 4. Conditions of the Model 
+
+There are two conditions, or foundations, upon which the model building that we have began are built upon.
+
+1. The $y$ -variable, or commonly know as the response variable, is Normally distributed with a mean $\mu$ and standard deviation of $\sigma$. 
+2. For each distinct value of the $x$-variable (the predictor variable), the $y$ variable has the same standard deviation $\sigma$.
+
+Condition #1 is ofen referred to as the *normality of the residuals* condition, while #2 is commonly called *homoscedasticity*. 
+
+In our attempt to model the linear dependency of the **math** score on the **salary** for all state high schools where **sat_percategory=="high"**, we are banking on the two conditions above holding. 
+
+### How do you check each condition?
+
+#### Checking the Condition of the Normality of the Residuals
+
+If the $y$-variable is Normally distributed, then the veritical distance each observed value of $y$, or $y_{i}$ is away from the *estimated* mean of $y$, $\widehat{y}_{i}$ for *all* values of $x$ will be normally distributed. This can be checked through a visualization of all such "vertical distances", or **residuals** , the $e_{i}$ terms. 
+
+The $e_{i}$ terms are computed by taking each observed value of $x_{i}$, then computing $\widehat{y}$ for the value of $x_{i}$. This represents the *mean* value of $y$ - on our case, the average "average Math SAT score" for *all states* that have a average teacher salary of $x_{i}$. This is then subtracted from the observed value of $y$ for the same value of $x$. 
+$$
+e_{i} = y_{i} - \widehat{y}_{i} \:\: \text{for all}\:\;x_{i}
+$$
+To see how these can be computed in our example, we access the $y_{i}$s, the predicted (or `fitted`) values of $y$ (or the $\widehat{y}$s), and the computed residuals. The latter two are "stored" within the **predictmathSAT** list, and can be accessed with
+```{r}
+predictsmath = predictmathSAT$fitted.values #place the predicted values of y for each observed x into a vector
+eismath = predictmathSAT$residuals      #pull out the residuals
+diagnosticdf = data.frame(predictsmath, eismath) #create a data frame of fitted.values and residuals
+```
+
+To see if the residuals are normally distributed, a **normal probability plot** is computed. The code below is used to create a normal probability plot the data - the residual terms - that were computed and stored in the **eismath** variable of the **diagnosticdf** data frame. 
+```{r}
+diagnosticdf %>%
+  ggplot(aes(sample = eismath)) +
+  stat_qq(col='blue') +
+  stat_qqline(col='red') +
+  ggtitle("Normal Probability Plot of Residuals")
+```
+
+To inspect the **homoscedasticity** condition, we plot the **fitted.values** with the **residuals**. 
+```{r}
+diagnosticdf %>%
+  ggplot(aes(x = predictsmath, y = eismath)) +
+  geom_point(size = 2, col = 'blue', position = "jitter") +
+  xlab("Predicted Average SAT Math Score") +
+  ylab("Residuals") +
+  ggtitle("Plot of Fits to Residuals") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed")
+```
+
+<div style="margin-bottom:30px;">
+</div>
+
+-----------------------
+
+**Time to Play, Part 3:** 
+
+Returning to the model that you have trained with the data, a model that attempts to predict the home attendence of a major league baseball team housed in the *American League*, or **league=="AL"**
+
+1. access the fitted.values and the residuals
+2. create a data frame, (called it diagnosticdf2) that stores the fitted.values and the residuals
+3. create a normal probability plot of the residuals
+4. create a plot of the fitted.values to the residuals (or a residual plot)
+
+What do the visualizations in #3 and #4 tell you with respect the conditions of the model?
+</br>
+</br>
+**Answer:**
+
+**Step 1:** The fitted.values and the residuals are assigned to the data vectors, below.
+```{r}
+predattend = predictattendanceAL$fitted.values
+resattend = predictattendanceAL$residuals
+```
+<div style="margin-bottom:100px;">
+</div>
+
+**Step 2:** The data frame is created below. 
+```{R}
+diagnosticdf2 = data.frame(predattend, resattend)
+head(diagnosticdf2,3)
+tail(diagnosticdf2,3)
+```
+The Normal probability plot of the residuals which is used to check the condition of the Normality of the residuals, or $e_{i}$-terms, is provided below.
+```{r}
+diagnosticdf2 %>%
+  ggplot(aes(x = resattend)) +
+  geom_histogram(col='red', fill='blue', binwidth=0.05) +
+  xlab("Residuals") +
+  ylab("Count") +
+  ggtitle("Histogram of the Residuals")
+
+diagnosticdf2 %>%
+  ggplot(aes(sample = resattend)) +
+  stat_qq(col='blue', size=2) +
+  stat_qqline(col='red') +
+  ggtitle("Normal Probability Plot of the Residuals")
+```
+
+The residual plot is provided below.
+```{r}
+diagnosticdf2 %>%
+  ggplot(aes(x = predattend, y = resattend)) +
+  geom_point(col = 'purple', size = 2, position = "jitter") +
+  xlab("Predicted AL Home Team Season Attendance") +
+  ylab("Residuals") +
+  ggtitle("Residual Plot") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed")
+```
+
+As the Predicted AL Home Team Season Attendance increases, the Residuals get larger.
+
+<div style="margin-bottom:300px;">
+</div>
+
+-------------------------
+
+# The Common Variation in the Response Variable $\sigma^{2}$
+
+So far we have seen how to estimate the unknown values of $A$ and $B$. The statistics used to esimate the values of these parameters, $a$ and $b$ are *both* least-squares estimates and maximum likelihood estimates.
+</br>
+</br>
+There is a third parameter hovering in the background, the value of which is unknown. This parameter is $\sigma^{2}$, and represents the variation in the response variable *after* its linear dependency on the predictor/explanatory variable has been taken into account. 
+</br>
+</br>
+We can obtain a statistic that estimates the value of $\sigma^{2}$ through what is called a variance decomposition of total sum of squares of the response variable $Y$. This **total sum of squares (SST)** is 
+
+$$
+SST = \sum_{i = 1}^{n}(Y_{i} - \overline{Y})^{2} = (Y_{1} -\overline{Y})^{2} + (Y_{2} - \overline{Y})^{2} + \cdots + (Y_{n} - \overline{Y})^{2}
+$$
+
+This $SST$ quantity is the numerator of the sample variance in the response variable $Y$, $S_{Y} = \frac{\sum_{i = 1}^{n}(Y_{i} - \overline{Y})^{2}}{n - 1}$. With a bit of math, $SST$ can be split into two separate pieces:
+
+$$
+\begin{aligned}
+\sum_{i = 1}^{n}(Y_{i} - \overline{Y})^{2} = & \sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i} + \widehat{Y}_{i} - \overline{Y})^{2} \\
+                                           = & \sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i})^{2} + 2\sum_{i=1}^{n}(Y_{i} - \widehat{Y}_{i})(\widehat{Y}_{i} - \overline{Y}) + 
+                                           \sum_{i = 1}^{n}(\widehat{Y}_{i} - \overline{Y})^{2} \\
+\underbrace{\sum_{i = 1}^{n}(Y_{i} - \overline{Y})^{2}}_{\text{Total Variation in Y}} = & \underbrace{\sum_{i = 1}^{n}(Y_{i} - \widehat{Y}_{i})^{2}}_{\text{Variation Unexplained}} + \underbrace{\sum_{i =1}^{n}(\widehat{Y}_{i} - \overline{Y})^{2}}_{\text{Explained Variation}} \\
+SST                        = & \underbrace{SSE}_{\text{Unexplained}} + \underbrace{SSR}_{\text{Explained}} \\
+\end{aligned}
+$$
+$SSR$ quantifies the portion of the variation in the response variable $Y$ is can be explained by the linear model $Y_{i} = \beta_{0} + \beta_{1} X_{i} + e_{i}$ and $SSE$ quantifies the portion of the variation in $Y$ that is left-over, that is *unaccounted for*. 
+
+## A Statistic to Estimate $\sigma^{2}$
+
+Through this variance decomposition, we can come up with an *unbiased* statistic that is used to estimate the unknown value of $\sigma^{2}$. It turns out that $E(SSE) = (n - 2)\sigma^{2}$. From this result we find an unbiased statistic for $\sigma^{2}$: 
+</br>
+</br>
+
+$$
+\frac{SSE}{n-2} {\:\:\rm is\:\:an \:\:unbiased\:\:statistic\:\:for\:\:} \sigma^{2}
+$$
+
+The square root of this unbiased statistic is called the *standard deviation of the regression*, or more commonly referred to as the *standard error* $S_{e}$.
+
+$$
+S_{e} = \sqrt{\frac{SSE}{n-2}}
+$$
+This statistic provides a standard deviation in the prediction of $Y$ for a given value of $X$. 
+
+It is too clumsy to compute by hand, so the R-command that will compute $S_{e}$ is **aov(y~x)**, where aov means **a**nalysis **o**f **v**ariance.
+
+**Back to Math SAT Scores:**  The estimate of the model that allowss one to predict a state's (with a low proportion of students who write the SAT college entrance exam) average SAT Math score based on its linear dependency on the state's expenditure per student was estimated by 
+$$
+\widehat{AverageSATMathScore}_{i} = 456.8362 + 0.00076*AverageSalary_{i}
+$$
+with a correlation coefficient of $r_{high} = 0.4374$. Below is a scatterplot with the least-squares line through the points:
+
+```{r}
+SAT_2010 %>%
+  filter(sat_percategory == "high") %>%
+  ggplot(aes(x = salary, y = math)) +
+  geom_point(size = 2, col = 'blue', position = "jitter") + 
+  stat_smooth(method = "lm", col = 'red') + xlab("Average Teacher Salary in State") +
+  ylab("Math SAT Score") +
+  ggtitle("Scatterplot of Average Teacher Salary to Average SAT score (r = 0.4374)")
+```
+
+The regression model that was created was **predictmathSAT**. Below is the analysis of variance for the regressionex1.
+
+```{r}
+aov(predictmathSAT)
+```
+This computes the values of $SSR = 570.7076$ and $SSE = 2412.2209$. From this, the standard deviation of the regression is
+
+$$
+S_{e} = \sqrt{\frac{SSE}{n - 2}} = \sqrt{\frac{2412.2209}{14-2}} = 14.1781
+$$
+
+The computation of $S_{e}$ is also provided in the "Residual standard error:" in the R-output, $S_{e} = 14.1781$. 
+</br>
+</br>
+Alternatively, we can compute $S_{e}$ via.
+
+```{r}
+sqrt(sum((predictmathSAT$residuals)^2)/(14-2)) # squares all residuals, then sums and divides by (n-2) to compute SSE/n-2
+```
+</br>
+</br>
+
+
+**Time to Play Around, Part 4**
+
+Continuing on from the three previous Time to Play exercises, re-visit the value of the correlation coefficient $r_{AL}$ and your estimate of the statistical model. 
+
+
+(a) Use R Studio to compute $SSR, SSE$ and the standard deviation of the regression/standard error of the regression $S_{e}$.
+</br>
+</br>
+**Answer:** To obtain $SSR$ and $SSE$, use the `aov` function
+```{r}
+aov(predictattendanceAL)  #produces the ANOVA table with SSR and SSE
+```
+From which $SSR = 42.79748$ and $SSE = 195.39425$. The standard error of the regression is
+$$
+S_{e} = \sqrt{\frac{195.39425}{432-2}} = 0.67409 \approx 0.6741
+$$
+</br>
+</br>
+
+(b) Explain the meaning of the computed value of $S_{e}$, in the context of these data. 
+</br>
+</br>
+**Answer:** The computed value of $S_{e}$ represents the standard deviation in the $y$-variable **seasonattend** *after* its linear relationship with an AL team's winning percentage has been taken into account. 
+</br>
+</br>
+
+<div style="margin-bottom:300px;">
+</div>
+
+
+------------
+
+# Accuracy of the Estimate of Our Model - Coefficient of Determination 
+
+One statistic that can be used to determine "how well" our statistical model mimics the real-world is through the computation of the **coefficient of determination**. 
+</br>
+</br>
+The coefficient of determination is the proportion of variation in the response variable $Y$ that is explained by $Y$'s linear relationship with the predictor/explanatory variable $X$. By definition, the coefficient of determination is computed by
+$$
+r^{2} = \frac{SSR}{SST} = ({\rm correlation})^{2} \hspace{0.5in} 0 \leq r^{2} \leq 1
+$$
+
+
+In the average SAT math score and average teacher salary for a state, the coefficent of determination is computed below. 
+</br>
+</br>
+**Answer** We have found $SSR = 570.707$ and we know that $SSR + SSE = SST$.
+$$
+r^{2} = \frac{570.707}{570.707 + 2412.2209} = 0.1913 \hspace{0.2in} {\rm OR} \hspace{0.2in} r^2 = (\text{correlation}^2) = (0.4374)^{2} = 0.1913
+$$
+</br>
+
+R computes this value with the command **rsquared(y~x)**
+
+```{r}
+rsquared(predictmathSAT)
+```
+</br>
+</br>
+
+**Time to Play Around, Part 5**
+
+Compute the coefficient of determination $r^{2}$. Interpret its meaning in the context of these data.
+</br>
+</br>
+**Answer:** Here, the coefficient of determination is computed with R
+```{r}
+rsquared(predictattendanceAL)
+```
+</br>
+17.96% of the variation in a AL team's home season attendance can be attributed to its linear dependency with the team's season winning percentage.
+
+<div style="margin-bottom:300px;">
+</div>
+
+
+
+-------------
+
+# Testing the Statistical Significance of the Model
+
+Should the conditions of the model - which in our predicting the average SAT math score given a state's average teacher salary (for those states where the proportion of high school students who write the SAT exam is "high") - we can further the inferences through 
+
+1. testing the overall linear appropriateness of the model
+2. testing the significance of both the $A$ and $B$ terms of the linear model. 
+
+### 1. Testing the Overall Linear Appropriateness of the Model
+
+We carry out the $F$-test of linear appropriateness, which tests the statistical hypotheses that
+$$
+{\rm H}_{0}: \text{the y-variable CANNOT be expressed as a linear function of x} \\
+{\rm H}_{A}: \text{the y-variable CAN be expressed as a linear function of x} \\
+$$
+The $F_{obs}$ statistic is computed by
+$$
+F_{obs} = \frac{MSR}{MSE} \sim F_{1, n-2} \\
+MSR = \frac{SSR}{df_R} \\
+MSE = \frac{SSE}{df_E} \\
+df_R = 2-1 = 1 \\
+df_E = n-2
+$$
+This is a result of an examination of the variance decomposition in the $y$-variable. What causes average **math** SAT score to fluctuate from one state to the next (for all states with a **sat_percategory**)? There is the variation that is "explained" by the model, and the variation that is unaccounted for, or "unexplained". This is called the $F$-test or the $ANOVA$-test. 
+
+In short, the $F_{obs}$ statistic is a ratio that compares the "expected" variation due the linear model to the "expected" unexplained variation. If this ratio is "large" (relative to the $F$-distribution with 1 and $n - 2$ degrees of freedom), then more of the variation in the $y$-variable is explained by the linear model than "unexplained". As a result, the $y$-variable *CAN BE* expressed as a linear function of the $x$-variable. 
+
+To extract the computed/observed value of $F_{obs}$, the `aov` function of the linear model is used:
+```{r}
+summary(aov(predictmathSAT)) #predictmathSAT is the name we gave our lm(math~salary)
+```
+From this output, 
+$$
+F_{obs} = \frac{\frac{570.1}{1}}{\frac{2412.2}{12}} = \frac{570.7}{201.0} = 2.839 
+$$
+
+The $P$-value is also provided:
+$$
+P-\text{value} = P(F_{1, 12} > 2.839) = 0.118
+$$
+or
+```{r}
+1 - pf(2.839, 1, 12)
+```
+
+The $y$-variable *CANNOT BE* expressed as a linear function of the $x$-variable. We cannot reject $H_{0}$
+
+</br>
+</br>
+**Time to Play Around, Part 6**
+
+You are attempting to create, and then built, a model that will enable you to predict the home season attendance **seasonattend** of an American League baseball team based on its winning percentage **winningpct**
+</br>
+</br>
+
+(a) Is there enough statistical evidence to suggest that this model is sound? State the appropriate statistical hypotheses in the *context of these data*.
+</br>
+</br>
+**Answer:** The statistical hypotheses is
+$$
+{\rm H}_{0}: B = 0 \:\: \text{(an AL baseball team's home season attendance CAN NOT be expressed as a linear function of winning percentage)} \\
+{\rm H}_{A}: B \ne 0 \:\: \text{(an AL baseball team's home season attendance CAN be expressed as a linear function of winning percentage)} \\
+$$
+</br>
+</br>
+
+(b) Obtain the value of $F_{obs}$.
+</br>
+</br>
+**Answer:** From R,
+```{r}
+summary(aov(predictattendanceAL))
+```
+From which
+$$
+F_{obs} = \frac{MSR}{MSE} = \frac{42.8}{195.4} = 94.18
+$$

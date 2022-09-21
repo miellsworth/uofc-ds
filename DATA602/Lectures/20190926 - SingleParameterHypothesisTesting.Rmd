@@ -1,0 +1,923 @@
+---
+title: "DATA 602 - Introduction to Hypothesis Testing"
+output:
+  html_document:
+    df_print: paged
+---
+&copy; Jim Stallard 2019
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mosaic)
+library(mosaicData)
+library(binom)
+# studentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+# attach(studentsurvey)
+```
+
+# Foundations of Statistical Hypothesis Testing
+</br>
+</br>
+A **statistical hypothesis** is an assertion/conjecture regarding the value of a target parameter $\theta$. $\theta$
+may be equal to the population mean $\mu$; the population proportion $p$;the value of $\theta$ in a uniform distribution, etc.
+</br>
+</br>
+For now, the unknown value of the parameter will be either $p$ or $\mu$.
+</br>
+</br>
+
+Any statistical hypothesis has two components:
+
+1. The **null hypothesis**, or ${\rm H}_{0}$
+2. The **alternative hypothesis**, or ${\rm H}_{A}$
+</br>
+</br>
+
+The null hypothesis represents the "default" state of nature. It is assumed to be true until there is sufficient
+``evidence'' to suggest it is no longer true.
+</br>
+</br>
+The alternative hypothesis is the complimentary state of nature of the null hypothesis, or ${\rm H}_{A} = ({\rm H}_{0})^{c}$. The alternative hypothesis, sometimes referred to as the research hypothesis, is always assumed to be false until there is enough evidence to suggest that the null hypothesis is false, which in turn suggests that the alternative hypothesis is true.
+</br>
+</br>
+
+Whatever the case may be, there are two "classes"" of a statistical hypothesis test:
+$$
+\begin{array}{lcc}
+               &   {\rm Simple}                 & {\rm Composite}       \\[1ex]
+{\rm H}_{0}: & \theta = \theta_{0}     &  \theta \geq (\leq) \theta_{0}  \\
+{\rm H}_{A}: & \theta \not= \theta_{0} &  \theta < (>) \theta_{0}  \\
+\end{array}
+$$
+
+**Illustration 1:** Consider the following statements which are to be investigated. For each, state the statistical hypotheses.
+
+(a) local real estate agent believes the average selling price of a residential property in Calgary during the month of September  is  *at least* $485,000. Formulate a statistical hypotheses. 
+</br>
+</br>
+**Answer:**
+Ho: mu >= $485,000
+HA: mu < $485,000
+
+
+<div style="margin-bottom:100px;">
+</div>
+
+(b) Researchers believe that a new chemotherapy treatment will prolong the lifetime of patients afflicted with liver
+cancer.  The mean survival time of liver cancer patients using the *current* chemotherapy regime is 4.5 months. Formulate a statistical hypotheses. 
+</br>
+</br>
+**Answer:** 
+Ho: mu = 4.5
+HA: mu > 4.5
+
+
+<div style="margin-bottom:100px;">
+</div>
+
+(c) The federal Liberal Party received 39.5% of the vote in the last federal election (October 2015). A poll is being conducted to see if the support for the federal Liberal Party has changed since the October 2015 federal election. Formulate a statistical hypotheses. 
+</br>
+</br>
+**Answer:**
+Ho: p = 0.395
+HA: p != 0.395
+
+
+<div style="margin-bottom:150px;">
+</div>
+
+Any statistical hypothesis test has four possible outcomes, that are summarized in the table below.
+
+$$
+\begin{array}{lcc}
+                              &         {\bf State\:\:of\:\:the\:\:World}         \\
+{\bf Decision}                & {\rm H}_{0} {\rm\:\:is\:\:True}  &  {\rm H}_{0}{\rm\:\:is\:\:False}   \\
+{\rm Fail\:\:to\:\:Reject}\:\: {\rm H}_{0}  &                        &                            \\
+{\rm Reject\:\:}{\rm H}_{0}          &                        &                            \\
+\end{array}
+$$
+
+Understandably, one would want to consider the probability of committing an error when conducting a statistical hypothesis. That is
+to say, what is the probability of committing a (i) Type I error? (ii) Type II error? 
+</br>
+</br>
+The probability of committing a Type I error is defined as: 
+$$
+\alpha = P({\rm Reject\:\:H_{0} | H_{0}\:\:is\:\:True}) 
+$$
+</br>
+The probability of committing a Type II error is defined as: 
+$$
+\beta = P({\rm Fail\:\:To\:\:Reject\:\:H_{0} | H_{0}\:\:is\:\:False})
+$$
+
+**Example 1:** Is the implementation of a provincial sales tax an idea that is gaining traction? A poll conducted in the spring[^1] of this year, just prior to the provincial election, found that about 25% of Albertans (Alberta residents aged 18 years of age or older) were in support ("agree or strongly agree" for its implementation) of a provincial sales tax. Given impending cuts to public spending, you wish to carry out a poll/survey to determine if the support for a provincial sales tax has increased since mid-April. 
+</br>
+</br>
+Suppose you are to take a pilot sample of $n = 30$ randomly chosen Albertans. If 11 or more provide a "support" response, then you will conclude that the proportion of Alberta residents (18 years of age or older) who support a sales tax in Alberta has increased.   
+
+(a) State the appropriate statistical hypotheses.
+</br>
+</br>
+**Answer:**
+<div style="margin-bottom:100px;">
+</div>
+
+(b) You are to define $X$ as the number, out of $n = 30$ randomly chosen Albertans who support the idea of a provincial sales tax. The null hypothesis in (a) is rejected if this count $X$ is greater than or equal to 11. That is, Reject ${\rm H}_{0}$ if $X \geq 11$. 
+</br>
+</br>
+**Answer:** The probability of committing a Type I Error here is $P({\rm Reject\:\:}H_{0} | H_{0} {\rm is\:\:true})$. To compute $\alpha$, we need to compute
+
+$$
+\begin{aligned}
+P({\rm Reject\:\:}H_{0} | H_{0} {\rm is\:\:true}) = & P(X \geq 11 | p = 0.25) \\
+                                                 = & {30 \choose 11}(0.25)^{11}(0.75)^{30-11} + {30 \choose 12}(0.25)^{12}(0.75)^{18} + \\
+                                                 + & \cdots + {30 \choose 30}(0.25)^{30}(0.75)^{0} \\
+                                           = & 0.1057281 \\
+                                           \approx & 0.1057 \\
+\end{aligned}
+$$
+
+Below is the R code that will compute the value of $\alpha$.
+
+```{r echo=TRUE}
+sum(dbinom(11:30, 30, 0.25)) #P(X = 11) + P(X = 12) + ... + P(X = 30)
+#OR
+1 - pbinom(10,30,0.25)  #1 - P(X <= 10)
+```
+
+<div style="margin-bottom:50px;">
+</div>
+
+(c) Unbeknownst to anyone, the proportion of all Albertan who support a provincial sales tax is 30%, or $p = 0.30$. From the $n = 30$, compute the probability of concluding that proportion of Albertans who  support a provincial sales tax *has not increasesd* since April. 
+</br>
+</br>
+**Answer:** To compute $\beta$, or the $P({\rm Type\:\:II\:\:Error})$, we compute
+$$
+\begin{aligned}
+P({\rm Type\:\:II\:\:Error}) = & P({\rm Fail\:\:To\:\;Reject\:\:}H_{0}|H_{0} {\rm is\:\:False}) \\
+                             = & P(X \leq 10 | p = 0.30) \\
+                             = & \sum_{x = 0}^{10}{30 \choose x}(0.30)^{x}(0.70)^{30 - x} \\
+                             = & 0.730374 \\
+                             \approx & 0.7304
+\end{aligned}
+$$
+
+Computed with R 
+```{r}
+pbinom(10, 30, 0.30)
+```
+</br>
+</br>
+
+[^1]: https://www.cbc.ca/news/canada/calgary/vote-compass-economy-1.5091293
+
+**Example 1 - Time to Play:**: Suppose the rejection region is changed to $X \geq 13$. Recompute (i) $\alpha$ and (ii) $\beta$ from part (c).
+</br>
+</br>
+**Answer:**
+
+$$
+\begin{aligned}
+P({\rm Reject\:\:}H_{0} | H_{0} {\rm is\:\:true}) = & P(X \geq 13 | p = 0.25) \\
+                                                 = & {30 \choose 13}(0.25)^{11}(0.75)^{30-11} + {30 \choose 14}(0.25)^{12}(0.75)^{18} + \\
+                                                 + & \cdots + {30 \choose 30}(0.25)^{30}(0.75)^{0} \\
+                                           = & 0.02159364 \\
+                                           \approx & 0.0216 \\
+\end{aligned}
+$$
+
+```{r echo=TRUE}
+sum(dbinom(13:30, 30, 0.25)) #P(X = 13) + P(X = 12) + ... + P(X = 30)
+#OR
+1 - pbinom(12,30,0.25)  #1 - P(X <= 12)
+```
+</br>
+</br>
+To compute $\beta$, or the $P{\rm Type\:\:II\:\:Error}$, we compute
+$$
+\begin{aligned}
+P({\rm Type\:\:II\:\:Error}) = & P({\rm Fail\:\:To\:\;Reject\:\:}H_{0}|H_{0} {\rm is\:\:False}) \\
+                             = & P(X \leq 12 | p = 0.30) \\
+                             = & \sum_{x = 0}^{12}{30 \choose x}(0.30)^{x}(0.70)^{30 - x} \\
+                             = & 0.9155299\\
+                             \approx & 0.9155
+\end{aligned}
+$$
+```{r echo=TRUE}
+sum(dbinom(0:12, 30, 0.30)) #P(X = 13) + P(X = 12) + ... + P(X = 30)
+#OR
+pbinom(12,30,0.30)  #1 - P(X <= 12)
+```
+By increasing the rejection region from $X \geq 11$ to $X \geq 13$, $\alpha$ has decreased from 0.1097 to 0.0216. However, *if* $p = 0.30$, the probability of making a Type II error has increased from 0.7304 to 0.9155. 
+
+<div style="margin-bottom:200px;">
+</div>
+
+(e) You have taken the sample, classifying a "support" response as a "1"; and a "not support" response as a "0". The 30 responses/data collected are provided below.
+
+$$
+0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1
+$$
+The value of $X = \sum_{i = 1}^{30}X_{i} = 16$ can be computed with R.
+
+```{r echo=TRUE}
+pstoutcome = c(0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1)
+x = sum(pstoutcome)
+x
+```
+
+(e, i) What decision can be made here about the null hypothesis stated in part (a)?
+</br>
+</br>
+**Answer:**
+Reject Ho
+
+<div style="margin-bottom:100px;">
+</div>
+
+
+(e, ii) What type of error could be made here?
+</br>
+</br>
+**Answer:**
+Type I error
+
+<div style="margin-bottom:100px;">
+</div>
+
+
+
+What was computed in Example 2(e) is called a **test statistic**. Simply put, the test statistic is a statistic computed from the data/sample from which a decision is based.
+</br>
+</br>
+In this instance, the value of the test statistic was computed to be $X = 16$. What does the distribution of this statistic look like? 
+</br>
+</br>
+We can view the distribution of the test statistic via a bootstrap, or a resampling of $n = 30$ from the data that occurred.
+
+
+```{r echo=TRUE}
+pstsupport = do(2000) * sum(resample(pstoutcome, size=30))
+```
+
+
+```{r}
+head(pstsupport, 4)
+```
+
+```{r}
+ggplot(data=pstsupport, aes(x=sum)) + geom_histogram(binwidth=1, fill='blue', col='red') + xlab("Bootstrap Statistic is the Sample Count") + ylab("Count") + ggtitle("Distribution of Bootstrap Statistics: Sample Count")
+```
+
+```{r}
+counter = 0
+for (i in 1: length(pstsupport$sum))
+{ if (pstsupport$sum[i] > x) counter = counter + 1
+} 
+pstproppvalue = (counter/2000) 
+pstproppvalue  
+```
+
+In light of the bootstrap distribution of the statistic $X = \sum_{i=1}^{30}X_{i}$, the proportion of all $X$s are more than the observed value of $X = 16$? in the above distribution, 41.24% of the $X$-values are at greater than the observed value of $X =  16$. Moreover, about 10% of the 2000 $X$s exceed 19 ($X \geq 20$). 
+```{R}
+qdata(~sum, c(0.90), data=pstsupport)
+```
+</br>
+</br>
+
+Rather than carrying out a bootstrap distribution (which does not assume anything about the value of $p$), what if we were to consider the probability of *another* random sample of $n = 30$ Albertans producing an oucome, or result, that leaned more towards the alternative hypothesis than the current sample which produces the result $X = 16$, assuming that the null hypothesis is true? 
+</br>
+</br>
+This probablity is represented by $P(X > 16|p = 0.25)$. Notice how this is a *conditional* probability; We are computing the probability that another Binomial experiment will produce a result/outcome that will be stronger evidence *against* the null hypothesis than the current sample has provided. 
+$$
+\begin{aligned}
+P(X > 16 | p = 0.25) = & P(X \geq 17 | p = 0.25)   \\
+                    = & \sum_{x = 17}^{30}{30 \choose x}(0.25)^{x}(0.75)^{30 - x} \\
+                    = & 0.0002156 \\
+                    \approx & 0.0002
+\end{aligned}
+$$
+</br>
+
+This probability is computed below 
+
+```{r}
+sum(dbinom(17:30, 30, 0.25))
+#OR
+1 - pbinom(16, 30, 0.25)
+```
+
+
+This conditional probability of $P(X > 16|p = 0.25) = 0.0002$ is the $P$-value. Below is my definition of a $P$-value:
+</br>
+</br>
+A **P-value** is a conditional probability. Assuming that the null hypothesis is true (this is the condition), the $P$-value computes the probability that another sample of size $n$ taken from the same population as the "original sample" will yield *more condemning evidence against* the null hypothesis than the current sample (current evidence). 
+</br>
+</br>
+
+
+**Back to Example 1:** The $P$-value is computed to be $P$-value = 0.0002. Given the $X$ can be modeled with the Binomial probability model, the $P$-value we computed above is more accurate than the *empirical* $P$-value of 0.427 that was computed via the boostrap distribution of $X$, the total number out of 30 indicating support for a provincial sales tax. 
+</br>
+</br>
+
+This leads us to a universal decision rule in statistical hypothesis testing: If the $P$-value is small, the null hypothesis is rejected in favour of the alternative hypothesis. How small must the $P$-value be? 
+
+$$
+{\rm Reject\:\:H_{0}\:\:if\:\:the\:\:P-value} < \alpha
+$$
+
+Typically, the value of $\alpha = 0.05$. 
+
+-------------------
+
+## The Process of Testing Statistical Hypotheses
+
+Example 1 provides some insight into the *process* of scientific inquiry. In short, the process can be outlined in the following steps:
+</br>
+</br>
+
+**1. Formulate the Statistical Hypothesis**
+</br>
+
+Consider your target population. Whom, or what, consists of the group/population that you are going to carry about a statistical hypotheses above? What is the population variable? Is the variable categorical or numerical? 
+</br>
+
+These are guiding questions to consider "what" the population parameter is in your statistical hypotheses? If the population variable is categorical, you will be conducting a statistical hypothesis test about the **value of the population proportion** $p$. Should the population variable of interest be numerical (your are measuring how much of something is occurring or counting something), then your statistical hypothesis will be about the **value of population mean** $\mu$.
+</br>
+</br>
+
+**2. Collect the Data**
+</br>
+
+Collect the data. Is your sample a probability sample? Formulate/wrangle the data into a working form, create a data frame of the data you collect. Consider what type of statistics you will be computing from these data.  
+</br>
+
+**3. Compute Relevant Statistic(s) from your Data**
+</br>
+
+If your statistical hypotheses concerns the value of the population propotion $p$, you will need to compute $X$, the number of success you have observed in your data. If your $H_{0}$ and $H_{A}$ concern the value of the population mean $\mu$, then you will need to compute $\overline{X}$ and probably the sample standard deviation $S$. 
+</br>
+</br>
+
+**4. Consider the Distribution of the Statistic(s) Computed in Step 3**
+</br>
+
+Through the computation of the statistic necessary, what is the distribution of the statistic. What is the mean/expected value of this statistic *IF THE NULL HYPOTHESIS IS TRUE*?  What is the spread - the standard deviation - of the distribution of your statistic? 
+</br>
+</br>
+
+**5. Compute the $P$-value to Weigh the Evidence**
+</br>
+
+What probability does the $P$-value compute? Create a probability expression that guides you to compute the $P$-value.
+</br>
+</br>
+
+**6. Decision Time**
+</br>
+
+Is the $P$-value small? How small? Small enough to warrant a rejection of the null hypothesis? What conclusions about the null hypothesis can you draw from these data? 
+</br>
+</br>
+
+-------------------------------------
+
+
+## Hypothesis Testing About the Population Proportion $p$
+
+Consider the three different hypothesis tests about the proportion of a population of that possesses some attribute, $p$: 
+
+1. ${\rm H}_{0}: p = p_{0}\hspace{1in} {\rm H}_{A}: p > p_{0}$  (a **right-tailed test**)
+
+2. ${\rm H}_{0}: p = p_{0} \hspace{1in} {\rm H}_{A}: p < p_{0}$ (a **left-tailed test**)
+
+3. ${\rm H}_{0}: p = p_{0} \hspace{1in} {\rm H}_{A}: p \ne p_{0}$  (a **two-tailed test**)
+</br>
+</br>
+
+**Example 2:** Recall the example done in class on September 17th. A presumed to be fair die was tossed $n = 200$ times and the number of outcomes that showed a top-side of "six" was observed to be 45, or $X = 45$. 
+</br>
+</br>
+Test the (statistical) hypothesis that the die is fair to the alternate hypothesis that the die is weighted in favour of a "six" outcome.
+</br>
+</br>
+**Answer**. The population consists of *all tosses of this particular die*, and the variable of interest is categorical: does each "element" in this population have the attribute of interest (will show a "six") or does not have the attribute of interest (shows an outcome that is anything but a "six"). The population parameter is then the *proportion* of all die tosses that will show a "six", $P(Six) = p$. 
+</br>
+</br>
+If this particular die is fair, then $P(Six) = p = \frac{1}{6}$. We have the statistical hypotheses:
+
+$$
+\begin{aligned}
+{\rm H}_{0}: p = &\frac{1}{6}  \hspace{0.2in} ({\rm this\:\:indicates\:\:that\:\:the\:\:die\:\:is\:\:fair}) \\
+{\rm H}_{A}: p > & \frac{1}{6} \hspace{0.2in} ({\rm this\:\:indicates\:\:that\:\:the\:\:die\:\:is\:\:weighted\:\:in\:\;favour\:\;of\:\:a\:\:six}) \\
+\end{aligned}
+$$
+
+**3 and 4.** The data have been collected and the statistic to be observed is $X = 45$. The distribution of $X$, which can be modeled by the Binomial probablity model. 
+</br>
+</br>
+If the null hypothesis is true, then the distribuion of $X$ will look like this, with the mean/expected value and standard deviation following:
+
+```{r}
+plot(0:200, dbinom(0:200, 200, 1/6), xlab="Number of 6s Observed in n=200 Tosses", ylab="P(X = x)", type="h", col='red', main="Distribution of Statistic")
+ev = 200*(1/6)
+standarddeviation = sqrt(ev*5/6)
+ev
+standarddeviation
+```
+
+We would expect there to be $E(X) = \mu_{X} = 33.33$ sixes to be observed with a standard deviation of $SD(X) = \sigma_{X} = 5.27$. 
+</br>
+</br>
+
+**5.** Compute the $P$-value.
+$$
+\begin{aligned}
+P-{\rm value} = & P(X > 45|p = \frac{1}{6}) \\
+              = & \sum_{x = 46}^{200}{200 \choose x}\left(\frac{1}{6}\right)^{x}\left(\frac{5}{6}\right)^{200 - x} \\
+              = & 0.012823
+\end{aligned}
+$$
+
+```{r}
+1 - pbinom(45, 200, 1/6)
+```
+
+What does the $P$-value of 0.012383 mean? 
+</br>
+</br>
+
+**6.** What decision can we arrive at? Do these data indicate that the die is fair, or does the data indicate that the die is weighted in favour of a "six" outcome? 
+
+Since the $P$ value is less than alpha (0.05), then we can reject the null hypothesis and say that the die is weighted in favour of a "six" outcome.
+
+<div style="margin-bottom:100px;">
+</div>
+
+Given our decision, we can now attempt to estimate the *true value* of $P(Six) = p$ through either (i) a boostrap distribution of the sample proportion $\widehat{p}$ (ii) a confidence interval for $p$. 
+
+### The Bootstrap Distribution of $\widehat{p}$ 
+
+The code below generates the distribution of the sample proportion $\widehat{p}$ and the $\widehat{p}_{0.025}$ and $\widehat{p}_{0.975}$.  
+
+```{r echo=TRUE}
+nsims = 2000
+ntrials = 200
+outcomedietoss = numeric(nsims)
+sampleprop = numeric(nsims)
+for(i in 1:nsims)
+{ outcomedietoss[i] = sum(sample(c(0,1), ntrials, c(155/ntrials, 45/ntrials), replace=TRUE))  #resamples from 0,1 with prob 155/200 and 45/200, computes X
+  sampleprop[i] = (outcomedietoss[i]/ntrials) 
+}
+tossingsix = data.frame(sampleprop) #create a data frame with variable sampleprop
+head(tossingsix, 4)
+```
+
+```{r}
+ggplot(data=tossingsix, aes(x = sampleprop)) + geom_histogram(col='blue', fill='red', binwidth=0.01) + ylab("Count") + ggtitle("Distribution of Bootstrap Statisic: Sample Proportion")
+qdata(~ sampleprop, c(0.025, 0.975), data=tossingsix)
+```
+
+From this boostrap distribution, we have a 95% coverage interval for $P(Six)$: $0.165 \leq p \leq 0.280$. 
+
+### A Confidence Interval for $p$
+
+Recall the 95% confidence interval for the population proportion had the form:
+$$
+\widetilde{p} \pm (1.96)\sqrt{\frac{\widetilde{p}(1 - \widetilde{p})}{n + 4}} \hspace{0.4in} {\rm where\:\:} \widetilde{p} = \frac{X + 2}{n + 4}
+$$
+
+We compute 
+$$
+\left(\frac{45 + 2}{200 + 4}\right) \pm (1.96)\sqrt{\frac{\frac{47}{204}(1 - \frac{47}{204})}{200 + 4}} \longrightarrow 0.2304 \pm 0.0578 \longrightarrow 0.1726 \leq p \leq 0.2882
+$$
+or via the `binom.confint` (or the `binom.test`) command
+
+```{R}
+ptilde = 47/204
+lb = ptilde - qnorm(0.975)*sqrt(ptilde*(1- ptilde)/204)
+ub = ptilde + qnorm(0.975)*sqrt(ptilde*(1- ptilde)/204)
+lb
+ub
+```
+
+```{r}
+binom.confint(45, 200, conf.level=0.95, method="agresti-coull")
+```
+```{r}
+binom.test(45, 200, ci.method="plus4")$conf
+```
+</br>
+</br>
+
+**Time to Play 2:** With the increase in the price to "check a bag" by $5 (now at $10 for some airlines), what do Canadians think about airline baggage fees? A poll[^2] taken in 2014 by the Angus Reid Institute of $n = 1491$ Canadians, of which 1112 indicated the $25 checked baggage fee was "unacceptable - just a money grab", while 15% said it was "acceptable" and 10% had "no opinion". 
+</br>
+</br>
+From these data, can you infer that more than 70% of Canadians believe the checked baggage fee of $25 is unacceptable? 
+</br>
+</br>
+
+1. Create the necessary statistical hypotheses.
+</br>
+</br>
+**Answer**:
+
+The data is categorixal, hence, we are interested in a population proportion $p$, which represents the proportion of all persons who fly on Canadian airlines who  believe that the baggage fee is "unacceptable". Specifically,
+$$
+{\rm H}_{0}: p = (\leq ) 0.70 \hspace{0.2in} \text{(at most 70% of believe baggage fees are unacceptable)}  \\
+{\rm H}_{A}: p >  0.70 \hspace{0.2in} \text{(more than  70% of believe baggage fees are unacceptable)}  \\
+$$
+
+<div style="margin-bottom:100px;">
+</div>
+
+2. Compute the value of the required statistic. 
+</br>
+</br>
+**Answer**:
+From these data, $X = 1112$ out of $n = 1491$. The value of the test statistic is
+$$
+X = 1112
+$$
+
+<div style="margin-bottom:100px;">
+</div>
+
+
+3. Think about the distribution of the statistic in part (2). If your null hypothesis is true, what does this distribution look like? What is the expected number, out of $n = 1491$, that would respond "unacceptable - money grap"; and the spread in this distribution?
+</br>
+</br>
+**Answer**:
+$X$ counts the number of successes in $n = 1491$ independent trials. This can be modeled by the Binomial distribution, where $p = 0.70$ (incorporating that the null hypothesis is true).
+<div style="margin-bottom:100px;">
+</div>
+
+4. Compute the $P$-value and *interpret* the meaning of this probability.
+</br>
+</br>
+**Answer**:
+To compute the $P$-value, we wish to compute the probabilty that another random sample of $n = 1491$ will produce a test statistic, the value of which is "more surprsing" that the observed value of the test statistic. In this case, $P(X > 1112)$.
+$$
+\begin{aligned}
+P(X > 1112 | p = 0.70) = & P(X \geq 1113 | p = 0.70) \\
+                       = & \sum_{x = 1113}^{1491}{1491 \choose x}(0.70)^{x}(0.30)^{1491 - x} \\
+                       = & 0.00003959 \:\: \text{(computed in R below)}\\
+                       \approx & 0.00004
+\end{aligned}
+$$
+```{R}
+sum(dbinom(1113:1491, 1491, 0.70))
+#OR
+1 - pbinom(1112, 1491, 0.70)
+```
+<div style="margin-bottom:100px;">
+</div>
+
+5. What decision can you make from these data about your ${\rm H}_{0}$ and ${\rm H}_{A}$? 
+</br>
+</br>
+**Answer**:
+Since the $P$-value of 0.00004 is less than 0.05 (default value of $\alpha$), we would reject the null hypothesis.
+</br>
+</br>
+We would infer, **from these data**, that more than 70% of person - Canadian airline passengers - believe that baggage fees are "unacceptable".
+</br>\
+</br>
+What possible range of values can $p$ be? A 95% confidence interval is provided below:
+```{r}
+binom.confint(1112, 1491, conf.level=0.95, method="agresti-coull")
+```
+<div style="margin-bottom:100px;">
+</div>
+
+
+-----------------------------------------------------------
+
+**Extention of Time to Play 2:** From your finding(s), compute a 95% bootstrap interval for $p$, the proportion of all Canadians who believe that the $25 checked baggage fee is "unaccepable - money grab". For you convenience, copy and paste the data below into a data vector called **dislikefees**. Then, create code or modify existing code. 
+</br>
+</br>
+**Answer:** 
+```{r echo=TRUE}
+dislikefees = c(rep(c(0,1),c(1491 - 1112, 1112)))
+```
+</br>
+</br>
+**Answer 1:** Use the provided code to create a bootstrap confidence interval for $p$. 
+
+```{r}
+nsims = 2000
+ntrials = 1491
+samplep = numeric(nsims)
+outcomettp2 = numeric(nsims)
+for(i in 1:nsims)
+{ outcomettp2[i] = sum(sample(dislikefees, ntrials, replace=TRUE))  #resamples from 0,1 with prob 155/200 and 45/200, computes X
+  samplep[i] = (outcomettp2[i]/ntrials) 
+}
+hatefees = data.frame(samplep) #create a data frame with variable sampleprop
+head(hatefees, 4)
+```
+
+```{r}
+ggplot(data=hatefees, aes(x = samplep)) + geom_histogram(col='blue', fill='red', binwidth=0.005) + xlab("Values of the Bootstrap Sample Proportion") + ylab("Count") + ggtitle("Bootstap Distribution of Sample Proportion")
+qdata(~ samplep, c(0.025, 0.975), data=hatefees)
+```
+
+
+**Answer 2:** Create a 95% confidence interval for $p$: 
+```{r echo=TRUE}
+binom.confint(1114, 1493, method="agresti-coull")
+```
+<div style="margin-bottom:300px;">
+</div>
+
+[^2]: (http://angusreid.org/three-in-four-canadians-call-airlines-new-checked-baggage-fees-unacceptable-money-grab/)
+
+
+-------------------------------------------------
+
+## Hypothesis Testing About the Population Mean $\mu$ and the $t$-test. 
+
+From confidence interval estimation, we learned about the following *pivotal quantity* transformation of $\overline{X}$ into the $t$-distriubution with $df = n - 1$. 
+$$
+T_{Obs} = \frac{\overline{X} - \mu}{\frac{S}{\sqrt{n}}} 
+$$
+
+This transformation makes up the basis of the distribution of the test statistic, where $T_{Obs}$ is the computed value from the observed values of $\overline{X}$ and $S$. 
+</br>
+</br>
+
+Consider the three different hypothesis tests about the mean of a population of values, $\mu$: 
+
+1. ${\rm H}_{0}: \mu = \mu_{0} \hspace{1in} {\rm H}_{A}: \mu > \mu_{0}$ 
+
+2. ${\rm H}_{0}: \mu = \mu_{0} \hspace{1in} {\rm H}_{A}:\mu < \mu_{0}$
+
+3. ${\rm H}_{0}: \mu = \mu_{0} \hspace{1in} {\rm H}_{A}: \mu \ne \mu_{0}$
+</br>
+</br>
+
+**Example 1:** Let's go back to the **flights** data. In 2013, did all American Airlines flights leaving any one of the three NYC-area airports leave on time, on average? 
+</br>
+</br>
+In this instance, the population consists of all "AA" flights in the **flights** data set. The variable **dep\_delay** is a numerical variable, with values $< 0$ indicating the flight departed early and values $> 0$ indicating the flight left late. 
+
+If the AA flights leave on time, then $\mu = 0$. If the flights, on average, are late then $\mu > 0$. Since one probably is more interested in late-leaving flights rather than flights leaving early, let's test the following statistical hypotheses:
+
+$$
+\begin{aligned}
+{\rm H}_{0}: \mu = & 0  \hspace{0.2in} ({\rm flights\:\:on\:\:average\:\:depart\:\:on\:\:time}) \\
+{\rm H}_{A}: \mu > & 0 \hspace{0.2in} ({\rm flights\:\:on\:\:average\:\:depart\:\:late}) \\
+\end{aligned}
+$$
+
+To test this claim, we are randomly sampling $n = 50$ flights and placing them into a data frame called **AAdelays**
+
+```{r}
+library(nycflights13)
+AAflights = select(filter(flights, carrier == "AA"), dep_delay, carrier) #strip out all AA flights on the variable dep_delay, 32979 cases
+```
+
+```{r include=FALSE}
+aaflights= na.omit(AAflights$dep_delay)
+```
+
+```{r}
+aadata = sample(aaflights, 50, replace=FALSE) # (blocked out as to not continue to resample)
+```
+
+```{r echo=FALSE}
+depdelay = aadata
+AAdelays = data.frame(depdelay)
+head(AAdelays, 4)
+tail(AAdelays, 2)
+```
+The boxplot of our random sample of $n = 50$ flights
+```{r}
+ggplot(data=AAdelays, aes(x = "var", y = depdelay)) + geom_boxplot(col='red', fill= 'blue', na.rm=TRUE) + xlab("") + ylab("Departure Delay in Minutes") + scale_x_discrete(breaks=NULL) + coord_flip() + ggtitle("Boxplot of the sample of n = 50 American Airlines Departure Delays")
+```
+
+A Normal probability plot shows that the departure delay data in this sample of $n = 50$ cannot be modeled by the Normal distribution. 
+```{r}
+ggplot(data=AAdelays, aes(sample = depdelay)) + stat_qq(size=2, col='blue') + stat_qqline(col='red') + ggtitle("Normal Probability Plot n = 50 American Airlines Departure Delays")
+  # geom_qq(aes(sample = depdelay), col='blue', size=2) + geom_qq_line()
+```
+But, does the non-Normality in these data matter?
+</br>
+</br>
+
+Let's compute the various sample statisics using the `favstats()` command.
+```{r}
+favstats(~ depdelay, data=AAdelays)
+```
+
+$\overline{X} =  14.9$ and $S = 42.67401 \approx 42.674$ minutes.
+
+These data and the resulting sample statistics $\overline{X}$ and $S$ are converted to the $t$-distribution with $df = n - 1 = 50 - 1 = 49$ degrees of freedom, all the while we *incorporate the null hypothesis*. 
+</br>
+</br>
+The resulting $T_{Obs}$ is the test statistic.
+$$
+T_{Obs} = \frac{\overline{X} - \mu_{0}}{\frac{S}{\sqrt{n}}} =  \frac{14.9 - 0}{\frac{42.674}{\sqrt{50}}} = 2.4689
+$$
+
+Now, let's consider the distribution of a $t$ with $df = 49$. 
+```{r}
+a = seq(-4, 4, 0.1)
+plot(a, dt(a, 49), type="l", col="red", xlab="Values of t", ylab="")
+```
+
+Where does our $T_{Obs} = 2.4689$ lay on the above distribution? How likely it is for another random sample of $n = 50$ flights to produce a $T_{Obs}$ that provides stronger evidence against the null hypothesis than the observed $T_{Obs} = 2.4689$?
+</br>
+</br>
+Consider $P(T_{49} > 2.4689)$ and its computation in R:
+
+```{r}
+1 - pt(2.4689, 49) # 1 - P(T <= 1.8607, with df = 49)
+```
+
+The $P$-value is $P(T_{49} > 2.4689) = 0.008543764 \approx 0.0085$. 
+</br>
+</br>
+What decision can we render about the null hypothesis of $\mu = 0$, or that on average an American Airlines flight departs any one of the three NYC-area airports on time? 
+
+
+The test is highly significant. We can reject Ho.
+</br>
+</br>
+</br>
+The computation of $T_{Obs}$ and the $P$-value can be computed with the `t.test()` command. See the R chunk below.
+```{r}
+t.test(~ depdelay, mu=0, alternative="greater", data=AAdelays) #sets mu = 0 (H0 is true) and indicats sign in Ha
+```
+
+**Time to Play, Extention of Example 1:** The `t.test` command was run again, changing the *alternative=greater* to *alternative=two.sided*. What do you notice?
+```{r}
+t.test(~ depdelay, mu=0, alternative="two.sided", data=AAdelays)
+```
+</br>
+</br>
+**Answer:** 
+<div style="margin-bottom:100px;">
+</div>
+
+------------------------------
+
+### $t$-Test and the Matched-Pairs Experimental Design
+
+The data file **Cameras** consists of data on different types of cameras sold at two different camera stores, **J & R Cameras** and **B & H Cameras**. This data set is within the **resampledata** package, which you will require for this exercise. 
+
+Below are the first four and last four pieces of data in this data set.
+
+```{r}
+library(resampledata)
+head(Cameras, 4)
+tail(Cameras, 4)
+```
+
+There are $n = 22$ *sets* data here. You wish to test if, on average, there is a difference in the price of cameras between these two stores. 
+</br>
+</br>
+To formulate they hypothesis, we have 22 different types of cameras, presumed to be randomly chosen from the population of all cameras that are sold at both camera stores. Below we have boxplots showing the prices of cameras at each of these two stores. Because of the structure of these data, I have used the base-R command `boxplot` rather than `ggplot`
+
+```{r}
+boxplot(Cameras$JR, Cameras$BH, names=c("JR", "BH"), ylab="Price of Camera in $s", col='blue', main="Boxplots of Camera Prices at Stores JR and BH")
+```
+
+#### Some Background
+
+In this situation, the data was collected via a **Matched-Pairs Experimental Design**. This method of data collection involves the collection of two pieces of data on the *same* element sampled, one piece of data is collected under scenario 1, the other under a different scenario. 
+
+In this method of data collection we consider the differences between the data points collected under the different scenarios, where each scenario can be considered a different population. The difference between the data points observed for each element under the different scenarios, or conditions, is defined as
+$$
+d_{i} = x_{1,i} - x_{2,i}
+$$
+
+These computed differences are then thought to be a random sample from a *population of differences* that has a mean difference of $\mu_{d}$ and a standard deviation of $\sigma_{d}$. These population parameters are *estimated* from the Matched-Pairs Experimental Design with the computed values of the mean difference $\overline{d}$ and the standard deviation of the differences $S_{d}$. 
+
+### Back to the Data
+
+Let's find the difference between the prices of cameras between stores **JR** and **BH** by creating a new variable called **Diff** and attaching this new variable onto the **Cameras** data. 
+
+Let's think of the price of camera $i$ at the JR-store as $x_{JR,i}$ and the price of the same camera at store $BH$ as $x_{BH, i}$.
+
+
+```{r}
+Cameras = Cameras %>%
+  mutate(Diff = JR - BH)
+head(Cameras, 4)
+```
+
+Below is both a histogram and a boxplot of the $d_{i}$s, the difference in camera prices between these two stores. 
+
+```{r}
+ggplot(data=Cameras, aes(x = Diff)) + geom_histogram(col='blue', fill='red', binwidth=20) + xlab("Difference in Price (JR - BH)") + ylab("Count") + ggtitle("Distribution of Difference in Camera Prices")
+```
+
+A boxplot is perhaps a more-telling visual display of these data.
+
+```{r}
+ggplot(data=Cameras, aes(x = "var", y = Diff)) + geom_boxplot(col='blue', fill= 'red') + xlab("") + ylab("Price Difference in Cameras") + scale_x_discrete(breaks=NULL) + coord_flip() + ggtitle("Boxplot of Difference in Camera Prices")
+```
+
+**Time to Play 4:** Let's not forget the motivation for this data collection in the first instance. You wish to see if there is a difference, on average, between these two stores with respect to the price of a camera. 
+</br>
+</br>
+
+1. Ponder the *differences* that have been computed, the $d_{i}$s, and population of differences. If there is no difference, on average, between the price of a camera at store JR and store BH, what is the value of the mean of this population of differences?
+</br>
+</br>
+**Answer:** 
+$$
+\begin{aligned}
+{\rm H}_{0}: \mu_{d} = & 0  \hspace{0.2in} ({\rm difference\:\:in\:\:camera\:\:prices\:\:on\:\:average\:\:are\:\:the\:\:same}) \\
+{\rm H}_{A}: \mu_{d} \ne & 0 \hspace{0.2in} ({\rm difference\:\:in\:\:camera\:\:prices\:\:on\:\:average\:\:are\:\:NOT\:\:the\:\:same}) \\
+\end{aligned}
+$$
+
+
+<div style="margin-bottom:100px;">
+</div>
+
+
+2. Compute the mean of the difference and the standard deviation of the differences, $\overline{d}$ and $S_{d}$. Notice the value of $\overline{d}$, what does this say about the average of the differences computed and previously visualized?
+</br>
+</br>
+**Answer:** 
+Using the `favstats` command:
+```{r}
+favstats(~ Diff, data = Cameras)
+```
+<div style="margin-bottom:100px;">
+</div>
+
+
+3. Compute the value of the Student's $t$ Test Statistic, just as was done in Example 1. Simply replace $\overline{X}$ with $\overline{d}$ and $S$ with $S_{d}$. Ensure you incorporate the value of the mean difference $\mu_{d}$ that you are assuming to be true in your null hypothsis. Also, what is your $n$ equal to here? Is $n = 44$ or is $n = 22$? 
+</br>
+</br>
+**Answer:** 
+$$
+T_{Obs} = \frac{\overline{d} - \mu_{0}}{\frac{S_{d}}{\sqrt{n}}} =  \frac{2.805455 - 0}{\frac{18.95815}{\sqrt{22}}} = 0.69409
+$$
+<div style="margin-bottom:100px;">
+</div>
+
+
+4. Now, use `t.test` to generate the value of $T_{Obs}$, the $P$-value, and the 95% confidence interval for $\mu_{d}$. 
+</br>
+</br>
+**Answer:** 
+```{r}
+t.test(~ Diff, mu=0, alternative="two.sided", conf.level = 0.95, data = Cameras)
+```
+From which,
+
+$$
+T_{Obs} = 0.6941 \hspace{0.2in} P-\text{value} = P(T_{21} > 0.694)*2 = 0.4952
+$$
+<div style="margin-bottom:100px;">
+</div>
+
+5. From the output in 4, provide the $P$-value. What does this $P$-value represent? What is your decision about the null hypothesis?
+</br>
+</br>
+**Answer:** 
+If the null hypothesis is true (and, on average, there is no difference in the price of a camera), then the chance/probability of another matched-pairs experimental design will produce stronger statisical evidence against the null hypothesis *than the current data/sample* is 0.4952. 
+<div style="margin-bottom:100px;">
+</div>
+
+-----------------------------------------------------------------------------------
+
+### An Afterthought
+
+The inferences made about the mean/average different in the price of cameras between store JR and store BH are made upon the *condition* that the differences follow a Normal distribution/can be modeled by the Normal probabilty model. Does this condition seem to be satisfied?
+</br>
+</br>
+Below is a Normal probablity plot of the differences $d_{i}$s. 
+
+```{r}
+ggplot(data=Cameras, aes(sample = Diff)) + stat_qq(size=2, col='blue') + stat_qq_line(col='red')
+```
+
+**Suppose these differences appeared to stray from the Normal Probability Model**? 
+
+If such were the case, one could simply create a bootstrap interval of the bootstrap statisic $\overline{d}$. Let's take a look:
+
+```{r}
+nsims=1000
+diffmean = numeric(nsims)
+for(i in 1:nsims)
+{
+  diffmean[i] = mean(sample(Cameras$Diff, 22, replace=TRUE))
+}
+```
+
+```{r}
+hist(diffmean, xlab="Mean Difference in Camera Prices", col="blue", main="Bootstrap Distribution of Mean Difference di")
+quantile(diffmean, c(0.025, 0.975), data=Cameras)
+```
+
+The 95% bootstrap interval has a lower bound of -5.29 and an upper bound of 10.99. That is
+$$
+-4.78 \leq \mu_{d} \leq 10.72
+$$

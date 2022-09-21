@@ -1,0 +1,231 @@
+---
+title: "Mulinomial regression"
+output: html_notebook
+---
+
+###Example 1: 
+```{r}
+library(VGAM)
+income=c(3,10,20,30)
+VD=c(2,2,0,0)
+LD=c(4,6,1,3)
+MS=c(13,22,15,13)
+VS=c(3,4,8,8)
+dat=data.frame(income,VD,LD,MS,VS)
+dat
+```
+```{r}
+# model fitting
+fit.blogit=vglm(cbind(VD,LD,MS,VS)~income,family=multinomial,data=dat)
+summary(fit.blogit)
+```
+
+```{r}
+# Pearson chi-square statistic
+Pearson_statistic<-sum(resid(fit.blogit,type="pearson")^2)
+1-pchisq(Pearson_statistic, df.residual(fit.blogit))
+```
+
+```{r}
+fitted(fit.blogit)
+```
+
+________________________________
+
+**In-class practice 1**
+```{r}
+Alligator_L<-c(1.24,1.45,1.63,1.78,1.98,2.36,2.79,3.68,1.30,1.45,1.65,1.78,2.03,2.39,2.84,3.71,1.30,1.47,1.65,1.78,2.03,2.41,3.25,3.89,1.32,1.47,1.65,1.80,2.16,2.44,3.28,1.32,1.50,1.65,1.80,2.26,2.46,3.33,1.40,1.52,1.68,1.85,2.31,2.56,3.56,1.42,1.55,1.70,1.88,2.31,2.67,3.58,1.42,1.60,1.73,1.93,2.36,2.72,3.66)
+food<-c(rep('I',5),rep('F',2),'O','I',rep('O',2),'I',rep('F',4),rep('I',3),'O',rep('F',2),'O',rep('F',4),'I',rep('F',2),'O','F','I',rep('F',6),'I',rep('F',3),'O','F',rep('I',4),rep('F',4),'I','O','I','F','I','F')
+Allidata<-data.frame(Alligator_L,food)
+```
+
+```{r}
+# Establish baseline-category logit model between the Alligator_L and food
+
+```
+
+```{r}
+# Get the prediction accuracy rate
+
+```
+
+
+__________________________________________
+###Example 2: Belief in afterlife
+```{r}
+Race=c('W','W','B','B')
+Gender=c('F','M','F','M')
+Yes=c(371, 250, 64, 25)
+Undecided=c(49, 45, 9, 5)
+No=c(74, 71, 15, 13)
+belief_data<-data.frame(Race, Gender, Yes, Undecided, No)
+belief_data
+```
+
+```{r}
+# run baseline-category logit model with Race and Gender as explanatory variables.
+
+
+```
+
+```{r}
+# Predict the probability of "Race='W', Gender='F'"
+# Use "predict" function
+
+```
+
+
+_____________________________________________
+###Example 3: job satisfication revisited
+```{r}
+fit.clogit1=vglm(cbind(VD,LD,MS,VS)~income, family=cumulative(parallel = TRUE), data=dat)
+summary(fit.clogit1)
+```
+```{r}
+# goodness-of-fit test
+1-pchisq(sum(resid(fit.clogit1, type="pearson")^2),df.residual(fit.clogit1))
+```
+
+```{r}
+# check the predicted probability (cumulative logit model)
+predict(fit.clogit1, newdata=dat, type="response")
+```
+
+```{r}
+# check the predicted probability (baseline-category logit model)
+predict(fit.blogit, newdata=dat, type="response")
+```
+
+_____________________________________________
+**In-class practice 2**
+```{r}
+# political party
+gender=c('F','F','M','M')
+Po_party=c('De','Re','De','Re')
+VL<-c(44,18,36,12)
+SL<-c(47,28,34,18)
+MO<-c(118,86,53,62)
+SC<-c(23,39,18,45)
+VC<-c(32,48,23,51)
+POdata<-data.frame(gender, Po_party, VL, SL, MO, SC, VC)
+POdata
+```
+
+```{r}
+# fit the cumulative logit model
+
+```
+
+```{r}
+# obtain the fitted probabilities
+
+```
+
+```{r}
+# Check the model goodness-of-fit 
+
+```
+
+### Example 4: mental data
+```{r}
+Mental=c(rep(1,12), rep(2,12), rep(3,7), rep(4,9))
+SES=c(rep(1,4),0,1,0,rep(1,3),0,0,1,0,1,0,1,1,0,1,1,0,1,1,0,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0)
+Life=c(1,9,4,3,2,0,1,3,3,7,1,2,5,6,3,1,8,2,5,5,9,3,3,1,0,4,3,9,6,4,3,8,2,7,5,4,4,8,8,9)
+menDATA<-data.frame(Mental, SES, Life)
+```
+
+```{r}
+fit.clogit3=vglm(Mental~SES+Life, family=cumulative(parallel = TRUE), data=menDATA)
+summary(fit.clogit3)
+```
+
+```{r}
+predict(fit.clogit3, newdata=data.frame(SES=0, Life=4.275), type="response")
+```
+
+
+**Invariance to choice of categories**
+**In-class practice 3**
+```{r}
+# combine the 2nd and 3rd Y categories, rename it as "2". The original 4th category of Y is renamed as "3"
+
+```
+
+```{r}
+
+```
+
+###Example 5: mental data revisited
+```{r}
+# continuation-ratio logit model
+Mental=c(rep(1,12), rep(2,12), rep(3,7), rep(4,9))
+SES=c(rep(1,4),0,1,0,rep(1,3),0,0,1,0,1,0,1,1,0,1,1,0,1,1,0,1,0,0,1,0,0,1,1,1,0,0,0,1,0,0)
+Life=c(1,9,4,3,2,0,1,3,3,7,1,2,5,6,3,1,8,2,5,5,9,3,3,1,0,4,3,9,6,4,3,8,2,7,5,4,4,8,8,9)
+menDATA<-data.frame(Mental, SES, Life)
+```
+
+```{r}
+fit.cratio <- vglm(Mental~SES+Life, family=cratio(reverse=FALSE, parallel=TRUE), data=menDATA)
+summary(fit.cratio)
+```
+
+```{r}
+predict(fit.cratio, newdata=data.frame(SES=0, Life=4.275), type="response")
+```
+
+```{r}
+predict(fit.clogit3, newdata=data.frame(SES=0, Life=4.275), type="response")
+```
+
+```{r}
+# based on continuation-ratio logit model
+1-pchisq(sum(resid(fit.cratio, type="pearson")^2), df.residual(fit.cratio))
+```
+
+```{r}
+# based on cumulative logit model
+1-pchisq(sum(resid(fit.clogit3, type="pearson")^2), df.residual(fit.clogit3))
+```
+
+
+```{r}
+# based on continuation-ratio logit model
+library(Rfast)
+prob.fit<-fitted(fit.cratio)
+fitted.result<-colnames(prob.fit)[rowMaxs(prob.fit)]
+misClasificError <- mean(fitted.result != menDATA$Mental)
+print(paste('Accuracy',1-misClasificError))
+```
+
+```{r}
+# based on cumulative logit model
+prob.fit<-fitted(fit.clogit3)
+fitted.result<-colnames(prob.fit)[rowMaxs(prob.fit)]
+misClasificError <- mean(fitted.result != menDATA$Mental)
+print(paste('Accuracy',1-misClasificError))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

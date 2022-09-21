@@ -1,0 +1,266 @@
+---
+title: "DATA 603 - Lecture Notes Unit 1 Part 4"
+output: html_document
+---
+
+```{r Load Packages, include = FALSE}
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(GGally)
+```
+
+# Part IV: MULTIPLE REGRESSION DIAGNOSTICS
+
+## Residual Analysis: Checking the Regression Assumptions
+
+Most statistical tests rely upon certain assumptions about the variables used in the analysis. When these assumptions are not met the results may not be trustworthy. The assumptions and conditions for the multiple regression model sound nearly the same as for simple linear regression, but with more variables in the model.
+
+### 1. Linearity Assumption
+The linear regression model assumes that there is a straight-line relationship between the predictors and the response. If the true relationship is far from linear, then virtually all of the conclusions that we draw from the fit are suspect. In addition, the prediction accuracy of the model can be significantly reduced. Residual plots are a useful graphical tool for identifying non-linearity. In the case of multiple regression model since there are multiple predictors, we instead plot the residuals versus predicted (or fitted) values $\hat{y_l}$. Ideally, the residual plot will show no discernible pattern. The presence of a presence may indicate a problem with some aspect of the linear model. If the residual plot indicates that there are non-linear associations in the data, then a simple approach is to use non-linear transformations of the predictors, such as $log(X), \sqrt{X}$, and $X^2$ in the regression model.
+
+<insert image here>
+
+This scatter plot shows the distribution of residuals (errors) vs fitted values (predicted values)
+```{r}
+Advertising <- read_delim("/Users/Ellsworth/Documents/School/DATA603/Lectures/Advertising.txt", delim ="\t" )
+model <- lm(sale ~ tv + radio + tv * radio, data = Advertising)
+summary(model)
+# .fitted : Fitted values of model
+# .resid : Residuals
+model %>%
+  ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 0)
+
+# optional graph from plot()
+plot(fitted(model), residuals(model),xlab="Fitted Values", ylab="Residuals")
+abline(h=0,lty=1)
+title("Residual vs Fitted")
+```
+
+From the Advertising example, the output displays the residual plot that results from the
+model $\widehat{Sale} = 6.750 + 0.01910*tv + 0.02886*radio + 0.001086*tv*radio$. There appears to
+be a little pattern in the residuals, suggesting that the quadratic term or logarithmic might
+improve the fit to the data.
+
+```{r}
+Advertising %>%
+  ggpairs(lower = list(continuous = "smooth_loess", combo = "facethist", discrete = "facetbar", na = "na"))
+model <- lm(sale ~ tv + radio + tv * radio, data = Advertising)
+quadmodel <- lm(sale ~ tv + I(tv^2) + radio + tv * radio, data = Advertising)
+cubic <- lm(sale ~ tv + I(tv^2) + I(tv^3) + radio + tv * radio, data = Advertising)
+summary(model)$adj.r.squared
+summary(quadmodel)$adj.r.squared
+summary(cubic)$adj.r.squared
+summary(cubic)
+#residual vs fitted data plot for the simple model
+model %>%
+  ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +geom_smooth() +
+  geom_hline(yintercept = 0)
+#residual vs fitted data plot for the quadratic model
+quadmodel %>%
+  ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() + 
+  geom_smooth() +
+  geom_hline(yintercept = 0) 
+#residual vs fitted data plot for the cubic model
+cubic %>%
+  ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 0) 
+```
+
+From the output, there appears to be a little pattern for the quadratic regresssion model while the cubic model shows no pattern of the residuals at all. Moreover, the $R^2 - adj$ of the cubic model is 0.9907 indicates the variation in $y$ that can be explained by this model is 99.02% with RMSE= 0.5026. Therefore, we can conclude that the cubic model is the best fit model to predict $Y$ among the models we considered.
+
+#### Inclass Practice Problem 1
+*From the clerical staff work hours, use residual plots to conduct a residual analysis of the data. Check Linearity Assumption. If a trend is detected, how would you like to transform the predictors in the model?*
+
+```{r}
+clerical <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Lectures/CLERICAL.csv")
+clerical <- clerical[, -c(1, 2)]
+clerical_t_test_best <- lm(Y ~ X2 + I(X2^2) + X4 + X5, data = clerical)
+summary(clerical_t_test_best)
+# .fitted : Fitted values of model
+# .resid : Residuals
+clerical_t_test_best %>%
+  ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 0)
+```
+
+### 2. Independence Assumption
+An important assumption of the linear regression model is that the error terms, $\epsilon_1, \epsilon_2, \epsilon_3, ..., \epsilon_n$ are uncorrelated (must be mutually independent). What does this mean? For instance, if the errors are uncorrelated, then the fact that $\epsilon_i$ is positive provides little or
+no information about the sign of $\epsilon_{i+1}$.
+
+The assumption of independent errors is violated when successive errors are correlated. This typically occurs when the data for both dependent and independent variables are observed sequentially over a period of time-called time-series data.
+
+We can check displays of the regression residuals for evidence of patterns, trends or clumping, any of which would suggest a failure of independence. In the special case when response $Y$ is related to time (time series data), a common violation of the Independence Assumption is for the errors to be correlated. This violation can be check by plotting the residuals against the order of occurrence (time plot of the residuals and looking for pattern).
+
+In the Advertising example, the subjects were not related to time, so we can pretty sure that their measurement are independent.
+
+### 3. Equal Variance Assumption
+Another important assumption of the linear regression model is that the error terms have a
+constant variance (homoscedasticity), $Var(\epsilon_i) = \sigma^2$. Unfortunately, it is often the case that
+the variances of the error terms are non-constant. For instance, the variances of the error terms may increase with the value of the response. One can identify non-constant variances in the errors, or heteroscedasticity.
+
+Heteroscedasticity means unequal scatter. In regression analysis, heteroscedasticity is a systematic change in the spread of the residuals over the range of measured values. An example is shown in the left-hand panel of the figure below, in which the magnitude of the residuals tends to increase with the fitted values. When faced with this problem, one possible solution is to transform the response $Y$ using a concave function such as $log(Y)$ or $\sqrt{X}$. Such a transformation results in a greater amount of shrinkage of the larger responses, leading to a reduction in heteroscedasticity. The right-hand panel of the figure below
+displays the residual plot after transforming the response.
+
+<insert image here>
+
+Residual plots.
+
+In each plot, the red line is a smooth fit to the residuals, intended to make it easier to identify
+a trend. The blue lines track the outer quantiles of the residuals, and emphasize patterns.
+
+Left: The funnel shape indicates heteroscedasticity. 
+
+Right: The predictor has been log-transformed, and there is now no evidence of
+heteroscedasticity.
+
+A scale-location plot between fitted value and standardized residuals can also be checked for heteroscedasticity. It’s also called Spread-Location plot. This plot shows if residuals are spread equally along the ranges of predictors. You can check the assumption of equal variance (homoscedasticity). It’s good if you see a horizontal line with equally (randomly) spread points. From the figure above in Case 1, the residuals appear randomly spread. Whereas, in Case 2, the residuals begin to spread wider along the x-axis as it passes around 5. Because the residuals spread wider and wider, the red smooth line is not horizontal and
+shows a steep angle in Case 2.
+
+```{r}
+cubic <- lm(sale ~ tv + I(tv^2) + I(tv^3) + radio + tv * radio, data = Advertising)
+summary(cubic)
+#residuals plot
+ggplot(cubic, aes(x=.fitted, y=.resid)) +
+ geom_point() +
+ geom_hline(yintercept = 0) +
+ geom_smooth()+
+ ggtitle("Residual plot: Residual vs Fitted values") 
+#a scale location plot
+ggplot(cubic, aes(x=.fitted, y=sqrt(abs(.stdresid)))) +
+ geom_point() +
+ geom_hline(yintercept = 0) +
+ geom_smooth()+
+ ggtitle("Scale-Location plot : Standardized Residual vs Fitted values") 
+```
+
+From the Advertising example, the output displays the residual plot and Scale-Location plot that result from the cubic model. In our case, the residuals tend to form a horizontal band-indicates that the plot does not provide evidence to suggest that heteroscedasticity exists.
+
+A more formal, mathematical way of detecting heteroscedasticity is what is known as the
+Breusch-Pagan test. It involves using a variance function and using a $\chi^2$ test to test.
+
+$$
+\begin{aligned}
+H_0 :& \text{ heteroscedasticity is not present (homoscedasticity)} \\
+H_a :& \text{ heteroscedasticity is present} \\
+&\text{or} \\
+H_0 :& \sigma_1^2 = \sigma_2^2 = ... = \sigma_p^2 \\
+H_a :& \text{ at least } \sigma_i^2 \text { is different from the others } i = 1, 2, ..., p \\
+\chi^2 =& nR^2 ~ \chi_{p-1}^2 \\
+&\text{where} \\
+n =& \text{ sample size} \\
+R^2 =& \text{ coefficient determination} \\
+p =& \text{ number of regression coefficients}
+\end {aligned}
+$$
+
+
+```{r}
+library(lmtest)
+cubic <- lm(sale ~ tv + I(tv^2) + I(tv^3) + radio + tv * radio, data = Advertising)
+bptest(cubic)
+morepower <- lm(sale ~ tv + I(tv^2) + I(tv^3) + I(tv^4) + I(tv^5) + I(tv^6) + I(tv^7) + I(tv^8) + I(tv^9) + I(
+tv^10) + I(tv^11) + radio + tv * radio, data = Advertising)
+bptest(morepower)
+# optional
+morepower1 <- lm(sale ~ poly(tv, 11, raw = TRUE) + radio + tv * radio, data = Advertising)
+summary(morepower1)
+```
+
+From the Advertising example, the output displays the Breusch-Pagan test that result from the cubic model. The p-value = 0.00034 <0.05, indicating that we do reject the null hypothesis. Therefore, the test provide evidence to suggest that heteroscedasticity does exist. However, a model with more power on tv (power of 11) shows evidence to suggest that heteroscedasticity does not exist.
+
+#### Inclass Practice Problem 2
+*From the clerical staff work hours, use residual plots to conduct a residual analysis of the data. Check Equal Variance Assumption by graphs and the Breusch-Pagan test. If you detect a trend, how would you like to transform the predictors in the model?*
+
+```{r}
+clerical_t_test_best <- lm(Y ~ X2 + I(X2^2) + X4 + X5, data = clerical)
+bptest(clerical_t_test_best)
+```
+
+### 4. Normality Assumption
+The multiple linear regression analysis requires that the errors between observed and predicted values (i.e., the residuals of the regression) should be normally distributed. This assumption may be checked by looking at a histogram, a normal probability plot or a Q-QPlot.
+
+If the distribution is normal, the points on such a plot (Probability Plot or Q-Q-Plot) should fall close to the diagonal reference line. A bow-shaped pattern of deviations from the diagonal indicates that the residuals have excessive skewness. An S-shaped pattern of deviations indicates that the residuals have excessive kurtosis, i.e., there are either too many or two few large errors in both directions. Sometimes the problem is revealed to be that there are a few data points on one or both ends that deviate significantly from the
+reference line (“outliers”), in which case they should get close attention.
+
+There are also a variety of statistical tests for normality, including the KolmogorovSmirnov test and the Shapiro-Wilk test.
+
+$$
+\begin{aligned}
+H_0: \text{ the sample data are significantly normally distributed} \\
+H_a: \text{ the sample data are not significantly normally distributed}
+\end {aligned}
+$$
+
+```{r}
+#option 1 (histogram)
+qplot(residuals(morepower),
+ geom="histogram",
+ binwidth = 0.1,
+ main = "Histogram of residuals",
+ xlab = "residuals", color="red",
+ fill=I("blue"))
+
+#option 2 (histogram)
+Advertising %>%
+  ggplot(aes(residuals(morepower))) +
+  geom_histogram(breaks = seq(-1,1,by=0.1), col="red", fill="blue") +
+  labs(title="Histogram for residuals") +
+  labs(x="residuals", y="Count")
+
+#normal QQ plot
+Advertising %>%
+  ggplot(aes(sample=morepower$residuals)) +
+  stat_qq() +
+  stat_qq_line()
+
+#Testing for Normality
+shapiro.test(residuals(morepower))
+```
+
+geom_qq_line and stat_qq_line compute the slope and intercept of the line connecting the points at specified quartiles of the theoretical and sample distributions. The outputs show that the residual data have normal distribution (from histogram and Q-Q plot). Moreover, Shapiro-Wilk normality test also confirms that the residuals are normally distributed as the p-value=0.3129 >0.05.
+
+### Inclass Practice Problem 3
+From the clerical staff work hours, use residual plots to conduct a residual analysis of the data. Check Normality Assumption by graphs and the Shapiro-Wilk normality test. If you detect a trend, how would you like to transform the predictors in the model?
+
+```{r}
+clerical %>%
+  ggplot(aes(sample = clerical_t_test_best$residuals)) +
+  stat_qq() +
+  stat_qq_line()
+#Testing for Normality
+shapiro.test(residuals(clerical_t_test_best))
+```
+
+### 5. Multicollinearity
+Often, two or more of the independent variables used in the model for $E(Y)$ provide redundant information. That is, the independent variables will be correlated with each other. For example, suppose we want to construct a model to predict the gasoline mileage rating, $Y$, of a truck as a function of its load, $X_1$, and the horsepower, $X_2$,  of its engine. In general, you would expect heavier loads to require greater horsepower and to result in lower mileage ratings. Thus, although both $X_1$ and $X_2$ contribute information for the prediction of mileage rating, some of the information is overlapping, because $X_1$ and $X_2$ are
+(linearly) correlated. When the independent variables are (linearly) correlated, we say that multicollinearity exists. In practice, it is not uncommon to observe correlations among the independent variables. However, a few problems arise when serious multicollinearity is present in the regression analysis.
+
+The scatter plot shows multicollonearity between Rating and Limit
+In the left-hand panel of Figure 3, the two predictors limit and age appear to have no obvious relationship. In contrast, in the right-hand panel of Figure 3, the predictors limit and rating are very highly linearly correlated with each other, and we say that they are collinear.
+
+When you can safely ignore multicollinearity: https://statisticalhorizons.com/multicollinearity
+
+### What Problems Do Multicollinearity Cause?
+Multicollinearity causes the following two basic types of problems:
+  1. The coefficient estimates can swing wildly based on which other independent variables are in the model. The coefficients become very sensitive to small changes in the model.
+  2. Multicollinearity reduces the precision of the estimate coefficients, which weakens the statistical power of your regression model. You might not be able to trust the p-values to identify independent variables that are statistically significant.
+
+### Testing for Multicollinearity with Variance Inflation Factors (VIF)
+If you can identify which variables are affected by multicollinearity and the strength of the correlation, you’re well on your way to determining whether you need to fix it. Fortunately, there is a very simple test to assess multicollinearity in your regression model which is called “The variance inflation factor (VIF)”
+The variance inflation factor (VIF) VIF identifies correlation between independent variables and the strength of that correlation. It can be computed using the formula:
+
+#### Inclass Practice Problem 4 - Multicollinearity
+*From the credit card example, check for Multicollinearity by scatter plots between independent predictors and VIF test . Note! consider only main effect predictors*
+
+
+

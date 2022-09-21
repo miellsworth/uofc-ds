@@ -1,0 +1,363 @@
+---
+title: "DATA 603 Project Presentation"
+author: "Mark Dodd, Michael Ellsworth, Dustin Tang, Raymond Wong"
+date: '2019-12-03'
+output: html_document
+header-includes: \usepackage{xcolor}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Load Libraries, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(car)
+library(olsrr)
+library(lmtest)
+library(kableExtra)
+```
+
+```{r Load Seasons Data with Future Points, include = FALSE}
+id <- "1YTb0rg8104VKZv7i6vWKhPaDe7wlaMb3"
+seasons <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+seasons <- seasons %>%
+  filter(!is.na(FUTURE_PTS)) %>%
+  mutate(GD = GF - GA) %>%
+  mutate(SD = S - SA) %>%
+  mutate(PD = `PIM/G` - `oPIM/G`)
+```
+
+```{r Load Descriptive Statistics Table Data, include = FALSE}
+id2 <- "1eTE9ZwmrpLG9rltG0qAI6-GgYzOM-mC1"
+statistics_linear <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id2))
+id3 <- "128_mfoY4DPWNcZCQGo2EIBti7Q2731Ed"
+statistics_logistic <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id3))
+```
+
+```{r}
+
+```
+
+
+## Descriptive Statistics
+
+Each descriptive statistic considered in both the logistic and multiple linear regression models are described below. All variables are numeric values and are either a whole number or represented as a percentage.
+
+```{r echo = FALSE}
+kable(statistics_linear, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(statistics_linear), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(statistics_linear), by = 2), color = "black", background = "#FFFFFF")
+kable(statistics_logistic, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(statistics_logistic), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(statistics_logistic), by = 2), color = "black", background = "#FFFFFF")
+```
+
+
+## Multiple Linear Regression Model for Predicting Team's Point Totals
+
+### Model with subset of available variables
+
+The first step in determining the most suitable model for predicting team's future seasons points was to take a subset of the available variables and build an additive model. Since there are a significant amount of season statistics to choose from, a number of variables were removed based on assumed significance. There was no statistical reasoning for removing the variables at this point. Instead, we assumed the statistics that were being removed were irrelevant. For example, statistics such as "Average Team Age", were removed as we didn't believe they would significantly impact the model.
+
+The statistics that will be used in the first full additive model are:
+
+  - PTS
+  - GF
+  - GD
+  - SD
+  - CF%
+  - FF%
+  - SCF%
+  - HDF%
+  - PDO
+  - PD
+
+The first full additive model will be built with the `lm()` function using the seasons dataset from hockey-reference.com.
+
+```{r Full Model Multiple Linear Regression for Season Points}
+season_points_model_full <- lm(data = seasons,
+                               FUTURE_PTS ~ PTS + GD + SD + `CF%` + `FF%` + `SCF%` + `HDF%` + PDO + PD)
+summary(season_points_model_full)
+```
+
+Based on the individual coefficients test (t-test) using the `summary()` function, only one variable appears to be significant and will be used in a reduced model:
+
+  - CF%
+  
+A reduced linear regression model will be built with the `lm()` function.
+
+```{r Reduced Model Multiple Linear Regression for Season Points}
+season_points_model_reduced <- lm(data = seasons, FUTURE_PTS ~ `CF%`)
+summary(season_points_model_reduced)
+```
+
+Based on the reduced linear regression model summary, a team's future seasons points can be predicted with the CF% variable with a model that can explain 29.4% of the variation in a team's future seasons points. This is not a significant amount of explained variation and hence, further model fitting will be attempted.
+
+Using the same variables in the first full additive model, a stepwise regression procedure will be used to determine if a better model for a team's future seasons points can be fitted. From the `olsrr` package, the `ols_step_both_p()` function will be used to complete the stepwise regression procedure.
+
+```{r Stepwise Regression Procedure for Season Points 1}
+model_stepwise1_team_pts = ols_step_both_p(season_points_model_full, pent = 0.1, prem = 0.3)
+```
+
+Based on the stepwise regression procedure using a p-value entry limit of 0.1 and a p-value exit threshold of 0.3, SCF% is the only variable that was included in the model. The R-squared value increases slightly as the model using SCF% instead of CF% can explain 30.1% of the variation in a team's future seasons points. Although the model has improved slightly, there is still plenty of room for improvement.
+
+The next step will be to determine if more variables can be accepted using the stepwise regression procedure using a higher p-value entry and exit limit; 0.2 and 0.3 respectively.
+
+```{r Stepwise Regression Procedure for Season Points 1b}
+season_points_stepwise1b = ols_step_both_p(season_points_model_full, pent = 0.2, prem = 0.3)
+```
+
+From this stepwise regression procedure, three variables are included in the model:
+
+  - SCF%
+  - CF%
+  - SD
+  
+This appears to be a better model than the previous stepwise model as the adjusted R-squared value suggests that this model can explain 33.1% of the variance in a team's future seasons points. The previous best model could only explain 30.1%.
+
+Since there are three variables in this model, the next step would be to check the model for multi-collinearity using the `vif()` function from the `car` package to calculate the variance inflation factor (VIF) and the `pairs()` function for visual identification.
+
+```{r Multicollinearity Assumption Check Stepwise 1b}
+vif(season_points_stepwise1b$model)
+pairs(~`SCF%` + `CF%` + SD, data = seasons)
+```
+
+Based on the values of VIF, SD and CF% appear to have critical levels of multi-collinearity, and one of these variables should be removed from the model. This is confirmed with the pairs plots as CF% and SD appear to be linearly correlated.
+
+Since CF% is more significant in the parameter estimates from the stepwise output, SD will be dropped and a new model will be built.
+
+```{r Reduced Stepwise Model for Season Points 1b}
+reduced_stepwise1b <- lm(data = seasons, FUTURE_PTS ~ `CF%` + `SCF%`)
+summary(reduced_stepwise1b)
+```
+
+Based on the adjusted R-squared value from the reduced stepwise model, this model is not any better than the model with just SCF%. However, with two variables available, an interaction term can be tested.
+
+```{r Stepwise Interaction Model}
+reduced_interaction <- lm(data = seasons, FUTURE_PTS ~ (`CF%` + `SCF%`)**2)
+summary(reduced_interaction)
+```
+
+From the summary output of the model with the interaction term, none of the terms are significant which means the interaction model will not be used. Since the additive model with CF% and SCF% did not perform any better than the model with SCF%, the model with SCF% is the best model at this point.
+
+The best fitted model at this point is as follows:
+
+```{r Coefficients of Best Fit Model}
+coefficients(model_stepwise1_team_pts$model)
+summary(model_stepwise1_team_pts$model)$r.squared
+```
+
+
+$$ \widehat{Points_{future{}}} = -68.1 + 3.2 * SCF\% $$
+
+Based on this model, with every one percent increase in SCF%, a teams next season points total will increase by ~3.2.
+
+### Model with all available variables
+
+Since the best model found with a subset of variables had an adjusted R-squared value of only 0.301, a better fitted model will try and be found with all of the available variables.
+
+The statistics that will be used in the second full additive model are:
+
+  - AvAge
+  - W
+  - L
+  - OL
+  - PTS
+  - GF
+  - GA
+  - GD
+  - SOW
+  - SOL
+  - SRS
+  - SOS
+  - TG/G
+  - EVGF
+  - EVGA
+  - PD
+  - SD
+  - PDO
+  - CF%
+  - FF%
+  - xGF
+  - xGA
+  - SCF%
+  - HDF%
+
+The second full additive model will be built with the `lm()` function using the seasons dataset from hockey-reference.com. The individual coefficients test will be used to test the significance of each of the variables.
+
+```{r Second Full Model Multiple Linear Regression for Season Points}
+model_full2_team_pts <- lm(data = seasons,
+                          FUTURE_PTS ~ AvAge + W + L + OL + PTS + GF + GA + GD + SOW + SOL + SRS +
+                            SOS + `TG/G` + EVGF + EVGA + PD + SD + PDO + `CF%` + `FF%` + xGF + xGA +
+                            `SCF%` + `HDF%`)
+summary(model_full2_team_pts)
+```
+
+From the individual coefficients test, the following variables appear to be significant:
+
+  - GF
+  - GA
+  - TG/G
+  - xGF
+
+From here, the stepwise regression procedure will be used to test all the available variables to see if the significant terms from the individual coefficients test is consistent with the stepwise procedure. A p-value entry limit of 0.05 and p-value exit limit of 0.3 will be used for this stepwise model.
+
+```{r Stepwise Regression Procedure for Season Points 2}
+model_stepwise2_team_pts <- ols_step_both_p(model_full2_team_pts, pent = 0.05, prem = 0.3)
+```
+
+From the stepwise regression procedure, the following variables appear to be significant:
+
+  - SCF% 
+  - TG/G 
+  - xGF 
+  - CF%
+
+Although the variables are slightly different between the individual coefficients test and the stepwise regression procedure.
+
+In order to ensure that these variables are independent, multi-collinearity will be tested using the `vif()` function from the `car` package to calculate the variance inflation factor (VIF) and the `pairs()` function for visual identification.
+
+```{r Multicollinearity Assumption Check Stepwise 2}
+vif(model_stepwise2_team_pts$model)
+pairs(~`SCF%` + `TG/G` + xGF + `CF%`, data = seasons)
+```
+
+Based on the values of VIF, SCF% and CF% appear to have moderate levels of multi-collinearity, bordering on significant. From the pairs visualization, SCF% and CF% appears to be linearly correlated.
+
+Since CF% is more significant in the parameter estimates from the stepwise output, but SCF% was the first variable chosen in the stepwise regression procedure, both variables will be dropped independently and two models will be tested.
+
+```{r Stepwise Reduced Test for Season Points 2}
+model_stepwise2_reduced_team_pts_a <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `CF%`)
+# Adjusted R-squared of model without SCF%
+summary(model_stepwise2_reduced_team_pts_a)$adj.r.squared
+
+model_stepwise2_reduced_team_pts_b <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `SCF%`)
+# Adjusted R-squared of model without CF%
+summary(model_stepwise2_reduced_team_pts_b)$adj.r.squared
+```
+
+Since the adjusted R squared value is higher in the model without SCF%, this will be the model that is used going forward. As there has been a change to the model, the individual coefficients test will be used to ensure all variables continue to be significant.
+
+```{r Stepwise Reduced for Season Points 2}
+model_stepwise2_reduced_team_pts <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `CF%`)
+summary(model_stepwise2_reduced_team_pts)
+```
+
+Since the p-value of xGF is higher than 0.05, it will be removed from the reduced model.
+
+```{r}
+model_stepwise2_reduced_team_pts <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + `CF%`)
+summary(model_stepwise2_reduced_team_pts)
+```
+
+Two variables remain in the best fitted model which means we have the opportunity to test an interaction term.
+
+```{r}
+model_stepwise2_interact_team_pts <- lm(data = seasons, FUTURE_PTS ~ (`TG/G` + `CF%`)**2)
+summary(model_stepwise2_interact_team_pts)
+```
+
+Since neither of the interaction terms are significant, the best fitted model is as follows:
+
+```{r Coefficients of Best Fit Model 2}
+coefficients(model_stepwise2_reduced_team_pts)
+```
+
+
+$$ \widehat{Points_{future}} = -181.63 + 12.5 * TG/G + 4.0 * CF\% $$
+
+Based on this model, with every one percent increase in CF%, a teams next season points total will increase by ~4. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~12.5.
+
+In order to ensure that this model is acceptable, a few additional assumptions will be tested:
+
+  - Linearity
+  - Equal variance
+  - Normality
+  - Outlier
+
+The linearity and equal variance assumptions will be tested by plotting the fitted versus the residual values on a scatter plot and visually determining if a trend can be observed.
+
+```{r Linearity Assumption Test}
+ggplot(model_stepwise2_reduced_team_pts, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 0) 
+```
+
+Since the plot above displays no observable pattern between the residuals and the fitted values of the model, the linearity and equal variance assumptions hold. Additionally, the Breusch-Pagan test can be used to confirm the equal variance assumption quantitatively.
+
+```{r BP test for Equal Variance Assumption}
+bptest(model_stepwise2_reduced_team_pts)
+```
+
+Since the p-value from the Breusch-Pagan test is greater than 0.05, we can confirm that heteroscedasticity is not present.
+
+The normality assumption will be tested using the Shapiro-Wilk test.
+
+```{r Normality Assumption Test}
+shapiro.test(residuals(model_stepwise2_reduced_team_pts))
+```
+
+Since the p-value from the Shapiro-Wilk test is greater than 0.05, we can say that the sample data are significantly normally distributed, thus confirming the normality assumption.
+
+Lastly, the outlier assumption will be tested using the leverage points methodology.
+
+```{r Outlier Assumption Test}
+lev <- hatvalues(model_stepwise2_reduced_team_pts)
+p <- length(coef(model_stepwise2_reduced_team_pts))
+n <- nrow(seasons)
+outlier <- lev[lev > (3 * p / n)]
+outlier
+plot(rownames(seasons), lev, main = "Leverage in Advertising Dataset",
+     xlab="observation",
+     ylab = "Leverage Value")
+abline(h = 3 *p/n, lty = 1)
+```
+
+Since there are two outliers that affect the model, a new model will be tested without these outliers.
+
+```{r}
+final_model_no_outliers <- lm(data = seasons[-c(27, 38),], FUTURE_PTS ~ `TG/G` + `CF%`)
+summary(final_model_no_outliers)
+sigma(final_model_no_outliers)
+```
+
+Now that the outliers have been removed and all other assumptions have been tested, the final best fitted model becomes:
+
+$$ \widehat{Points_{future}} = -178.8 + 10.6 * TG/G + 4.2 * CF\% $$
+
+Based on this model, with every one percent increase in CF%, a teams next season points total will increase by ~4.2. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~10.6.
+
+# Conclusion
+
+## Multiple Linear Regression Model for Predicting Team's Points Totals
+The best fitted multiple linear regression model for predicting team’s points totals is as follows:
+
+$$ \widehat{Points_{future}} = -178.8 + 10.6 * TG/G + 4.2 * CF\% $$
+
+This model is the best fitted model for a number of reasons:
+
+  - The model does not have any insignificant variables
+  - The model has the highest adjusted R-squared out of the models without insignificant variables
+  - The model includes independent variables that do not provide redundant information
+  - The data used in the model is significantly normal
+  - The linearity assumption holds
+  - There are no significant outliers that impact the model significantly
+  - The error terms of the model have a constant variance
+
+Based on the best fitted model, we can say that with every one percent increase in CF%, a teams next season points total will increase by ~4.2. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~10.6.
+
+Based on an adjusted R-squared value of 0.3708, this model explains 37% of the variation in a team's seasons points total. Additionally, based on the RMSE value of 11.51, the standard deviation of the unexplained variance in the model is 11.51.
+
+The results of the best fitted model are in line with what was expected going into this model building exercise. Although there are a significant amount of variables available to predict a team's future seasons points totals, it is challenging to predict future results based on past results. In the NHL, there is usually significant change that happens between seasons and to say that one team will perform similarly to how they performed in a previous season, is flawed. With that being said, 37% explained variance is suprisingly high. It would be interesting to use this model to predict the current NHL season to see how the prediction compared to the actual results.
+
+One of the surprising outcomes of the best fitted model was the fact that past seasons points totals are not significant in predicting future seasons points total. If a team had 100 points in the previous season, that would not be a good indication that the team would also achieve around 100 points in the next season.
+
+A more interesting and effective model for predicting future seasons points totals would be to incorporate a value of the current roster of players. As discussed previously, the previous season's team is not going to look exactly like the future season's team which is why the best fitted model is flawed. Incorporating an aggregation of current player value would help accurately predict the results of the upcoming season. 

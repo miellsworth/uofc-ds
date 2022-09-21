@@ -1,0 +1,134 @@
+---
+title: "Beat Salad - Data Prep"
+author: "Michael Ellsworth"
+date: '2020-02-02'
+output: html_document
+---
+
+```{r Load Packages and Set Spotify Access Token, include=FALSE}
+library(tidyverse)
+library(spotifyr)
+library(tidytext)
+library(extrafont)
+
+Sys.setenv(SPOTIFY_CLIENT_ID = "5dd55b078eca4f02aaf27dbd05a579a1")
+Sys.setenv(SPOTIFY_CLIENT_SECRET = "db19d49a7db74e52a082cc4577cbbb9b")
+
+access_token <- get_spotify_access_token()
+```
+
+```{r Import Song Data}
+# Import playlist features
+beat_salad_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "7FmvywrafXglYfgWKaOzXV")
+
+# Import playlist features from songs played to date
+beat_salad_TD_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "307u8dcKCdI9ekI0KXT80l")
+
+# Import playlist features - Disco
+disco_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "0Tikn9YidHYTRVU11ARwYj")
+
+# Import playlist features - Pop
+pop1_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "37i9dQZF1DXcOFePJj4Rgb")
+pop2_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "37i9dQZF1DXarRysLJmuju")
+pop3_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "37i9dQZF1DXcBWIGoYBM5M")
+pop4_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "37i9dQZF1DXbYM3nMM0oPk")
+pop5_features <- get_playlist_audio_features(username = "89izkhd4t6h8bj4cgzbv789nh", playlist_uris = "37i9dQZF1DX0s5kDXi1oC5")
+```
+
+```{r Clean Beat Salad Playlist Feature Data}
+# Start cleaning playlist features
+BS_clean <- beat_salad_features %>%
+
+  # Unnest the track.artists column which is contains a list of a song has multiple artists
+  unnest(track.artists) %>%
+  
+  # Select the columns of interest from the larger data frame
+  select(name, playlist_name, danceability, energy, key, loudness, mode, speechiness,
+         instrumentalness, valence, tempo, time_signature, track.album.id,
+         track.name, track.popularity, track.album.name, track.album.release_date,
+         key_name, mode_name, key_mode, track.duration_ms) %>%
+  
+  # Remove rows with the same track name created during the unnest step
+  distinct(track.album.name, track.name, .keep_all = TRUE)
+
+# Display the first 6 rows of the new data frame
+head(BS_clean)
+```
+
+```{r Clean Songs Played To Date Playlist Feature Data}
+# Start cleaning playlist features
+BSTD_clean <- beat_salad_TD_features %>%
+
+  # Unnest the track.artists column which is contains a list of a song has multiple artists
+  unnest(track.artists) %>%
+  
+  # Select the columns of interest from the larger data frame
+  select(name, playlist_name, danceability, energy, key, loudness, mode, speechiness,
+         instrumentalness, valence, tempo, time_signature, track.album.id,
+         track.name, track.popularity, track.album.name, track.album.release_date,
+         key_name, mode_name, key_mode, track.duration_ms) %>%
+  
+  # Remove rows with the same track name created during the unnest step
+  distinct(track.album.name, track.name, .keep_all = TRUE)
+
+# Display the first 6 rows of the new data frame
+head(BSTD_clean)
+```
+
+```{r Clean Disco Playlist Feature Data}
+# Start cleaning playlist features
+disco_clean <- disco_features %>%
+
+  # Unnest the track.artists column which is contains a list of a song has multiple artists
+  unnest(track.artists) %>%
+  
+  # Select the columns of interest from the larger data frame
+  select(name, playlist_name, danceability, energy, key, loudness, mode, speechiness,
+         instrumentalness, valence, tempo, time_signature, track.album.id,
+         track.name, track.popularity, track.album.name, track.album.release_date,
+         key_name, mode_name, key_mode, track.duration_ms) %>%
+  
+  # Remove rows with the same track name created during the unnest step
+  distinct(track.album.name, track.name, .keep_all = TRUE)
+
+# Change all playlist name to "Disco"
+disco_clean <- disco_clean %>%
+  mutate(playlist_name = "Disco")
+
+# Display the first 6 rows of the new data frame
+head(disco_clean)
+```
+
+```{r Clean Pop Playlist Feature Data}
+# Combine pop playlists
+pop_features <- rbind(pop1_features, pop2_features, pop3_features, pop4_features, pop5_features)
+
+# Start cleaning playlist features
+pop_clean <- pop_features %>%
+
+  # Unnest the track.artists column which is contains a list of a song has multiple artists
+  unnest(track.artists) %>%
+  
+  # Select the columns of interest from the larger data frame
+  select(name, playlist_name, danceability, energy, key, loudness, mode, speechiness,
+         instrumentalness, valence, tempo, time_signature, track.album.id,
+         track.name, track.popularity, track.album.name, track.album.release_date,
+         key_name, mode_name, key_mode, track.duration_ms) %>%
+  
+  # Remove rows with the same track name created during the unnest step
+  distinct(track.album.name, track.name, .keep_all = TRUE)
+
+# Change all playlist names to "Pop Playlist"
+pop_clean <- pop_clean %>%
+  mutate(playlist_name = "Pop")
+
+# Display the first 6 rows of the new data frame
+head(pop_clean)
+```
+
+```{r Write Data}
+write_csv(BS_clean, path = "/Users/Ellsworth/Documents/School/DATA605/Project/BeatSalad.csv")
+write_csv(BSTD_clean, path = "/Users/Ellsworth/Documents/School/DATA605/Project/BeatSaladToDate.csv")
+write_csv(disco_clean, path = "/Users/Ellsworth/Documents/School/DATA605/Project/Disco.csv")
+write_csv(pop_clean, path = "/Users/Ellsworth/Documents/School/DATA605/Project/Pop.csv")
+```

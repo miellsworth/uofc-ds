@@ -1,0 +1,652 @@
+---
+title: "DATA 602 - Numerical Properies of Samples"
+output:
+  html_document:
+    df_print: paged
+---
+&copy; Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+# studentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+# attach(studentsurvey)
+library(dplyr)
+#install.packages("nycflights13")
+library(nycflights13)
+
+```
+
+# Working with Subsets of the Population
+
+When conducting a statistical investigation, how does one acquire the data on the variable? In most cases, the data is collected is observed via surveys (online or telephone). We treat such data as a subset of a larger set of data, or a **sample** from all the potential data that could be retrieved, or the population.
+
+Why not attempt to acquire the data for the entire population? When such an attempt is made, we say that a **census** is being conducted. A census is an extremely labourious activity which is impractical when the population is large or dynamic. As a result, we turn to a sample from the population as a basis to the comprehension of "what is going on".
+
+<center>
+
+</center>
+
+There are two ways to sample from a population.
+
+1. Non-probability Sampling
+2. Probability Sampling
+
+## 1. Non-Probability Sampling
+
+Non-probability samping involves picking elements/individuals from the population of interest in a "non random" way.
+
+**Illustration**. Rather than inspecting all of the $N = 336776$ flights that have departed the three NYC-area airports, suppose we only look at the first 27004 cases. These are all the flights that departed the 3-NYC area airports in the month of January.  or our sample size is $n = 27004$. 
+
+```{r echo=TRUE}
+janflights <-  filter(flights, month == 1) #filter out all flights with month ==1 (January) from parent data set flights
+head(janflights, 4)
+length(janflights$dep_delay)
+```
+Our sample size is then $n = 27004$. 
+
+```{r}
+#Histogram of Arrival Delays
+janflights %>%
+  ggplot(aes(x = arr_delay)) +
+  geom_histogram(fill='blue', binwidth=50, na.rm=TRUE) +
+  xlab("Minutes a Flight Arrives Late") +
+  ylab("Frequency") +
+  ggtitle("Histogram of rrival Delays for Flights Leaving 3-NYC Airports")
+#Density Plot of Departure Delays
+janflights %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_density(fill='red', na.rm=TRUE) +
+  xlab("Minutes a Flight Departs Late") +
+  ylab("Density") +
+  ggtitle("Density-plot of Arrival Delays for Flights Leaving 3-NYC Airports")
+```
+
+Here is another sample of $n = 27574$ flights from the three NYC-area airports and their arrivals delays. 
+```{r}
+septflights <- filter(flights, month==9)
+length(septflights$arr_delay)
+
+septflights %>%
+  ggplot(aes(x = arr_delay)) +
+  geom_histogram(fill='blue', binwidth=50, na.rm=TRUE) +
+  xlab("Minutes a Flight Arrives Late") +
+  ylab("Frequency") +
+  ggtitle("Histogram of rrival Delays for Flights Leaving 3-NYC Airports")
+
+septflights %>%
+  ggplot(aes(x=dep_delay)) +
+  geom_density(fill='red', na.rm=TRUE) +
+  xlab("Minutes a Flight Departs Late") +
+  ylab("Density") +
+  ggtitle("Density-plot of Arrival Delays for Flights Leaving 3-NYC Airports")
+```
+The code below will almagamate these two samples of $n = 27004 + 27574 = 54578$ flights. The lighter blue density curve represents the arrival delays for all flights in September, the darker shade of blue density curve represents all flights that departed in the month of January. 
+
+```{r}
+janseptflights <- filter(flights, month==1 || month==9)
+janseptflights %>%
+  ggplot(aes(x = dep_delay, group = month)) +
+  geom_histogram(aes(fill=month), binwidth=50, na.rm=TRUE) +
+  xlab("Minutes Delayed in Departing")
+janseptflights %>%
+  ggplot(aes(x = dep_delay, y = ..density.., group = month)) +
+  geom_freqpoly(aes(color=month), binwidth=100, na.rm=TRUE) +
+  xlab("Minutes Delayed in Departing")
+```
+
+## 2. Probability Sampling
+
+Probability sampling involves the selection of population elements/individuals so that each *had a chance* of appearing in the subset/sample chosen from the population. This can be done in various ways. In the scope of this course, we will only consider **simple random sampling**, where every conceivable sample of size $n$ taken from a population consisting of $N$ items. As a result, every element/individual in the population has the same probability of being chosen, a probability that is given by 
+$$
+P({\rm element\:\:}i{\rm \:\:is\:\:chosen}) = \frac{n}{N}
+$$
+
+**Illustration** Suppose one were to randomly select $n = 1000$ flights from the $N = 336776$ flights departing the three NYC airports in 2013. There are many, many different samples. The probability of each flight being chosen in the sample is 
+$$
+P({\rm flight\:\:}i{\rm \:\:is\:\:chosen}) = \frac{n}{N} = \frac{1000}{336776} = 0.002969
+$$
+
+Below is the R Studio code than enables us to sample $n = 1000$ flights from the pouplation of flights.
+
+```{r}
+sampleflights <- sample(flights, 1000, replace = FALSE)  #select 1000 cases from flights without replacement
+head(sampleflights, 4) #shows the first four cases chosen
+tail(sampleflights, 4) #shows the last four cases chosen
+nsize <- length(sampleflights$dep_delay) - count(is.na(sampleflights$dep_delay)) #subtracts missing values to determine n
+nsize
+```
+
+```{r}
+sampleflights %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_histogram(col = 'red', fill = 'blue', binwidth = 50, na.rm = TRUE) +
+  xlab("Minutes Flight is Delayed") +
+  ggtitle("Histogram of Flight Delays for Sample of 968 flights")
+```
+
+The following density plot breaks down the data into months
+
+```{r echo=TRUE}
+sampleflights %>%
+  ggplot(aes(x = dep_delay, y = ..density.., group = month)) +
+  geom_freqpoly(aes(color = month), binwidth = 100, na.rm = TRUE) 
+sampleflights %>%
+  ggplot(aes(x = dep_delay, y = ..density.., group = month)) +
+  geom_freqpoly(aes(color = month), binwidth = 100, na.rm = TRUE) +
+  xlab("Minutes Flight is Delayed") +
+  facet_wrap(~ month)
+```
+
+# Properties of Data: Sample Statistics
+
+There statistics that locate the **central** part of the data.  
+
+1. Sample Mean/Average or $\overline{X}$
+2. Sample Median or $\widetilde{X}$
+3. Sample Mode or $\dot{X}$
+
+#### The Sample Mean $\overline{X}$
+
+The **sample mean** (or sample average) is simply the average of the data. If we imagine each data point as $x_{1}, x_{2}, \cdots x_{n}$, then the average is then
+$$
+\overline{X} = \frac{\sum_{i = 1}^{n}x_{i}}{n}
+$$
+$\overline{X}$ is computed with the R-command `mean` fucntion that is built into R.
+
+
+#### The Sample Median $\widetilde{X}$
+
+The **sample median** is a different type of statistic. It represents a point of such that half of the data are below and half are above. The notation of the sample median is $\widetilde{X}$, but I will not be going into how to compute these by hand. Instead, the R-command **median()** is used to compute.
+
+
+#### The Sample Mode $\dot{X}$ 
+
+The sample mode is a statistic that is often computed when data is collected on a categorical variable. A sampled element from the population is to yield one of a finite number of possible responses. Each of the responses are then assigned a numerical value via a nominal measurement scale. The outcome with the highest frequency of occurrence is the sample mode $\dot{X}$. 
+</br>
+</br>
+
+**Example 1:** The following data is a random sample of $n = 15$ 2019 assessed property values of residential properties in the City of Calgary in $1000s.
+$$
+342.0, 166.5, 406.0, 303.5, 704.5, 540.0, 373, 449.5, 398.5, 394.5, 219, 220.0, 398.5, 480.5, 364.0
+$$
+</br>
+(Source: https://data.calgary.ca/dataset/Property-Assessments/6zp6-pxei/data)
+
+
+A data vector that contains the data is created in R:
+```{r echo=TRUE}
+assessedvalue <- c(342.0, 166.5, 406.0, 303.5, 704.5, 540.0, 373, 449.5, 398.5, 394.5, 219, 220.0, 398.5, 480.5, 364.0)
+propassess <- data.frame(assessedvalue) #create a data frame to prepare data to be visualzed wtih ggplot
+head(propassess, 3)
+```
+A boxplot in addition to a density-plot (one without the data, and one with) are also included. 
+```{r}
+#create a boxplot of these data
+propassess %>%
+  ggplot(aes(x = "var", y = assessedvalue)) +
+  geom_boxplot(col='red', fill='blue') +
+  xlab("") +
+  ylab("Assessed Value in $1000s") +
+  ggtitle("Boxplot of Property Assessments") +
+  coord_flip() 
+#use ggplot to create densityplot
+propassess %>%
+  ggplot(aes(x = assessedvalue)) +
+  geom_density(color='blue') +
+  xlab("Property Assessment in $1000s") +
+  ggtitle("Density Plot of Residential Property Assessments")
+#useful way to create density plot on a data vector, including dotchart
+densityplot(propassess$assessedvalue,
+            xlab="Property Assessment in $1000s",
+            main = "Density Plot of Residential Property Assessments")
+```
+
+(a) Compute the sample mean $\overline{X}$
+</br>
+</br>
+**Answer:**
+```{r}
+mean(assessedvalue, data=propassess)
+```
+
+and $\overline{X} = 384.0$, in $1000s. 
+
+(b) Compute the sample median $\widetilde{X}$
+</br>
+</br>
+**Answer:**
+```{r}
+median(assessedvalue, data=propassess)
+```
+and $\widetilde{X} = 394.5$ ($1000s).
+
+(c) Compute the mode $\dot{X}$.
+</br>
+</br>
+**Answer:**
+There does not exist a built in R function to compute $\dot{X}$, so we create one!
+```{r}
+computemode = function(x)
+{
+  uniqx = unique(x)  
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
+```
+Now, run the `computemode` function with the data vector `propassess$assessedvalue`:
+```{r}
+computemode(propassess$assessedvalue) #computes the mode of data in data vector propassess$assessedvalue
+```
+</br>
+</br>
+
+**Time to Play 1:** The following data are the commuting times (in minutes) of $n = 19$ randomly chosen University of Calgary first-year students. 
+$$
+ 0,  0,  5,  6, 10, 10, 15, 15, 15, 20, 20, 25, 30, 40, 45, 60, 60, 60, 60
+$$
+</br>
+For the sake of convenience, copy and paste the R code and answer the following components. 
+```{r echo=TRUE}
+ct <- c(0,  0,  5,  6, 10, 10, 15, 15, 15, 20, 20, 25, 30, 40, 45, 60, 60, 60, 60) # inputs data into a data vector
+ct <- sort(ct)  # arranges the data from smallest to largest
+ct# see the data in ascending value
+```
+The disribution of this sample is provided below
+```{r echo=FALSE}
+densityplot(ct, xlab = "Commuting Time in Minutes", main = "Distribution of Commuting Time for First-year Students")
+```
+
+(a) Compute the mean $\overline{X}$ and the median $\widetilde{X}$ of these data.
+</br>
+</br>
+**Answer:** 
+
+```{r}
+mean(ct)
+median(ct)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+(b) Compute the mode.
+</br>
+</br>
+**Answer:**
+
+```{r}
+computemode = function(x)
+{
+  uniqx = unique(x)  
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
+computemode(ct)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+(c) Now, what happens if we sample a *twentieth* student, and the commute time of this student is 90 minutes or in the context of our data $x_{20} = 90$. Recompute the mean and median of this sample. Use the code below to add this data point onto the end of the `ct` data vector. Then regenrate the density plot and recompute the sample mean, sample median, and sample mode. 
+```{r echo=TRUE}
+ct2 <- c(ct, 90) #combines data vector ct with 90
+```
+</br>
+**Answer:**
+
+```{r}
+mean(ct2)
+median(ct2)
+computemode(ct2)
+densityplot(ct2, xlab = "Commuting Time in Minutes", main = "Distribution of Commuting Time for First-year Students")
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+---------------------------
+
+### Measures of Spread
+
+Through the computation of $\overline{X}$ and $\widetilde{X}$ (to a lesser extent, $\dot{X}$) we have experience in computing a statistic that provides a central point that data lies about. But what statistic exists that enables one to compute "how" the data falls around the center of gravity of the data? There are three possible statistics that can be computed:
+
++ mean absolute deviation, $\sum_{i=1}^{n}\frac{|x_{i} - \overline{X}}{n}$
++ sample standard deviation, represented by $S$
++ interquartile range, $IQR$
+
+Our attention will focus on the **sample standard deviation** for now.
+
+#### The Sample Standard Deviation, $S$
+
+The sample standard deviation is a statistic that computes the *typical* distance each data point in the data set/sample lies away from the sample mean $\overline{X}$. It is important to note that the sample standard deviation is **not an average** distance, as it can be shown that the average distance each data point lies away from the sample mean is zero:
+$$
+\sum_{i=1}^{n}(x_{i} - \overline{X}) = \underbrace{\sum_{i=1}^{n}x_{i}}_{n\overline{X}} - n\overline{X} = n\overline{X} - n\overline{X} = 0
+$$
+
+The sample stadard deviation is computed from the sample variance. This latter statistic, does represent the *average squared distance* each data point is away from $\overline{X}$. The sample variance is computed with the following formula
+$$
+S^{2} = \frac{\sum_{i=1}^{n}(x_{i} - \overline{X})^{2}}{n - 1} \hspace{0.5in} {\rm where\:\:} S^{2} > 0
+$$
+This statistic can be computed in R with the `var` command
+
+The sample standard deviation is the square root of the sample variance, or
+$$
+S = \sqrt{S^{2}}
+$$
+
+$S$ can be computed in R with one of two options, either `sqrt(var())` or `sd`.
+
+**Example 1: ** Compute the sample variance $S^{2}$ and the sample standard deviation $S$ from the $n = 19$ commuting times provided in Example 2, *prior* to having a student with a commuting time of 90 minutes. Recall that the data was stored in the vector **ct**. 
+```{r}
+var(ct)  # computes the variance of the data in first 19 positions in ct, prior to adding 90 minutes
+```
+
+The sample variance is computed to be $S^{2} = 463.211$ in ${\rm minutes}^{2}$. The sample standard deviation is now computed as
+
+```{r}
+sqrt(var(ct))
+#OR
+sd(ct)  # computes the standard deviation of the sample of n = 19$ commuting times
+round(sd(ct), digits=2)  #rounds the sd to 2 decimals
+```
+The value of $S = 21.5223 \approx 21.52$ minutes.  
+</br>
+</br>
+**Time to Play 2:** Compute the variance and standard deviation of the sample of $n = 20$.
+</br>
+</br>
+**Answer:** 
+
+```{r}
+length(ct2)
+var(ct2)
+sd(ct2)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+**Example 3:** Consider the random sample of $n=1000$ flights chosen from all flights leaving the three NY-area airports in 2013. These data are stored in a .csv file and can be read into R below. Copy and paste this code into a chunk of R. 
+```{r}
+sampleflights = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/sampleNYCflights.csv")
+head(sampleflights, 3)
+tail(sampleflights, 2)
+```
+
+The data frame **sampleflights** now exists, and consists of data from $N = 1000$ randomly chosen flights that have left the 3-NYC airports.
+</br>
+</br>
+Two different versions of density-plots of the **dep_delay** data are provided below.
+```{r echo=TRUE}
+sampleflights %>%
+  ggplot(aes(x = dep_delay)) +
+  geom_density(fill='blue', na.rm=TRUE) +
+  xlab("Minutes a Departing Flight is Delayed")
+densityplot(sampleflights$dep_delay, xlab="Minutes a Departing Flight is Delayed")
+```
+The mean, median, and standard deviation are computed using the commands:
+```{r}
+mean(~dep_delay, data=sampleflights, na.rm=TRUE) #compute the mean and exclude missing data
+median(~dep_delay, data=sampleflights, na.rm=TRUE) #compute the median and exclude missing data
+sd(~dep_delay, data=sampleflights, na.rm=TRUE) ##compute the sd and exclude missing data
+```
+These statistics are computed from the $n = 974$ departure delay times as there are 26 flights sampled that have missing depature delays.  
+```{r}
+count(is.na(sampleflights$dep_delay))
+nsize = length(sampleflights$dep_delay) - count(is.na(sampleflights$dep_delay)) #returns n for dep_delay variable
+nsize
+```
+In this instance, the statistics we desire to compute are of a certain variable (**dep_delay**) that is a column of a data frame named **sampleflights**. As a result, the notation changes to `mean(~variablename, data=dataframename, na.rm=TRUE)`, etc. 
+</br>
+</br>
+**Alternatively, these statistics can be computed with**
+```{r}
+mean(sampleflights$dep_delay, na.rm=TRUE) #data is in a vectore sampleflights#dep_delay
+median(sampleflights$dep_delay, na.rm=TRUE)
+sd(sampleflights$dep_delay, na.rm=TRUE)
+```
+</br>
+</br>
+
+**Time to Play 3:** Consider the variable **arr_delay** in our **sampleflights** data set/frame. 
+
+(a) Create a density plot of these data. 
+</br>
+</br>
+**Answer:** 
+
+```{r}
+densityplot(sampleflights$arr_delay, xlab="Minutes an Arriving Flight is Delayed")
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+(b) Compute the mean, median, and standard deviation of these data. 
+</br>
+</br>
+**Answer:**
+
+```{r}
+mean(sampleflights$arr_delay, na.rm = TRUE)
+median(sampleflights$arr_delay, na.rm = TRUE)
+sd(sampleflights$arr_delay, na.rm = TRUE)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+--------------------------
+
+### Measures of Relative Standing
+
+There is third class of statistics that reveal how certain data points are compare to other data points in the same sample. The sample median $\widetilde{X}$ is one of these statistics of relative standing, as it computes a statistic whereby 50% of the data are below and 50% of the data are above. The sample median computed in from the sample of $n = 5$ single-family detached homes listed for sale in varsity, $\widetilde{X} = 749.9$ conveys that approximately half of all homes for sale in the Varisty area have a listed asking price of $749,900, and approximatley 50% have a listed asking price that exceeds $749,900. 
+
+#### Percentiles
+
+A **percentile** computes a statistic which identifies a data position in the data and how is related to all the data. In other words, the **p-th percentile** $x_{p}$ is a statistic such that
+$$
+P(X \leq x_{p}) \approx p
+$$
+
+To R-command used to compute the p-th percentile $x_{p}$ is `quantile(variable_name, p, data=datasetname)`. 
+</br>
+</br>
+The 10th percentile $x_{10}$ of the commuting data appearing in the data vector **ct** (based on the $n = 20$ students) can be found with **quantile(data, p)** command:
+```{r}
+quantile(ct, 0.10) # computes the 10th percentile of data stored in the data vector ct
+```
+
+$x_{10} = 4.5$ in minutes. 
+</br>
+</br>
+One can infer that *approximately* 10% of all first-year students spend at most 4.5 minutes commuting to the univeristy from their respective residences. 
+
+**Time to Play 4:** Compute both the 20th percentile and the 90th percentiles of the 2018 residential property assessements in the City of Calgary. 
+</br>
+</br>
+**Answer:** 
+
+```{r}
+quantile(propassess$assessedvalue, 0.2)
+
+quantile(propassess$assessedvalue, 0.9)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+------------------------
+
+Often times one is interested in decomposing the data into four quarters, each quarter partitioned by the each of the following statistics:
+
+1. $x_{min}$ - the minimum (or smallest) observed value in the sample
+2. $x_{25}$ OR $Q1$ - the 25th percentile or *first quartile*
+3. $\widetilde{X}$ - the sample median which can be thought of as the *second quartile*
+4. $x_{75}$ OR $Q3$ - the 75th percentile or *third quartile*
+5. $x_{max}$ - the maximum (or largest) observed value in the sample
+
+These are often called the *five-number summary*.
+
+These statistics can be computed separately using the previously mentioned commands of `mean`, `median`, `qdata` or `quantile`*. The R-command `favstats`, which is specific to the **mosaic** package will compute the all these statistics at once! 
+
+**Example 1:** Let's see how the `favstats` command can be used to compute the $x_{min}$, $Q1$, $Q3$, and $x_{max}$ of sample of $n$ 2018 City of Calgary residential property assessments. (Recall these data are found the **assessevalue** column/variable of the **propassess** data frame.)
+```{r}
+favstats(~assessedvalue, data=propassess) #one can set na.rm=TRUE as the last argument to favstats
+```
+
+From this output:
+$$
+x_{min} = 166.5 \hspace{0.5in} Q1 = 322.75 \hspace{0.5in} \widetilde{X} = 394.5 \hspace{0.5in} Q3 = 427.75 \hspace{0.5in} x_{max} = 704.5
+$$
+
+all, in $1000$s, of course. Also, $\overline{X} = 384$ and $S = 134.13$. These statistics are based on $n = 15$, and there are no missing data points.
+</br>
+</br>
+
+**Time to Play 5:** 
+
+(a) Use the `favstats` command to compute all summary statistics for the **arr_delay** datafor the sample of $n$ flights that appears in the **sampleflights** data frame.
+</br>
+</br>
+**Answer:**
+
+```{r}
+favstats(~arr_delay, data = sampleflights, na.rm = TRUE)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+
+(b) 10% of flights leaving any of the 3-NYC airports are at most how early/late in arriving at the destination airport? What about 95%? 
+</br>
+</br>
+**Answer:**
+
+```{r}
+quantile(sampleflights$arr_delay, 0.1, na.rm = TRUE)
+quantile(sampleflights$arr_delay, 0.95, na.rm = TRUE)
+```
+
+
+<div style="margin-bottom:30px;">
+</div>
+
+</br>
+</br>
+
+-----------------------------
+
+#### More About Boxplots....
+
+A **boxplot** is an extremely useful data visualization tool, particularly when one wishes to compare distributions between two differen groups or populations. The boxplot is a graph of the 5-number summary. The command used to create a boxplot in R is **bwplot(variable_name)**. This is an easier way to create a boxplot on a single array of data. If you are creating many boxplots - as we did earlier this evening - then is is recommended to use the **ggplot()** language of graphing.  
+
+Below are two boxplots. The first is of the data on the "commuting time" or **ct** data, data which is in a singular data vector:
+
+```{r}
+bwplot(ct, xlab="Minutes to Commute", col='red')  #create a boxplot for the commute-time data in a single data vector
+favstats(ct)
+```
+
+In this box-and-whisker plot, the "lower whisker" starts at the minimum of $x_{min} = 0$, the box then starts at $Q1 = 10$, the dot in the middle of the box locates the computed value of the sample median $\widetilde{X} = 20$, the box stops at $Q3 = 48.75$. You will notice that there is an "upper whisker" drawn at approximately 90. So what is happening here?
+
+In creating this graph, R computes both the "lower whisker" and the "upper whisker", where
+$$
+LW = Q1 - 1.5(Q3 - Q1) \hspace{1in} UW = Q3 + 1.5(Q3 - Q1)
+$$
+The difference between $Q3$ and $Q1$ is called the **interquartile range**, or $IQR = Q3 - Q1$. Any data point lying *below the lower whisker* $LW$ or the *beyond the upper whisker* $UW$ are deemed to be **outliers**. In this instance, there are no data points below the $LW$ and there 8 data points lying beyond the $UW$. R then creates the box-and-whisker plot, or "bw" plot for short.
+
+In the box-and-whisker (sometimes called a 'boxplot' for short), the lower-whisker and upper-whisker were computed via
+$$
+\begin{array}{ll}
+LW = Q1 - 1.5(IQR) \hspace{0.25in}  & \hspace{0.25in} UW = Q3 + 1.5(IQR) \\
+LW = 10 - 1.5(60 - 10) \hspace{0.25in}  & \hspace{0.25in} UW = 60 + 1.5(60 - 10) \\
+LW = 10 - 1.5(50) \hspace{0.25in}  & \hspace{0.25in} UW = 60 + 1.5(50) \\
+LW = -65  \hspace{0.25in}          & \hspace{0.25in} UW = 135 \\                         
+\end{array}
+$$
+In this instance, the commute time cannnot be a negative value, so we set the $LW = 0$ and the $UW = 135$ minutes. There are no commute times in our data that are less than 0, so we set the lower-whisker of the boxplot to 0; there are not commute times above 135 minutes, so we set the upper-whisker in the boxplot to the $X_{max} = 90$. The median $\widetilde{X} = 20$ minutes, indicated by the <font color='red'>red dot</font>.
+</br>
+</br>
+
+**Example 2:** Use the ggplot code below to create a for the data appearing in the **propassess** data frame. comment in the distribution shape.
+</br>
+</br>
+**Answer**
+```{r}
+ggplot(data=propassess) + geom_boxplot(mapping = aes(x = "var", y = assessedvalue), fill= 'blue', na.rm=TRUE) + xlab("") + ylab("Assessed Property Values in $1000s") + scale_x_discrete(breaks=NULL) + coord_flip() #provides a horizontal bp
+```
+Boxplots can also be used to compare distributions. Recall from the previous class we compared the distribution of flight departure delays between two specific airlines, each of whom fly out of the three different NYC-area airports. From our sample of $n = 977$ flights that were randomly chosen, the distribution of flights via airline are as follows:
+
+```{r}
+sort(table(sampleflights$carrier))
+```
+
+114 of these flights were "AA", 169 were "UA". From this sample we can compare the distribution of flight delays for these two airlines:
+
+```{r}
+ggplot(data=filter(sampleflights, carrier =="UA" | carrier == "AA"), aes(x = carrier, y = dep_delay)) + geom_boxplot(fill='blue',na.rm=TRUE) + coord_flip()
+ggplot(data=filter(sampleflights, carrier =="UA" | carrier == "AA"), aes(x = dep_delay)) + geom_freqpoly(aes(color=carrier),binwidth=50, na.rm=TRUE)
+```
+How about comparing the "time of delay" between the five most frequent air carriers flying out of the 3 NYC-area airports? Here is a boxplot that enables us to compare the distribution of the variable "time of delay" for the five Carriers: AA, UA, EV, B6, and DL:
+
+```{r}
+ggplot(data=filter(sampleflights, carrier =="UA" | carrier == "AA"| carrier =="EV" | carrier == "B6" | carrier == "DL"), aes(x = carrier, y = dep_delay)) + geom_boxplot(fill='blue',na.rm=TRUE) + coord_flip() + xlab("Airline") + ylab("Minutes Flight was Delayed")
+```
+</br>
+</br>
+**Wrap-Up** Refer to the **sampleflights** data In this wrap-up exercise, use R Studio to complete the following tasks:
+
+```{r eval=FALSE, include=FALSE}
+head(sampleflights, 4)
+```
+
+
+(a) Consider the**air_time** variable, a variable that measures the time duration of each flight, in minutes. For this particular variable
+
+(i) create a *both* a histogram and a density plot from the sample of flights. Use 30 minutes as the width of each bin. Comment on the nature of flights from the three NYC-area airports. 
+
+</br>
+</br>
+
+```{r echo=TRUE}
+ggplot(data=sampleflights, aes(x = air_time)) + geom_histogram(col='red', fill='blue', binwidth=30, na.rm=TRUE) + xlab("Minutes in the Air") + ggtitle("Histogram of Flight Times (in Minutes)")
+ggplot(data=sampleflights, aes(x = air_time)) + geom_density(fill='blue', na.rm=TRUE) + xlab("Minutes in the Air")
+#density plot with data imposed 
+densityplot(sampleflights$air_time, xlab="Minutes in the Air")
+```
+
+
+(ii) Compute the summary statistics $\overline{X}, \widetilde{X}, S, Q1, Q3, X_{min}$ and $X_{max}$ for the "air-time" variable. Which of these summary statistics best represents the "typical" time that a flight leaving one of the three NYC-area airports is in the air? 
+
+```{r echo=TRUE}
+favstats(~air_time, data=sampleflights, na.rm=TRUE)
+```
+
+</br>
+</br>
+
+(iii) create a series of boxplots - one for each of the following airlines "UA", "AA", "EV", "B6", and "DL" - to compare the air time between these five passenger carrier airlines. Do any of these airlines fly "longer" in terms of duration of the flight? 
+
+```{r echo=TRUE}
+ggplot(data=filter(sampleflights, carrier == "UA" | carrier == "AA"| carrier =="EV" | carrier == "B6" | carrier == "DL"), aes(x = carrier, y = air_time)) + geom_boxplot(col='red', fill='blue', na.rm=TRUE) + xlab("Carrier") + ylab("Minutes in the Air") + coord_flip() 
+```
+</br>
+</br>
+
+(iv) for the five airlines listed in (iii), find the various summary statistics listed in (ii)
+
+```{r echo=TRUE}
+favstats(~air_time | carrier, data=filter(sampleflights, carrier == "UA" | carrier == "AA"| carrier =="EV" | carrier == "B6" | carrier == "DL"))
+```

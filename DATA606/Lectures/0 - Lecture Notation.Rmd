@@ -1,0 +1,48 @@
+---
+title: "DATA 606 Lecture Notation"
+output: html_notebook
+---
+
+# Cluster Sampling
+$$U = \text{ Population}$$
+$$N = \text{ Number of primary sampling units or clusters}$$
+$$S = \text{ Sample of the primary sampling unit}$$
+$$S_i = \text{ The sample of the secondary sampling unit from the } i_{th} \text{ primary sampling unit}$$
+$$y_{ij} = \text{ measurement of the } j_{th} \text{ element in the } i_{th} \text{ primary sampling unit}$$
+
+## Primary sampling unit level
+$$N = \text{ Number of primary sampling units or clusters in the population}$$
+$$M_i = \text{ Number of secondary sampling units in primary sample unit } i$$
+$$M_0 = M_1 + M_2 + ... + M_N = \text{ The total number of secondary sampling units in the population}$$
+$$t_i = y_{i1} + y_{i2} + ... y_{M_i} = \text{ measurement total of primary sampling unit i}$$
+$$t = t_1 + t_2 + ... t_N = \text{ measurement total for the population}$$
+$$V_t = \text{population variance of the primary sampling unit totals}$$
+
+## Secondary sampling unit level
+$$\overline{y}_U = \frac{t}{M} =  \text{ measurement mean for the population}$$
+$$\overline{y}_{iU} = \frac{t_i}{M_i} =  \text{ measurement mean for the primary sampling unit } i$$
+$$V = \text{ population variance}$$
+$$V_i = \text{ population variance within primary sampling unit } i$$
+
+## Sample quantities
+$$n = \text{ number of primary sampling units (clusters) in the sample}$$
+$$m_i = \text{ number of secondary sampling units in the sample from primary sampling unit } i$$
+$$\overline{y}_i =  \text{ measurement mean for the sample from primary sampling unit } i$$
+$$\hat{t_i} = M_i * \overline{y}_i = \text{ estimated measurement total for primary sampling unit } i$$
+$$\hat{t} = N * \frac{(\hat{t_1} + \hat{t_2} + ... + \hat{t_S})}{n} = \text{ estimated measurement total for primary sampling unit } i$$
+$$v_t = \text{ estimate of the variance between primary sampling unit totals}$$
+$$v_i = \text{ sample variance within primary sampling unit } i$$
+
+# Ratio Estimation
+
+$$y_i = \text{ measurement at sample number } i$$
+$$x_i = \text{ auxiliary variable}$$
+$$N = \text{ population size}$$
+$$t_y = \text{ population total of measurement y } = \sum_{i=1}^{N} y_i$$
+$$t_x = \text{ population total of measurement x } = \sum_{i=1}^{N} x_i$$
+$$Ratio = B = \frac{t_y}{t_x} = \frac{\overline{y}_U}{\overline{x}_U}$$
+## Simple random sample
+$$\hat{B} = \text{ Ratio estimate } = \frac{\overline{y}_S}{\overline{x}_S} = \frac{N * \overline{y}_S}{N * \overline{x}_S} = \frac{\hat{t}_y}{\hat{t}_x}$$
+$$\hat{t}_{yr} = \text{ ratio estimate of the population total of measurement y } = \hat{B} * t_x = \frac{\overline{y}_S}{\overline{x}_S} * t_x$$
+$$\hat{\overline{y}}_r = \text{ ratio estimate of the population mean of measurement y } = \hat{B} * \overline{x}_U$$
+$$\hat{N} = \text{ population size estimate } = \frac{t_x}{\overline{x}_S}$$

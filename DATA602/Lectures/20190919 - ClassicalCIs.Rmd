@@ -1,0 +1,577 @@
+  ---
+title: DATA 602  - Confidence Interval Estimation through more Classical Statistical
+  Methods
+output:
+  html_document:
+    df_print: paged
+---
+@ copy; Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+library(nycflights13)
+library(binom)
+sampleflights = sample(flights, 1000, replace=FALSE)
+# studentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+# attach(studentsurvey)
+```
+
+
+# (More About) Distributions of Statistics
+</br>
+**Note: For this class, we will be using the `nycflights13`. `mosaic`, `purrr`, `dplyr` and `tidyverse` packages.**
+</br>
+</br>
+Through our coverage of bootstrap interval estimation we have learned out to the powerful tool of resampling to
+
+* generate a distribution of a specified *bootstrap* statistic - $\overline{X}$, $\widehat{p}$ and $S^{2}$
+* compute lower and upper percentiles from the bootstrap statistic's distribution
+
+It is from these lower and upper percentiles that the bootstrap confidence interval is computed. 
+
+This bootstrapping in an attempt to estimate the center of the distribution of the bootstrap statistic, which we can locate as
+$$
+E(\overline{X}) = \mu \hspace{0.5in} {\rm or} \hspace{0.5in} E(\widehat{p}) = p \hspace{0.5in} {\rm or} \hspace{0.5in} E(S^{2}) = \sigma^{2}
+$$ 
+
+is a distribution-free way of isolating the plausible values of the population parameter. That is, the bootstrapping method knows *nothing* about the distribuiton of the sample mean $\overline{X}$, the sample proportion $\widehat{p}$, nor the sample variance $S^{2}$. 
+
+what if we were to take into account distributions of these statistics? How would the interval estimate of the population parameter change?
+
+The Central Limit Theorem demonstrated to us that, for *large* sample sizes ($n \geq 25$), the distribution of 
+
+1. the sample mean can be *approximately* modeled by the Normal with a mean/expected value of $\mu$ and a standard deviation of $SD(\overline{X}) = \frac{\sigma}{\sqrt{n}}$, or $\overline{X} \sim Normal(\mu, \frac{\sigma}{\sqrt{n}})$
+
+2. the sample proportion can also be *approximately* modeled by the Normal distribution with a mean $p$ and a standard deviation of $SD(\widehat{p}) = \sqrt{\frac{p(1-p)}{n}}$, or $\widehat{p} \sim Normal(p,\sqrt{\frac{p(1-p)}{n}})$. 
+
+3. the sample variance $S^{2}$ can be transformed by $\frac{(n - 1)S^{2}}{\sigma^{2}}$, the result of which is a random variable that can be modeled by a $\chi^{2}$ distribution with $df = n - 1$. 
+However, the Central Limit Theorem *does not address* the distribution of the statistic $S^{2}$. 
+
+From these results, we can turn to *more conventional* statistical methods, or more classical statistical techniques, to make inferences about the true value of either the poplulation mean $\mu$ or the population proportion $p$. 
+</br>
+</br>
+
+## The Student's $t$ - An Introduction
+
+The *nasty looking* probablity density function you see below is of a certain type of random variable $T$ that takes on values $t$:
+$$
+f(t) = \frac{\Gamma(\frac{df + 1}{2})}{\sqrt{\pi df}*\Gamma(\frac{df}{2})}\left(1 + \frac{t^{2}}{df}\right)^{\frac{-(df + 1)}{2}} \hspace{0.2in} -\infty < t < \infty
+$$
+This is the probability density function of the **Student's $t$** distribution. 
+
+**Result** The Student's $t$ random variable is defined as
+$$
+T_{df} = \frac{({\rm Normal\:\:}\mu=0, \sigma=1)}{\sqrt{\frac{{\rm ChiSquared}}{df}}} \hspace{0.2in} {\rm with\:\:degrees\:\:of\:\:freedom\:\:} = df
+$$
+Below are various Student $t$ distribution with varying degrees of freedom:
+
+```{r echo=FALSE}
+plotDist("t", params = list(df=5), xlim=c(-4,4), xlab="Values of T", lty=4, lwd=3, col='red') # t-distribution with df = 5
+plotDist("t", params = list(df=30), xlim=c(-4,4), xlab="Values of T", lty=3, lwd=2, col='blue', add=TRUE) # t-distribution with df = 30
+plotDist("t", params = list(df=90), xlim=c(-4,4), lty=2, xlab="Values of T", lwd=2, col='green', add=TRUE) # t-distribution with df = 90
+plotDist("t", params = list(df=150), xlim=c(-4,4), lty=5, xlab="Values of T", lwd=2, col='purple', add=TRUE) # t-distribution with df = 150
+```
+The <font color="red">curve shows a t-distribution with 5 degrees of freedom</font>, the <font color="blue">is a t-distribution with df = 30</font>; the <font color="green">is a t-distribution with df = 90</font>; and <font color="purple">is a t-distribution with df = 150</font>
+
+
+From this result, we can come up with a method that does not involve resampling that will enable us to create an interval estimate for the mean of a population *when$ the population variance/standard deviation is an unknown value, or $\sigma^{2} = ?$
+
+**Result** $x_{1}, x_{2}, \cdots, x_{n}$ are data resulting from a random sample *with replacement* from a population of values that is modeled by the Normal distribution with both a mean $\mu$ and a variance $\sigma^{2}$ that are unknown in value. The random variable
+$$
+\frac{\overline{X} - \mu}{\frac{s}{\sqrt{n}}} \hspace{0.1in} {\rm follows\:\:a\:\:Student's-t\:\:distribution\:\:with\:\:degrees\:\;of\;\;freedom}\:\:(df) = n - 1
+$$
+**Demonstration**. From our current knowledge of the course material
+
+1. $\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}}$ is a Normal random variable with a mean $\mu = 0$ and a standard devation $\sigma = 1$
+2. $\frac{(n - 1)S^{2}}{\sigma^{2}}$ is a $\chi^{2}$ random variable with degrees of freedom equal to $n - 1$, or $\chi^{2}_{n-1}$
+
+From the definition of the Student's $t$ ratio
+$$
+T_{df} = \frac{{\rm Standard\:\:Normal}}{\sqrt{\frac{{\rm ChiSquared}}{df}}} = \frac{\left(\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}}\right)}{\sqrt{\frac{\frac{(n-1)S^{2}}{\sigma^{2}}}{n-1}}} = \left(\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \right)* \sqrt{\frac{\sigma^{2}(n-1)}{(n-1)S^{2}}} = \left(\frac{\overline{X} - \mu}{\frac{\sigma}{\sqrt{n}}} \right)*\frac{\sigma}{S} = \frac{\overline{X} - \mu}{\frac{S}{\sqrt{n}}} = T_{n-1}
+$$
+
+# Confidence Interval Estimation
+
+**Illustration:** Imagine if you will a situation where you are to sample $n = 50$, without replacement, of your fellow Data Science colleagues, and for each you measure the number of hours they are involved in physical activity in a week, an amount represented by a random variable $X$.
+</br>
+</br>
+You collect the data $x_{1}, x_{2}, \cdots, x_{50}$, then compute $\overline{X}$ and $S^{2}$, amongst other statistics. But for the sake of your own curiosity (and perhaps abundant resources), you decide to take another random sample of $n = 50$ students to see how the data in the second sample is different, and so on, and so on...for a total of *1000 times*!
+</br>
+</br>
+Now, suppose for each sample of $n = 50$ you created some interval estimate for the $\mu$, the mean number of hours students in the Data Science program exercise per week. You would have *1000* different intervals. Below are the first 100.
+</br>
+</br>
+**Time to Play 1:** Copy and Paste the code you see below into a chunk of R, then run the code 
+```{r}
+count = 0
+plot(x = c(2.5, 3.5), y = c(1,100), type="n", xlab="", ylab="", main="Confidence Intervals to Estimate Mean # of Hours Exercising/week")
+multiplier = qt(0.975,49)
+for(i in 1:1000)
+{  x = rnorm(50, mean = 3, sd = 0.75)
+   lb = mean(x) - (multiplier*(sd(x)/sqrt(50)))
+   ub = mean(x) + (multiplier*(sd(x)/sqrt(50)))
+   if (lb < 3 && ub > 3) 
+      count = count + 1
+   if (i <= 100)
+	  segments(lb, i, ub, i)
+}
+abline(v=3, col="red", lwd=2, lty=1)
+count/1000
+```
+What do you observe? 
+</br>
+</br>
+In our case, of the 1000 different confidence intervals - each having a different lower and upper bound - 955 of mine captured the *true value* of the population mean $\mu$.That is, 95.5%
+</br>
+</br>
+Now, let's pull back: one clearly is not going to take 1000 *different samples* each of size $n = 50$. Practically, you sample $n = 50$ once and then roll with the data you have.
+</br>
+</br>
+
+**Result** A $100(1-\alpha)$% confidence interval for a population parameter is a relative frequency statement. Off all possible confidence intervals that can be produced, $100(1-\alpha)$% will capture the *true* value of the population parameter.
+</br>
+</br>
+
+Returning to our illustration, each confidence interval was computed with level of confidence of 95%. As we can see, *approximately* 95% of the 1000 different confidence intervals (95.0%) capture the true value of $\mu$ which is indicate by the <font color="red">vertical line at 3.0</font>. By taking one sample of $n = 50$ and computing a 95% confidence interval for the mean $\mu$, we are randomly picking *one* of the intervals above! 
+
+
+------------------------------------
+
+## Confidence Interval Estimation of the Population Mean $\mu$
+
+To come up with a $100(1-\alpha)$% confidence interval for the population mean $\mu$, one can consider two cases: (i) the population variance $\sigma^{2}$ is a *known* value or (ii) the population variance $\sigma^{2}$ is an *unknown* value. In this course we will only entertain case (ii).
+
+If the underlying data appears/can be modeled by a Normal distribution, we take into account that $T = \frac{\overline{X} - \mu}{\frac{S}{\sqrt{n}}}$ is a Student's $t$-distribution with $df = n-1$. This is said to be a **pivotal** quantity because 
+
+1. it is a function of the data ($\overline{X}$, $S$)
+2. The *distribution* is free, or does not depend upon, the parameters $\mu$ and $\sigma^{2}$ 
+
+To demonstrate 2, simply look at the probability density function of the $t$-distribution
+$$
+f(t) = \frac{\Gamma(\frac{df + 1}{2})}{\sqrt{\pi df}*\Gamma(\frac{df}{2})}\left(1 + \frac{t^{2}}{df}\right)^{\frac{-(df + 1)}{2}} \hspace{0.2in} -\infty < t < \infty
+$$
+**No where** do you see a $\mu$ term or $\sigma^{2}$ term. Therefore, the *distribution* of $T = \frac{\overline{X} - \mu}{\frac{S}{\sqrt{n}}}$ is free of $\mu$.
+
+**Just some math** We can use this pivotal quantity to derive a $100(1-\alpha)$% confidence interval estimate for $\mu$:
+$$
+\begin{align}
+1 - \alpha = & P\left(-t_{\frac{\alpha}{2}, n-1} \leq \frac{\overline{X} - \mu}{\frac{S}{\sqrt{n}}}   \leq  t_{\frac{\alpha}{2}, n-1}\right) \\
+          = & P\left(-t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right) \leq (\overline{X} - \mu)   \leq  t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right)\right) \\
+ = & P\left(-\overline{X}-t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right) \leq -\mu   \leq  -\overline{X} + t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right)\right) \\
+ = & P\left(\overline{X}+t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right) \geq \mu   \geq  \overline{X} - t_{\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}} \right)\right) \\
+\end{align}
+$$
+This *math* brings us to the result of how to compute a $100(1 - \alpha)$% confidence interval of the population mean $\mu$ for samples of $n \geq 25$. 
+</br>
+</br>
+**Result** $x_{1}, x_{2}, \cdots, x_{n}$ represent independent data points extracted from a population of values that can be modeled by the Normal distribution. 
+</br>
+</br>
+
+A $100(1-\alpha)$% confidence interval estimate for the population mean $\mu$ for an unknown value of $\sigma^{2}$ is
+$$
+\overline{X} \pm t_{1-\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}}\right)
+$$
+In order to find the $t_{1-\frac{\alpha}{2}, n-1}$ values in R, use the command `qt(1-(alpha/2), df)`. For example, to find $t_{1-0.025, 21-1} = 2.0859$. For a 99% level of confidence, find $t_{0.995, 21-1} = 2.8453$. Let's try these commands together.
+
+```{r echo=TRUE}
+qt(1-0.025, 21-1) #for a 95% level of confidence
+qt(1-0.005,21-1)   #for a 99% level of confidence
+```
+From this,
+$$
+t_{0.975, df=21-1} = 2.085963 \hspace{1in} t_{0.995, df= 21-1} = 2.84534
+$$
+**Example 1(a):** The following data is a random sample of $n = 15$ monthly Enmax water and electricity bills for a certain statistics professor. 
+$$
+198.58, 187.49, 174.77, 178.86, 177.03, 159.43, 178.94, 150.52, 157.48, 176.24, 162.88, 153.58, 170.91, 185.79, 182.03
+$$
+The mean and standard deviation of this sample can be verified to be $\overline{X} = \$172.9687$ and $S =\$13.688$. Assuming that the the professor's monthly Enmax bill varies from one month to the next in according with a Normal probability model, find a 95% confidence interval for $\mu$, the mean amount of his Enmax utility bill. 
+</br>
+</br>
+**Answer:** With a 95% level of confidence, we first find the $t_{0.025, 15 - 1}$ multiplier value with R.
+```{r}
+qt(0.975,14)
+```
+$t_{0.025,15} = 2.13145 \approx 2.131$. We now compute this interval:
+$$
+\overline{X} \pm t_{1-\frac{\alpha}{2}, n-1}\left(\frac{S}{\sqrt{n}}\right) \longrightarrow 172.9687 \pm (2.144787)\left(\frac{13.688}{\sqrt{15}}\right) \longrightarrow 172.9687 \pm 7.5802 \longrightarrow 165.3885 \leq \mu \leq 180.5489
+$$
+This interval can be computed via the folllowing R commands as well. **Copy and paste** the chunk of R into your own notebook/markdown document. 
+
+```{r echo=TRUE}
+waterbill = data.frame(billamount = c(198.58, 187.49, 174.77, 178.86, 177.03, 159.43, 178.94, 150.52, 157.48, 176.24, 162.88, 153.58, 170.91, 185.79, 182.03)) # create a data from called waterbill with billamount as the variable
+head(waterbill,3) #a look at the first 3 rows of the waterbill data frame
+```
+From the various statistics produced by `favstats`, we are only interested in the mean $\overline{X}$ and the standard deviation $S$:
+```{R}
+meanbill = favstats(~billamount, data=waterbill)$mean  #assigns sample mean to meanbill
+sdbill = favstats(~billamount, data=waterbill)$sd  #assigns sample standard deviation to sdbill
+nsize = favstats(~billamount, data=waterbill)$n
+```
+As a check of the value of these statistics:
+```{r}
+meanbill
+sdbill
+nsize
+```
+Now **copy and paste** the code below into a succeeding chunk of R, then run it! 
+
+```{r echo=TRUE}
+lbavewaterbill = meanbill - (qt(0.975, nsize - 1)*(sdbill)/sqrt(nsize))  # subtract the margin of error from the sample mean to find the lower bound
+ubavewaterbill = meanbill + (qt(0.975, nsize - 1)*(sdbill)/sqrt(nsize))  # add the margin of error to the sample mean to find the upper bound
+cat("The lower bound is computed to be", lbavewaterbill,"and the upper bound is computed to be",ubavewaterbill,".\n") # report in a statement
+```
+</br>
+</br>
+**Example 1(b):** From this confidence interval can you infer that (i) $\mu = \$175.00$? (ii) $\mu > \$165.00$? Justify. 
+</br>
+</br>
+**Answer:** For part (i), we can infer *from these data* that the population mean *is* $175.00, since the 95% confidence interval for $\mu$ captures the value fo 175. What about the answer for part (ii)?
+<div style="margin-bottom:50px;">
+</div>
+
+---------------
+
+We have seen how to compute a $100(1-\alpha)$\% confidence interval for $\mu$ through (i) the application of the formula and (ii) "coding" the lower and upper bounds in R. There is a convenient R command `t.test()$conf` which will compute this interval for us! Below is the `t.test` command applied to the data in Example 1. Run the code below into a chunk of R (a succeeding one from above...)
+
+```{r}
+t.test(~billamount, data=waterbill)$conf #indexes the 4th position in the output array
+```
+If you wish to change the level of confidence from 95% to 98% (the default is conf.level=0.95)
+```{r}
+t.test(~billamount, data=waterbill, conf.level=0.98)$conf #indexes the 4th position in the output array
+```
+If your data is in a data vector...
+
+```{r}
+t.test(waterbill$billamount)$conf #indexes the 4th position in the output array of t.test(waterbill)
+```
+</br>
+</br>
+
+------------------------------------------------------------------------------------
+
+**Time To Play 2:** Let's revisit the **sampleflightsfortoday** data set and focus on two specific variables: (1) distance (in miles) and (2) air_time (in minutes). Each data vector in this data frame can be accessed separately with the command **sampleflights$variablename**. It it has beeen some time. To ensure we all have the same data to compare our findings with one another:
+
+```{r}
+sampleflightsfortoday = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/sampleNYCflights.csv")
+head(sampleflightsfortoday, 3)
+```
+
+(a) Use the `t.test` command to compute the 95% confidence interval for the *mean distance* of all domestic flights departing the three NYC-area airports fly. </br>
+</br>
+**Answer:** 
+The 95% confidence interval for $\mu_{Distance}$ is computed with
+```{r}
+t.test(~ distance, data=sampleflightsfortoday)$conf
+```
+The 95% confidence interval for the mean distance of all domestic flights departing any one of the 3-NYC airports, $\mu_{Distance}$, is
+$$
+993.364\:\:\text{miles} \leq \mu_{Distance} \leq 1082.868 \:\: \text{miles}
+$$
+
+(b) Repeat part (a), computing a 99% confidence interval for the mean distance all (domestic) flights departing the three NYC-area airports fly. 
+</br>
+</br>
+**Answer:** 
+Changing the conf.level (default) to 0.99: in the code used in part (a):
+```{r}
+t.test(~ distance, conf.level=0.99, data=sampleflightsfortoday)$conf
+```
+The 99% confidence interval for the mean distance of all domestic flights departing any one of the 3-NYC airports, $\mu_{Distance}$, is
+$$
+979.26\:\:\text{miles} \leq \mu_{Distance} \leq 1096.972 \:\: \text{miles}
+$$
+
+(c) Now change your focus to the data in the **dep_delay** column where there is $n = 974$ data points.  Compute a 95% confidence interval for $\mu_{dep\_delay}$, the mean number of minutes *all* domestic leaving the 3-NYC airports in 2013 were late in departing. 
+</br>
+</br>
+**Answer:** 
+The 95% confidence interval for $\mu_{dep\_delay}$ is computed with
+```{r}
+t.test(~ dep_delay, data=sampleflightsfortoday)$conf
+```
+he 95% confidence interval for the average minutes *late* (or mean departure delay) for all domestic flights departing any one of the 3-NYC airports, $\mu_{Distance}$, is
+$$
+9.87\:\:\text{minutes} \leq \mu_{dep\_delay} \leq 14.91 \:\: \text{minutes}
+$$
+
+(d) Consider the confidence interval you computed in part (c). What does this interval mean? What does it not mean? In your seated area, take turns explaining to your peers what the meaning of this computed confidence interval means. 
+</br>
+</br>
+**Answer:**
+<div style="margin-bottom:200px;">
+</div>
+
+**Time to Play 3A:** On the heals of **Time to Play 2**, suppose we wished to compute a 95% confidence interval for the mean departure delay (**dep_delay**) for (i) all "UA" flights appearing in our sample and (ii) all "DL" flights appearing in our sample? Use the`filter` function to create two data frames, one called **uaflights** and the other **dlflights**. 
+</br>
+</br>
+Compute a 95% confidence interval for the mean time all United ("UA") airline flights are delayed the three NYC-area airports.
+</br>
+</br>
+**Answer:**
+We can use the `filter()` function to strip out all the flights (in our sample of $n = 1000$ flights) where the carrier was United Airlines:
+```{r}
+uaflights = filter(sampleflightsfortoday, carrier=="UA") #filters out all United flights in our sample of 1000
+head(uaflights, 4) #shows the first four rows of the uaflights data frame
+favstats(~dep_delay, data=uaflights) 
+```
+```{r}
+count(is.na(uaflights$dep_delay))  #confirms there are 3 missing depature delays, n_{UA} =  for dep_delay
+```
+
+```{r echo=TRUE}
+output1 = t.test(~ dep_delay, data=filter(sampleflightsfortoday, (carrier=="UA")))$conf  #assign the con.int output to object called output
+output1[1]
+output1[2]
+#cat("\n")
+cat("The 95% confidence interval for the mean amount of minutes a United Airlines flight is delayed in departing has a lower bound of", round(output1[1], digits=2), "minutes and an upper bound of", round(output1[2], digits=2), "minutes.")
+```
+from which
+$$
+8.94\: \text{minutes}\leq \mu_{United, dep\_delay} \leq 20.26 \: \text{minutes}
+$$
+
+**Time to Play 3B:** Use your code from the previous time to play exercises to 
+
+(a) create a 95% confidence interval for the mean time all Delta ("DL") airline flights are delayed the three NYC-area airports. 
+</br>
+</br>
+**Answer:** A 95% confidence interval for $\mu_{Delta, dep\_delay}$ is computed with the `t.test` command below:
+```{r}
+dlflights = filter(sampleflightsfortoday, carrier=="DL") #filters out all Delta flights in our sample of 1000
+head(dlflights, 4) #shows the first four rows of the uaflights data frame
+favstats(~dep_delay, data=dlflights)
+```
+The 95% confidence interval for $\mu_{Delta, dep\_delay}$ is then
+```{r}
+output2 = t.test(~dep_delay, data=dlflights)$conf
+output2[1]
+output2[2]
+cat("The 95% confidence interval for the mean amount of minutes a Delta Airlines flight is delayed in departing has a lower bound of", round(output1[1], digits=2), "minutes and an upper bound of", round(output1[2], digits=2), "minutes.")
+```
+
+$$
+1.72\: \text{minutes}\leq \mu_{Delta, dep\_delay} \leq 11.92 \: \text{minutes}
+$$
+
+(b) Compare yiur result in part (a)) to your result in **Time to Play 3B**. Can you infer that on average, a Delta flight leaving one of the 3-NYC airports has the same departure delay as United, on average?  
+</br>
+</br>
+**Answer:**
+<div style="margin-bottom:100px;">
+</div>
+
+
+----------------
+
+### Addressing the Condition of Normal Data
+
+The $t$-confidence interval estimate for the population mean when the data is small $(n \leq 25)$ is valid on the condition that the data $x{1}, x_{2}, \cdots, x_{n}$ come from a population of values that is modeled by the Normal distribution. How can this "Normal condition" be checked? We can visualize the data via a histogram, box-whisker plot, or a density plot. 
+</br>
+</br>
+There is a more telling plot that we can use, it is called a Normal Probability Plot. If this produces roughly a straight line throught the middle of the points, then the data can be determined to conform to a Normal probability model. 
+</br>
+</br>
+The R function that will allow us to create a qqplot is `stat_qq`. Below is a ggplot() language to create a Normal probabilty plot of the *billamount* data appearing in the **waterbill** data frame, along with a density plot.
+
+```{r}
+waterbill %>%
+  ggplot(aes(sample=billamount)) +
+  stat_qq(col='blue') +
+  stat_qqline(col='red')  #defaults are a Normal distribution
+waterbill %>%
+  ggplot(aes(x = billamount)) +
+  geom_density(col='blue') +
+  ylab("Monthly Enmax Bill $")
+```
+
+**Create a Normal Probability Plot** 
+
+Create both a Normal probability plot and a density plot of the variable *air_time* appearing in the **sampleflights** data frame/set. Does the Normal probabilty model seem like a model that will fit these data? Why or why not? I have provided you with the code...
+
+
+```{r}
+sampleflights %>%
+  ggplot(aes(sample = air_time)) +
+  stat_qq(col='blue', na.rm=TRUE) +
+  stat_qqline(col='red',na.rm=TRUE)
+sampleflights %>%
+  ggplot(aes(x = air_time)) +
+  geom_density(col='blue', na.rm=TRUE)
+```
+</br>
+</br>
+
+Below are the boxplots showing the distribution of the data appearing on the variable **dep_delay** for (i) UA flights appearing in the sample and (ii) DL flights appearing in the sample.
+
+```{r}
+sampleflightsfortoday %>%
+  filter((carrier=="UA" | carrier=="DL")) %>%
+  ggplot(aes(x = carrier, y = dep_delay)) +
+  geom_boxplot(fill='blue', col='red', na.rm=TRUE) +
+  ylab("Minutes a Flight is Delayed in Departing") +
+  coord_flip()
+```
+Below are the Normal probability plots for the variable **air_time** on each of the sampled (i) UA flights and (ii) DL flights. 
+
+```{r}
+sampleflightsfortoday %>%
+  filter((carrier == "UA")) %>%
+  ggplot(aes(sample = air_time)) +
+  stat_qq(col='blue', na.rm=TRUE) +
+  stat_qqline(col='red', na.rm=TRUE)
+sampleflightsfortoday %>%
+  filter((carrier == "DL")) %>%
+  ggplot(aes(sample = air_time)) +
+  stat_qq(col='blue', na.rm=TRUE) +
+  stat_qqline(col='red', na.rm=TRUE)
+```
+
+-----------------
+
+## Confidence Interval Estimation of the Population Proportion $p$
+
+In determining a confidence interval for the population proportion $p$, we start out with the following pivotal quantity
+
+$$
+\frac{\widehat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \approx \:\: Normal(0,1)\:\:{\rm and}\:\: 1 - \alpha = P \left( -z_{\frac{\alpha}{2}} \leq \frac{\widehat{p} -  p}{\sqrt{\frac{p(1-p)}{n}}} \leq z_{\frac{\alpha}{2}} \right)
+$$
+
+
+
+After some math the $100(1-\alpha)$\% confidence interval for the population proportion $p$ has the following lower bound and upper bound:
+$$
+LB = \frac{\widehat{p} + \frac{z_{\frac{\alpha}{2}}^{2}}{2n} - z_{\frac{\alpha}{2}}\sqrt{\widehat{p}(1-\widehat{p})/n + z_{\frac{\alpha}{2}}^{2}/(4n^{2})}}
+{1 + \frac{z_{\frac{\alpha}{2}}^{2}}{n}} \hspace{0.5in} UB = \frac{\widehat{p} + \frac{z_{\frac{\alpha}{2}}^{2}}{2n} + z_{\frac{\alpha}{2}}\sqrt{\widehat{p}(1-\widehat{p})/n + z_{\frac{\alpha}{2}}^{2}/(4n^{2})}}
+{1 + \frac{z_{\frac{\alpha}{2}}^{2}}{n}} \hspace{0.5in} 
+$$
+
+This confidence interval can be computed in R/R Studio with the following command: `prop.test(x, n)$conf` where x is the number of successes and n is the number of independent Bernoulli trials. 
+
+### For US! 
+
+There is a compuational alternative $100(1 - \alpha)$\% confidence interval for the population proportion $p$ provide above. The lower and upper bounds provided above are of the **Agresti-Coull** version of confidence interval for $p$. Algebraically, these can be simplied with the **"plus-2/plus-4"** interval. The form of this confidence inteval appears below.
+$$
+\widetilde{p} \pm z_{1-\frac{\alpha}{2}}\sqrt{\frac{\widetilde{p}(1 - \widetilde{p})}{n + 4}} \hspace{0.2in} {\rm where}\:\: \widehat{p} = \frac{X + 2}{n + 4}
+$$
+
+The $z$-multiplier $z_{1 - \frac{\alpha}{2}}$ is obtained from `qnorm(1 - alpha/2)`.
+</br>
+</br>
+
+**Example 1:** In a study on the effects of gum piercings and the health concerns associated, 7 of 78 young adults (aged 18 - 24) had their tongue pierced. Find a 95% confidence interval estimate for $p$, the proportion of *all* young adults aged (18 - 24) with a tongue piercing.
+</br>
+</br>
+**Answer:** We first compute the $z$-multiplier from R for a 95% level of confidence, meaning $\frac{1-\alpha}{2} = 0.975$.
+```{r echo=TRUE}
+qnorm(0.975)
+```
+
+$z_{0.975} = 1.96$. The observed value of the sample proportion is $\widehat{p} = \frac{7 + 2}{78 + 4} = \frac{9}{82} = 0.109756$. Now we 'plug and chug'....
+
+$$
+LB = \frac{9}{82} - (1.96)\sqrt{\frac{\frac{9}{82}(1 - \frac{9}{82})}{78 + 4}} =  0.1098 - 0.06766 = 0.0421
+$$
+
+
+$$
+UB = \frac{9}{82} + (1.96)\sqrt{\frac{\frac{9}{82}(1 - \frac{9}{82})}{78 + 4}} =  0.1098 + 0.06766 = 0.1774
+$$
+</br>
+
+There many commands through various R packages that can be used to compute this confidence interval. Probably the most effective is found in the
+**binom** package (install.packages("binom")). After the install, you will see the **binom** option in your list of packages. 
+</br>
+
+Within the **binom** package, there is a the `binom.confint(x,n, conf.level=?, method="agresti-coull")` command. Cpy and paste this into R.
+
+```{r}
+binom.confint(7, 78, conf.level = 0.95, method = "agresti-coull") #accepts number of successes then sample size
+```
+This confidence interval can also be computed with the `binom.test` command:
+```{r}
+binom.test(7, 78, ci.method="Plus4")$conf
+```
+Now, reuse the  `binom.confint()` command, excluding the **method = "agresti-coull"** option.
+</br>
+</br>
+
+
+**Example 2:** What proportion of all flights leaving the three NYC-area airports have a flying time of at most 2 hours, or $\leq 120$ minutes)?
+</br>
+</br>
+**Answer:** Let's use **count()** command to determine how many of the flights sampled have a flight time of less than 2 hours (or 120 minutes)
+
+```{r}
+count(is.na(sampleflightsfortoday$air_time))  #number of missing values in the air_time variable
+nflightsless2hrs = count(sampleflightsfortoday$air_time<= 120) #counts no. of data points <= 120 minutes
+nflightsless2hrs #returns the no. flights that are at most 120 minutes
+nflights = length(sampleflightsfortoday$air_time) - sum(is.na(sampleflightsfortoday$air_time)) #denominator
+nflights
+```
+
+From this output, we have 451 flights that are at most 2 hours long, out of 967 flights with a flight time.
+```{r echo=TRUE}
+binom.confint(451,967, conf.level=0.95, method="agresti-coull")
+binom.test(nflightsless2hrs, nflights, ci.method="Plus4")$conf
+#OR
+binom.confint(nflightsless2hrs, nflights, conf.level=0.95, method="agresti-coull")
+```
+From this result, out 95% confidence interval for the proportion of all flights leaving the 3-NYC airports that have a flight time of at most 2 hours is
+$$
+0.4351 \leq p_{\leq \text{2 hours}} \leq 0.4979
+$$
+<div style="margin-bottom:50px;">
+</div>
+
+
+**Time to Play 4:** What would happen to this confidence interval if you were to be 90% confident? Set the **conf.level=0.90** and recompute.
+</br>
+</br>
+**Answer:** 
+```{r echo=TRUE}
+binom.confint(451,967, conf.level=0.90, method="agresti-coull")
+#OR
+binom.test(451, 967, conf.level=0.90, ci.method="Plus4")$conf
+```
+and the 90% confidence interval for the proportion of all domestic flights leaving the 3-NYC airpoorts that are at most 2 hours in flight-time is
+$$
+0.4401 \leq p_{\leq \text{2 hours}} \leq 0.4928
+$$
+
+
+**Time to Play 5:** A Gallop poll[^1] conducted about this time last year asked $n = 1508$ randomly chosen American voters the following question: 
+</br>
+</br>
+<center>Now turning to the U.S. Supreme Court: As you may know, Brett Kavanaugh is a federal judge who has been nominated to serve on the Supreme Court. Would you like to see the Senate vote in favor of Kavanaugh serving on the Supreme Court, or not?</center>
+
+1. Would like Sentate to vote in favour
+2. Would not
+3. Unsure
+</br>
+</br>
+633 responded "Would not". 
+</br>
+</br>
+Compute the 95% confidence interval for the proportion of all American votes who would not like to see the Senate vote in favour of Kavanaugh serving on the Supreme Court. Interpret the meaning of this interval in the context of these data. 
+</br>
+</br>
+**Answer:** 
+From this sample of $n = 1508$, the number of Americans who did have the characteristic of interest (do like to see the Senate vote in favour of Kavanaugh) is $X = 633$. Using the `binom.confint` command below
+```{r}
+binom.confint(633, 1508, conf.level=0.95, method="agresti-coull")
+#OR
+binom.test(633, 1508, ci.method="Plus4")$conf
+```
+produces a 95% confidence interval of
+$$
+0.3951 \leq p \leq 0.4448
+$$
+```{R}
+binom.confint(633, 1508, conf.level=0.95)
+```
+
+[^1]: http://pollingreport.com/court.htm

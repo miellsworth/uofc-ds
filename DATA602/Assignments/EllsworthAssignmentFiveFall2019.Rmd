@@ -1,0 +1,581 @@
+---
+title: "Data 602 - Assignment Five"
+author: "Michael Ellsworth, ID 30101253"
+date: "October 14, 2019"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(mosaic)
+library(mosaicData)
+library(ISLR)
+```
+
+### Question 1
+*Refer to Question 6 from Assignment Four:*
+
+*Consider your estimation of the model*
+
+$$
+R_{Suncor,i} = \beta_{0} + \beta_{1}R_{TSE, i} + e_{i}   
+$$
+
+#### a. 
+*From these data, can you infer that the monthly rate of return of Suncor stock can be expressed as a positive linear function of the monthly rate of return of the TSE Index? State your statistical hypotheses, compute (and report) both the test statistic and the* $P$*-value and provide your decision.*
+
+
+$$
+{\rm H}_{0}: \beta_1 = 0 \ \ (\text{Suncor stock CANNOT be expressed as a positive linear function of TSE Index}) \\
+{\rm H}_{A}: \beta_1 > 0 \ \ (\text{Suncor stock CAN be expressed as a positive linear function of TSE Index}) \\
+$$
+
+
+The $F_{obs}$ statistic:
+$$
+F_{obs} = \frac{MSR}{MSE} \sim F_{1, n-2} \\
+df_R = 2-1 = 1 \\
+df_E = n-2 = 59 - 2 = 57 \\
+MSR = \frac{SSR}{df_R} = \frac{0.0638}{1} \\
+MSE = \frac{SSE}{df_E} = \frac{0.4612}{57}\\
+F_{obs} = 7.89
+$$
+
+
+The $P$-value:
+$$
+P-\text{value} = P(F_{1, 57} > 7.89) = 0.0068
+$$
+
+
+```{r}
+capmdata <- read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/capm.csv")
+predict_suncor <- lm(Suncor ~ TSE.Index, data = capmdata)
+summary(aov(predict_suncor))
+```
+
+
+Since the P value is less than 0.05, Suncor stock CAN be expressed as a positive linear function of TSE Index. We can reject H0.
+
+#### b.
+*Compute a 95% confidence interval for* $\beta_{1}$*, then interpret its meaning in the context of these data.*
+
+
+Using the 'confint' function, the results from the TSE.Index row represent the 95% confidence interval for $\beta_{1}$
+
+
+```{r}
+confint(predict_suncor, level = 0.95)
+```
+
+
+Therefore, the 95% confidence interval for $\beta_{1}$ is:
+
+
+$$
+0.155 \leq \beta_{1} \leq 0.923
+$$
+
+In the context of these data, as the monthly rate of return for the TSE Index increases by 1%, the average monthly rate of return for the Suncor share will increase between 0.155 and 0.923% with 95% confidence.
+
+
+#### c.
+*Compute a 95% confidence interval for the mean monthly rate of return of Suncor stock when the TSE has a monthly rate of return of 3%.*
+
+
+```{r}
+predict(predict_suncor, newdata=data.frame(TSE.Index = 0.03), interval = "conf", conf.level = 0.95)
+```
+
+The 95% confidence interval for the mean monthly rate of return of Suncor stock when the TSE index has a monthly rate of return of 3% is $0.00766 \leq \widehat{R}_{Stock} \leq 0.0580$
+
+#### d.
+*In a month of September, the TSE Index had a rate of return of 1.16%. With 95% confidence, compute the September rate of return for Suncor stock.*
+```{r}
+predict(predict_suncor, newdata=data.frame(TSE.Index = 0.0116), interval = "predict", conf.level = 0.95)
+```
+
+The 95% confidence interval for $Y|_{X = x_{p}}$ is $-0.159 \leq Y|x = 0.016 \leq 0.205$
+
+#### e.
+*Consider the bootstrap statistic* $r_{boot}$*. Using 1000 bootstraps, provide a 95% bootstrap confidence interval for the value of the* $\rho$*, the **population correlation** that measures the degree of linear association between Suncor's monthly rate of return and the TSE Index monthly rate of return.*
+```{r}
+Nbootstraps_1e = 1000 #resample n =  XX, 3000 times
+cor.boot_1e = numeric(Nbootstraps_1e) #define a vector to be filled by the cor boot stat
+a.boot_1e = numeric(Nbootstraps_1e) #define a vector to be filled by the a boot stat
+b.boot_1e = numeric(Nbootstraps_1e) #define a vector to be filled by the b boot stat
+ymean.boot_1e = numeric(Nbootstraps_1e) #define a vector to be filled by the predicted y boot stat
+```
+
+```{r}
+nsize_1e = dim(capmdata)[1]  #set the n to be equal to the number of bivariate cases, number of rows
+xvalue_1e = 60000 #set x = 60000
+#start of the for loop
+for(i in 1:Nbootstraps_1e)
+{   #start of the loop
+    index = sample(nsize_1e, replace=TRUE)  #randomly picks n- number between 1 and n, assigns as index
+    CAPM.boot = capmdata[index, ] #accesses the i-th row of the CAPM data frame
+    #
+    cor.boot_1e[i] = cor(~TSE.Index, ~Suncor, data=CAPM.boot) #computes correlation for each bootstrap sample
+    CAPM.lm = lm(Suncor ~ TSE.Index, data = CAPM.boot)  #set up the linear model
+    a.boot_1e[i] = coef(CAPM.lm)[1] #access the computed value of a, in position 1
+    b.boot_1e[i] = coef(CAPM.lm)[2] #access the computed valeu of b, in position 2
+    ymean.boot_1e[i] = a.boot_1e[i] + (b.boot_1e[i]*xvalue_1e)
+}
+#end the loop
+#create a data frame that holds the results of teach of he Nbootstraps 
+bootstrapresultsdf_1e = data.frame(cor.boot_1e, a.boot_1e, b.boot_1e, ymean.boot_1e)
+```
+
+```{r}
+favstats(~cor.boot_1e, data = bootstrapresultsdf_1e)
+qdata(~cor.boot_1e, c(0.025, 0.975), data = bootstrapresultsdf_1e)
+```
+
+The 95% bootstrap confidence interval for $\rho$ is $-0.0247 \leq \rho \leq 0.635$
+
+</br>
+</br>
+
+### Question 2
+*Refer to Question 7 from Assignment Four, where you wished to estimate the model*
+$$
+Balance_{Student, i} = A + (B *Income_{Student, i}) + e_{i}
+$$
+
+#### a.
+*Compute the value of* $S_{e}$*, then interpret its meaning on the context of these data.*
+```{r}
+predict_balance <- lm(balance ~ income, filter(Default, student == "Yes"))
+aov(predict_balance)
+```
+
+$$
+SSE = 686080187 \\
+n = 2944 \\
+S_{e} = \sqrt{\frac{SSE}{n - 2}} = \sqrt{\frac{686080187}{2944-2}} = 482.91
+$$
+
+#### b.
+*Compute the coefficient of determination, followed by its interpretation in the context of these data.*
+$$
+r^{2} = \frac{SSR}{SST} = \frac{232619}{232619 + 686080187} = 0.0003389402
+$$
+```{r}
+rsquared(predict_balance)
+```
+
+#### c.
+*From what you have done with these data - Assignment Four and now - can you infer that a student's credit card balance can be expressed as a linear function of their income? Ensure you state your statistical hypotheses, provide both the value of your test statistic and* $P$*-value, and a decision and conclusion in the context of these data.* 
+
+
+Based on the coefficient of determination, the statistical model does not mimic the actual relationship between student's credit card balance and income very well.
+
+In order to further our understanding of the significance of the model, we can perform an F-test.
+```{r}
+summary(aov(predict_balance))
+```
+
+
+Based on the results above:
+
+
+$$
+F_{obs} = \frac{\frac{232619}{1}}{\frac{686080187}{2942}} = 0.997
+$$
+
+
+$$
+P-\text{value} = P(F_{1, 2942} > 0.997) = 0.318
+$$
+
+
+Since the P-Value is greater than 0.05, we cannot assume that Balance can be expressed as a linear function of Income.
+
+#### d.
+*(Perhaps read both this question and part (e) before you attempt to complete both.) Consider the coefficient of determination as a bootstrap statistic. Use 1000 resamples to generate the bootstrap distribution this statistic. Then, compute a 95% bootstrap confidence interval.*
+```{r}
+Nbootstraps_2d = 1000 #resample n =  XX, 3000 times
+rsquared.boot_2d = numeric(Nbootstraps_2d) #define a vector to be filled by the cor boot stat
+a.boot_2d = numeric(Nbootstraps_2d) #define a vector to be filled by the a boot stat
+b.boot_2d = numeric(Nbootstraps_2d) #define a vector to be filled by the b boot stat
+ymean.boot_2d = numeric(Nbootstraps_2d) #define a vector to be filled by the predicted y boot stat
+```
+
+```{r}
+nsize_2d = dim(filter(Default, student == "Yes"))[1]  #set the n to be equal to the number of bivariate cases, number of rows
+xvalue_2d = 60000 #set x = 60000
+#start of the for loop
+for(i in 1:Nbootstraps_2d)
+{   #start of the loop
+    index = sample(nsize_2d, replace=TRUE)  #randomly picks n- number between 1 and n, assigns as index
+    studentbalance.boot = filter(Default, student == "Yes")[index, ] #accesses the i-th row of the Default data frame
+    studentbalance.lm = lm(balance ~ income, data = studentbalance.boot)  #set up the linear model
+    rsquared.boot_2d[i] = rsquared(studentbalance.lm) #computes coefficient of determination for each bootstrap sample
+    a.boot_2d[i] = coef(studentbalance.lm)[1] #access the computed value of a, in position 1
+    b.boot_2d[i] = coef(studentbalance.lm)[2] #access the computed valeu of b, in position 2
+}
+#end the loop
+#create a data frame that holds the results of teach of he Nbootstraps 
+bootstrapresultsdf_2d = data.frame(rsquared.boot_2d, a.boot_2d, b.boot_2d)
+```
+
+```{r}
+favstats(~rsquared.boot_2d, data = bootstrapresultsdf_2d)
+qdata(~rsquared.boot_2d, c(0.025, 0.975), data = bootstrapresultsdf_2d)
+```
+
+The 95% bootstrap confidence interval for the coefficient of determination is $0.000000781 \leq r^2 \leq 0.002971762$
+
+#### e.
+*Using 1000 different resamples, estimate the model above with* $a_{boot}$ *and* $b_{boot}$. 
+```{r}
+favstats(~a.boot_2d, data = bootstrapresultsdf_2d)
+favstats(~b.boot_2d, data = bootstrapresultsdf_2d)
+```
+
+Using the means for $a_{boot}$ and $b_{boot}$, we can estimate the model as
+
+$$
+\widehat{Balance_{Student, i}} = 1024.977 + (-0.0021 *Income_{Student, i})
+$$
+
+
+</br>
+</br>
+
+#### Question 3
+*Refer to Question 9 of Assignment 1, where you were asked to refer to certain variables of the General Society Survey of 2002. For your convenience, the data file is linked below.*
+
+```{R}
+gss = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/GSS2002.csv")
+```
+
+#### a.
+*Is there a relationship between one's support for gun laws (variable name is **GunLaw**) and their opinion about current government spending on Science (variable name is **SpendSci**)? State the appropriate statistical hypotheses.*
+
+$$
+H_0 : \text{Support of gun laws and opinion about government spending on science are independent} \\
+H_A : \text{Support of gun laws and opinion about government spending on science are NOT independent}
+$$
+
+#### b.
+*Use R Studio to create the contingency table.*
+
+
+```{r}
+gun_science <- gss %>%
+  filter(!is.na(GunLaw), !is.na(SpendSci))
+gun_science_tally <- tally(~GunLaw + SpendSci, data = gun_science)
+gun_science_tally
+```
+
+
+$$
+\begin{array}{lcc}
+                              &  {\bf Science\:\:Spending}  &                                            \\
+{\bf Gun\:\:Law\:\:Support}   &  {\rm About\:\:right}       & {\rm Too\:\:little}   & {\rm Too\:\:much}  \\
+{\rm Favor}                   &      166                    &      117              &     42             \\
+{\rm Oppose}                  &      35                     &      37               &     12             \\
+\end{array}
+$$
+
+
+#### c.
+*Carry out the appropriate statistical test, providing both the test statistic and the* $P$*-value.*
+```{r}
+xchisq.test(gun_science_tally, correct=FALSE)
+```
+
+
+From this output, we observe the value of the test statistic $\chi^{2}_{obs} = 2.4447$ and the $P$-value is $0.2945$. 
+
+
+#### d.
+*What can you conclude? Do these data support your null hypothesis in part (a)? State your decision and conclusion.*
+
+
+Since the $P$-value is greater than 0.05, we cannot reject the null hypothesis and we must assume that support on gun laws and opinion on government spending on science are independent.
+
+
+#### e.
+*Re-trace a result, in the form of a bar-graph, that was provided in Assignment 2, Question 9. Can you infer from these data that one's level of **Education** is independent of their **Race**? Present your findings in the form of a paragraph, outlining the decision you have made, why you made the decision you made, and the* $P$*-value.*
+
+$$
+H_0 : \text{Education and Race are independent} \\
+H_A : \text{Education and Race are NOT independent}
+$$
+
+
+```{r}
+race_education <- gss %>%
+  filter(!is.na(Race), !is.na(Education))
+race_education_tally <- tally(~Race + Education, data = race_education)
+race_education_tally
+```
+
+```{r}
+xchisq.test(race_education_tally, correct=FALSE)
+```
+
+
+From the results of the xchisq test above, we can infer that one's level of Education is NOT independent of their Race. This decision was made based on the results of the test statistic and the $P$-value presented below:
+
+$$
+\chi^{2}_{obs} = 79.05 \hspace{0.1in} \text{with a}\:\:P-\text{value} = P(\chi^{2}_{df=8} > 79.05) \approx 0
+$$
+
+
+Since the $P$-value is almost 0, we can infer that one's level of Education is NOT independent of their Race.
+
+
+</br>
+</br>
+
+### Question 4
+*A group of patients with a binge-eating disorder were randomly assigned to take either the experimental drug fluvoxamine or the placebo in a nine-week-long, double-blinded clinical trial. At the end of the trial the condition of each patient was classified into one of four categories: no response, moderate response, marked response, or remission. The table below shows a cross-classification, or contingency table, of these data.*
+
+$$
+\begin{array}{lcccc}
+             & \text{No Response}  & \text{Moderate Response}  & \text{Marked Response}  & \text{Remission}  \\
+             \hline
+\text{Fluvoxamine}  &   15         &     7                     &    3                    &   15              \\
+\text{Placebo}      &   22         &     7                     &    3                    &   11              \\
+\end{array}
+$$
+
+*Do these data provide statistically significant evidence to conclude that there is an association between the type of treatment received and a patient's response?*
+
+
+*Ensure you provide your statistical hypotheses, test statistic and* $P$*-value in your finding(s).*
+$$
+H_0 : \text{The type of treatment received and the patient's response are independent} \\
+H_A : \text{The type of treatment received and the patient's response are NOT independent}
+$$
+
+Contingency table:
+```{r}
+treatment_response <- rbind(c(15, 7, 3, 15), c(22, 7, 3, 11))
+rownames(treatment_response) = c("Fluvoxamine", "Placebo")
+colnames(treatment_response) = c("No Response", "Moderate Response", "Marked Response", "Remission")
+treatment_response
+```
+
+
+
+```{r}
+xchisq.test(treatment_response, simulate.p.value=TRUE)
+```
+
+
+$$
+\chi^{2}_{obs} = 1.8337 \hspace{0.1in} \text{with a}\:\:P-\text{value} = 0.6257
+$$
+
+
+These data DO NOT provide statistically significant evidence to conclude that there is an association between the type of treatment received and a patient's response. We cannot reject the null hypothesis.
+
+
+</br>
+</br>
+
+### Question 5
+*Was Barry Bonds using Steroids? The following bivariate data set gives the year and the number of home runs divided by the number of at bats - attempts to hit the ball - for each season. The number of homeruns is not used as later in his career he was given intential walks, which do not count as an at bat.*
+
+*In this exercise, you will build on your learning of model building and attempt to predict the number of home runs Barry Bonds would have hit in the 2001 season. These data are stored in the* [data file](http://people.ucalgary.ca/~jbstall/DataFiles/bondsdata.csv). 
+
+
+</br>
+</br>
+*Read these data into a data frame called **Ass5ques5data**, then look at the first three and the last three rows as a "check".*
+```{r}
+Ass5ques5data = read.csv("http://people.ucalgary.ca/~jbstall/DataFiles/bondsdata.csv")
+head(Ass5ques5data, 3)
+tail(Ass5ques5data, 3)
+```
+
+#### a.
+*Create a scatter plot of these data, with **season** acting as your* $x$*-variable and **hrat** (home runs to at bat ratio) acting as your* $y$*-variable.*
+```{r}
+Ass5ques5data %>%
+  ggplot(aes(x = season, y = hrat)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+
+#### b.
+*Remove the data point that corresponds to the **season == 2001**. After, you are attempting to build a statistical model of the following form:*
+
+
+$$
+HRAT_{i} = A + B*Year_{i} + e_{i} \hspace{0.5in} i = 1993, 1994, \cdots, 2000.
+$$
+
+
+*Estimate this model and compute the* $S_{e}$ *as well as* $r^{2}$.
+```{r}
+predict_hrat <- lm(hrat~season, data = filter(Ass5ques5data, season != 2001))
+predict_hrat
+aov(predict_hrat)
+summary(aov(predict_hrat))
+rsquared(predict_hrat)
+```
+
+
+$$
+\widehat{AverageHRAT}_{i} = -7.99 + (0.00404*Season_{i})
+$$
+
+
+$$
+S_{e} = 0.0133
+$$
+$$
+r^{2} = 0.637
+$$
+
+
+#### c.
+*From these data, can you conclude that Bonds' home-run-to-at-bat ratio **hrat** can be expressed as a positive linear function of the number of seasons he has played? A comment based on your statistical hypotheses and subsequent* $P$*-value is sufficient here.*
+
+
+$$
+{\rm H}_{0}: B = 0  \:\: \text{(Y cannot be expressed as a linear function of X)} \\
+{\rm H}_{A}: B > 0 \:\: \text{(Y can be expressed as a linear function of X)} 
+$$
+
+
+Since the $P$-value above is 0.0006, we can reject $H_0$ and can conclude that Bonds' home-run-to-at-bat ratio can be expressed as a positive linear function of the number of seasons he has played.
+
+
+#### d.
+*Compute the 95% confidence interval for* $B$*, and interpret its meaning on the context of these data.*
+```{r}
+confint(predict_hrat, level=0.95)
+```
+$$
+0.00212 \leq B \leq 0.00596
+$$
+
+
+As Barry Bonds' seasons played increases by 1, then his home-run-to-at-bat ratio will increase by an average of anywhere between:
+
+$$
+0.00212 \leq h_{rat} \leq   0.00596
+$$
+
+
+As the number of seasons played increases by one, the average home-run-to-at-bat ratio will increase by an average from 0.00212 and 0.00596.
+
+
+#### e.
+*Find a 95% prediction level for Bonds' homerun to at bat ratio in 2001. What does your interval represent?*
+```{r}
+predict(predict_hrat, newdata=data.frame(season = 2001), interval="predict", conf.level=0.95)
+```
+
+
+$$
+0.0666 \leq Y|x = 2001 \leq 0.133
+$$
+
+#### f.
+*During the 2001 Season, the number of at bat Bonds had was 476. Since the* $HRAT$ *ratio is defined as*
+
+
+$$
+HRAT = \frac{{\rm no.\:homeruns}}{{\rm no.\:At\:\:Bats}}
+$$
+
+
+*Use the result you obtained in part (e) to predict the number of homeruns that Bonds would have hit in the 2001 season.*
+
+```{r}
+lb_5f <- 0.06662845 * 476
+lb_5f
+ub_5f <- 0.1331382 * 476
+ub_5f
+```
+
+
+$$
+31.7 \leq homerun|at \ bats = 476 \leq 63.4
+$$
+
+```{r}
+0.09988334 * 476
+```
+The number of homeruns would be $\approx$ 47.5
+
+
+
+#### g.
+*Create a residual plot. What condition does this residual plot inspect? Does this condition appear to hold?*
+```{r}
+predictshrat <- predict_hrat$fitted.values
+eishrat <- predict_hrat$residuals
+diagnosticdf_5g <- data.frame(predictshrat, eishrat)
+diagnosticdf_5g %>%
+  ggplot(aes(x = predict_hrat$fitted.values, y = predict_hrat$residuals)) +
+  geom_point(col = 'purple', size = 2, position = "jitter") +
+  xlab("Predicted Home Runs to At Bat Ratio") +
+  ylab("Residuals") +
+  ggtitle("Residual Plot") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed")
+```
+
+
+This plot checks the homoscedasticity condition, or the error term is the same across the range of predicted HRAT. This condition appears to hold.
+
+
+</br>
+</br>
+
+#### 6.
+*Reconsider the data presented in Question 5. Use the bootstrap method (1000 resamples) as a means to estimate the model presented in Question 5.*
+
+
+```{r}
+Nbootstraps_6 = 1000
+a.boot_6 = numeric(Nbootstraps_6)
+b.boot_6 = numeric(Nbootstraps_6)
+```
+
+```{r}
+nsize_6 = dim(filter(Ass5ques5data, season != 2001))[1]
+xvalue_6 = 60000
+
+for(i in 1:Nbootstraps_6)
+  {
+    index = sample(nsize_6, replace=TRUE)
+    HRAT.boot = filter(Ass5ques5data, season != 2001)[index, ]
+    HRAT.lm = lm(hrat ~ season, data = HRAT.boot)
+    a.boot_6[i] = coef(HRAT.lm)[1]
+    b.boot_6[i] = coef(HRAT.lm)[2]
+}
+#end the loop
+#create a data frame that holds the results of teach of he Nbootstraps 
+bootstrapresultsdf_6 = data.frame(a.boot_6, b.boot_6)
+```
+
+```{r}
+favstats(~a.boot_6, data = bootstrapresultsdf_6)
+qdata(~a.boot_6, c(0.025, 0.975), data = bootstrapresultsdf_6)
+favstats(~b.boot_6, data = bootstrapresultsdf_6)
+qdata(~b.boot_6, c(0.025, 0.975), data = bootstrapresultsdf_6)
+```
+
+
+From the above bootstrap distribution of $a_{boot}$ and $b_{boot}$, we can take the means to estimate the model.
+
+
+$$
+\widehat{AverageHRAT}_{i} = -7.96 + (0.00403*Season_{i})
+$$
+
+*Ensure you have justified the computations and your findings.*

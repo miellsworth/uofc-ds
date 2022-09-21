@@ -1,0 +1,381 @@
+---
+title: "Inference of contingency table"
+output: html_notebook
+---
+
+##Two-way contingency table test
+```{r}
+# explore the origin of cars and their prices
+library(MASS)
+data(Cars93)
+M_price<-median(Cars93$Price)
+L1=sum(Cars93$Price<=M_price)
+mydata<-Cars93[order(Cars93$Price),]
+Yes<-c(rep(0,L1),rep(1,(length(Cars93$Price)-L1)))
+carDATA<-cbind(Yes,mydata)
+```
+
+```{r}
+tab<-table(carDATA$Origin, carDATA$Yes)
+tab
+```
+
+**Test of difference**
+```{r}
+library(fmsb)
+tab_M<-as.matrix(tab)
+# function "riskdifference" tests the difference of proportions
+risk_difference<-riskdifference(27,20,48,45, conf.level = 0.95)
+risk_difference
+```
+
+```{r}
+# do it manually
+pi1_hat=27/48
+pi2_hat=20/45
+var_diff=pi1_hat*(1-pi1_hat)/48+pi2_hat*(1-pi2_hat)/45
+# the estimated difference
+esti_diff=pi1_hat-pi2_hat
+# the 95 percent CI
+print(c(esti_diff-1.96*sqrt(var_diff), esti_diff+1.96*sqrt(var_diff)))
+
+```
+
+**Test the ratio (relative risk)**
+```{r}
+# function "riskratio" tests the relative risk
+risk_ratio<-riskratio(27,20,48,45, conf.level = 0.95, p.calc.by.independence = TRUE)
+risk_ratio
+```
+
+```{r}
+RR<-pi1_hat/pi2_hat
+var_logRR<-(1-pi1_hat)/27+(1-pi2_hat)/20
+# the 95% CI for log RR
+print(c(log(RR)-1.96*sqrt(var_logRR), log(RR)+1.96*sqrt(var_logRR)))
+```
+```{r}
+# the 95% CI for RR
+print(c(exp(log(RR)-1.96*sqrt(var_logRR)), exp(log(RR)+1.96*sqrt(var_logRR))))
+```
+
+**Test the odds ratio**
+```{r}
+# function "oddsratio" tests the odds ratio
+test_odds<-oddsratio(tab_M, conf.level = 0.95, p.calc.by.independence = TRUE)
+test_odds
+```
+
+```{r}
+esti_odds_ratio=pi1_hat*(1-pi2_hat)/pi2_hat/(1-pi1_hat)
+var_odds_ratio=1/27+1/21+1/20+1/25
+# the 95% CI for log odds_ratio is
+print(c(log(esti_odds_ratio)-1.96*sqrt(var_odds_ratio), log(esti_odds_ratio)+1.96*sqrt(var_odds_ratio)))
+```
+
+```{r}
+# the 95% CI for odds ratio is
+print(c(exp(log(esti_odds_ratio)-1.96*sqrt(var_odds_ratio)),exp(log(esti_odds_ratio)+1.96*sqrt(var_odds_ratio))))
+```
+
+_______________________________________
+**In-class practice question 1**
+```{r}
+# explore whether the price is related to the manual transmission cars
+carDATA<-Cars93[order(Cars93$Price),]
+l1=sum(as.numeric(carDATA$Price)<=median(carDATA$Price))
+l2=dim(carDATA)[1]-l1
+Label=c(rep('Cheap',l1),rep('Expensive',l2))
+newDATA<-cbind(Label,carDATA)
+tab2<-table(newDATA$Label, newDATA$Man.trans.avail)
+tab2
+```
+```{r}
+# use risk difference test
+risk_difference<-riskdifference(9,23,47,46, conf.level = 0.95)
+risk_difference
+```
+
+```{r}
+# use relative risk test (risk ratio)
+risk_ratio<-riskratio(9,23,47,46, conf.level = 0.95, p.calc.by.independence = TRUE)
+risk_ratio
+```
+
+```{r}
+# use odds ratio test
+test_odds<-oddsratio(tab2, conf.level = 0.95, p.calc.by.independence = TRUE)
+test_odds
+```
+
+______________________________________
+##An example from the lecture notes
+```{r}
+MF_politics<-matrix(c(762,327,468,484,239,477), nrow = 2, byrow = TRUE)
+MF_tab<-as.table(MF_politics)
+chisq.test(MF_tab)
+```
+
+_______________________________________
+##Chi-square multinomial test
+```{r}
+C_summary<-summary(Cars93$Horsepower)
+carDATA<-Cars93[order(Cars93$Horsepower),]
+l1=sum(as.numeric(carDATA$Horsepower<=C_summary[2]))
+l2=sum(as.numeric(carDATA$Horsepower<=C_summary[3]))-l1
+l3=sum(as.numeric(carDATA$Horsepower<=C_summary[4]))-l1-l2
+l4=dim(carDATA)[1]-l1-l2-l3
+Horse_level<-c(rep('Level 0',l1),rep('Level 1',l2),rep('Level 2',l3), rep('Level 3', l4))
+newDATA<-cbind(Horse_level,carDATA)
+tab3<-table(newDATA$Cylinders, newDATA$Horse_level)
+tab3
+```
+
+```{r}
+chisq.test(tab3)
+```
+
+```{r}
+ctab3<-rbind(tab3[1,]+tab3[2,],tab3[3,]+tab3[4,], tab3[5,]+tab3[6,])
+ctab3
+```
+
+```{r}
+cctab3<-cbind(ctab3[,1],ctab3[,2],ctab3[,3]+ctab3[,4])
+cctab3
+```
+
+```{r}
+chisq.test(cctab3)
+```
+
+_______________________________________
+**In-class practice question 2**
+```{r}
+# explore the relationship between smoking habit and physical exercise situation
+# Please run chi-square test to see if they are independent
+# If you got the warning message, please combine the last two columns and redo the chi-square test
+tbl = table(survey$Smoke, survey$Exer) 
+tbl
+```
+
+```{r}
+# Your answer
+chisq.test(tbl)
+```
+```{r}
+tbl2<-data.frame(tab[,1],tbl[,2]+tbl[,3])
+colnames(tbl2)=c('Freq','None or some')
+rownames(tbl2)=c('Heavy','Never','Occas','Regul')
+chisq.test(tbl2)
+```
+________________________________________
+**In-class practice question 3**
+```{r}
+# Establish the table by yourself to test whether "DriveTrain" is related to "Cylinders" (using Cars93 dataset)
+tbl3<-table(Cars93$DriveTrain, Cars93$Cylinders)
+chisq.test(tbl3)
+```
+
+_________________________________________
+## Pearson residuals 
+```{r}
+MF_politics<-matrix(c(762,327,468,484,239,477), nrow = 2, byrow = TRUE)
+MF_tab<-as.table(MF_politics)
+library(questionr)
+chisq.residuals(MF_tab, std=TRUE)
+```
+
+```{r}
+# survival data of Titanic
+data(Titanic)
+Ti_tab<-apply(Titanic, c(1,4), sum)
+Ti_tab
+```
+
+__________________________________________
+**In-practice question 4**
+```{r}
+# Test whether travel class and survivial rate are dependent
+chisq.test(Ti_tab)
+```
+
+```{r}
+# If they are dependent, which cell deviates most from the independence assumption
+chisq.residuals(Ti_tab, std=TRUE)
+```
+
+___________________________________________
+## Ordinal data test
+```{r}
+AL_Infant<-matrix(c(48,17066,38,14464,5,788,1,126,1,37),nrow = 5,byrow = TRUE)
+AL_tab<-as.table(AL_Infant)
+AL_tab
+```
+
+```{r}
+# A self-defined function to calculate the Mantel-Haenszel statistic, as well as the p-value
+pears.cor=function(table, rscore, cscore)
+{ 
+	dim=dim(table) 
+	rbar=sum(margin.table(table,1)*rscore)/sum(table) 
+	rdif=rscore-rbar 
+	cbar=sum(margin.table(table,2)*cscore)/sum(table) 
+	cdif=cscore-cbar 
+	ssr=sum(margin.table(table,1)*(rdif^2)) 
+	ssc=sum(margin.table(table,2)*(cdif^2)) 
+	ssrc=sum(t(table*rdif)*cdif) 
+	pcor=ssrc/(sqrt(ssr*ssc)) 
+	pcor 
+	M2=(sum(table)-1)*pcor^2
+	M2
+	result=c(pcor, M2, (1-pchisq(M2,1)))
+	result=as.table(result)
+	names(result)=c('Pearson correlation','MH statistic', 'P-Value')
+	result
+} 
+```
+
+```{r}
+# Pearson chi-square test
+chisq.test(AL_tab)
+```
+
+```{r}
+pears.cor(AL_tab,c(0,0.5,1.5,4,7),c(0,1))
+```
+
+```{r}
+# try difference scores
+pears.cor(AL_tab,c(0,0.5,1.5,4,7),c(1,3))
+```
+
+______________________________________________
+**In-class practice 5: Titanic data again**
+```{r}
+# Treat the variables as ordinal and apply Mantel-Haenszel test
+data(Titanic)
+Ti_tab<-apply(Titanic, c(1,4), sum)
+Ti_tab
+```
+
+```{r}
+# When you assgin scores to row and column variables, try different scores to check the result.
+pears.cor(Ti_tab, c(1,2,3,4), c(0,1))
+```
+```{r}
+pears.cor(Ti_tab, c(1,3,5,7), c(0,1))
+```
+
+______________________________________________
+## nominal-ordinal data
+```{r}
+library(MASS)
+data(Cars93)
+car_tab<-table(Cars93$Type, Cars93$Cylinders)
+car_tab<-car_tab[,c(1,2,3,4,5)]
+car_tab
+```
+
+```{r}
+# suppose you are given such a table, how to convert it back to the data.frame
+# step 1: give names to dimensions
+names(dimnames(car_tab))=c('Type','Cylinders')
+car_tab
+```
+
+```{r}
+# step 2: convert the table to data frame
+tab_car<-as.data.frame(car_tab)
+tab_car
+```
+
+```{r}
+# step 3: recover the original data frame
+Type=vector()
+Cylinders=vector()
+
+# use "as.character" function to convert factor to character, such as Type variable: "Compact", "Large", etc.
+# use "as.numeric" and "levels" functions to convert factor to numbers, such as Cylinders variable: "3", "4", etc.
+for (i in 1:length(tab_car$Freq)){
+  Type=c(rep(as.character(tab_car$Type[i]), tab_car$Freq[i]), Type)
+  Cylinders=c(rep(as.numeric(levels(tab_car$Cylinders[i]))[tab_car$Cylinders[i]], tab_car$Freq[i]), Cylinders)
+}
+
+tab_car2<-data.frame(Type, Cylinders)
+tab_car2
+```
+
+```{r}
+# Step 4: use function "aov" to do ANOVA 
+car_aov<-aov(Cylinders~Type, data = tab_car2)
+summary(car_aov)
+```
+
+______________________________________
+**In-class practice 6**
+```{r}
+# use above method to test whether "DriveTrain" is related to "Cylinders"
+# Use the table given below
+Dr_Cy_tab<-table(Cars93$DriveTrain, Cars93$Cylinders)
+Dr_Cy_tab<-Dr_Cy_tab[,c(1,2,3,4,5)]
+Dr_Cy_tab
+```
+
+```{r}
+# Your answer
+names(dimnames(Dr_Cy_tab))=c('DriveTrain','Cylinders')
+Dr_Cy_tab<-as.data.frame(Dr_Cy_tab)
+
+Dr=vector()
+Cy=vector()
+
+# use "as.character" function to convert factor to character, such as Type variable: "Compact", "Large", etc.
+# use "as.numeric" and "levels" functions to convert factor to numbers, such as Cylinders variable: "3", "4", etc.
+for (i in 1:length(Dr_Cy_tab$Freq)){
+  Dr=c(rep(as.character(Dr_Cy_tab$DriveTrain[i]), Dr_Cy_tab$Freq[i]), Dr)
+  Cy=c(rep(as.numeric(levels(Dr_Cy_tab$Cylinders[i]))[Dr_Cy_tab$Cylinders[i]], Dr_Cy_tab$Freq[i]), Cy)
+}
+
+tab_car3<-data.frame(Dr, Cy)
+tab_car3
+```
+```{r}
+car3_aov<-aov(Cy~Dr, data = tab_car3)
+summary(car3_aov)
+```
+
+
+_______________________________________
+## Fisher's exact test
+```{r}
+TeaTasting <-
+matrix(c(3, 1, 1, 3),
+       nrow = 2,
+       dimnames = list(Truth = c("Milk", "Tea"),Guess = c("Milk", "Tea")))
+TeaTasting
+```
+
+```{r}
+# DO remember
+fisher.test(TeaTasting, alternative = "two.sided")
+```
+
+**In-class practice 7**
+```{r}
+# practice 6 revisited
+Dr_Cy_tab<-table(Cars93$DriveTrain, Cars93$Cylinders)
+Dr_Cy_tab<-Dr_Cy_tab[,c(1,2,3,4,5)]
+Dr_Cy_tab
+```
+
+```{r}
+# Use Pearson Chi-square test to check whether "DriveTrain" is related to "Cylinders"
+chisq.test(table(Cars93$DriveTrain, Cars93$Cylinders))
+```
+
+```{r}
+# Did Chi-square test give you accurate test result?
+# If not, try fisher's exact test
+fisher.test(table(Cars93$DriveTrain, Cars93$Cylinders), alternative = "two.sided")
+```

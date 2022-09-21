@@ -1,0 +1,602 @@
+---
+title: 'Data 606 - Final Project'
+
+author: ""
+date: "January 19, 2020"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(results = 'hold')
+```
+
+```{r load libraries, results='hide', message=FALSE, warning=FALSE}
+#library(survey)
+#library(sampling)
+library(tidyverse)
+library(mosaic)
+library(kableExtra)
+library(mice)
+library(glmnet)
+library(cowplot)
+library(caret)
+library(mctest)
+library(emdbook)
+library(MASS)
+```
+
+
+
+```{r Clean Functions, include = FALSE}
+# Create a function to count the NAs in a dataframe
+count_na = function(df) {
+  x = df %>% 
+    summarise_all(funs(sum(is.na(.)))) %>%
+    gather(key = "Feature", value = "NAs") %>% 
+    filter(NAs > 0)
+  return(x)
+}
+
+# Create a function to replace categories in the house dataframe
+replace_cats = function(df) {
+  # replace categorical variables based on text file description
+  replacements = list(Alley = "None", 
+                      BsmtCond = "None",
+                      BsmtQual = "None",
+                      BsmtExposure = "None",
+                      BsmtFinType1 = "None",
+                      BsmtFinType2 = "None",
+                      FireplaceQu = "None",
+                      GarageType = "None",
+                      GarageYrBlt = "None",
+                      GarageFinish = "None",
+                      GarageQual = "None",
+                      GarageCond = "None",
+                      PoolQC =  "None",
+                      Fence = "None"
+                      )
+  
+  return(df %>% replace_na(replacements))
+}
+
+
+# Create a function that will return the mode from a vector
+# From https://www.tutorialspoint.com/r/r_mean_median_mode.htm
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# Create a function that will impute the mode into missing values of a column of a dataframe
+impute_cat_mode = function(df, col) {
+  mode_ = getmode(df[[col]])
+  df[, col] = replace(df[, col], is.na(df[, col]), mode_)
+  return(df)
+}
+
+# Create a function that will drop columns from a dataframe
+drop_cols = function (df, cols) {
+  return(df %>% select(-(!!cols)))
+}
+```
+
+```{r Impute Functions, include = FALSE}
+# Create a function that will impute  avlues
+replace_cats_prop = function(df, col_name){
+  col <- as.name(col_name)
+  n = (df %>% filter(is.na(!!col)) %>% summarise(n()))[[1]]
+  
+  # randomly select n values from the categorical column - this should approximate the same distribution of values in that column
+  temp = df %>%
+    filter(!is.na(!!col)) %>%
+    sample_n(n, replace = TRUE)
+  df[is.na(df[col_name]), col_name] = temp[col_name]
+  return(df)
+}
+
+# Create a function that will remove the messages from the mice package
+# some function from Hadley Wickham - craziness
+quiet <- function(x) {
+  sink(tempfile())
+  on.exit(sink())
+  invisible(force(x))
+}
+
+# Create a function to impute values
+impute_values = function(df, cols_to_impute) {
+  tempData <- quiet(mice(df, m=5, maxit=5, meth='pmm', seed=500))
+  tempComplete = complete(tempData, 1)
+
+  for (col_s in cols_to_impute) {
+    df = df %>% mutate(!!col_s := tempComplete[[col_s]])
+  }
+  return(df)
+}
+```
+
+```{r}
+clean_df = function(df) {
+  # clean the data frame completely
+  # remove bad names
+  names(df) = make.names(names(df))
+  
+  # replace na's in categorical variables
+  df = replace_cats(df)
+  
+  # impute the mode of the categorical column passed in
+  df = impute_cat_mode(df, 'Electrical')
+  
+  # replace categorical variables proportionately to their counts
+  df = replace_cats_prop(df, 'MasVnrType')
+  
+  # impute the missing values using mice package
+  df = impute_values(df, c("MasVnrArea", 'LotFrontage'))
+  return(df)
+}
+```
+
+
+Additional Columns that need to be dealt with for the final Test set to submit to Kaggle
+```{r Final Kaggle Testing - inspection}
+test.c = clean_df(read_csv('test.csv'))
+count_na(test.c)
+
+head(test.c %>% select(MSZoning, Utilities, Exterior1st, Exterior2nd,
+                       BsmtFinSF1, BsmtFinSF2, BsmtUnfSF, TotalBsmtSF, BsmtFullBath, BsmtHalfBath,
+                       KitchenQual, Functional, GarageCars, GarageArea, SaleType))
+```
+
+```{r inspect cleaned dataframe for missing values}
+house.c = clean_df(read_csv('train.csv'))
+count_na(house.c)
+```
+
+### Feature Engineering
+```{r Feature Engineering}
+w_age = 0.579
+new_age = 5
+old_age = 30
+house.feature = house.clean %>% 
+  mutate(BathAbove = FullBath + 0.5 * HalfBath,
+         BathAbove = ifelse(BathAbove <= 1, "1",
+                     ifelse(BathAbove >= 2.5, '2.5+', as.character(BathAbove))), 
+         BathBelow = BsmtFullBath + 0.5 * BsmtHalfBath,
+         # BathBelow = ifelse(BathBelow <= 1, "1-",
+         #             ifelse(BathBelow >= 3, "3+", "2-")),
+         BathBelow = BathBelow > 0,
+         Age = YrSold - (w_age * YearBuilt + (1-w_age) * YearRemodAdd),
+         ReModel = YearRemodAdd > YearBuilt,
+         YrSold = factor(YrSold),
+         MoSold = factor(MoSold),
+         IsNew = YrSold == YearBuilt,
+         Old = Age >= old_age,
+         #Old = ifelse(Age >= old_age, "Old", ifelse(Age <= new_age, "New", "Normal")),
+         Fire = Fireplaces > 0,
+         GarageCars = ifelse(GarageCars < 3, GarageCars, 3),
+         
+         SaleType = ifelse(SaleType == 'New',"New",
+                    ifelse(SaleType %in% c("WD", "CWD", "VWD", "COD"), "Deed", "Other")),
+         BasementCond = ifelse(BsmtCond %in% c("Gd", "TA"), "Good",
+                        ifelse(BsmtCond %in% c("Fa", "NoBase"), "Ave", "Bad")),
+         BasementFin = ifelse(BsmtFinType1 %in% c("ALQ", "BLQ", "LwQ", "Rec", "Unf"), "Ave",
+                       ifelse(BsmtFinType1 == "GLQ", "Good", "None")),
+         PorchSF = (OpenPorchSF + EnclosedPorch + ScreenPorch),
+         OverallCond = ifelse(OverallCond >= 5, "Good", "Bad"),
+         GasFurnace = ifelse(Heating %in% c("GasA", "GasW"), "Gas", "NoGas"),
+         ExteriorCovering = ifelse(Exterior1st %in% c("ImStucc", "Stone"), "Good",
+                            ifelse(Exterior1st %in% c("AsbShng", "AsphShn", "BrkComm", "CBlock"), "Poor", "Average")),
+         Foundation = ifelse(Foundation == "PConc", Foundation, "Other"),
+         TotRmsAbvGrd = ifelse(TotRmsAbvGrd >= 7, "High", "Low"),
+         OverallQual = ifelse(OverallQual >= 9, "9+",
+                      ifelse(OverallQual <= 2, "0-",
+                      ifelse(OverallQual > 2 & OverallQual <= 4, "3-4", OverallQual))),
+         SaleCondition = ifelse(SaleCondition %in% c("Partial"),"Good", "Poor"),
+         PavedDrive = PavedDrive == "Y",
+         MSZoning = ifelse(MSZoning %in% c("RH", "RM"), "RH", MSZoning),
+         Neighborhood = ifelse(Neighborhood %in% c("NoRidge", "NridgHt", "StoneBr"), "a",
+                        ifelse(Neighborhood %in% c("Timber", "Veenker", "Somerst"), "b",
+                        ifelse(Neighborhood %in% c("ClearCr", "Crawfor"), "c",
+                        ifelse(Neighborhood %in% c("Blmngtn", "CollgCr", "Gilbert", "NWAmes"), "c",
+                        ifelse(Neighborhood %in% c("SawyerW"), "c",
+                        ifelse(Neighborhood %in% c("Mitchel", "NAmes", "NPkVill", "SWISU", "Blueste", "Sawyer"), "f",
+                        ifelse(Neighborhood %in% c("Edwards", "OldTown", "BrkSide"), "g", "h")))))))
+
+         ) %>%
+  select(-c(Id, 
+            Alley, 
+            BsmtCond, BsmtFinSF1, BsmtFinSF2,  BsmtUnfSF, BsmtFinType2, BsmtExposure, BsmtFullBath, BsmtHalfBath, BsmtFinType1,
+            Condition1, Condition2, Electrical, Exterior2nd, Fence,
+            X2ndFlrSF, LowQualFinSF, 
+            FireplaceQu, Fireplaces,
+            FullBath, GarageArea, GarageCond, GarageFinish, GarageQual, GarageType, GarageYrBlt, HalfBath, HeatingQC, Heating,
+            KitchenAbvGr, 
+            LandContour, LandSlope, LotShape, LotConfig,
+            MasVnrArea, MasVnrType, MSSubClass,
+            MiscFeature, MiscVal,
+            OpenPorchSF, EnclosedPorch, ScreenPorch,
+            PoolArea, PoolQC, RoofMatl, RoofStyle, Street,
+            Utilities,
+            YearRemodAdd, YearBuilt
+            )) %>%
+  filter(GrLivArea < 4000 | SalePrice > 200000) # this removes two data points which are clearly incorrect
+```
+
+
+
+We started with the assumption that we could equally weight YearBuilt and YearRemodAdd, but then we wanted to validate this assumption. So we created a gridsearch of weights using 10-Fold Cross Validation. After a number of iterations we fould an optimized value of 0.58 for the weight of YearBuilt
+```{r Weight Optimization for Age formula}
+#I DON"T NEED TO RUN THIS ANYMORE - BUT KEEP IT FOR FUTURE USE
+
+# results = data.frame() # create an empty dataframe to store the result of the grid search
+# 
+# age_seq = seq(0.57,0.59,by=0.001) # final sequence of values to search through
+# for(w in age_seq) {
+#   # create a temporary data frame with the new formual for age
+#   temp.data = house.temp %>% mutate(Age = YrSold - (w * YearBuilt + (1-w) * YearRemodAdd))
+#   
+#   # set up the cross validation
+#   set.seed(123) 
+#   train.control = trainControl(method = "cv", number = 10)
+#   
+#   # Train the model
+#   model = train(log(SalePrice) ~ GrLivArea + Age:Old, data = temp.data,
+#                method = "lm",
+#                trControl = train.control)
+#   # save the results
+#   results = rbind(results, cbind(w=w, model$results))
+# }
+# 
+# # display the results of the grid search
+# results
+# 
+# # and now we can find the optimal weight for YearBuilt
+# results %>% filter(RMSE == min(RMSE))
+```
+
+Ok, let's do a train / test split and let's do some cv on age ratio
+```{r Train / Test Split}
+# Split the data into training and test set
+set.seed(123)
+training.samples = createDataPartition(house.feature$Neighborhood, p = 0.8, list = FALSE)
+
+train.data = house.feature[training.samples, ]
+test.data  = house.feature[-training.samples, ]
+
+#cat(length(train.data$MSSubClass), length(test.data$MSSubClass))
+```
+
+
+```{r}
+ggplot(house.feature, aes(y = SalePrice, x = factor(BathAbove), color = factor(BathAbove))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+```{r}
+ggplot(house.feature, aes(y = log(SalePrice), x = factor(OverallQual), color = factor(OverallQual))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+```
+
+
+```{r fig.heigh=6, fig.width=12}
+ggplot(house.c, aes(y = log(SalePrice), 
+                          x = reorder(factor(Neighborhood), log(SalePrice), FUN = median), 
+                          color = factor(Neighborhood))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r fig.heigh=6, fig.width=12}
+ggplot(house.feature, aes(y = log(SalePrice), 
+                          x = reorder(factor(Neighborhood), log(SalePrice), FUN = median), 
+                          color = factor(Neighborhood))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+  #theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r fig.heigh=6, fig.width=12}
+ggplot(house.feature, aes(y = log(SalePrice), 
+                          x = reorder(factor(MSZoning), log(SalePrice), FUN = median), 
+                          color = factor(MSZoning))) +
+  geom_boxplot() +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1), alpha = 0.2)
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+CRD.neighborhood = aov(log(SalePrice) ~ Neighborhood, data = house.feature)
+summary(CRD.neighborhood)
+
+# Fishers LSD (Least Significant Difference)
+library(agricolae)
+ls.neighborhood = LSD.test(CRD.neighborhood, trt='Neighborhood')
+ls.neighborhood
+
+# Scheffes Test
+scheffe.test(CRD.neighborhood, "Neighborhood", group = TRUE, console = TRUE)
+```
+
+```{r}
+CRD.mszoning = aov(log(SalePrice) ~ MSZoning, data = house.feature)
+summary(CRD.mszoning)
+
+# Fishers LSD (Least Significant Difference)
+library(agricolae)
+ls.mszoning = LSD.test(CRD.mszoning, trt='MSZoning')
+ls.mszoning
+
+# Scheffes Test
+scheffe.test(CRD.mszoning, "MSZoning", group = TRUE, console = TRUE)
+```
+
+```{r}
+CRD.BathAbove = aov(log(SalePrice) ~ BathAbove, data = house.feature)
+summary(CRD.BathAbove)
+
+# Fishers LSD (Least Significant Difference)
+library(agricolae)
+ls.BathAbove = LSD.test(CRD.BathAbove, trt='BathAbove')
+ls.BathAbove
+
+# Scheffes Test
+scheffe.test(CRD.BathAbove, "BathAbove", group = TRUE, console = TRUE)
+```
+
+```{r}
+CRD.OverallQual = aov(log(SalePrice) ~ OverallQual, data = house.feature)
+summary(CRD.OverallQual)
+
+# Fishers LSD (Least Significant Difference)
+library(agricolae)
+ls.OveralQual = LSD.test(CRD.OverallQual, trt='OverallQual')
+ls.OveralQual
+
+# Scheffes Test
+scheffe.test(CRD.OverallQual, "OverallQual", group = TRUE, console = TRUE)
+```
+
+```{r Distribution of GrLivArea, fig.width=8}
+p1 = ggplot(house.feature, aes(x=(GrLivArea))) +
+  geom_histogram()
+p2 = ggplot(house.feature, aes(x=log(GrLivArea))) +
+  geom_histogram()
+plot_grid(p1, p2, align = 'h')
+```
+
+```{r q-q of GrLivArea}
+house.feature %>%
+  #ggplot(aes(sample = (SalePrice))) +
+  ggplot(aes(sample = (GrLivArea))) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+```{r BoxCox of GrLivArea, fig.height=12}
+bc <- boxcox(GrLivArea ~ 1, data=house.feature)
+summary(bc)
+data.frame(bc) %>% filter(y == max(y))
+max(bc$y)
+lambda = bc$x[bc$y == max(bc$y)]
+
+boxcox_transform = function(y, lambda) {
+  return ((y^lambda-1)/lambda)
+}
+
+p1 = ggplot(house.feature, aes(x=(GrLivArea))) +
+  geom_histogram()
+p2 = ggplot(house.feature, aes(x=boxcox_transform(GrLivArea, lambda))) +
+  geom_histogram()
+p3 = ggplot(house.feature, aes(x=log(GrLivArea)) )+
+  geom_histogram()
+plot_grid(p1, p2, p3, ncol = 1)
+```
+
+
+```{r Distribution of Age, fig.width=8}
+
+bc <- boxcox(Age ~ 1, data=house.feature %>% filter(Age > 15))
+summary(bc)
+data.frame(bc) %>% filter(y == max(y))
+max(bc$y)
+bc[bc$y == max(bc$y)]
+p1 = ggplot(house.feature, aes(x=(Age), color = factor(Old))) +
+  geom_histogram()
+p2 = ggplot(house.feature %>% filter(Age > 15), aes(x=sqrt(Age))) + #aes(x=((Age^0.5050505 - 1)/0.5050505))) +
+  geom_histogram()
+plot_grid(p1, p2, align = 'h')
+```
+
+```{r Histograms of some Near Zero Variance Variables}
+p2 = ggplot(house.feature, aes(x=factor(Functional))) +
+  geom_histogram(stat="count")
+p3 = ggplot(house.feature, aes(x=factor(BathBelow))) +
+  geom_histogram(stat="count")
+p4 = ggplot(house.feature, aes(x=factor(BasementCond))) +
+  geom_histogram(stat="count")
+p5 = ggplot(house.feature, aes(x=factor(GasFurnace))) +
+  geom_histogram(stat="count")
+p6 = ggplot(house.feature, aes(x=factor(ExteriorCovering))) +
+  geom_histogram(stat="count")
+p7 = ggplot(house.feature, aes(x=factor(BathBelow))) +
+  geom_histogram(stat="count")
+
+plot_grid(p2, p3, p4, p5, p6, p7, ncol=2)
+```
+
+
+```{r Linear Model Cross Validation}
+lambda
+train.control <- trainControl(method = "cv", number = 10)
+model.formula = log(SalePrice) ~ 
+  factor(Neighborhood)*boxcox_transform(GrLivArea, 0.06060606)  + 
+  
+  (factor(MSZoning) +factor(OverallQual) + TotalBsmtSF +  PorchSF + factor(Fire)) * boxcox_transform(GrLivArea, 0.06060606) + 
+  factor(SaleType) + 
+  LotArea +
+  WoodDeckSF +
+  factor(OverallCond) +
+  #factor(PavedDrive) + 
+  #factor(BathBelow) + 
+  factor(BathAbove) +
+  factor(BathBelow) +
+  #factor(SaleCondition) +  
+  #factor(BasementCond) + 
+  #factor(BasementFin) +
+  factor(BsmtQual) +
+  #factor(GasFurnace) + 
+  factor(CentralAir) +
+  #factor(ExterQual) + factor(ExteriorCovering) + 
+  #factor(Foundation) +  
+  factor(KitchenQual) + factor(GarageCars) + 
+  #factor(Functional) +
+  #factor(TotRmsAbvGrd) + 
+  #factor(YrSold) + 
+  #factor(MoSold) + 
+  #factor(IsNew) + 
+  #factor(ReModel) +
+  #log(GrLivArea) +
+  
+  
+  factor(Old):Age 
+
+lm.base <- train(model.formula,
+                data = train.data,
+                method = "lm",
+                trControl = train.control)
+print(lm.base$results)
+```
+
+```{r}
+summary(lm.base)
+```
+
+
+```{r VIF}
+library(car)
+model.formula2 = log(SalePrice) ~ GrLivArea +
+                                  LotArea +  
+                                  WoodDeckSF + 
+                                  TotalBsmtSF +
+                                  Age + 
+                                  PorchSF
+
+my_model = lm(model.formula2, data=train.data)
+alias( my_model)
+vif(my_model)
+```
+
+
+
+
+```{r Near Zero Variance Calculation}
+nzv <- nearZeroVar(house.feature, saveMetrics= TRUE)
+nzv[nzv$nzv,]
+```
+
+
+```{r ElasticNet Tuning and CrossValidation}
+
+train_grid = expand.grid(.alpha = seq(0.1, .4, by=0.01),
+                         .lambda = 10^(seq(-6,-1,by=0.25)))
+
+model.enet <- train(model.formula,
+                data = train.data,
+                method = "glmnet",
+                preProcess = c("center", "scale"),
+                trControl = train.control,
+                tuneGrid = train_grid)
+```
+
+```{r Save and Load ElasticNet Model}
+saveRDS(model.enet, "elasticnet_tune.rds")
+model.enet = readRDS("elasticnet_tune.rds")
+```
+
+
+
+```{r ElasticNet Best Tuning}
+coef(model.enet$finalModel, model.enet$bestTune$lambda)
+model.enet$bestTune
+```
+
+```{r ElasticNet Results}
+model.enet$results %>% filter(near(RMSE, min(RMSE)))
+```
+
+
+
+```{r SVM Regression}
+# this code takes a LONG TIME to run - just load the tuned model that is saved below
+
+# model.svm <- train(model.formula,
+#                 data = train.data,
+#                 method = "svmLinear",
+#                 preProcess = c("center", "scale"),
+#                 trControl = train.control,
+#                 tuneGrid = expand.grid(.C = 10^(seq(-3,1,by=0.05))))
+```
+
+```{r Save and Load SVM Model}
+saveRDS(model.svm, "svm_tune.rds")
+model.svm = readRDS("svm_tune.rds")
+```
+
+```{r}
+print(model.svm)
+#model.enet$results %>% filter(near(RMSE, min(RMSE)))
+model.svm$results
+model.svm$bestTune
+```
+
+```{r}
+model.svm$results %>% filter(near(C,model.svm$bestTune$C))
+```
+
+
+
+
+
+
+
+
+```{r Predictions}
+#names(test.data)
+#test.data$SalePrice
+#subset(test.data, select = -c(SalePrice))
+lm_pred = lm.base %>% predict(test.data %>% subset(select = -SalePrice))
+enet_pred = model.enet %>% predict(test.data %>% subset(select = -SalePrice))
+svm_pred = model.svm %>% predict(test.data)
+
+results_lm = data.frame(obs = test.data$SalePrice, pred = exp(lm_pred))
+results_enet = data.frame(obs = test.data$SalePrice, pred = exp(enet_pred))
+results_svm = data.frame(obs = test.data$SalePrice, pred = exp(svm_pred))
+
+round(defaultSummary(results_lm),3)
+round(defaultSummary(results_enet),3)
+round(defaultSummary(results_svm),3)
+```
+
+```{r Prediction Plot - ElasticNet}
+ggplot(results_enet, aes(x=obs, y=pred)) +
+  geom_point(color = 'slateblue')
+```
+
+
+
+
+
+
+```{r Functions for MSE, RMSE, MAE}
+# Mean squared error, Root Mean Squared Error, Mean Absolute Error
+mse = function(mod) {return(mean(residuals(mod)^2))}
+rmse = function(mod) {return(sqrt(mse(mod)))}
+mae = function(mod) {return(mean(abs(residuals(mod))))}
+```
+
+```{r}
+summary(aov(log(house.feature$SalePrice) ~ house.feature$Neighborhood))
+```
+

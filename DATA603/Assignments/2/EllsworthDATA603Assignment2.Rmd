@@ -1,0 +1,480 @@
+---
+title: "DATA 603 Assignment 2"
+author: "Michael Ellsworth"
+date: "November 22nd, 2019"
+output:
+  html_document:
+    df_print: paged
+---
+```{r Load Packages, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(GGally)
+library(car)
+library(lmtest)
+library(olsrr)
+```
+
+# Problem 1
+*The amount of water used by the production facilities of a plant varies. Observations on water usage and other possibility related variables, were collected for 249 months. The data are given in water.csv file. The explanatory variables are:*
+
+  - *TEMP = average monthly temperature(degree celsius)*
+  - *PROD = amount of production(10cubic)*
+  - *DAYS = number of operationing day in the month*
+  - *HOUR = number of hours shut down for maintenance*
+    
+*The response variable is USAGE = monthly water usage (gallons/minute). From Exercise 1 and 2, assume that the best fitted model is:*
+
+$$\widehat{USAGE} = \hat{\beta_0} + \hat{\beta_1}TEMP + \hat{\beta_2}HOUR + \hat{\beta_3}PROD*TEMP + \hat{\beta_4}PROD*HOUR$$
+
+```{r Load Data 1, include=FALSE}
+water <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/2/water.csv")
+glimpse(water)
+```
+
+## a
+*Many researchers avoid the problems of multicollinearity by always omitting all but one of the "redundant" variables from the model. By checking all pairwise combinations of predictors in scatterplots and using the VIF function, do you detect any high correlation (r > 0.8) between predictors? Does there appear to be any problem with multicollinearity assumption?*
+```{r Water Scatterplots}
+full_additive_water <- lm(data = water, USAGE ~ TEMP + PROD + DAYS + HOUR)
+best_model_water <- lm(data = water, USAGE ~ TEMP + HOUR + PROD * TEMP + PROD * HOUR)
+ggpairs(data = water, columns = c("TEMP", "PROD", "DAYS", "HOUR"))
+```
+
+Based on all of the predictor scatterplots, there does not appear to be any high correlation between the predictors. All the predictors have r < 0.8. Additionally, the data is quite scattered in each of the plots without any reasonable observable pattern.
+
+```{r Water VIF}
+vif(full_additive_water)
+```
+
+This conclusion is supported by calculating the VIF of each variable. Each of the predictor variables have a VIF between 1 and 5 which suggests moderate collinearity but it is not severe enough to correct the model. There does not appear to be any significant multicollinearity present in the model.
+
+## b
+*Conduct a test for heteroscedasticity (non constant variance) and plot a residual plot. Does there appear to be any problem with homoscedasticity assumption?*
+
+```{r Breusch-Pagan Test Water}
+bptest(best_model_water)
+```
+
+Based on the Breusch-Pagan test for Heteroscedasticity, we cannot reject the null hypothesis and we can say that heteroscedasticity does not exist.
+
+```{r Residual Plot Water}
+best_model_water %>%
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() + 
+  geom_smooth()
+```
+
+Checking the residual versus fitted values plot, we can confirm that heteroscedasticity does not exist as the residuals appear to fall along a straight line on 0.
+
+```{r Scale Location plot Water}
+best_model_water %>%
+  ggplot(aes(x = .fitted, y = abs(.stdresid)**0.5)) +
+  geom_point() + 
+  geom_smooth()
+```
+
+Again, from the scale-location plot, we can confirm heteroscedasticity.
+
+## c
+*Provide a histogram for residuals, a normal Q-Q plot, and the Shapiro-Wilk test. Does there appear to be any problem with normality assumption?*
+```{r Residual Histogram Water}
+qplot(residuals(best_model_water),
+      geom = "histogram",
+      binwidth = 0.5,
+      main = "Histogram of residuals",
+      xlab = "residuals",
+      color="red",
+      fill=I("blue"))
+```
+
+Based on the results from the histogram, there does appear to be some values that do no fall a normal distribution. Specifically, the residuals that appear between 3 and 8.
+
+```{r Normal QQ plot Water}
+water %>%
+  ggplot(aes(sample = best_model_water$residuals)) +
+  stat_qq() +
+  stat_qq_line()
+```
+
+Additionally, as the theoretical values increase in absolute value, the data does not appear to be normal.
+
+```{r Shapiro-Wilk Test Water}
+shapiro.test(residuals(best_model_water))
+```
+
+This is confirmed with the Sahpiro-Wilk normality test as the P-value is less than 0.05 meaning we can reject the null hypothesis that the residuals are normally distributed.
+
+## d
+*Plot the residuals vs predicted value * $\hat{Y}$ *plot, do you detect any patterns? Does there appear to be any problem with linearity assumption?*
+```{r Residual Plot Water 2}
+best_model_water %>%
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() + 
+  geom_smooth()
+```
+
+There does not appear to be any pattern in the plot above meaning there is not a problem with the linearity assumption. The model is suitable without any quadratic terms.
+
+## e
+*Do you detect any outliers by using Cook’s distance measure (using cooks.distance() > 1) and Residual vs Leverage plot?*
+
+```{r Cooks Distance Water}
+water[cooks.distance(best_model_water) > 1, ]
+```
+
+By measuring cooks distance with a cutoff of 1, there are no outliers detected.
+
+```{r Residual Leverage Plot Water}
+plot(best_model_water, which = 5)
+plot(best_model_water, pch = 18, col = "red", which = 4)
+```
+
+This is confirmed by the plots above. The highest cook's distance appears to be observation number 163 with a cook's distance of ~0.3.
+
+## f
+*From part a-e, determine whether your model meets the assumptions of the analysis.*
+
+Based on the questions above, the following assumptions are true:
+
+  - No significant multicollinearity
+  - No heteroscedasticity
+  - Linearity assumption
+  - No significant outliers
+  
+The assumption that the residuals follow a normal distribution is not valid. The residuals follow an s-shaped pattern which indicates that the residuals have excessive skewness or there are either too many or too few large errors in both directions.
+
+# Problem 2 Collusive bidding in road construction
+*Road construction contracts in the state of Florida are awarded on the basis of competitive, sealed bids; the contractor who submits the lowest bid price wins the contract. During the 1980s, the Office of the Florida Attorney General (FLAG) suspected numerous contractors of practicing bid collusion (i.e., setting the winning bid price above the fair, or competitive, price in order to increase project margin). By comparing the bid prices (and other important bid variables) of the fixed (or rigged) contracts to the competitively bid contracts, FLAG was able to establish invaluable benchmarks for detecting future bid-rigging. FLAG collected data for 279 road construction contracts. For each contract, the following variables shown below were measured and are only considered for this problem:*
+
+  1. *Price of contract ($) bid by lowest bidder, LOWBID.*
+  2. *Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST.*
+  3. *Status of contract (1 if fixed, 0 if competitive), STATUS*
+  4. *District (1, 2, 3, 4, or 5) in which construction project is located, DISTRICT.*
+  5. *Number of bidders on contract, NUMIDS.*
+  6. *Estimated number of days to complete work, DAYSEST.*
+  7. *Length of road project (miles), RDLNGTH.*
+  8. *Percentage of costs allocated to liquid asphalt, PCTASPH.*
+  9. *Percentage of costs allocated to base material, PCTBASE.*
+  10. *Percentage of costs allocated to excavation, PCTEXCAV.*
+  11. *Percentage of costs allocated to mobilization, PCTMOBIL.*
+  12. *Percentage of costs allocated to structures, PCTSTRUC.*
+  13. *Percentage of costs allocated to trafic control, PCTTRAF.*
+    
+*The data are saved in the file named FLAG2.txt*
+
+```{r Load Data 2, include=FALSE}
+FLAG <- read_delim("/Users/Ellsworth/Documents/School/DATA603/Assignments/2/FLAG2.txt", delim = '\t')
+glimpse(FLAG)
+FLAG$STATUS <- as.factor(FLAG$STATUS)
+FLAG$DISTRICT <- as.factor(FLAG$DISTRICT)
+FLAG <- FLAG %>%
+  select(-SUBCONT, -LBERATIO)
+```
+
+## a
+*Consider building a model for the low-bid price (Y). Apply Stepwise Regression Procedure with pent = 0.05 and prem = 0.1 to the data to find the independent variables most suitable for modeling* $Y$.
+```{r Stepwise FLAG}
+full_model_FLAG <- lm(data = FLAG, LOWBID ~.)
+ols_step_both_p(full_model_FLAG, pent = 0.05, prem = 0.1)
+```
+
+Based on the stepwise regression procedure, the variables that are suitable for modelling are:
+
+  - Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST
+  - Status of contract (1 if fixed, 0 if competitive), STATUS
+  - Number of bidders on contract, NUMIDS.
+
+## b
+*Consider building a model for the low-bid price (Y). Apply Forward Regression Procedure with pent = 0.05 :ols_step_forward_p(fullmodel, pent = 0.05) to the data to find the independent variables most suitable for modeling Y.*
+```{r Forward Regression FLAG}
+ols_step_forward_p(full_model_FLAG, pent = 0.05)
+```
+
+Based on the forward regression procedure, the variables that are suitable for modelling are:
+
+  - Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST
+  - Status of contract (1 if fixed, 0 if competitive), STATUS
+  - Number of bidders on contract, NUMIDS.
+
+## c
+*Consider building a model for the low-bid price (Y). Apply Backward Regression Procedure with prem = 0.05 :ols_step_backward_p(fullmodel, prem = 0.05) to the data to find the independent variables most suitable for modeling Y.*
+```{r Backward Regression FLAG}
+ols_step_backward_p(full_model_FLAG, prem = 0.05)
+```
+
+Based on the backward regression procedure, the variables that are suitable for modelling are:
+
+  - Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST
+  - Status of contract (1 if fixed, 0 if competitive), STATUS
+  - Number of bidders on contract, NUMIDS.
+
+## d
+*Using the full model with all predictors, test the individual t-test at* $\alpha = 0.05$. *What predictors should be added to the model?*
+```{r Individual t-test FLAG}
+summary(full_model_FLAG)
+```
+
+Based on the summary of the full model, the following variables are significant and should be added to the model:
+
+  - Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST
+  - Status of contract (1 if fixed, 0 if competitive), STATUS
+  - Number of bidders on contract, NUMIDS.
+  - District (1, 2, 3, 4, or 5) in which construction project is located, DISTRICT
+
+Additionally, one might look at the PCTEXCAV variable as a suitable predictor for the model as it is close to the p-value cut-off of 0.05. For now, we will include the additional variable, DISTRICT, only.
+
+```{r Reduced Flag model d}
+reduced_model_FLAG_d <- lm(data = FLAG, LOWBID ~ DOTEST + STATUS + NUMIDS + DISTRICT)
+summary(reduced_model_FLAG_d)
+```
+
+## e
+*Compare the results, parts a-d. Which independent variables consistently are selected as the "best" predictors for the first order model? Write the first order model for predicting* $Y$.
+
+The independent variables that are consistently selected as the best predictors are:
+
+  - Department of Transportation (DOT) engineer’s estimate of fair contract price ($), DOTEST
+  - Status of contract (1 if fixed, 0 if competitive), STATUS
+  - Number of bidders on contract, NUMIDS.
+
+```{r Reduced Model FLAG}
+reduced_model_FLAG <- lm(data = FLAG, LOWBID ~ DOTEST + STATUS + NUMIDS)
+coefficients(reduced_model_FLAG)
+```
+
+
+$$\widehat{LOWBID} = \hat{\beta_0} + \hat{\beta_1}DOTEST + \hat{\beta_2}STATUS + \hat{\beta_3}NUMIDS$$
+
+Where,
+
+$$
+\begin{aligned}
+\hat{\beta_0} =& 57105.973 \\
+\hat{\beta_1} =& 0.937 \\
+\hat{\beta_2} =& 95252.389 \\
+\hat{\beta_3} =& -15353.820 \\
+\end{aligned}
+$$
+
+## f
+*Interpret the regression coefficients for each* $\beta_i$
+
+If the Depatrment of Transportation's estimate increases by \$1, the price of the contract for the lowest bidder will increase by \$0.937. If the status of the contract is fixed, the contract price will be \$92,252.40 higher than if the contract was competitive. If the number of bidders increases by one, the constract price of the lowest bidder will decrease by \$15,353.82. The lowest bidder's contract price will start at \$57,105.97 if all other variables are 0.
+
+
+## g
+*Apply All Possible Regressions Selection Procedure to confirm that the independent variables in part (d) are suitable for modeling* $Y$. *Provide all three criteria value (Cp, AIC,* $R_{adj}^2$*) for the model selected.*
+```{r All Possible Regression FLAG, cache = TRUE}
+ols_step_best_subset(full_model_FLAG)
+```
+
+Based on the Subsets Regression Summary, Model 4 suggests that, with a relatively low Cp, AIC and a relatively high $R_{adj}^2$, the model variables from part d are suitable. Additionally, since model 7 is not the most suitable model, we can confirm that even though the PCTEXCAV variable was close to being accept in part d, we should drop it from further use.
+
+The criteria values for the model selected would be:
+
+  - $R_{adj}^2 = 0.9745$
+  - $Cp = 5.2934$
+  - $AIC = 7799.6943$
+
+## h
+*Build a complete first order model with interaction term. Would you suggest this model for predicting* $Y$*? Explain.*
+```{r Interaction Model FLAG}
+full_interact_FLAG <- lm(data = FLAG, LOWBID ~ (DOTEST + STATUS + NUMIDS + DISTRICT)**2)
+summary(full_interact_FLAG)
+```
+
+```{r Reduced Interaction Model}
+interaction_reduced_FLAG <- lm(data = FLAG, LOWBID ~ DOTEST + DISTRICT + STATUS + NUMIDS + DOTEST * STATUS + DOTEST * NUMIDS + DOTEST * DISTRICT + NUMIDS * DISTRICT)
+summary(interaction_reduced_FLAG)
+```
+
+The first order model would be:
+
+$$\begin{aligned}
+\widehat{LOWBID} =& \hat{\beta_0} + \hat{\beta_1}DOTEST + \\
+&\hat{\beta_2}STATUS + \hat{\beta_3}NUMIDS + \hat{\beta_4}DISTRICT + \\
+&\hat{\beta_5}DOTEST*STATUS + \hat{\beta_6}DOTEST*NUMIDS + \\
+&\hat{\beta_7}DOTEST*DISTRICT + \hat{\beta_8}NUMIDS*DISTRICT
+&\end{aligned}$$
+
+```{r Breusch-Pagan Test FLAG}
+bptest(interaction_reduced_FLAG)
+```
+
+```{r Shapiro-Wilk Test FLAG}
+shapiro.test(residuals(interaction_reduced_FLAG))
+```
+
+Since both the Breusch-Pagan Test and the Shapiro-Wilk test reject the null hypothesis, meaning heteroscedasticity is present in the first order model and the sample data is also not significantly normally distributed, the first order model should not be used to predict $Y$.
+
+## i
+*Compare the RMSE from the first order model in part (d) with the interation model in part (h). Interpret the result.*
+```{r RMSE comparison FLAG}
+sigma(reduced_model_FLAG_d)
+sigma(interaction_reduced_FLAG)
+sigma(reduced_model_FLAG) - sigma(reduced_model_FLAG_d)
+```
+
+The RMSE for the model in part d is 2,036 units higher than the interaction model in part h. Our model preference in this case would be the reduced interaction model from part h as we prefer models with a minimum RMSE.
+
+## j
+*Find the* $R_{adj}^2$ *and interpret the result from part h*
+```{r R squared Adj FLAG}
+summary(interaction_reduced_FLAG)$adj.r.squared
+```
+
+The $R_{adj}^2$ for the model from part h is 0.981, meaning that 98.1% of the variance in the contractor's lowest bidding price can be explained by the model in part h.
+
+# Problem 3
+*An author studied family caregiving in Korea of older adults with dementia. The outcome variable, caregiver burden (BURDEN), was measured by the Korean Burden Inventory (KBI) where scores ranged from 28 to 140 with higher scores indicating higher burden. The following independent variables were reported by the researchers:*
+
+  1. *CGAGE: caregiver age (years)*
+  2. *CGINCOME: caregiver income (Won-Korean currency)*
+  3. *CGDUR: caregiver-duration of caregiving (month)*
+  4. *ADL: total activities of daily living where low scores indicate the elderly perform activities independently.*
+  5. *MEM: memory and behavioral problems with higher scores indicating more problems.*
+  6. *COG: cognitive impairment with lower scores indicating a greater degree of cognitiveimpairment.*
+  7. *SOCIALSU: total score of perceived social support (25-175, higher values indicating more support).*
+  
+*The reported data are in file KBI.csv.*
+
+```{r Load Data 3, include=FALSE}
+KBI <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Assignments/2/KBI.csv")
+glimpse(KBI)
+```
+
+## a
+*Use stepwise regression (with stepwise selection) to find the "best" set of predictors of caregiver burden. [Hint: Use pent = 0.1 and prem = 0.3].*
+```{r Stepwise Regression KBI}
+full_model_KBI <- lm(data = KBI, BURDEN ~ .)
+ols_step_both_p(full_model_KBI, pent = 0.1, prem = 0.3)
+```
+
+From the stepwise regression procedure, the following independent variables are selected as the best predictors:
+
+  - MEM: memory and behavioral problems with higher scores indicating more problems
+  - SOCIALSU: total score of perceived social support (25-175, higher values indicating more support)
+  - CGDUR: caregiver-duration of caregiving (month)
+
+## b
+*Use backward elimination regression to find the "best" set of predictors of caregiver burden. [Hint: Use prem = 0.1]*
+```{r Backward Regression KBI}
+ols_step_backward_p(full_model_KBI, prem = 0.1)
+```
+
+From the backward regression procedure, the following independent variables are selected as the best predictors:
+
+  - MEM: memory and behavioral problems with higher scores indicating more problems
+  - SOCIALSU: total score of perceived social support (25-175, higher values indicating more support)
+  - CGDUR: caregiver-duration of caregiving (month)
+
+## c
+*Use forward elimination regression to find the "best" set of predictors of caregiver burden. [Hint: Use pent = 0.1]*
+```{r Forward Regression KBI}
+ols_step_forward_p(full_model_KBI, pent = 0.1)
+```
+
+From the forward regression procedure, the following independent variables are selected as the best predictors:
+
+  - MEM: memory and behavioral problems with higher scores indicating more problems
+  - SOCIALSU: total score of perceived social support (25-175, higher values indicating more support)
+  - CGDUR: caregiver-duration of caregiving (month)
+
+## d
+*Use all-possible-regressions-selection to find the "best" predictors of caregiver burden (Cp, AIC, Adjusted R^2, R^2)*
+```{r All Possible Regression KBI}
+ols_step_best_subset(full_model_KBI, details = TRUE)
+```
+
+The the subsets regression summary, the lowest Cp and the second highest $R_{adj}^2$ is Model 3 which includes the following predictors:
+
+  - MEM: memory and behavioral problems with higher scores indicating more problems
+  - SOCIALSU: total score of perceived social support (25-175, higher values indicating more support)
+  - CGDUR: caregiver-duration of caregiving (month)
+
+These predictors are considered the strongest to predict the caregiver burden.
+
+## e
+*Compare the results, parts a-c. Which independent variables consistently are selected as the "best" predictors? Comment on the value of the adjusted R^2.*
+The independent variables consistently selected as the best predictors are:
+
+  - MEM: memory and behavioral problems with higher scores indicating more problems
+  - SOCIALSU: total score of perceived social support (25-175, higher values indicating more support)
+  - CGDUR: caregiver-duration of caregiving (month)
+  
+The $R_{adj}^2$ is 0.4222 which means only 42% of the variance in the caregiver burden can be explained by this model.
+
+## f
+*Explain how you would use the results, parts a-c, to develop a model for caregiver burden. Check for interactions, normality and linearity assumptions.*
+From the best predictors found in parts a-c, the interaction terms betwen those predictors should be tested as follows:
+
+```{r Interaction Model KBI}
+reduced_model_KBI <- lm(data = KBI, BURDEN ~ MEM + SOCIALSU + CGDUR)
+interaction_KBI <- lm(data = KBI, BURDEN ~ (MEM + SOCIALSU + CGDUR)**2)
+summary(interaction_KBI)
+```
+
+As there are no interactions that are significant (p-value below 0.05), interactions will not be included in this model.
+
+Next, a qqplot and the Shapiro-Wilk test will be used to check for normality:
+
+```{r Normality Assumption KBI}
+KBI %>% ggplot(aes(sample = reduced_model_KBI$residuals)) +
+  stat_qq() +
+  stat_qq_line()
+shapiro.test(residuals(reduced_model_KBI))
+```
+
+Based on the qqplot, we can see the residuals of the reduced additive model follow a linear trend along the qq line. Additionally, the p-value from the Shapiro-Wilk test is greater than 0.05 which confirms that the residuals of this model follow a normal distribution.
+
+Next, a residual plot will be used to check the linearity assumption:
+
+```{r Linearity Assumption KBI}
+ggplot(reduced_model_KBI, aes(x = .fitted, y = .resid)) +
+  geom_point() + 
+  geom_smooth() +
+  geom_hline(yintercept = 0)
+```
+
+Based on the residual plot above, we can see there is no general pattern. The linearity assumption holds.
+
+## g
+*Do you detect any outliers by using leverage values greater than *$\frac{2p}{n}$*? Remove those outliers and fit again the model with variables selected in question a*
+```{r Outliers KBI 2p/n}
+n_KBI <- 100
+p_KBI <- 3
+plot(reduced_model_KBI, pch = 18, col = "red", which = 4)
+abline(h = 2 * p_KBI / n_KBI, lty = 1)
+```
+
+Observations 58, 62 and 68 are above the $\frac{2p}{n}$ cutoff. These observation will be dropped.
+
+```{r Remove Outliers KBI g}
+KBI_reduced1 <- KBI[-c(58, 62, 68), ]
+reduced_model_KBI1 <- lm(data = KBI_reduced1, BURDEN ~ MEM + SOCIALSU + CGDUR)
+```
+
+## h
+*Do you detect any outliers by using leverage values greater than *$\frac{3p}{n}$*? Remove those outliers and fit again the model with variables selected in question a*
+```{r Outliers KBI 3p/n}
+plot(reduced_model_KBI, pch = 18, col = "red", which = 4)
+abline(h = 3 * p_KBI / n_KBI, lty = 1)
+```
+
+Observation 58 is above the $\frac{3p}{n}$ cutoff. This observation will be dropped.
+
+```{r Remove Outliers KBI h}
+KBI_reduced2 <- KBI[-c(58), ]
+reduced_model_KBI2 <- lm(data = KBI_reduced2, BURDEN ~ MEM + SOCIALSU + CGDUR)
+```
+
+## i
+*Do you notice any difference in the results with the model from part a and the best fit model between part g and h? Comment.*
+```{r Outlier comparison KBI}
+summary(reduced_model_KBI1)$adj.r.squared
+summary(reduced_model_KBI2)$adj.r.squared
+summary(reduced_model_KBI)$adj.r.squared
+```
+
+In terms of $R_{adj}^2$, the model improves as you take out the observation outliers. These outliers have a significant enough impact on the model that they should be removed from the best fitted model.

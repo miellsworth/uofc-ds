@@ -1,0 +1,229 @@
+---
+title: "Additional Project Info"
+output: html_notebook
+---
+
+## Explore - Tree Species
+- Top 10 Tree Species in Calgary
+
+```{r List Top 10 Species, include=FALSE}
+# Tally number of trees per Species type
+species <- public_trees %>%
+  top_n(10) %>%
+  filter(!is.na(SPECIES)) %>% # Filters NAs from species column
+  group_by(SPECIES) %>%
+  tally() %>%
+  arrange(desc(n))
+species_top10 <- pull(species %>% top_n(10), SPECIES)
+```
+
+```{r Top 10 Species, echo=FALSE, warning=FALSE}
+# Plot
+species_plot <- species %>%
+  filter(SPECIES %in% species_top10) %>%
+  ggplot(aes(x = reorder(SPECIES, n), y = n / 1000)) +
+  geom_col() +
+  xlab("Tree Species") +
+  ylab("Total Count (Thousands) - Calgary") +
+  ggtitle("Tree Count By Species - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+species_plot
+```
+
+## Tree Condition - Top 10 Species
+```{r Top 10 Species Conditions, echo=FALSE, warning=FALSE}
+species_condition <- public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), TREE_CONDITION_RATING_PERC < 100) %>%
+  filter(!is.na(SPECIES)) %>%  # Filters NAs from species column
+  filter(SPECIES %in% species_top10)
+species_boxplot <- species_condition %>%
+  ggplot(aes(x = SPECIES, y = TREE_CONDITION_RATING_PERC)) +
+  geom_boxplot() +
+  xlab("Tree Species") +
+  ylab("Tree Condition (%)") +
+  ggtitle("Boxplot Tree Condition By Species - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+species_boxplot
+```
+
+## Tree Condition - Top 10 Trees by Name
+```{r Top 10 Tree Names Conditions, echo=FALSE, warning=FALSE}
+names_condition <- public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), TREE_CONDITION_RATING_PERC < 100) %>%
+  filter(!is.na(COMMON_NAME)) %>%  # Filters NAs from species column
+  filter(COMMON_NAME %in% names_top10)
+names_boxplot <- names_condition %>%
+  ggplot(aes(x = COMMON_NAME, y = TREE_CONDITION_RATING_PERC)) +
+  geom_boxplot() +
+  xlab("Tree Names") +
+  ylab("Tree Condition (%)") +
+  ggtitle("Boxplot Tree Condition By Common Names - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+names_boxplot
+```
+
+## Tree Condition - Top 10 Trees by Genus
+```{r Top 10 Genus Conditions, echo=FALSE, warning=FALSE}
+genus_condition <- public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), TREE_CONDITION_RATING_PERC < 100) %>%
+  filter(!is.na(GENUS)) %>%  # Filters NAs from species column
+  filter(GENUS %in% genus_top10)
+genus_boxplot <- genus_condition %>%
+  ggplot(aes(x = GENUS, y = TREE_CONDITION_RATING_PERC)) +
+  geom_boxplot() +
+  xlab("Tree Genus") +
+  ylab("Tree Condition (%)") +
+  ggtitle("Boxplot Tree Condition By Genus - Top 10") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+genus_boxplot
+```
+
+## Green Ash Proportion - Built-out
+```{r Green Ash Prop Built, warning=FALSE, include=FALSE}
+
+bootstrap_GA_built <- do(1000) * mean(resample(GA_built_vector, n = n_built))
+bootstrap_GA_built_plot <- bootstrap_GA_built %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0001) +
+  xlab("Bootstrap Statistic - Sample Proportion of Green Ash in Built-Out Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Green Ash - Built-Out Communities")
+bootstrap_GA_built_plot
+```
+
+## Green Ash Proportion - Built-out
+```{r Green Ash Prop Built Stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_GA_built)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_GA_built)
+```
+
+
+## Green Ash Proportion - Developing
+```{r Green Ash Prop Developing, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for Green Ash in "Developing" Communities
+
+bootstrap_GA_developing <- do(1000) * mean(resample(GA_developing_vector, n = n_developing))
+bootstrap_GA_developing_plot <- bootstrap_GA_developing %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0001) +
+  xlab("Bootstrap Statistic - Sample Proportion of Green Ash in Developing Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Green Ash - Developing Communities")
+bootstrap_GA_developing_plot
+```
+
+## Green Ash Proportion - Developing
+```{r Green Ash Prop Developing Stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_GA_developing)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_GA_developing)
+```
+
+## Picea Proportion - Built-out
+```{r Picea Prop Built, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for Picea in "Built-Out" Communities
+
+bootstrap_picea_built <- do(1000) * mean(resample(picea_built_vector, n = n_built_genus))
+bootstrap_picea_built_plot <- bootstrap_picea_built %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0001) +
+  xlab("Bootstrap Statistic - Sample Proportion of Picea in Built-Out Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Picea - Built-Out Communities")
+bootstrap_picea_built_plot
+```
+
+## Picea Proportion - Built-out
+```{r Picea Prop Built stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_picea_built)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_picea_built)
+```
+
+## Picea Proportion - Developing
+```{r Picea Prop Developing, warning=FALSE, include=FALSE}
+# Build bootstrap distribution for Picea in "Developing" Communities
+
+bootstrap_picea_developing <- do(1000) * mean(resample(picea_developing_vector, n = n_developing_genus))
+bootstrap_picea_developing_plot <- bootstrap_picea_developing %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0005) +
+  xlab("Bootstrap Statistic - Sample Proportion of Picea in Developing Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Picea - Developing Communities")
+bootstrap_picea_developing_plot 
+```
+
+## Picea Proportion - Developing
+```{r Picea Prop Developing stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_picea_developing)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_picea_developing)
+```
+
+## Small Proportion - Built-out
+```{r Small Prop Built, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for Small in "Built-Out" Communities
+
+bootstrap_small_built <- do(1000) * mean(resample(small_built_vector, n = n_built_size))
+bootstrap_small_built_plot <- bootstrap_small_built %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0001) +
+  xlab("Bootstrap Statistic - Sample Proportion of Small Trees in Built-Out Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Small Trees - Built-Out Communities")
+bootstrap_small_built_plot
+```
+
+## Small Proportion - Built-out
+```{r Small Prop Built stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_small_built)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_small_built)
+```
+
+## Small Proportion - Developing
+```{r Small Prop Developing, echo=FALSE, warning=FALSE}
+# Build bootstrap distribution for Small in "Developing" Communities
+
+bootstrap_small_developing <- do(1000) * mean(resample(small_developing_vector, n = n_developing_size))
+bootstrap_small_developing_plot <- bootstrap_small_developing %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.0005) +
+  xlab("Bootstrap Statistic - Sample Proportion of Small Trees in Developing Communities") +
+  ylab("Counts") +
+  ggtitle("Distribution - Sample Proportion of Small Trees - Developing Communities")
+bootstrap_small_developing_plot 
+```
+
+## Small Proportion - Developing
+```{r Small Prop Developing stats, echo=FALSE, warning=FALSE}
+# Generate statistics and 95% confidence interval
+mosaic::favstats(~mean, data = bootstrap_small_developing)
+mosaic::qdata(~mean, c(0.025, 0.975), data = bootstrap_small_developing)
+```
+
+## Linear Relationships
+- The Public Trees dataset consists of mostly categorical variables
+- Three numeric variables to test linear relationships
+
+    - Tree Condition
+    - Tree Size (Diameter)
+    - Tree Rating
+
+## Tree Condition vs Tree Rating
+```{r echo=FALSE}
+# Tree Condition vs Tree Rating
+public_trees %>%
+  filter(!is.na(TREE_CONDITION_RATING_PERC), !is.na(RATING)) %>%
+  filter(TREE_CONDITION_RATING_PERC < 100, RATING > 50) %>%
+  ggplot(aes(x = RATING, y = TREE_CONDITION_RATING_PERC)) +
+  geom_point(alpha = 0.1)
+```
+
+## Difference of Tree Condition Means - Green Ash and Other
+- Boxplot for a visual comparison
+```{r echo=FALSE}
+boxplot(GA_conditions$TREE_CONDITION_RATING_PERC, total_conditions_name$TREE_CONDITION_RATING_PERC, names=c("Green Ash", "Other"), ylab="Tree Condition Rating", col='blue', main="Boxplots of Tree Condition Rating (Green Ash Vs. Other)")
+```

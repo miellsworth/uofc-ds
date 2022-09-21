@@ -1,0 +1,304 @@
+name,playlist_name,danceability,energy,key,loudness,mode,speechiness,instrumentalness,valence,tempo,time_signature,track.album.id,track.name,track.popularity,track.album.name,track.album.release_date,key_name,mode_name,key_mode,track.duration_ms
+Why Don't We,Pop,0.693,0.604,11,-5.279,1,0.0427,0,0.651,75.014,4,4XSRrYHawXjGuQ6qEk3Kk5,Big Plans,27,Big Plans,2019-01-17,B,major,B major,179929
+Lauv,Pop,0.806,0.558,9,-6.46,1,0.0683,0,0.678,95.016,4,60sI3iRfHfu7YpcTpZ29W1,"fuck, i'm lonely (with Anne-Marie) - from “13 Reasons Why: Season 3”",81,"fuck, i'm lonely (with Anne-Marie) (from “13 Reasons Why: Season 3”)",2019-08-02,A,major,A major,198973
+Ed Sheeran,Pop,0.64,0.648,5,-8.113,0,0.187,0,0.548,92.977,4,3oIFxDIo2fwuk4lwCmFZCx,Beautiful People (feat. Khalid),82,No.6 Collaborations Project,2019-07-12,F,minor,F minor,197866
+5 Seconds of Summer,Pop,0.611,0.52,0,-5.445,1,0.0346,0,0.771,159.927,4,2rSrRHcfwJXxni8HczqKAT,Lie To Me (feat. Julia Michaels),76,Lie To Me (feat. Julia Michaels),2018-12-21,C,major,C major,149877
+Dan + Shay,Pop,0.654,0.63,10,-4.644,1,0.0259,0,0.43,89.991,4,4ow6xJwn49gpWz7iHpOzWY,"10,000 Hours (with Justin Bieber)",90,"10,000 Hours (with Justin Bieber)",2019-10-04,A#,major,A# major,167693
+Why Don't We,Pop,0.614,0.647,0,-4.681,0,0.0524,0,0.368,163.862,4,6IEEEv0mmFYPjhATWKYZRE,What Am I,78,What Am I,2019-08-23,C,minor,C minor,184665
+Shawn Mendes,Pop,0.692,0.809,2,-4.198,1,0.0602,0,0.864,123.911,4,1J2BrRxtQjVUa7X9Ne99xD,If I Can't Have You,82,If I Can't Have You,2019-05-03,D,major,D major,190800
+Andy Grammer,Pop,0.641,0.537,0,-5.452,0,0.0282,9.05e-6,0.0681,112.864,4,0yfSE7Q6NGIbvnEU0sFNRP,"Don't Give Up On Me - (From ""Five Feet Apart"")",17,"Don't Give Up On Me (From ""Five Feet Apart"")",2019-02-13,C,minor,C minor,196187
+Maren Morris,Pop,0.612,0.57,11,-6.642,0,0.0347,0,0.335,77.004,4,5QakU0QMcoxjjyCS1YW4G5,The Bones,79,GIRL,2019-03-08,B,minor,B minor,197293
+The Chainsmokers,Pop,0.591,0.702,7,-5.59,1,0.0289,0,0.501,104.003,4,1ONuDpN0a3zhCUyKCgtuzK,Call You Mine,34,World War Joy,2019-05-31,G,major,G major,217653
+Julia Michaels,Pop,0.518,0.467,0,-6.184,1,0.0302,0,0.386,132.854,4,1xJ7jIK1tT0aVoJw1fPE6r,What A Time (feat. Niall Horan),77,Inner Monologue Part 1,2019-01-24,C,major,C major,173306
+Lauv,Pop,0.599,0.733,11,-7.058,1,0.203,0,0.534,102.211,4,13yMsBNa2femeWzhcDOqFw,i'm so tired...,82,i'm so tired...,2019-01-24,B,major,B major,162582
+Ed Sheeran,Pop,0.857,0.621,9,-6.376,0,0.0824,0,0.668,97.986,4,3oIFxDIo2fwuk4lwCmFZCx,South of the Border (feat. Camila Cabello & Cardi B),89,No.6 Collaborations Project,2019-07-12,A,minor,A minor,204466
+Lennon Stella,Pop,0.689,0.679,7,-5.893,1,0.0517,0.00111,0.475,149.972,4,3OIuzwZjpwUwyvFhSHYjj6,La Di Da,75,"Love, me",2018-11-17,G,major,G major,209773
+Katy Perry,Pop,0.77,0.882,8,-4.792,1,0.0602,0,0.385,99.991,4,3KjXg0MDej2pG9fv6I22lT,Never Really Over,84,Never Really Over,2019-05-31,G#,major,G# major,223523
+MAX,Pop,0.732,0.856,11,-2.2,0,0.0929,0,0.771,145.034,4,0BHgyJ3dblyBOmxV8pRmGg,Love Me Less (feat. Quinn XCII),77,Love Me Less (feat. Quinn XCII),2019-04-05,B,minor,B minor,177669
+Drax Project,Pop,0.698,0.66,2,-5.429,0,0.083,0,0.351,119.214,4,4orebNTJrv5qLKVBOunr1N,Woke Up Late (feat. Hailee Steinfeld),24,Woke Up Late (feat. Hailee Steinfeld),2019-01-21,D,minor,D minor,181859
+Ed Sheeran,Pop,0.798,0.675,6,-5.041,1,0.0442,0,0.842,101.956,4,3oIFxDIo2fwuk4lwCmFZCx,I Don't Care (with Justin Bieber),83,No.6 Collaborations Project,2019-07-12,F#,major,F# major,219946
+Lewis Capaldi,Pop,0.501,0.405,1,-5.679,1,0.0319,0,0.446,109.891,4,0NVQ9k3wKmuK6T02lLMl6y,Someone You Loved,83,Breach,2018-11-08,C#,major,C# major,182160
+Alessia Cara,Pop,0.492,0.267,7,-9.25,1,0.0336,0,0.137,117.679,3,0LzVdypBGpn6dGuHqVGwwt,Out Of Love,77,The Pains Of Growing,2018-11-30,G,major,G major,227693
+Jeremy Zucker,Pop,0.798,0.175,0,-12.603,1,0.0594,0,0.633,93.994,4,0z59TOGj1z9NZJYNvRV02q,comethru,16,comethru,2018-09-07,C,major,C major,181520
+Why Don't We,Pop,0.797,0.543,11,-5.744,1,0.0439,0,0.164,115.036,4,3CKzA951WnfvvOGresjno6,I Don't Belong In This Club,29,I Don't Belong In This Club,2019-03-20,B,major,B major,222620
+Dan + Shay,Pop,0.489,0.581,11,-5.731,1,0.0281,0,0.494,86.016,4,0g1F5eGVwX4Sxi1n8ojPkE,Tequila,75,Dan + Shay,2018-06-22,B,major,B major,196746
+Virginia To Vegas,Pop,0.788,0.761,7,-5.752,1,0.177,0,0.807,100.036,4,3RNU0cc0r24CcchOHZBQuJ,Just Friends,55,Hartland St.,2019-06-14,G,major,G major,169533
+Khalid,Pop,0.551,0.44,10,-8.559,1,0.0985,3.02e-5,0.341,167.923,4,2Qxc2NJ7yPKVFRWi3llRr2,Saturday Nights,77,Suncity,2018-10-18,A#,major,A# major,210666
+Niall Horan,Pop,0.591,0.841,4,-4.351,0,0.0304,0,0.392,109.034,4,3KrYBAbfxlssMirZLs6HzZ,Nice To Meet Ya,84,Nice To Meet Ya,2019-10-04,E,minor,E minor,158805
+James Bay,Pop,0.631,0.715,1,-6.083,0,0.0277,0,0.42,135.826,4,4pPJ0Hwrvadty8bGsg4Msg,Peer Pressure (feat. Julia Michaels),29,Peer Pressure (feat. Julia Michaels),2019-02-22,C#,minor,C# minor,176880
+James Arthur,Pop,0.67,0.743,10,-4.993,1,0.0393,0,0.571,125.944,4,4dPosP4Io4sDCmeiCxVHW0,Rewrite The Stars (with James Arthur & Anne-Marie),72,The Greatest Showman: Reimagined,2018-11-16,A#,major,A# major,218293
+Marshmello,Pop,0.791,0.565,5,-3.933,0,0.0439,0,0.181,99.961,4,6NHS3hV16MZyfcp0nSHdrd,Here With Me,82,Here With Me,2019-03-08,F,minor,F minor,156346
+Halsey,Pop,0.667,0.583,11,-5.127,0,0.0747,4.48e-5,0.187,92.043,4,66QwiCFDLtRbrZ5Vs9wlL9,Graveyard,82,Graveyard,2019-09-13,B,minor,B minor,181805
+Mark Ronson,Pop,0.605,0.664,8,-7.162,1,0.0316,3e-6,0.164,103.997,4,6vdLdzihSWxV8FgWU2GSvA,Find U Again (feat. Camila Cabello),72,Late Night Feelings,2019-06-21,G#,major,G# major,176416
+Zara Larsson,Pop,0.665,0.699,11,-5.265,1,0.0578,0,0.585,124.896,4,2BM5FQCILC33Va2jOZ11Mu,Ruin My Life,78,Ruin My Life,2018-10-18,B,major,B major,190931
+SHAED,Pop,0.619,0.459,7,-5.782,0,0.0334,0,0.498,126.803,4,5QqqBZmdQmY1MvlnpBkagB,Trampoline (with ZAYN),88,Trampoline (with ZAYN),2019-09-26,G,minor,G minor,184280
+Andy Grammer,Pop,0.728,0.701,1,-6.58,1,0.0406,2.08e-5,0.413,137.97,4,0XTXsyyHWn0yhefqH6i570,I Found You,24,I Found You,2019-07-12,C#,major,C# major,151733
+Taylor Swift,Pop,0.359,0.543,7,-7.582,1,0.0919,1.58e-5,0.453,68.534,4,1NAmidJlEaVgA3MpcPFYGq,Lover,83,Lover,2019-08-23,G,major,G major,221306
+OneRepublic,Pop,0.668,0.534,1,-6.586,1,0.0677,0,0.711,145.816,4,19xtr8RaBkQNaDaNmXnVDj,Wanted,73,Wanted,2019-09-06,C#,major,C# major,136247
+The Chainsmokers,Pop,0.575,0.571,1,-7.906,1,0.0439,0,0.449,105.049,4,6ZvDJs17O3woQirttKRYCG,This Feeling,80,Sick Boy,2018-12-14,C#,major,C# major,197946
+Chris Brown,Pop,0.66,0.395,7,-5.242,1,0.0333,0,0.678,81.997,4,1BfLzaTFI5qKsAAk0Ae6aV,Don't Check On Me (feat. Justin Bieber & Ink),67,Indigo,2019-06-28,G,major,G major,204880
+Ellie Goulding,Pop,0.669,0.801,8,-5.445,1,0.136,0,0.541,109.919,4,5AXNN75OmMjFrwst6ExNPx,Sixteen,80,Sixteen,2019-04-12,G#,major,G# major,201072
+Taylor Swift,Pop,0.771,0.671,2,-5.617,1,0.0553,0,0.714,85.026,4,1NAmidJlEaVgA3MpcPFYGq,You Need To Calm Down,85,Lover,2019-08-23,D,major,D major,171360
+Lauv,Pop,0.752,0.505,9,-7.621,1,0.253,2.55e-6,0.419,91.97,4,7l6fTSFvlumnPFpOSrbnDV,I Like Me Better,82,I Like Me Better,2017-05-19,A,major,A major,197436
+Lennon Stella,Pop,0.699,0.663,2,-5.697,1,0.0891,3.83e-6,0.379,94.042,4,0TBJKh2NvW9XPSVjTMSXGW,Kissing Other People,74,Kissing Other People,2019-11-01,D,major,D major,161626
+Sam Smith,Pop,0.477,0.682,1,-4.931,0,0.0925,0,0.345,110.567,5,7baaCf70tVcUBL2bbkuXjo,How Do You Sleep?,89,How Do You Sleep?,2019-07-19,C#,minor,C# minor,202204
+Khalid,Pop,0.665,0.712,1,-7.536,1,0.0527,0.00342,0.669,93.989,4,2pSH41L4EXqhGHyTjM2dA2,Up All Night,84,Up All Night,2019-11-14,C#,major,C# major,157220
+Dean Lewis,Pop,0.613,0.739,10,-6.478,1,0.0311,0,0.712,104.966,4,48M2TlqiSdLFWXK1k7Hoar,7 Minutes,71,7 Minutes,2019-01-18,A#,major,A# major,211453
+Alessia Cara,Pop,0.766,0.522,6,-6.86,1,0.148,0.00398,0.525,156.077,4,24riCP5KVIEEaXKYvvhshe,Rooting For You,52,This Summer,2019-09-06,F#,major,F# major,176040
+Marshmello,Pop,0.659,0.623,4,-2.253,1,0.0451,0,0.439,88.042,4,4QAC6FquY8D0RXom13iE5J,One Thing Right,84,One Thing Right,2019-06-21,E,major,E major,181823
+Havelin,Pop,0.57,0.571,11,-7.76,0,0.0347,6.62e-4,0.78,200.072,4,1vJQ4rDLU63Hy7fNYq5A3e,Me Without You,41,Me Without You,2019-06-14,B,minor,B minor,167498
+Sabrina Carpenter,Pop,0.46,0.809,6,-5.415,1,0.326,5.04e-5,0.609,157.184,4,29mlGxS6kxq1EHxlX1EAZK,Sue Me,74,Singular Act I,2018-11-09,F#,major,F# major,179226
+Bazzi,Pop,0.844,0.644,11,-6.273,0,0.0479,0,0.591,122.061,4,5mLjE4CPn8kNpzqNNslabJ,Paradise,27,Paradise,2019-04-04,B,minor,B minor,169038
+Lewis Capaldi,Pop,0.459,0.575,3,-4.858,1,0.0573,0,0.183,111.881,4,2wiPF3m0ylst0JSk1IvZL8,Before You Go,83,Divinely Uninspired To A Hellish Extent (Extended Edition),2019-11-22,D#,major,D# major,215106
+Post Malone,Pop,0.695,0.762,0,-3.497,1,0.0395,0.00244,0.553,120.042,4,3KziODx7ieQTgYCVrS6nBv,Circles,41,Hollywood's Bleeding,2019-09-06,C,major,C major,215280
+Gabrielle Aplin,Pop,0.66,0.449,7,-6.573,1,0.0442,0,0.237,133.984,4,5MS4jSKio1OjUOKOnTEEat,Losing Me,73,Losing Me,2019-08-14,G,major,G major,180640
+NOTD,Pop,0.7,0.872,10,-5.896,1,0.0666,7.08e-6,0.761,125.03,4,4ZIaWbFnkMozASM1CA59K6,So Close,78,So Close (feat. Georgia Ku),2018-11-02,A#,major,A# major,190302
+Lukas Graham,Pop,0.538,0.409,9,-6.581,0,0.0505,0,0.265,171.838,4,02gV87QEIFp2T9q7OqVBjj,Love Someone,72,3 (The Purple Album),2018-10-26,A,minor,A minor,205440
+ZAYN,Pop,0.452,0.685,0,-4.828,0,0.0385,0,0.305,76.986,4,2aE3VcIiNPqqo4VzOXiDoR,There You Are,61,Icarus Falls,2018-12-14,C,minor,C minor,199600
+Sam Smith,Pop,0.741,0.52,8,-7.513,1,0.0656,1.97e-6,0.347,102.998,4,1V9oE8bVilClrk5naqyyvL,Dancing With A Stranger (with Normani),86,Dancing With A Stranger (with Normani),2019-01-11,G#,major,G# major,171029
+Jonas Brothers,Pop,0.842,0.734,1,-5.065,0,0.0588,0,0.952,137.958,4,1Uf67JAtkVWfdydzFFqNF2,Sucker,87,Happiness Begins,2019-06-07,C#,minor,C# minor,181026
+Ellie Goulding,Pop,0.574,0.758,1,-5.029,0,0.0621,0,0.492,144.111,4,4bLCVUEB9YWKEeaJm8FfqQ,Close To Me (with Diplo) (feat. Swae Lee),81,Close To Me (feat. Swae Lee),2018-10-24,C#,minor,C# minor,182623
+Blake Rose,Pop,0.595,0.687,4,-6.536,1,0.0486,0,0.508,94.73,4,16A6HpMW9UMCB3GNA0Es7a,Lost,69,Lost,2019-02-08,E,major,E major,234623
+OneRepublic,Pop,0.759,0.605,7,-7.737,1,0.0433,0,0.64,121.049,4,57BhVBJbVPfIbwLANO5fSe,Rescue Me,84,Rescue Me,2019-05-17,G,major,G major,158899
+Jonas Blue,Pop,0.46,0.8,1,-3.584,1,0.05,6.16e-6,0.553,102.46,4,6gPZmYBSipug1asf4zu9jh,What I Like About You (feat. Theresa Rex),80,What I Like About You (feat. Theresa Rex),2019-03-22,C#,major,C# major,220396
+Tyler Shaw,Pop,0.761,0.584,6,-7.832,1,0.0407,0,0.294,101.993,4,6DilYlKBYF90I7ZZXQw9Db,To the Man Who Let Her Go - Radio Mix,58,To the Man Who Let Her Go (Remixes),2019-05-24,F#,major,F# major,185219
+Jonas Brothers,Pop,0.795,0.496,0,-5.883,1,0.0722,0,0.874,94.01,4,1Uf67JAtkVWfdydzFFqNF2,Only Human,85,Happiness Begins,2019-06-07,C,major,C major,183000
+Anne-Marie,Pop,0.697,0.683,1,-2.881,0,0.117,0,0.603,96.133,4,661ouXU4o4oBewWvVzQN7H,2002,22,Speak Your Mind (Deluxe),2018-04-27,C#,minor,C# minor,186986
+Noah Cyrus,Pop,0.708,0.186,9,-8.953,0,0.0422,0,0.321,72.541,4,2YQptVBjUJeIOBavD1AyXg,July,87,July,2019-07-31,A,minor,A minor,156106
+Alexander Stewart,Pop,0.571,0.656,1,-3.154,0,0.14,0,0.699,79.868,4,2VRvshudal7iF6UpYdrVu1,Backwards,59,Backwards,2019-03-01,C#,minor,C# minor,172500
+James Arthur,Pop,0.404,0.531,1,-4.328,1,0.103,0,0.321,164.848,4,2utLlsPJXe11YMuLwH2rf4,Empty Space,71,Empty Space,2018-10-19,C#,major,C# major,214226
+Conor Maynard,Pop,0.779,0.42,0,-8.396,1,0.221,0,0.688,105.076,4,14XTLEelUegZgKjQ6XI5oA,Hate How Much I Love You,67,Hate How Much I Love You,2019-06-28,C,major,C major,175897
+Tyler Shaw,Pop,0.723,0.569,2,-6.21,1,0.0792,0,0.445,97.998,4,3Im6NQtp5y45uCASGJW1vp,With You,57,Intuition,2018-09-28,D,major,D major,200733
+The Chainsmokers,Pop,0.294,0.505,3,-8.106,1,0.042,0,0.357,85.332,1,1JawI0XkEwmQ5Bwef3RMbq,Takeaway (feat. Lennon Stella),58,World War Joy...Takeaway,2019-07-24,D#,major,D# major,209893
+Rita Ora,Pop,0.654,0.528,6,-6.224,0,0.0412,7.14e-5,0.376,82.014,4,6Vn8F3hERVHYYz5RfKmsAN,Only Want You,67,Phoenix (Deluxe Edition),2018-11-23,F#,minor,F# minor,180760
+Lauren Daigle,Pop,0.494,0.637,5,-6.381,1,0.0333,0,0.1,147.924,4,7dnYwtDQNa3xzaCoekrjL1,You Say,20,Look Up Child,2018-09-07,F,major,F major,274693
+Bastille,Pop,0.685,0.742,8,-5.409,1,0.0471,0,0.618,115.008,4,3PshhNStqCBXDzWm5O1VsE,Another Place,72,Another Place,2019-11-01,G#,major,G# major,213510
+Maggie Rogers,Pop,0.657,0.569,2,-6.287,1,0.0542,1.38e-5,0.399,102.054,4,5AHWNPo3gllDmixgAoFru4,Light On,75,Heard It In A Past Life,2019-01-18,D,major,D major,233880
+P!nk,Pop,0.652,0.453,1,-6.119,1,0.0445,0,0.432,88.038,3,6JKkXVEljQJ1wKbRG5MywC,Walk Me Home,62,Hurts 2B Human,2019-04-26,C#,major,C# major,177390
+Dean Lewis,Pop,0.553,0.586,11,-6.319,1,0.0362,0,0.443,126.684,4,0YZLXTaHLcgl5UdtKDiUXD,Be Alright,82,Be Alright,2018-06-29,B,major,B major,196373
+Sam Smith,Pop,0.584,0.407,1,-7.356,0,0.046,0,0.341,115.124,4,5utJfkRQ5yEIat3AIK6WIL,"Fire On Fire - From ""Watership Down""",80,"Fire On Fire (From ""Watership Down"")",2018-12-21,C#,minor,C# minor,246735
+Lewis Capaldi,Pop,0.688,0.53,11,-5.507,1,0.0333,0,0.162,106.958,4,5658aM19fA3JVwTK6eQX70,Hold Me While You Wait,78,Divinely Uninspired To A Hellish Extent,2019-05-17,B,major,B major,205686
+benny blanco,Pop,0.56,0.68,6,-7.648,0,0.321,0,0.319,89.391,4,7pkLXlFdpQDfmHujT2AbBK,Eastside (with Halsey & Khalid),83,Eastside (with Halsey & Khalid),2018-07-12,F#,minor,F# minor,173799
+Miley Cyrus,Pop,0.53,0.538,5,-6.672,1,0.0335,2.83e-6,0.288,148.051,4,0SHGFAL8WZUvpWb5iLPp6E,Slide Away,80,Slide Away,2019-08-16,F,major,F major,233654
+John Legend,Pop,0.508,0.729,11,-5.712,0,0.0443,0,0.412,91.906,4,32r4o1R9a1lK5DoVXGEC7E,Preach,66,Preach,2019-02-15,B,minor,B minor,236880
+Maren Morris,Pop,0.44,0.793,6,-3.95,1,0.0502,0,0.447,143.599,4,5QakU0QMcoxjjyCS1YW4G5,GIRL,69,GIRL,2019-03-08,F#,major,F# major,250653
+Frank Walker,Pop,0.792,0.724,11,-5.108,0,0.0362,0,0.429,109.984,4,1cCNxRCbzZyZPfWdNfXiHd,Only When It Rains,50,Only When It Rains,2019-03-29,B,minor,B minor,169000
+Scott Helman,Pop,0.82,0.692,3,-6.164,1,0.11,0,0.739,105.131,4,2mTYjA1gCM2DsyEdbV4GgR,Hang Ups,52,Hang Ups,2018-10-19,D#,major,D# major,175805
+Loote,Pop,0.589,0.662,7,-7.403,1,0.042,0,0.405,140.088,4,0jgsdQlQ1LZtLmYb667r8l,85%,4,85%,2019-03-22,G,major,G major,173520
+Diplo,Pop,0.764,0.555,11,-6.414,1,0.0604,0,0.255,111.004,4,4YEes0AZtUChqtLBwaQLzh,Heartless (feat. Morgan Wallen),80,Heartless (feat. Morgan Wallen),2019-08-16,B,major,B major,169226
+Zedd,Pop,0.503,0.741,4,-5.128,1,0.047,1.49e-6,0.458,88.335,3,0JcW7yCW3Qj8uMfzO2lUDb,Happy Now,78,Happy Now,2018-07-18,E,major,E major,207029
+Lennon Stella,Pop,0.811,0.619,0,-4.744,0,0.133,0,0.431,103.043,4,3OIuzwZjpwUwyvFhSHYjj6,Fortress,60,"Love, me",2018-11-17,C,minor,C minor,174706
+Faouzia,Pop,0.675,0.93,11,-3.131,0,0.069,0,0.595,129.965,4,6mpS8wIedYl2hcHVowz6CC,This Mountain,63,This Mountain,2018-10-05,B,minor,B minor,142259
+Jax Jones,Pop,0.906,0.832,5,-3.004,0,0.0718,0,0.751,104.03,4,1fYOToOfdZXY5hrOra8z2Z,Harder,61,Snacks,2019-07-12,F,minor,F minor,159753
+5 Seconds of Summer,Pop,0.596,0.854,7,-5.114,0,0.463,0,0.152,120.274,4,2D0Hi3Jj6RFnpWDcSa0Otu,Youngblood,82,Youngblood (Deluxe),2018-06-15,G,minor,G minor,203417
+Alessia Cara,Pop,0.613,0.668,0,-6.134,1,0.162,2.04e-6,0.622,150.173,4,0LzVdypBGpn6dGuHqVGwwt,Trust My Lonely,57,The Pains Of Growing,2018-11-30,C,major,C major,199746
+Dan Talevski,Pop,0.626,0.475,8,-8.086,1,0.0666,0,0.424,84.035,4,5kzHHrO8DMBOkHpcmKQ5BP,If I Ain't Got You,56,If I Ain't Got You,2019-03-22,G#,major,G# major,177850
+Camila Cabello,Pop,0.701,0.512,0,-6.869,0,0.0969,5.07e-6,0.663,91.947,4,61rwEPg49tCJFTXzyWgxJP,Real Friends,70,Real Friends,2018-08-16,C,minor,C minor,223583
+Halsey,Pop,0.752,0.488,6,-7.05,1,0.0705,9.11e-6,0.533,136.041,4,0zzrCTzvL4ZmR42xF46Afm,Without Me,86,Without Me,2018-10-04,F#,major,F# major,201660
+ILLENIUM,Pop,0.404,0.806,2,-4.75,1,0.0496,0,0.112,148.036,4,60xcVwuQJAOyu11xf9mObS,In Your Arms (with X Ambassadors),75,ASCEND,2019-08-16,D,major,D major,220730
+Panic! At The Disco,Pop,0.577,0.833,5,-3.337,1,0.0695,0,0.58,107.936,4,6ApYSpXF8GxZAgBTHDzYge,"Hey Look Ma, I Made It",78,Pray for the Wicked,2018-06-22,F,major,F major,169666
+5 Seconds of Summer,Pop,0.749,0.461,10,-2.961,0,0.0416,6.24e-6,0.42,139.02,4,1zbH0DnpYxaoqTojXNLQb6,Teeth,75,13 Reasons Why (Season 3),2019-08-23,A#,minor,A# minor,204887
+Shawn Mendes,Pop,0.759,0.54,9,-6.039,0,0.0287,0,0.75,116.947,4,2ZaX1FdZCwchXl1QZiD4O4,Señorita,91,Señorita,2019-06-21,A,minor,A minor,190960
+Carly Rae Jepsen,Pop,0.843,0.631,11,-5.567,0,0.0588,9.14e-5,0.914,134.981,4,3CXbDL5ySxJ9dtyW01UFPn,Let's Be Friends,40,Let's Be Friends,2020-02-07,B,minor,B minor,190242
+Justin Bieber,Pop,0.814,0.549,9,-6.679,1,0.0597,0,0.852,148.007,4,55zg331p7m1EFA4uRggkwt,Intentions,75,Intentions,2020-02-07,A,major,A major,212868
+Y2K,Pop,0.871,0.417,9,-7.864,1,0.0781,0,0.524,129.952,4,0QuRkYmyQzQ5Yi9laZgN9r,Lalala - Remix - [feat. Enrique Iglesias & Carly Rae Jepsen],69,Lalala (Remix - [feat. Enrique Iglesias & Carly Rae Jepsen]),2019-10-30,A,major,A major,175253
+Tones and I,Pop,0.824,0.592,6,-6.4,0,0.0969,1.58e-4,0.54,98.074,4,5i6CS5XcLZGLgaNCKlJvc2,Dance Monkey,40,Dance Monkey,2019-05-10,F#,minor,F# minor,209754
+Jessie Reyez,Pop,0.511,0.333,11,-8.176,0,0.0266,6.06e-5,0.265,101.732,4,1cotXPn0CcR0ZCQWcTtZe0,LOVE IN THE DARK,70,LOVE IN THE DARK,2020-01-23,B,minor,B minor,240053
+Halsey,Pop,0.591,0.585,2,-6.35,1,0.0277,0,0.324,110.94,4,68enXe5XcJdciSDAZr0Alr,You should be sad,87,Manic,2020-01-17,D,major,D major,205473
+Khalid,Pop,0.79,0.694,9,-7.726,0,0.0708,0.00252,0.508,103.007,4,0uLz2ygHQAtLknyGasJOr5,Know Your Worth,73,Know Your Worth,2020-02-04,A,minor,A minor,181436
+Eminem,Pop,0.794,0.637,4,-6.29,0,0.339,0,0.393,103.868,4,4otkd9As6YaxxEkIjXPiZ6,Those Kinda Nights (feat. Ed Sheeran),85,Music To Be Murdered By,2020-01-17,E,minor,E minor,177693
+Dua Lipa,Pop,0.794,0.793,11,-4.521,0,0.0842,0,0.677,123.941,4,0ix3XtPV1LwmZADsprKxcp,Don't Start Now,97,Don't Start Now,2019-10-31,B,minor,B minor,183290
+Ava Max,Pop,0.693,0.835,6,-3.242,1,0.0623,0,0.743,128.052,4,6KPJTxKFCpuzrwyJGcURqK,Salt,81,Salt,2019-12-12,F#,major,F# major,180283
+5 Seconds of Summer,Pop,0.575,0.822,7,-3.053,1,0.0401,1.32e-5,0.457,90.971,4,2i4RHN9tSRQiQ8pcaaD2Gj,No Shame,72,No Shame,2020-02-05,G,major,G major,190893
+Regard,Pop,0.88,0.751,7,-4.258,0,0.0874,6.43e-5,0.884,117.948,4,4zOhjJfe0dwqsNdDYk622E,Ride It,92,Ride It,2019-07-26,G,minor,G minor,157605
+blackbear,Pop,0.778,0.559,6,-7.109,0,0.0776,0,0.678,129.989,1,37CqAwxTungNxKpIK5vSgE,hot girl bummer,92,hot girl bummer,2019-08-23,F#,minor,F# minor,185093
+Ali Gatie,Pop,0.605,0.365,7,-11.144,1,0.111,6.83e-6,0.224,84.628,4,5pxH5JnBRw3Dc7CCxESMWM,What If I Told You That I Love You,83,What If I Told You That I Love You,2020-01-24,G,major,G major,193667
+Justin Bieber,Pop,0.824,0.503,6,-6.94,0,0.156,5.25e-5,0.784,109.397,5,0GzsdiiItPCABfhuFIKiZi,Get Me,84,Get Me,2020-01-28,F#,minor,F# minor,185418
+Anne-Marie,Pop,0.609,0.785,11,-3.32,1,0.0891,0,0.756,151.995,4,2KLNA0H5XiiMLPAWSb8sUu,Birthday,66,Birthday,2020-02-07,B,major,B major,181466
+Lizzo,Pop,0.668,0.892,5,-3.001,0,0.0645,0,0.478,95.927,4,1k1HuvFs562Z3CCiSYhtc1,Good as Hell (feat. Ariana Grande) - Remix,87,Good as Hell (feat. Ariana Grande) [Remix],2019-10-25,F,minor,F minor,159011
+Walk Off the Earth,Pop,0.697,0.676,10,-5.575,1,0.0479,0,0.449,95.001,4,4YYkscqQ8cegjuiBe4YXqv,I'll Be There,61,HERE WE GO!,2019-10-25,A#,major,A# major,169354
+Camila Cabello,Pop,0.724,0.491,8,-6.024,1,0.0296,1.29e-5,0.383,105.046,4,3Vsbl0diFGw8HNSjG8ue9m,My Oh My (feat. DaBaby),93,Romance,2019-12-06,G#,major,G# major,170746
+Dua Lipa,Pop,0.647,0.844,0,-3.756,1,0.0457,6.58e-4,0.746,146.962,4,5Vzq1wKBUXMxEZl3NPjJpS,Physical,86,Physical,2020-01-30,C,major,C major,193829
+The Weeknd,Pop,0.513,0.796,1,-4.075,1,0.0629,2.09e-4,0.345,171.017,4,2ZfHkwHuoAZrlz7RMj0PDz,Blinding Lights,98,Blinding Lights,2019-11-29,C#,major,C# major,201573
+Demi Lovato,Pop,0.557,0.387,11,-6.338,1,0.0374,0,0.317,129.98,4,4yP39SWfHBKh8J0HV3tCo1,Anyone,81,Anyone,2020-01-27,B,major,B major,227813
+Khalid,Pop,0.701,0.396,4,-10.182,0,0.119,0.0209,0.115,129.004,4,66o9dDjDduf6jpvZKzAXm4,Eleven,87,Eleven,2020-01-09,E,minor,E minor,206360
+Maroon 5,Pop,0.764,0.32,11,-7.209,1,0.0546,0,0.575,91.019,4,3nR9B40hYLKLcR0Eph3Goc,Memories,96,Memories,2019-09-20,B,major,B major,189486
+Joji,Pop,0.447,0.72,7,-3.954,1,0.0332,2.97e-4,0.362,157.892,3,6vC3YjRy755VljFSemBUu7,Run,76,Run,2020-02-06,G,major,G major,195000
+Halsey,Pop,0.626,0.55,9,-5.105,0,0.029,0,0.123,133.976,4,68enXe5XcJdciSDAZr0Alr,Finally // beautiful stranger,73,Manic,2020-01-17,A,minor,A minor,221095
+Diplo,Pop,0.738,0.717,1,-5.121,1,0.0573,0,0.5,98.047,4,1MF23oT6lg5q47LnZ91UPy,Lonely (with Jonas Brothers),80,Lonely,2019-09-27,C#,major,C# major,139813
+Kesha,Pop,0.69,0.864,1,-4.769,0,0.128,6.81e-5,0.313,114.975,4,4HZ195qaMlhiKebUtF36ni,Raising Hell (feat. Big Freedia),60,High Road,2020-01-31,C#,minor,C# minor,169693
+Niall Horan,Pop,0.726,0.736,1,-3.844,0,0.0495,5.63e-5,0.956,99.991,4,2KA0hztJvCs7eD7nv5316T,No Judgement,66,No Judgement,2020-02-07,C#,minor,C# minor,176283
+Sean Paul,Pop,0.623,0.891,7,-4.419,0,0.0653,0,0.641,99.987,4,5I3UCrlXD9vJn5n8awQspQ,Calling On Me,61,Calling On Me,2020-02-07,G,minor,G minor,218556
+Jonas Brothers,Pop,0.852,0.698,9,-7.206,1,0.0629,1.03e-6,0.324,113.039,4,3SgvmlSsTrMuqICaOTlo0p,What A Man Gotta Do,89,What A Man Gotta Do,2020-01-17,A,major,A major,180644
+Arizona Zervas,Pop,0.621,0.601,6,-5.616,0,0.148,0,0.457,116.735,5,6HJDrXs0hpebaRFKA1sF90,ROXANNE,98,ROXANNE,2019-10-10,F#,minor,F# minor,163636
+Ryland James,Pop,0.59,0.474,11,-9.561,1,0.0391,0,0.326,92.097,4,4eMsJAEXjicDYKwtHnVz9m,In My Head,9,In My Head,2019-07-19,B,major,B major,205626
+blackbear,Pop,0.755,0.631,7,-6.128,1,0.0261,0,0.881,100.026,4,1s9YbfFRnIB0jXONMz0gO2,me & ur ghost,83,me & ur ghost,2020-01-16,G,major,G major,200400
+Camila Cabello,Pop,0.572,0.292,7,-7.621,1,0.0364,1.04e-6,0.223,100.152,4,3Vsbl0diFGw8HNSjG8ue9m,First Man,76,Romance,2019-12-06,G,major,G major,228758
+JP Saxe,Pop,0.536,0.482,1,-9.97,1,0.102,0,0.672,74.55,4,2gO1pyq1nVTs7PdIMlX0r9,If The World Was Ending (feat. Julia Michaels),35,Hold It Together,2020-02-07,C#,major,C# major,211626
+John K,Pop,0.958,0.376,8,-7.063,1,0.0523,0,0.331,107.964,4,2KfDGvN1Q2CkL5yYWeSglg,if we never met,75,if we never met,2019-04-26,G#,major,G# major,144426
+Selena Gomez,Pop,0.838,0.545,5,-6.713,1,0.0706,8.01e-5,0.631,114.998,4,3YPFaTR7WMi1Hd4NVKdCJx,Rare,90,Rare,2020-01-10,F,major,F major,220589
+Charlotte Lawrence,Pop,0.476,0.652,2,-4.546,0,0.104,0,0.47,190.118,3,2Eu9J7STgsK7ojEDgXVN0A,Joke's On You,66,Joke's On You,2020-01-17,D,minor,D minor,184658
+Nea,Pop,0.779,0.342,3,-6.316,0,0.0404,2.56e-6,0.482,104.993,4,5pCAWYym13GcQN8CXEb89m,Some Say,80,Some Say,2019-09-06,D#,minor,D# minor,175601
+Meghan Trainor,Pop,0.753,0.561,1,-6.279,1,0.333,0.0266,0.539,192.037,4,766Hr0WDvATeOSIo41JvNs,Nice to Meet Ya (feat. Nicki Minaj),72,TREAT MYSELF,2020-01-31,C#,major,C# major,197003
+Madison Beer,Pop,0.658,0.698,11,-5.95,0,0.177,0,0.457,139.054,4,1VJJaEzHs2SHX4ZobSFAVh,Good in Goodbye,74,Good in Goodbye,2020-01-31,B,minor,B minor,141949
+R3HAB,Pop,0.812,0.594,5,-6.619,1,0.0776,1.86e-5,0.624,105.989,4,495KVZW6D8SXnsp7jPrTix,More Than OK (with Clara Mae),63,More Than OK (with Clara Mae),2020-01-24,F,major,F major,156226
+Ria Mae,Pop,0.483,0.667,8,-6.243,1,0.0912,0,0.64,96.028,4,1qndvyChhfvNmTWNi7eLiE,Too Close,65,Too Close,2019-10-16,G#,major,G# major,147741
+Doja Cat,Pop,0.787,0.673,11,-4.577,0,0.158,3.57e-6,0.786,110.962,4,1MmVkhiwTH0BkNOU3nw5d3,Say So,90,Hot Pink,2019-11-07,B,minor,B minor,237893
+Tate McRae,Pop,0.673,0.579,0,-6.029,0,0.0392,8.61e-5,0.262,96.009,4,1fK6nUQDMeIciyfhAADix8,stupid,61,all the things i never said,2020-01-24,C,minor,C minor,173826
+The Pussycat Dolls,Pop,0.745,0.74,10,-5.719,0,0.0697,0,0.544,120.014,4,1kApiZqAxZ1xwJQNwwyl7T,React,41,React,2020-02-07,A#,minor,A# minor,204176
+Lizzo,Pop,0.566,0.66,1,-4.039,1,0.0479,0,0.52,162.159,3,74gSdSHe71q7urGWMMn3qB,Cuz I Love You,63,Cuz I Love You (Deluxe),2019-05-03,C#,major,C# major,179978
+Neon Dreams,Pop,0.791,0.742,3,-4.8,1,0.0335,3.63e-6,0.784,128.023,4,1Rl0Ygy9QqUYNKCAKA9IlS,Turn Back Now,50,Turn Back Now,2020-01-09,D#,major,D# major,169714
+Harry Styles,Pop,0.676,0.771,8,-3.675,1,0.0483,7e-6,0.569,99.048,4,7xV2TzoaVc0ycW7fwBwAml,Adore You,87,Fine Line,2019-12-13,G#,major,G# major,207133
+Halsey,Pop,0.708,0.661,0,-6.543,0,0.0546,2.44e-4,0.317,102.046,4,68enXe5XcJdciSDAZr0Alr,Still Learning,81,Manic,2020-01-17,C,minor,C minor,211784
+Ryland James,Pop,0.64,0.766,4,-6.196,0,0.059,0,0.522,140.029,4,4URm8xxr8bmzVJ9RM64FOv,Shoulder To Cry On,40,Shoulder To Cry On,2020-02-07,E,minor,E minor,213306
+Hailee Steinfeld,Pop,0.378,0.388,10,-9.017,1,0.036,0,0.188,72.293,4,2gjtjSAbxvoeQs6zYHj1HJ,Wrong Direction,79,Wrong Direction,2020-01-01,A#,major,A# major,248986
+Justin Bieber,Pop,0.687,0.514,9,-6.612,0,0.0897,0,0.494,145.921,4,1SN6N3fNkZk5oXQ9X46QZ3,Yummy,97,Yummy,2020-01-03,A,minor,A minor,210426
+Faouzia,Pop,0.538,0.698,8,-5.57,1,0.0349,0,0.263,135.1,4,3sExgyQVCSI15CboxN1Lsy,The Road,60,The Road,2020-01-22,G#,major,G# major,198666
+Why Don't We,Pop,0.615,0.689,1,-5.332,1,0.0658,0,0.783,162.919,4,73MA39KSFI537siPGXAb8q,Chills,76,Chills,2019-12-30,C#,major,C# major,165596
+Tones and I,Pop,0.672,0.464,6,-5.624,0,0.037,0,0.271,92.069,4,2pJXQvY0YeDvVJ9gMU9G7j,Never Seen The Rain,85,The Kids Are Coming,2019-08-29,F#,minor,F# minor,200742
+Billy Raffoul,Pop,0.629,0.872,2,-4.603,0,0.0999,3.1e-6,0.774,90.087,4,4w8sbbvEA1TyJbzTBIrRr7,Without Falling in Love,42,Without Falling in Love,2020-02-07,D,minor,D minor,178653
+Selena Gomez,Pop,0.488,0.343,4,-8.985,1,0.0436,0,0.0978,102.819,4,3YPFaTR7WMi1Hd4NVKdCJx,Lose You To Love Me,91,Rare,2020-01-10,E,major,E major,206458
+Taylor Swift,Pop,0.777,0.658,0,-5.191,1,0.054,0,0.633,110.048,4,1NAmidJlEaVgA3MpcPFYGq,The Man,80,Lover,2019-08-23,C,major,C major,190360
+JP Saxe,Pop,0.604,0.179,2,-15.383,1,0.0339,0,0.391,124.982,3,2gO1pyq1nVTs7PdIMlX0r9,Sad Corny Fuck,50,Hold It Together,2020-02-07,D,major,D major,220520
+Shawn Hook,Pop,0.701,0.747,9,-5.839,0,0.124,1.54e-6,0.747,109.078,4,6OsbCFt5g2Prvfz6AUjPdg,I Don't Wanna Dance,51,I Don’t Wanna Dance,2020-01-24,A,minor,A minor,206964
+BENEE,Pop,0.801,0.589,7,-5.157,1,0.0485,0,0.58,116.934,4,6pTMhQX8gt1xegiIwo3Ekb,Glitter,80,FIRE ON MARZZ,2019-06-28,G,major,G major,180146
+Alec Benjamin,Pop,0.708,0.489,5,-7.608,0,0.0366,1.38e-4,0.771,142.925,4,0Y1lSBX381MOjxt5n72vN0,Demons,65,Demons,2020-01-16,F,minor,F minor,165112
+Elley Duhé,Pop,0.554,0.862,3,-4.672,1,0.0361,1.42e-4,0.557,139.937,4,6auvXmYeoGjzPcYqgI9lRl,LOVE ME HARD,57,LOVE ME HARD,2020-01-31,D#,major,D# major,218630
+Tate McRae,Pop,0.445,0.383,0,-11.015,1,0.166,0,0.333,102.059,4,1fK6nUQDMeIciyfhAADix8,that way,66,all the things i never said,2020-01-24,C,major,C major,175026
+Soran,Pop,0.594,0.311,9,-10.405,1,0.0365,0,0.528,95.128,4,7cpJTiGMINF194tOLaDVjq,Stop Myself,54,Stop Myself,2019-12-10,A,major,A major,190373
+Oh Wonder,Pop,0.414,0.208,0,-13.577,1,0.0467,1.49e-5,0.327,127.45,4,2PERPMWWY1pchfPKeNUJx8,In And Out Of Love,52,No One Else Can Wear Your Crown (Deluxe),2020-02-07,C,major,C major,177311
+SonReal,Pop,0.771,0.582,6,-7.124,0,0.134,0,0.557,139.939,4,1r7EkkbXz7pHt6zLaLMemY,Want It,45,The Aaron LP (Deluxe Edition),2020-01-31,F#,minor,F# minor,185285
+Havelin,Pop,0.706,0.659,5,-7.044,0,0.0534,0,0.786,152.06,4,2HbK1N4gW6IuSj3x9eQXPt,Gentle,43,Gentle,2019-12-13,F,minor,F minor,183947
+Mattia Pironti,Pop,0.737,0.583,5,-6.403,1,0.274,0,0.751,173.987,4,6OmN1ovn1r8Ek2NqZhNYub,Broken Hearted,42,Broken Hearted,2020-01-03,F,major,F major,177731
+Roddy Ricch,Pop,0.896,0.586,10,-6.687,0,0.0559,0,0.642,116.971,4,52u4anZbHd6UInnmHRFzba,The Box,100,Please Excuse Me For Being Antisocial,2019-12-06,A#,minor,A# minor,196652
+Trevor Daniel,Pop,0.784,0.43,10,-8.756,0,0.0364,0,0.236,127.087,4,1Czfd5tEby3DbdYNdqzrCa,Falling,97,Falling,2018-10-05,A#,minor,A# minor,159381
+Future,Pop,0.676,0.609,2,-5.831,0,0.481,0,0.508,142.037,4,5uCEoLCj3ZZZ1EtzQdQWVl,Life Is Good (feat. Drake),96,Life Is Good (feat. Drake),2020-01-10,D,minor,D minor,237735
+Halsey,Pop,0.591,0.585,2,-6.35,1,0.0277,0,0.324,110.94,4,1gBDGPFz9v93dxE3fUU9eO,You should be sad,86,You should be sad,2020-01-10,D,major,D major,205473
+Billie Eilish,Pop,0.704,0.225,6,-14.454,0,0.0994,0.657,0.243,120.006,4,4i3rAwPw7Ln2YrKDusaWyT,everything i wanted,96,everything i wanted,2019-11-13,F#,minor,F# minor,245425
+Taylor Swift,Pop,0.56,0.78,5,-4.895,0,0.0517,0,0.602,93.516,4,5LGsh3kexUfi3qkIIxb8vK,Only The Young - Featured in Miss Americana,81,Only The Young (Featured in Miss Americana),2020-01-31,F,minor,F minor,157507
+Eminem,Pop,0.808,0.745,10,-5.26,0,0.342,0,0.829,165.995,4,4otkd9As6YaxxEkIjXPiZ6,Godzilla (feat. Juice WRLD),95,Music To Be Murdered By,2020-01-17,A#,minor,A# minor,210800
+Lewis Capaldi,Pop,0.459,0.575,3,-4.858,1,0.0573,0,0.183,111.881,4,0488X5veBK6t3vSmIiTDJY,Before You Go,90,Before You Go,2019-11-19,D#,major,D# major,215106
+Harry Styles,Pop,0.676,0.771,8,-3.675,1,0.0483,7e-6,0.569,99.048,4,5SL9nXZYZZl68bHwaM8uLa,Adore You,89,Adore You,2019-12-06,G#,major,G# major,207133
+Post Malone,Pop,0.704,0.758,0,-3.537,1,0.0402,0.00144,0.534,120.003,4,75n7rjlC1fxezRtoMQmtL5,Circles,43,Circles,2019-08-30,C,major,C major,214906
+Kygo,Pop,0.529,0.612,10,-8.794,1,0.052,0,0.434,119.272,4,63VE57Ol6fcAC0fb6kGx5y,Forever Yours - Avicii Tribute,83,Forever Yours (Avicii Tribute),2020-01-24,A#,major,A# major,193846
+BROCKHAMPTON,Pop,0.453,0.538,1,-8.212,1,0.0638,0,0.516,122.973,4,1jToVugwBEzcak8gJNZG2f,SUGAR,90,GINGER,2019-08-23,C#,major,C# major,204533
+Mac Miller,Pop,0.794,0.32,1,-12.92,0,0.173,0.134,0.241,174.088,4,4CCaoRnCugI6RsHHBKiMLs,Good News,87,Good News,2020-01-09,C#,minor,C# minor,342040
+Surfaces,Pop,0.878,0.525,5,-6.832,1,0.0578,0,0.694,112.022,4,3mMWlBGocBwsS1Q0o9wvlc,Sunday Best,86,Where the Light Is,2019-01-06,F,major,F major,158571
+MEDUZA,Pop,0.598,0.526,10,-8.659,0,0.0415,0,0.529,123.935,4,1qSOaTvsCOyFJya3v1UzkP,Lose Control,91,Lose Control,2019-10-11,A#,minor,A# minor,168387
+Roddy Ricch,Pop,0.831,0.499,11,-8.442,0,0.114,0,0.511,97.956,4,52u4anZbHd6UInnmHRFzba,High Fashion (feat. Mustard),88,Please Excuse Me For Being Antisocial,2019-12-06,B,minor,B minor,220486
+Tate McRae,Pop,0.673,0.579,0,-6.029,0,0.0392,8.61e-5,0.262,96.009,4,0uzAVFqstsfwdLtnDs6zm8,stupid,81,stupid,2019-12-06,C,minor,C minor,172915
+SAINt JHN,Pop,0.77,0.724,8,-5.484,1,0.0495,0.0105,0.898,121.974,4,3GqSdhWjmMypMwPLtzoFYs,Roses - Imanbek Remix,89,Roses (Imanbek Remix),2019-10-09,G#,major,G# major,176840
+KAROL G,Pop,0.803,0.715,2,-3.28,1,0.298,1.34e-4,0.574,101.085,4,7mKevNHhVnZER3BLgI8O4F,Tusa,98,Tusa,2019-11-07,D,major,D major,200960
+JP Saxe,Pop,0.464,0.473,1,-10.086,1,0.129,0,0.604,75.801,4,7BrlhEO8dHiNmU8A1Ep9RZ,If The World Was Ending (feat. Julia Michaels),88,If The World Was Ending (feat. Julia Michaels),2019-10-17,C#,major,C# major,208687
+Selena Gomez,Pop,0.505,0.34,4,-9.005,1,0.0438,0,0.0916,101.993,4,3tBkjgxDqAwss76O1YHsSY,Lose You To Love Me,85,Lose You To Love Me,2019-10-23,E,major,E major,206458
+Alan Walker,Pop,0.67,0.668,3,-4.306,0,0.0422,0,0.608,88.033,4,700MviIgFKNTldTXmOAFOr,"Alone, Pt. II",86,"Alone, Pt. II",2019-12-27,D#,minor,D# minor,179052
+Travis Scott,Pop,0.559,0.491,2,-6.406,0,0.0346,0,0.114,153.131,4,1Sf8GsXG32t0jNrX11xqWx,HIGHEST IN THE ROOM (feat. ROSALÍA & Lil Baby) - REMIX,88,JACKBOYS,2019-12-27,D,minor,D minor,244873
+Lil Baby,Pop,0.882,0.602,11,-5.554,1,0.245,0,0.43,142.959,4,393l0NdTr8Rv0hybf4FTxy,Woah,87,Woah,2019-11-08,B,major,B major,183011
+Conan Gray,Pop,0.623,0.647,8,-5.438,1,0.04,0,0.522,107.987,4,4x1U4pmSekLejbWCRI0SES,Maniac,85,Maniac,2019-10-25,G#,major,G# major,185786
+Ant Saunders,Pop,0.866,0.399,7,-10.938,1,0.0745,0,0.713,129.047,4,0ahjnylJzSIfobrUbMZnmL,Yellow Hearts,54,Yellow Hearts,2019-06-18,G,major,G major,223255
+YNW Melly,Pop,0.736,0.369,9,-9.682,0,0.0688,0,0.235,140.005,4,5xq6RMHNIBA73qld03dR6V,Suicidal,91,Melly vs. Melvin,2019-11-22,A,minor,A minor,222997
+Tyga,Pop,0.816,0.63,2,-5.568,1,0.226,0,0.715,96.493,4,3Cse4lihKX7ww99QnZGQAh,Ayy Macarena,90,Ayy Macarena,2019-11-13,D,major,D major,131606
+Stormzy,Pop,0.817,0.781,7,-4.178,0,0.112,5.21e-6,0.359,104,4,4H9xdaXSMCiT7xyBBxiT0Q,Own It (feat. Ed Sheeran & Burna Boy),67,Own It (feat. Ed Sheeran & Burna Boy),2019-11-22,G,minor,G minor,216706
+The Black Eyed Peas,Pop,0.721,0.716,10,-7.037,0,0.0657,8.4e-4,0.667,104.994,4,6EobpC5SDFy5DF50dWNVGF,RITMO (Bad Boys For Life),95,RITMO (Bad Boys For Life),2019-10-12,A#,minor,A# minor,221714
+Ed Sheeran,Pop,0.64,0.648,5,-8.113,0,0.187,0,0.548,92.977,4,3E12WU80fDMyu7GyIAx7wJ,Beautiful People (feat. Khalid),87,Beautiful People (feat. Khalid),2019-06-28,F,minor,F minor,197866
+The Chainsmokers,Pop,0.591,0.702,7,-5.59,1,0.0289,0,0.501,104.003,4,1JawI0XkEwmQ5Bwef3RMbq,Call You Mine,53,World War Joy...Takeaway,2019-07-24,G,major,G major,217653
+Jeremy Zucker,Pop,0.795,0.178,0,-11.991,1,0.0574,0,0.608,93.982,4,6Whp0T7d1SAt4gDUNkWWD1,comethru,84,"summer,",2018-09-28,C,major,C major,181613
+5 Seconds of Summer,Pop,0.505,0.428,5,-5.604,1,0.221,0,0.618,175.813,4,0puSqXoH0dMgimvyi5slCt,Easier,79,Easier,2019-05-23,F,major,F major,157492
+Ed Sheeran,Pop,0.798,0.675,6,-5.041,1,0.0442,0,0.842,101.956,4,5Nux7ozBJ5KJ02QYWwrneR,I Don't Care (with Justin Bieber),88,I Don't Care (with Justin Bieber),2019-05-10,F#,major,F# major,219946
+Bazzi,Pop,0.812,0.519,2,-4.823,1,0.0385,0,0.554,104.954,4,4ZKdRW0AH9sxV09NmWsTkW,I.F.L.Y.,85,Soul Searching,2019-08-09,D,major,D major,165714
+The Chainsmokers,Pop,0.51,0.835,3,-4.673,1,0.0447,0,0.435,140.024,4,17knWaxhmQjegn5eJgGVyL,Who Do You Love,19,World War Joy...Do You Mean,2019-04-26,D#,major,D# major,226746
+Jonas Brothers,Pop,0.842,0.734,1,-5.065,0,0.0588,0,0.952,137.958,4,4W0r9HOcuCC6Vh7aze2hwi,Sucker,64,Sucker,2019-03-01,C#,minor,C# minor,181040
+Lewis Capaldi,Pop,0.501,0.405,1,-5.679,1,0.0319,0,0.446,109.891,4,5658aM19fA3JVwTK6eQX70,Someone You Loved,93,Divinely Uninspired To A Hellish Extent,2019-05-17,C#,major,C# major,182160
+Ellie Goulding,Pop,0.657,0.768,8,-4.628,1,0.0507,0,0.759,75.025,4,29FoTD5vBY3Fq1QWhbl3FM,Hate Me (with Juice WRLD),86,Hate Me (with Juice WRLD),2019-06-26,G#,major,G# major,186223
+Ali Gatie,Pop,0.732,0.463,11,-6.972,0,0.0287,0,0.397,95.971,4,63Kr9mdWxT7mB2AKgf4rCa,It's You,88,YOU,2019-11-08,B,minor,B minor,212606
+BTS,Pop,0.584,0.685,7,-7.811,1,0.425,0,0.345,97.551,4,0ZI6Q1QJSYdeEQPvKzX1XR,Make It Right (feat. Lauv),81,Make It Right (feat. Lauv),2019-10-18,G,major,G major,226321
+Bazzi,Pop,0.638,0.717,2,-4.722,1,0.0337,0,0.249,100.027,4,6hCR3zQtRH0IgookOYt771,Beautiful (feat. Camila Cabello),80,Beautiful (feat. Camila Cabello),2018-08-02,D,major,D major,180000
+Lauv,Pop,0.755,0.625,2,-7.114,1,0.0896,0,0.374,147.02,4,3xJzdYiYlc7CMtRXBpd9Qg,There's No Way (feat. Julia Michaels),78,There's No Way (feat. Julia Michaels),2018-09-27,D,major,D major,174860
+Ariana Grande,Pop,0.4,0.795,10,-3.731,0,0.461,0,0.702,190.097,4,3zVB99XMdbP9HTVNg0GJwV,boyfriend (with Social House),83,boyfriend,2019-08-02,A#,minor,A# minor,186106
+Khalid,Pop,0.901,0.4,0,-8.575,1,0.126,0,0.346,135.984,4,6KT8x5oqZJl9CcnM66hddo,Talk (feat. Disclosure),81,Free Spirit,2019-04-05,C,major,C major,197573
+Taylor Swift,Pop,0.614,0.839,0,-4.143,1,0.0702,0,0.657,182.123,4,6tHLalOVUNJYJlNYkRlNjC,ME! (feat. Brendon Urie of Panic! At The Disco),32,ME! (feat. Brendon Urie of Panic! At The Disco),2019-04-26,C,major,C major,193040
+Marshmello,Pop,0.687,0.792,5,-2.749,1,0.0452,0,0.671,100.015,4,78EicdHZr5XBWD7llEZ1Jh,Happier,87,Happier,2018-08-17,F,major,F major,214289
+Post Malone,Pop,0.548,0.653,5,-3.875,1,0.081,0,0.163,150.068,4,4g1ZRSobMefqF6nelkgibi,Goodbyes (feat. Young Thug),88,Hollywood's Bleeding,2019-09-06,F,major,F major,174853
+Selena Gomez,Pop,0.601,0.724,6,-4.856,1,0.0486,1.68e-6,0.508,102.061,4,3N7eWDCvfWv34xWNohdHjO,Back To You - From 13 Reasons Why – Season 2 Soundtrack,79,Back To You (From 13 Reasons Why – Season 2 Soundtrack),2018-05-10,F#,major,F# major,207904
+Ariana Grande,Pop,0.724,0.647,1,-5.642,1,0.0658,0,0.435,106.96,4,684W6NpKllEexqQlGqetCi,"thank u, next",26,"thank u, next",2018-11-03,C#,major,C# major,207333
+Zac Efron,Pop,0.684,0.619,10,-7.005,1,0.0386,0,0.284,125.046,4,0mRqi6mOvyVVVEIfFFfWXU,Rewrite The Stars,73,Rewrite The Stars,2017-11-17,A#,major,A# major,217440
+Alec Benjamin,Pop,0.652,0.557,1,-5.714,0,0.0318,0,0.483,150.073,4,6jKZplJpy21R5lHaYHHjmZ,Let Me Down Slowly,85,Narrated For You,2018-11-16,C#,minor,C# minor,169353
+Khalid,Pop,0.596,0.552,0,-10.278,0,0.097,0.334,0.112,97.949,4,2Qxc2NJ7yPKVFRWi3llRr2,Better,79,Suncity,2018-10-18,C,minor,C minor,229320
+Bebe Rexha,Pop,0.63,0.694,11,-6.257,0,0.0253,0,0.216,97.005,4,4TOkZvtqNpg5UHyGxCn0mS,I'm a Mess,79,Expectations,2018-06-22,B,minor,B minor,195519
+BTS,Pop,0.645,0.862,11,-4.757,0,0.0965,0,0.798,119.991,4,1AvXa8xFEXtR3hb4bgihIK,Boy With Luv (feat. Halsey),84,MAP OF THE SOUL : PERSONA,2019-04-12,B,minor,B minor,229773
+Post Malone,Pop,0.76,0.479,2,-5.574,1,0.0466,0,0.913,89.911,4,35s58BRTGAEWztPo9WqCIs,Sunflower - Spider-Man: Into the Spider-Verse,87,Spider-Man: Into the Spider-Verse (Soundtrack From & Inspired by the Motion Picture),2018-12-14,D,major,D major,158040
+Harry Styles,Pop,0.575,0.621,10,-8.165,0,0.032,0.0045,0.27,101.987,4,7xV2TzoaVc0ycW7fwBwAml,Lights Up,86,Fine Line,2019-12-13,A#,minor,A# minor,172213
+Hailee Steinfeld,Pop,0.659,0.717,8,-4.202,1,0.0581,0,0.71,103.036,4,4s5AbPXAxSCC62EWb1ZTqU,"Let Me Go (with Alesso, Florida Georgia Line & watt)",21,"Let Me Go (with Alesso, Florida Georgia Line & watt)",2017-09-08,G#,major,G# major,174800
+Ariana Grande,Pop,0.725,0.321,1,-10.744,0,0.323,0,0.319,70.142,4,03D36t8ODrA8ATvoTStU9P,7 rings,27,7 rings,2019-01-18,C#,minor,C# minor,178640
+Zedd,Pop,0.748,0.652,7,-3.02,1,0.058,0,0.431,106.914,4,1D8u1ccrRXyFMOGTEXTgTX,The Middle,21,The Middle,2018-01-23,G,major,G major,184732
+Shawn Mendes,Pop,0.622,0.712,5,-7.321,1,0.066,0,0.487,140.025,4,2VP96XdMOKTXefI8Nui23s,In My Blood,80,Shawn Mendes,2018-05-25,F,major,F major,211360
+Ava Max,Pop,0.719,0.704,1,-4.724,1,0.0476,0,0.628,133.002,4,7CdLU3GgPy1PH5FVsrPlyA,Sweet but Psycho,86,Sweet but Psycho,2018-08-17,C#,major,C# major,187436
+Ariana Grande,Pop,0.726,0.554,5,-5.29,0,0.0917,0,0.335,169.999,4,2fYhqwDWXjbpjaIJPEfKFw,"break up with your girlfriend, i'm bored",82,"thank u, next",2019-02-08,F,minor,F minor,190440
+Maroon 5,Pop,0.851,0.541,0,-6.825,1,0.0505,0,0.448,124.959,4,3ThQ5dvf9wlqB0C7evh5nH,Girls Like You (feat. Cardi B),72,Red Pill Blues (Deluxe),2018-06-15,C,major,C major,235545
+Billie Eilish,Pop,0.351,0.296,4,-10.109,0,0.0333,0,0.12,115.284,4,2sBB17RXTamvj7Ncps15AK,lovely (with Khalid),89,lovely (with Khalid),2018-04-19,E,minor,E minor,200185
+Little Mix,Pop,0.754,0.854,5,-3.449,0,0.0608,0,0.8,75.002,4,7Ho8gAx4haSxv1eFLQwvTj,Woman Like Me (feat. Nicki Minaj),75,LM5 (Deluxe),2018-11-16,F,minor,F minor,229720
+Imagine Dragons,Pop,0.383,0.637,3,-6.993,1,0.0703,0,0.0827,177.913,4,3JfSxDfmwS5OeHPwLSkrfr,Bad Liar,82,Origins (Deluxe),2018-11-09,D#,major,D# major,260773
+Russ,Pop,0.913,0.608,7,-6.764,1,0.259,0,0.496,101.002,4,7cm0BPEASHHElGnjyjPfwK,CIVIL WAR,77,CIVIL WAR,2019-05-08,G,major,G major,143880
+Kehlani,Pop,0.61,0.725,8,-5.131,1,0.15,0,0.291,146.163,4,73ZvpuYhKDr2FW4vlPsTpW,Nights Like This (feat. Ty Dolla $ign),79,While We Wait,2019-02-22,G#,major,G# major,201787
+Khalid,Pop,0.786,0.428,5,-10.011,0,0.31,1.1e-6,0.556,97.001,4,36Mq31otog86NGRflpMmkg,Right Back (feat. A Boogie Wit Da Hoodie),75,Right Back (feat. A Boogie Wit Da Hoodie),2019-08-13,F,minor,F minor,254999
+Avicii,Pop,0.802,0.645,5,-6.181,0,0.0715,0,0.376,100.001,4,5qx87PlzbAtZlv2xG9c2Kg,SOS,69,SOS (feat. Aloe Blacc),2019-04-10,F,minor,F minor,157202
+Panic! At The Disco,Pop,0.579,0.904,5,-2.729,1,0.0618,0,0.681,82.014,4,6ApYSpXF8GxZAgBTHDzYge,High Hopes,85,Pray for the Wicked,2018-06-22,F,major,F major,190946
+Maggie Lindemann,Pop,0.703,0.868,7,-4.661,0,0.0291,0.132,0.733,121.03,4,6jO7hs4GsF6924w10xQTyA,Pretty Girl - Cheat Codes X CADE Remix,70,Pretty Girl (Cheat Codes X CADE Remix),2017-03-03,G,minor,G minor,193613
+Billie Eilish,Pop,0.498,0.104,1,-14.08,0,0.0621,7.86e-5,0.205,124.001,3,2DfPdWWXknoGKrfa2Eicyw,when the party's over,25,when the party's over,2018-10-17,C#,minor,C# minor,199931
+Martin Garrix,Pop,0.506,0.693,0,-7.265,0,0.0412,9.58e-5,0.221,139.912,4,1XQ6XbZ6ZM1V5iEtWlYDeH,Ocean (feat. Khalid),75,Ocean (feat. Khalid),2018-06-15,C,minor,C minor,216419
+Clean Bandit,Pop,0.638,0.658,3,-6.318,1,0.0456,3.77e-6,0.33,105.076,4,78zct4Yn5hwMqrlh5uQedB,I Miss You (feat. Julia Michaels),22,I Miss You (feat. Julia Michaels),2017-10-26,D#,major,D# major,205747
+SHAED,Pop,0.689,0.412,7,-7.523,0,0.0301,1.6e-4,0.537,126.754,4,3WSazrD65bFptRnMvnesVH,Trampoline,75,MELT,2018-09-21,G,minor,G minor,184060
+Sam Smith,Pop,0.681,0.372,5,-8.237,1,0.0432,0,0.476,91.873,4,3XftSbguntyRTBQaGItmfK,Too Good At Goodbyes,75,The Thrill Of It All (Special Edition),2017-11-03,F,major,F major,201000
+Post Malone,Pop,0.833,0.539,11,-7.399,0,0.178,2.1e-6,0.385,99.947,4,5Dcz8PZHKuvTyjbqEPL5VM,Wow.,37,Wow.,2018-12-24,B,minor,B minor,149520
+James Arthur,Pop,0.358,0.557,10,-7.398,1,0.059,0,0.494,85.043,4,7oiJYvEJHsmYtrgviAVIBD,Say You Won't Let Go,84,Back from the Edge,2016-10-28,A#,major,A# major,211466
+Lauv,Pop,0.752,0.505,9,-7.621,1,0.253,2.55e-6,0.419,91.97,4,7lqieLm717j9Z8JrG7POkS,I Like Me Better,77,I met you when I was 18. (the playlist),2018-05-31,A,major,A major,197436
+Taylor Swift,Pop,0.76,0.703,5,-5.412,1,0.054,0,0.57,95.997,4,34OkZVpuzBa9y40DCy0LPR,Blank Space,59,1989 (Deluxe Edition),2014-10-27,F,major,F major,231826
+Selena Gomez,Pop,0.6,0.683,6,-6.271,1,0.0493,1.26e-6,0.494,102.036,4,4RpgjxgSxcRwGNuWnImneN,Back To You,73,13 Reasons Why (Season 2),2018-05-18,F#,major,F# major,210240
+Dua Lipa,Pop,0.836,0.544,7,-5.975,1,0.0943,0,0.51,97.028,4,01sfgrNbnnPUEyz6GZYlt9,IDGAF,82,Dua Lipa (Deluxe),2017-06-02,G,major,G major,217946
+Little Mix,Pop,0.534,0.642,9,-3.971,1,0.0504,0,0.131,92.963,4,4bzVI1FElc13HQagFR7S1W,Secret Love Song (feat. Jason Derulo),76,Get Weird (Deluxe),2015-11-06,A,major,A major,249813
+Shawn Mendes,Pop,0.444,0.819,10,-4.078,0,0.341,0,0.747,82.695,4,1ne2D0NxoGyZd31gAM4HNd,Treat You Better,82,Illuminate,2017-04-20,A#,minor,A# minor,187973
+Ariana Grande,Pop,0.628,0.593,8,-5.036,1,0.0323,1.65e-6,0.104,125.026,4,6EVYTRG1drKdO8OnIQBeEj,One Last Time,78,My Everything (Deluxe),2014-08-25,G#,major,G# major,197266
+Alessia Cara,Pop,0.573,0.739,0,-5.74,1,0.129,0,0.451,97.085,4,3rDbA12I5duZnlwakqDdZa,Scars To Your Beautiful,72,Know-It-All (Deluxe),2015-11-13,C,major,C major,230226
+One Direction,Pop,0.655,0.699,11,-4.421,1,0.0493,0,0.802,86.704,4,1gMxiQQSg5zeu4htBosASY,History,73,Made In The A.M. (Deluxe Edition),2015-11-13,B,major,B major,187426
+Shawn Mendes,Pop,0.866,0.813,11,-4.063,0,0.0554,0,0.969,121.998,4,3wBabo4pmzsYjALMSKY7Iq,There's Nothing Holdin' Me Back,81,Illuminate (Deluxe),2017-04-20,B,minor,B minor,199440
+Justin Bieber,Pop,0.609,0.378,4,-9.828,1,0.438,0,0.515,100.418,4,7fZH0aUAjY3ay25obOUf2a,Love Yourself,22,Purpose (Deluxe),2015-11-13,E,major,E major,233720
+Ariana Grande,Pop,0.568,0.656,8,-5.413,1,0.0433,1.37e-5,0.364,100.049,4,3tx8gQqWbGwqIGZHqDNrGe,breathin,77,Sweetener,2018-08-17,G#,major,G# major,198160
+Miley Cyrus,Pop,0.652,0.698,10,-4.667,0,0.042,1.15e-4,0.47,96.021,4,0IuHVgAvbNDJnJepuSZ8Oz,Party In The U.S.A.,77,The Time Of Our Lives (International Version),2009-01-01,A#,minor,A# minor,202066
+Charlie Puth,Pop,0.775,0.613,3,-4.586,0,0.0542,2.33e-5,0.797,100.066,4,0mZIUXje90JtHxPNzWsJNR,Attention,81,Voicenotes,2018-05-11,D#,minor,D# minor,208786
+Shawn Mendes,Pop,0.555,0.662,11,-4.952,0,0.0827,0,0.356,148.128,4,3wBabo4pmzsYjALMSKY7Iq,Mercy,79,Illuminate (Deluxe),2017-04-20,B,minor,B minor,208733
+ZAYN,Pop,0.731,0.445,0,-8.418,1,0.0533,1.96e-5,0.106,117.97,4,1MPAXuTVL2Ej5x0JHiSPq8,I Don’t Wanna Live Forever (Fifty Shades Darker),68,reputation Stadium Tour Surprise Song Playlist,2017-11-09,C,major,C major,247160
+One Direction,Pop,0.73,0.703,0,-5.672,0,0.0369,0,0.595,138.113,4,1gMxiQQSg5zeu4htBosASY,Drag Me Down,75,Made In The A.M. (Deluxe Edition),2015-11-13,C,minor,C minor,192120
+Charlie Puth,Pop,0.728,0.563,1,-8.053,0,0.134,0,0.352,100.017,4,5Nwsra93UQYJ6xxcjcE10x,We Don't Talk Anymore,78,Nine Track Mind,2016-01-29,C#,minor,C# minor,217706
+Little Mix,Pop,0.774,0.739,0,-4.022,1,0.0952,5.95e-6,0.823,126.002,4,2GJLzxAajkFeyDPVH7X4Cs,Shout Out to My Ex,16,Glory Days (Deluxe),2016-11-18,C,major,C major,246240
+Meghan Trainor,Pop,0.63,0.53,0,-7.259,1,0.0434,0,0.417,108.038,3,5W98Ab4VvQEuFEE4TIe5fE,Like I'm Gonna Lose You (feat. John Legend),78,Title (Deluxe),2015-01-09,C,major,C major,225053
+Hailee Steinfeld,Pop,0.729,0.615,4,-4.238,1,0.0647,0,0.508,99.989,4,18pR217SWwBjODSRWFBw0I,Starving,75,Starving,2016-07-22,E,major,E major,181880
+One Direction,Pop,0.647,0.823,2,-5.231,1,0.0762,0,0.396,99.933,4,1gMxiQQSg5zeu4htBosASY,Perfect,73,Made In The A.M. (Deluxe Edition),2015-11-13,D,major,D major,230333
+The Chainsmokers,Pop,0.748,0.524,8,-5.599,1,0.0338,0,0.661,95.01,4,0rSLgV8p5FzfnqlEk4GzxE,Closer (feat. Halsey),84,Closer (feat. Halsey),2016-07-29,G#,major,G# major,244960
+Bebe Rexha,Pop,0.643,0.783,10,-6.458,1,0.0856,0,0.579,154.084,4,6t5D6LEgHxqUVOxJItkzfb,Meant to Be (feat. Florida Georgia Line),79,All Your Fault: Pt. 2,2017-08-11,A#,major,A# major,163870
+Billie Eilish,Pop,0.511,0.363,4,-7.65,0,0.041,0.0317,0.169,144.892,4,7fRrTyKvE4Skh93v97gtcU,ocean eyes,85,dont smile at me,2017-12-22,E,minor,E minor,200379
+Ariana Grande,Pop,0.699,0.713,9,-5.507,0,0.0594,3.11e-6,0.354,121.993,4,3tx8gQqWbGwqIGZHqDNrGe,no tears left to cry,82,Sweetener,2018-08-17,A,minor,A minor,205920
+Maroon 5,Pop,0.799,0.597,5,-5.131,0,0.0611,5.66e-6,0.419,110.001,4,3ThQ5dvf9wlqB0C7evh5nH,What Lovers Do (feat. SZA),69,Red Pill Blues (Deluxe),2018-06-15,F,minor,F minor,199849
+ZAYN,Pop,0.258,0.437,11,-6.593,0,0.039,1.27e-6,0.0967,180.043,4,5l5gR4rh26QI3fijGFTDrp,Dusk Till Dawn - Radio Edit,81,Dusk Till Dawn (Radio Edit),2017-09-07,B,minor,B minor,239000
+Little Mix,Pop,0.777,0.895,4,-4.464,1,0.0618,0,0.826,111.987,4,4bzVI1FElc13HQagFR7S1W,Black Magic,76,Get Weird (Deluxe),2015-11-06,E,major,E major,211773
+Dua Lipa,Pop,0.762,0.7,9,-6.021,0,0.0694,1.56e-5,0.608,116.073,4,01sfgrNbnnPUEyz6GZYlt9,New Rules,82,Dua Lipa (Deluxe),2017-06-02,A,minor,A minor,209320
+Ariana Grande,Pop,0.602,0.658,1,-5.934,1,0.0558,6e-5,0.268,145.031,4,3tx8gQqWbGwqIGZHqDNrGe,God is a woman,79,Sweetener,2018-08-17,C#,major,C# major,197546
+One Direction,Pop,0.581,0.459,1,-6.198,1,0.0287,0,0.277,131.004,4,4oOPf4FFwuFFVYkDS9UOov,You & I - Radio Edit,57,You & I,2014-05-25,C#,major,C# major,229933
+MKTO,Pop,0.72,0.791,1,-4.689,1,0.124,0,0.756,102.071,4,5IenxFp0vpnXBUxPcwJtbE,Classic,76,MKTO,2012,C#,major,C# major,175426
+Camila Cabello,Pop,0.637,0.713,0,-4.333,1,0.0747,6.37e-4,0.243,129.923,4,2vD3zSQr8hNlg0obNel4TE,Never Be the Same,75,Camila,2018-01-12,C,major,C major,226973
+Marshmello,Pop,0.626,0.88,9,-2.384,0,0.0504,0,0.534,95.079,4,1BmxOYHjQv1dKZRr13YRZM,FRIENDS,82,FRIENDS,2018-02-09,A,minor,A minor,202620
+ZAYN,Pop,0.584,0.7,11,-4.275,1,0.0456,0,0.438,124.944,4,5amj9zNeZ3B2EdpBgXrOZ0,PILLOWTALK,77,Mind Of Mine (Deluxe Edition),2016-03-25,B,major,B major,202746
+Niall Horan,Pop,0.728,0.426,0,-6.69,1,0.0509,0,0.844,85.908,4,7BJ02LuWRn3RH7yDHZAJr2,Slow Hands,17,Slow Hands,2017-05-04,C,major,C major,188174
+Joel Adams,Pop,0.513,0.768,4,-4.868,0,0.0587,1.94e-5,0.235,84.264,4,2SF8Wbc61u8hlQkZYGVCnx,Please Don't Go,75,Please Don't Go,2015-11-06,E,minor,E minor,210580
+Ellie Goulding,Pop,0.258,0.631,5,-6.617,0,0.0541,0,0.266,189.583,4,2YLHkrwyRBsjBgSAySg0es,"Love Me Like You Do - From ""Fifty Shades Of Grey""",19,"Love Me Like You Do (From ""Fifty Shades Of Grey"")",2015-01-07,F,minor,F minor,252538
+Cheat Codes,Pop,0.739,0.619,10,-6.669,1,0.162,0,0.58,112.961,4,6h3fnzKZqjV0R5gP9iTUBh,No Promises (feat. Demi Lovato),65,No Promises (feat. Demi Lovato),2017-03-31,A#,major,A# major,222786
+Sam Smith,Pop,0.677,0.485,5,-5.795,1,0.0361,2.04e-5,0.493,82.001,4,08jWgM4vSkTose4blKBWov,I'm Not The Only One,82,In The Lonely Hour,2014-01-01,F,major,F major,239316
+Miley Cyrus,Pop,0.565,0.782,8,-6.413,1,0.0506,4.16e-5,0.4,140.004,4,7CUczABBlsbd5fqng9mjxo,Malibu,20,Malibu,2017-05-11,G#,major,G# major,231905
+Charlie Puth,Pop,0.667,0.613,1,-5.353,1,0.0344,0,0.47,91.024,4,6E0p38TjcK490itZ1Ns7bD,One Call Away,54,Nine Track Mind,2015-11-05,C#,major,C# major,194453
+DJ Snake,Pop,0.649,0.716,8,-5.371,1,0.0349,2.63e-5,0.163,99.988,4,02sEJTj1sye1JaqxqpcSCp,Let Me Love You,80,Encore,2016-08-05,G#,major,G# major,205946
+Calum Scott,Pop,0.608,0.174,1,-8.796,1,0.0332,1.92e-5,0.193,112.175,4,5Hq4LcmCQ6BP3kM8J5lgga,Dancing On My Own,24,Dancing On My Own,2016-06-03,C#,major,C# major,260004
+Zedd,Pop,0.69,0.622,5,-5.025,0,0.0622,0,0.544,102.04,4,1I4W7JKzYbl8VKRfD61DIS,Stay,77,Stay,2017-02-23,F,minor,F minor,210090
+John Legend,Pop,0.422,0.264,8,-7.064,1,0.0322,0,0.331,119.93,4,4OTAx9un4e6NfoHuVRiOrC,All of Me,84,Love In The Future (Expanded Edition),2013-08-30,G#,major,G# major,269560
+Rachel Platten,Pop,0.564,0.714,7,-4.987,1,0.129,0,0.33,175.924,4,0mFDIOqypzHp6Xd0el1hoT,Fight Song,78,Wildfire,2016-01-01,G,major,G major,204013
+DJ Khaled,Pop,0.552,0.76,0,-4.706,1,0.342,0,0.639,135.702,5,02drHFQa59AoJWU6DXSSjd,No Brainer,76,No Brainer,2018-07-27,C,major,C major,260000
+R. City,Pop,0.509,0.671,1,-5.709,1,0.0678,0,0.55,118.413,5,4AUTMNSP56xicSznzKgzjB,Locked Away,72,What Dreams Are Made Of,2015-10-09,C#,major,C# major,227480
+Bruno Mars,Pop,0.612,0.28,0,-8.648,1,0.0434,0,0.387,72.795,4,7KBjLhk3IM27k3ry4vBk3i,When I Was Your Man,47,Unorthodox Jukebox,2012-12-10,C,major,C major,213826

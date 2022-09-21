@@ -1,0 +1,972 @@
+---
+title: "NHL Game and Season Prediction Models"
+author: "Mark Dodd, Raymond Wong, Dustin Tang, Michael Ellsworth"
+date: '2019-12-03'
+output: html_document
+header-includes: \usepackage{xcolor}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Load Libraries, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(car)
+library(olsrr)
+library(lmtest)
+library(kableExtra)
+library(mctest)
+library(GGally)
+library(ROCR)
+library(pROC)
+```
+
+```{r Load Seasons Data with Future Points, include = FALSE}
+id <- "1YTb0rg8104VKZv7i6vWKhPaDe7wlaMb3"
+#seasons <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/seasons.csv")
+seasons <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+seasons <- seasons %>%
+  filter(!is.na(FUTURE_PTS)) %>%
+  mutate(GD = GF - GA) %>%
+  mutate(SD = S - SA) %>%
+  mutate(PD = `PIM/G` - `oPIM/G`)
+```
+
+```{r Load Descriptive Statistics Table Data, include = FALSE}
+id2 <- "1eTE9ZwmrpLG9rltG0qAI6-GgYzOM-mC1"
+#statistics_linear <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/statistics_linear.csv")
+statistics_linear <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id2))
+id3 <- "128_mfoY4DPWNcZCQGo2EIBti7Q2731Ed"
+#statistics_logistic <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/statistics_logistic.csv")
+statistics_logistic <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id3))
+```
+
+```{r Load NHL Table Data, include = FALSE}
+id4 = "1mZB6_yjISI1i1lesaXe05jFdRj2P_lF4"
+#nhl.data <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/nhl.data.csv")
+nhl.data <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id4))
+id5 <- "1keYn2Ipg0wrw9ju7c16M3QRpxMrlnKxd"
+#nhl.data.2018 <- read_csv("/Users/Ellsworth/Documents/School/DATA603/Project/nhl.data.2018.csv")
+nhl.data.2018 <- read_csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id5))
+```
+
+# Introduction
+The research topic of this project is an analysis of National Hockey League (NHL) statistics. Our team’s objective is to determine which statistics influence the outcomes of NHL games and if these statistics can help predict an NHL team’s final points total. Additionally, we want to investigate if they can be used to predict the outcome of an individual game. 
+
+Specifically, the question that we have set out to answer in this report are:
+Can build a model to predict the outcome of a hockey game that is better than flipping a coin?
+
+As hockey fans, this topic is of interest for a couple of reasons. First, it is common for hockey fans to make predictions based on what they have seen in previous games or how the teams look in the standings, but often these predictions are subjective and qualitative. This group is interested to see if there is a more quantitative approach to these predictions. Secondly, we wanted to investigate if a quantitative approach to predictions could be used for sports betting. The group is interested to see if a model can be created that consistently beats the odds set by the bookmakers.
+
+The data used for this project is taken from three key sources:
+
+  - Hockey-reference.com
+  - Naturalstattrick.com
+  - NHL Game Data sourced from Kaggle
+
+These sites provide a combination of both the traditional hockey statistics such as goals, assists, penalty minutes etc. but also provide the advanced non-traditional hockey statistics that incorporate location information to determine shot quality. We wanted to see if, based on our techniques and methodologies from our DATA 603 course, if a model would consider both traditional hockey statistics and advanced hockey statistics. 
+
+Permission restrictions for use of data from hockey-reference.com can be found at the following link: https://www.sports-reference.com/data_use.html. For the purposes of this project, there are no restrictions for the dataset that we are using. Additionally, we have communicated with naturalstattrick.com to ensure use of their data is acceptable for this project. A transcript of this communication can be provided upon request. As far as the NHL Game Data from Kaggle, this is a public dataset and is not restricted for the purposes of this project.
+
+To accomplish our tasks for this project we used a combination of R and Python. Various packages in R’s extensive statistics library will be leveraged for model building, whereas Python was used for data wrangling and data frame preparation for analysis in R.
+
+# Methodology
+
+## Descriptive Statistics
+Each descriptive statistics considered in both the logistic and multiple linear regression models are described below. All variables are numeric values and are either a whole number or represented as a percentage.
+
+### Descriptive Statistics - Logistic Regression
+
+```{r echo = FALSE}
+kable(statistics_logistic, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(statistics_logistic), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(statistics_logistic), by = 2), color = "black", background = "#FFFFFF")
+```
+
+### Descriptive Statistics - Multiple Linear Regression
+
+```{r echo = FALSE}
+kable(statistics_linear, "html", booktabs=T) %>%
+  kable_styling(full_width = F, position = "center") %>%
+  row_spec(0, align = "c", bold=T, color = "white", background = "#696969" ) %>%
+  row_spec(seq(from = 1, to = nrow(statistics_linear), by = 2), color = "black", background = "#D3D3D3") %>%
+  row_spec(seq(from = 2, to = nrow(statistics_linear), by = 2), color = "black", background = "#FFFFFF")
+```
+
+## Data Wrangling
+The data that we have used for this project provides game by game statistics, as defined by the above table, for the 2014-2018 seasons (five seasons in total). From these years we wanted to try and use the 2014-2017 data to make predictions for the 2018 season and with this goal in mind the 2018 data was excluded from our model building. This left us with three seasons with 1230 games per season and one season with 1271 games for a total of 4,961 games of data that we could use to build our model.
+
+Our goal was to build a logistic regression model to predict future games using previous data. Game by game data does not provide any value for our purposes, but it does provide insight into how a team plays if the data is looked at in aggregate. With this in mind we averaged all previous game data for each individual statistic for each season. The seasons were separated as teams tend to make drastic roster changes in the offseason so the statistics were only averaged for each individual season. For example, for the 42nd game that the Calgary Flames played in the 2017 season we would use an average of games 1-41 that the Flames played during the 2017 season.
+
+Once we had the average statistics for the previous games for each team we then subtracted the Away Team statistics from the Home Team statistics (Home minus Away) to create marginal statistics for each game and we used these marginal statistics as inputs to our logistic regression model. For example, if the Home Team average shots per game was 31.3 prior to game i and the Away Team average shots per game was 29.4 prior to game i, then our model would see an average marginal shot difference of 1.9 and it is these numbers that we used in our model.
+
+All data wrangling was performed in Python and the results were exported to csv files to analyze in R.
+
+## Methodology - Logistic Regression
+
+In order to create a prediction model for NHL games, the group utilized the logistic regression methodology described in DATA 603. The first step in this process was to evaluate the variables in the previously described datasets by running a full model, check for multicollinearity and run individual z-tests on all variables to test variable significance.
+
+Assumptions that will be tested in the multiple logistic regression model include:
+
+  - Multicollinearity
+
+## Methodology - Multiple Linear Regression
+In order to create a prediction model for a team’s next season’s points totals, the group utilized the multiple linear regression methodology described in DATA 603. The individual coefficients test (t-test) is a partial model test that will be used to test the significance of the statistics from the previously described datasets. Additionally, a stepwise regression procedure will be used to compare the partial model tests to see if a more effective model can be built.
+
+Assumptions that will be tested in the multiple linear regression model include:
+
+  - Multicollinearity
+  - Linearity
+  - Equal variance
+  - Normality
+  - Outliers
+
+# Main Results of the Analysis
+
+## Results - Logistic Regression
+
+We calculate for Variance Inflation Factor (VIF) to confirm that our variables are not collinear. We also use ggpair to visually check if there is any type of multicollinearity. 
+
+From our data wrangling and compiling our datasets, we start out with 75 variables! 75!
+
+### Code, Findings and Visualizations - Logistic Regression
+
+```{r include=TRUE}
+nhl.na = na.omit(nhl.data)
+names(nhl.na)
+nhl.stats = subset(nhl.na, select = CF_avg:takeaways_avg)
+
+nhl.stats = nhl.stats %>% mutate(result_bool = nhl.na$result_bool)
+nhl.reduced = nhl.na %>% select(-c(CF_avg:`CF%_avg`, `FF%_avg`:`SF%_avg`, `GF%_avg`, `xGF%_avg`, `SCF%_avg`, HDCF_avg:`SV%_avg`, PDO_avg, shots_avg, goals_avg))
+imcdiag(nhl.stats%>% select(-c(result_bool)), as.numeric(nhl.stats$result_bool), method="VIF")
+```
+
+```{r message=FALSE, fig.height=12, fig.width=12, cache = TRUE}
+ggpairs(data = nhl.reduced %>% select (-c(X1:TOI)),
+        lower = list(continuous = wrap("smooth_loess", alpha = 0.1, size = 0.5, color = 'blue'),
+                     combo ="facethist", 
+                     discrete = "facetbar", 
+                     na = "na"))
+```
+
+After looking at the results VIF we realized we can remove a lot of the variables as a number of them returned inf and extremely high values.
+
+In an effort to further focus our model into variables of significance, we, as Hockey Data Experts, recognize that the HD (High Danger Shots), MD (Medium Danger Shots), LD (Low Danger Shots) are all based and related to one stat, SCF (Scoring Chances For % Average). So going forward, our model does not consider  those variables, and is further reduced to 16 initial variables. 
+
+After cleaning up the variables we are left with these variables:
+
+  - FF_avg
+  - FA_avg 
+  - GF_avg 
+  - GA_avg 
+  - xGF_avg 
+  - xGA_avg 
+  - SCF_avg 
+  - SCA_avg 
+  - blocks_avg 
+  - hits_avg 
+  - pim_avg 
+  - powerPlayOpportunities_avg  
+  - powerPlayGoals_avg  
+  - faceOffWinPercentage_avg  
+  - giveaways_avg
+  - takeaways_avg
+
+
+We re-test multicollinearity for these variables using the VIF to ensure that there is no presence of multicollinearity.
+ 
+```{r}
+nhl.reduced = nhl.na %>% select(-c(CF_avg:`CF%_avg`, `FF%_avg`:`SF%_avg`, `GF%_avg`, `xGF%_avg`, `SCF%_avg`, HDCF_avg:PDO_avg, shots_avg))
+names(nhl.reduced)
+```
+
+
+```{r}
+imcdiag(nhl.reduced %>% select(c(FF_avg:takeaways_avg))%>% select(-c(goals_avg)), as.numeric(nhl.reduced$result_bool), method="VIF")
+```
+
+At this point all values sit within low or moderate levels of multicollinearity. Now we focus on building the model. This is our first step of building our model.
+
+```{r}
+nhl.mdl.1 = glm(result_bool ~ FF_avg +
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                hits_avg +
+                                pim_avg +
+                                powerPlayOpportunities_avg + 
+                                powerPlayGoals_avg + 
+                                faceOffWinPercentage_avg + 
+                                giveaways_avg + takeaways_avg
+              , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.1)
+```
+
+From here we decide to run individual Z-test on each variable, while considering the Residual Deviance, AIC and AUC values to further reduce our model and consider significant variables. Within our fully additive model, we decide to remove any variable where p-value > 0.05 and perform a LRTest (Likelihood Ratio Test) to see if it is safe to remove the variable from the model. This will be repeated until all of the variables are significant. 
+
+As an example, we review individual Z-test from our fully additive model, we can see that our p-value for the $\beta_{FF_{avg}}$ variable > 0.829022  . Using this parameter we run the LRTest (Likelihood Ratio Test) between the two models.  This will confirm whether or not a reduced model of 15 variables is more significant than our full model with 16 variables.
+
+$$ \begin{aligned}
+H_0: \beta_{FF_{avg}} &= 0 \: or \: Reduced \: Model \:  is \: True \\
+H_A: \beta_{FF_{avg}} &\ne  0  \: or \: Full \: Model \: is \: True\\
+\end{aligned}$$
+
+```{r}
+nhl.mdl.1_reduced = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                hits_avg +
+                                pim_avg +
+                                powerPlayOpportunities_avg + 
+                                powerPlayGoals_avg + 
+                                faceOffWinPercentage_avg + 
+                                giveaways_avg + takeaways_avg
+              , data = nhl.reduced, family = 'binomial')
+
+lrtest(nhl.mdl.1_reduced,nhl.mdl.1)
+```
+
+From the LRTest, our p-value = 0.829 > 0.05, therefore we fail to reject the $H_0$, we remove the ‘FF_Avg’ variable from our starting additive 16 variable model, and re-test with our now 15 variable model.
+
+We run through the following workflow:
+
+1) Create the model.
+2) Run Summary of Additive Model and review individual z-tests of all variables.
+3) Review Residual Deviance values and AIC (Akaike information criterion) values to ensure that the significance of our model does not drop.
+4) Review p-value of individual z-tests of each variable in our model and remove the most insignificant variable. We continue to use a p-value < 0.05 as our threshold.
+5) Perform LR Test to confirm that we are allowed to remove the variable. 
+
+Repeat. Steps 1-5.
+
+We continue this until our model contains only significant variables and each variables’ p-value < 0.05.
+Our process is shown in the following r-chunks.
+
+```{r}
+nhl.mdl.2 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                hits_avg +
+                                pim_avg +
+                                powerPlayOpportunities_avg + 
+                                powerPlayGoals_avg + 
+                                faceOffWinPercentage_avg + 
+                                giveaways_avg + takeaways_avg
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.2)
+```
+Remove giveaways_avg
+
+```{r}
+nhl.mdl.3 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                hits_avg +
+                                pim_avg +
+                                powerPlayOpportunities_avg + 
+                                powerPlayGoals_avg + 
+                                takeaways_avg
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.3)
+```
+Remove powerPlayOpportunities_avg 
+
+```{r}
+nhl.mdl.4 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                hits_avg +
+                                pim_avg +
+                                powerPlayGoals_avg + 
+                                takeaways_avg
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.4)
+
+```
+Remove hits_avg
+
+```{r}
+nhl.mdl.5 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg +
+                                powerPlayGoals_avg + 
+                                takeaways_avg
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.5)
+```
+
+Remove powerPlayGoals_avg and takeaways_avg
+
+```{r}
+nhl.mdl.6 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.mdl.6)
+
+prob=predict(nhl.mdl.6,type=c("response"))
+pred<-prediction(prob,nhl.reduced$result_bool)
+perf<-performance(pred,measure = "tpr",x.measure="fpr")
+plot(perf,col=2,main="ROC CURVE ", xlab="False Positive Rate (1-Specificity)",ylab="True Positive Rate (Sensibility)")
+abline(0,1)
+roc<-roc(nhl.reduced$result_bool,prob)
+auc(roc)
+```
+
+As a baseline Area under Curve (AUC), AIC, Receiver Operating Characteristic (ROC) Curve and Residual Deviance numbers are:
+
+Final Additive Model:
+
+  - Null deviance: 6650.8 on 4829  degrees of freedom
+  - Residual deviance: 6518.0  on 4820  degrees of freedom
+  - AIC: 6538
+  - AUC: 0.5971
+
+We will discuss the significance and meaning of these numbers once we finalize our model (see Conclusion.). As we interact with our variables below, we use these numbers to help determine changes in significance in our model, as we reduce towards our best fit model.
+
+### Interesting Scenario - consideration for borderline insignificant variables:
+
+In reducing our model, we did run into a scenario where the p-value for our “blocks_avg” was on the borderline of being insignificant. Ie: P-value = 0.0901. We run on LRTest to verify if we should keep Blocks_avg in our model.
+
+$$
+H_0: \beta_{Blocks_{avg}} = 0 \: or \: Reduced \: Model \:  is \: True \\
+H_A: \beta_{Blocks_{avg}} \ne  0  \: or \: Full \: Model \: is \: True\\
+$$
+
+```{r}
+nhl.mdl.6 = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg
+                , data = nhl.reduced, family = 'binomial')
+
+nhl.mdl.blocks = glm(result_bool ~ 
+                                FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                pim_avg
+                , data = nhl.reduced, family = 'binomial')
+
+lrtest(nhl.mdl.blocks, nhl.mdl.6)
+
+```
+
+When running LRTest for our blocks_avg variable, our p-value for the $\beta_{blocks_{avg}}$ variable > 0.05 = 0.08987. We fail to reject our $H_0$, and we should take remove Blocks_avg out of our model.  
+
+However, we decide to keep this variable in our model, because our AIC value is larger with the our model with Blocks_avg, than without.  As well, we want to consider the variable in our interaction models, to see if our AIC and Residual values decrease. We continue on.
+
+### Interactive Model Methods
+
+Now that we have a final additive model, we will begin to interact our variables to determine if a better fit model exists. We will first start by explaining our process in considering interaction within our model.
+
+#### Interactive process
+
+Interacting nine variables returns a large number of interaction terms to consider, so we will describe our process here, before showing the R-Code and its outputs.  
+
+We also will not show all reduced models through our iterative process, but we will return a number of models to show how our model reduced.
+
+1) Create the model.
+2) Run Summary of interactive model and review individual z-tests of all variables.
+3) Consider Residual Deviance values, AIC, and AUC values to ensure that the significance of our model does not drop, while comparing with our variables that are insignificant. We continue to use a p-value < 0.05 as our threshold.
+4) Review p-value of individual z-tests of each interactive variable in our model and remove the most insignificant variable. We continue to use a p-value < 0.05 as our threshold. 
+5) Repeat Steps 1-4.
+
+Here is our R-code that describes the above process:
+
+
+```{r}
+nhl.int.1 = glm(result_bool ~ 
+                                (FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg)^2
+                , data = nhl.reduced, family = 'binomial')
+
+summary(nhl.int.1)
+                
+```
+
+```{r}
+nhl.int.2 = glm(result_bool ~ 
+                                (FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg) + 
+                                FA_avg:GF_avg +
+                                xGF_avg:SCA_avg +
+                                SCF_avg:SCA_avg +
+                                blocks_avg:pim_avg
+                  
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.int.2)
+```
+
+Remove FA_avg:GF_avg and blocks_avg:pim_avg
+
+```{r}
+nhl.int.3 = glm(result_bool ~ 
+                                (FA_avg +
+                                GF_avg +
+                                GA_avg +
+                                xGF_avg +
+                                xGA_avg +
+                                SCF_avg +
+                                SCA_avg +
+                                blocks_avg +
+                                pim_avg) + 
+                                xGF_avg:SCA_avg +
+                                SCF_avg:SCA_avg
+                  
+                , data = nhl.reduced, family = 'binomial')
+summary(nhl.int.3)
+
+prob=predict(nhl.int.3,type=c("response"))
+pred<-prediction(prob,nhl.reduced$result_bool)
+perf<-performance(pred,measure = "tpr",x.measure="fpr")
+plot(perf,col=2,main="ROC CURVE ", xlab="False Positive Rate (1-Specificity)",ylab="True Positive Rate (Sensibility)")
+abline(0,1)
+roc<-roc(nhl.reduced$result_bool,prob)
+auc(roc)
+```
+
+$$\begin {aligned}
+\widehat{logit_{win}} &=  \beta_0 + \beta_1X_{FA_{avg}} + \beta_2X_{GF_{avg}} + \beta_3X_{GA_{avg}} + \beta_4X_{xGF_{avg}} 
++ \beta_5X_{xGA_{avg}} + \beta_6X_{SCF_{avg}} 
++ \beta_7X_{SCA_{avg}}+ \beta_8X_{Blocks_{avg}} \\
+&+ \beta_9X_{PIM_{avg}} 
++ \beta_{10}X_{xGF_{avg}}*X_{SCA_{avg}} 
++ \beta_{11}X_{SCF_{avg}}*X_{SCA_{avg}} 
+\\
+\\
+\widehat{logit_{win}} &=  0.22 -0.04X_{FA_{avg}} + 0.23X_{GF_{avg}} 
+- 0.22X_{GA_{avg}} 
+- 0.40 X_{xGF_{avg}}
++ 0.42X_{xGA_{avg}} + 0.07 X_{SCF_{avg}}
+- 0.04 X_{SCA_{avg}} \\
+&+ 0.03 X_{Blocks_{avg}} + 0.04X_{PIM_{avg}}
++ 0.10X_{xGF_{avg}}*X_{SCA_{avg}} 
+- 0.01X_{SCF_{avg}}*X_{SCA_{avg}} 
+\\
+\end {aligned}$$
+
+Our Logistic Regression Model is below:
+
+
+$$\begin{aligned}
+\widehat\pi_{win}&=  \dfrac {e^{\beta_0 + \beta_1X_{FA_{avg}} + \beta_2X_{GF_{avg}} + \beta_3X_{GA_{avg}} + \beta_4X_{xGF_{avg}} 
++ \beta_5X_{xGA_{avg}} + \beta_6X_{SCF_{avg}} 
++ \beta_7X_{SCA_{avg}}+ \beta_8X_{Blocks_{avg}} + \beta_9X_{PIM_{avg}} 
++ \beta_{10}X_{xGF_{avg}}*X_{SCA_{avg}} 
++ \beta_{11}X_{SCF_{avg}}*X_{SCA_{avg}} }} { 1+ e^{\beta_0 + \beta_1X_{FA_{avg}} + \beta_2X_{GF_{avg}} + \beta_3X_{GA_{avg}} + \beta_4X_{xGF_{avg}} 
++ \beta_5X_{xGA_{avg}} + \beta_6X_{SCF_{avg}} 
++ \beta_7X_{SCA_{avg}}+ \beta_8X_{Blocks_{avg}} + \beta_9X_{PIM_{avg}} 
++ \beta_{10}X_{xGF_{avg}}*X_{SCA_{avg}} 
++ \beta_{11}X_{SCF_{avg}}*X_{SCA_{avg}}  }} \\
+\\
+\\
+\widehat\pi_{win}&=  \dfrac {e^{0.22 -0.04X_{FA_{avg}} + 0.23X_{GF_{avg}} 
+- 0.22X_{GA_{avg}} 
+- 0.40 X_{xGF_{avg}}
++ 0.42X_{xGA_{avg}} + 0.07 X_{SCF_{avg}}
+- 0.04 X_{SCA_{avg}} + 0.03 X_{Blocks_{avg}} + 0.04X_{PIM_{avg}}
++ 0.10X_{xGF_{avg}}*X_{SCA_{avg}} 
+- 0.01X_{SCF_{avg}}*X_{SCA_{avg}}  }} { 1+ e^{0.22 -0.04X_{FA_{avg}} + 0.23X_{GF_{avg}} 
+- 0.22X_{GA_{avg}} 
+- 0.40 X_{xGF_{avg}}
++ 0.42X_{xGA_{avg}} + 0.07 X_{SCF_{avg}}
+- 0.04 X_{SCA_{avg}} + 0.03 X_{Blocks_{avg}} + 0.04X_{PIM_{avg}}
++ 0.10X_{xGF_{avg}}*X_{SCA_{avg}} 
+- 0.01X_{SCF_{avg}}*X_{SCA_{avg}}}} \\
+\end{aligned}$$
+
+## Results - Multiple Linear Regression
+In the early development of the logistic regression model described previously, it appeared as though a suitable model for predicting outcomes of games would not be achievable. To ensure that the group would have a regression model that would be worth using, a multiple regression model was created for predicting a team’s next seasons points total. The results of this regression model building is described below.
+
+### Code, Findings and Visualizations - Multiple Linear Regression
+
+#### Model with subset of variables
+The first step in determining the most suitable model for predicting team's next seasons points was to take a subset of the available variables and build an additive model. Since there are a significant amount of season statistics to choose from, a number of variables were removed based on assumed significance. There was no statistical reasoning for removing the variables at this point. Instead, we assumed the statistics that were being removed were irrelevant. For example, statistics such as "Average Team Age", were removed as we didn't believe they would significantly impact the model.
+
+The statistics that will be used in the first full additive model are:
+
+  - PTS
+  - GF
+  - GD
+  - SD
+  - CF%
+  - FF%
+  - SCF%
+  - HDF%
+  - PDO
+  - PD
+
+The first full additive model will be built with the `lm()` function using the seasons dataset from hockey-reference.com.
+
+```{r Full Model Multiple Linear Regression for Season Points}
+season_points_model_full <- lm(data = seasons,
+                               FUTURE_PTS ~ PTS + GD + SD + `CF%` + `FF%` + `SCF%` + `HDF%` + PDO + PD)
+summary(season_points_model_full)
+```
+
+Based on the individual coefficients test (t-test) using the `summary()` function, only one variable appears to be significant and will be used in a reduced model:
+
+  - CF%
+  
+A reduced linear regression model will be built with the `lm()` function.
+
+```{r Reduced Model Multiple Linear Regression for Season Points}
+season_points_model_reduced <- lm(data = seasons, FUTURE_PTS ~ `CF%`)
+summary(season_points_model_reduced)
+```
+
+Based on the reduced linear regression model summary, a team's future seasons points can be predicted with the CF% variable with a model that can explain 29.4% of the variation in a team's future seasons points. This is not a significant amount of explained variation and hence, further model fitting will be attempted.
+
+Using the same variables in the first full additive model, a stepwise regression procedure will be used to determine if a better model for a team's future seasons points can be fitted. From the `olsrr` package, the `ols_step_both_p()` function will be used to complete the stepwise regression procedure.
+
+```{r Stepwise Regression Procedure for Season Points 1}
+model_stepwise1_team_pts = ols_step_both_p(season_points_model_full, pent = 0.1, prem = 0.3)
+```
+
+Based on the stepwise regression procedure using a p-value entry limit of 0.1 and a p-value exit threshold of 0.3, SCF% is the only variable that was included in the model. The R-squared value increases slightly as the model using SCF% instead of CF% can explain 30.1% of the variation in a team's future seasons points. Although the model has improved slightly, there is still plenty of room for improvement.
+
+The next step will be to determine if more variables can be accepted using the stepwise regression procedure using a higher p-value entry and exit limit; 0.2 and 0.3 respectively.
+
+```{r Stepwise Regression Procedure for Season Points 1b}
+season_points_stepwise1b = ols_step_both_p(season_points_model_full, pent = 0.2, prem = 0.3)
+```
+
+From this stepwise regression procedure, three variables are included in the model:
+
+  - SCF%
+  - CF%
+  - SD
+  
+This appears to be a better model than the previous stepwise model as the adjusted R-squared value suggests that this model can explain 33.1% of the variance in a team's future seasons points. The previous best model could only explain 30.1%.
+
+To ensure that the variables in the stepwise regression model are independent, multicollinearity will be tested using the `vif()` function from the `car` package and the `pairs()` function. The `vif()` function will calculate the variance inflation factor (VIF) and the `pairs()` function will identify multicollinearity visually.
+
+```{r Multicollinearity Assumption Check Stepwise 1b}
+vif(season_points_stepwise1b$model)
+pairs(~`SCF%` + `CF%` + SD, data = seasons)
+```
+
+Based on the values of VIF, SD and CF% appear to have critical levels of multicollinearity, and one of these variables should be removed from the model. This is confirmed with the pairs plots as CF% and SD appear to be linearly correlated.
+
+Since CF% is more significant in the parameter estimates from the stepwise output, SD will be dropped and a new model will be built.
+
+```{r Reduced Stepwise Model for Season Points 1b}
+reduced_stepwise1b <- lm(data = seasons, FUTURE_PTS ~ `CF%` + `SCF%`)
+summary(reduced_stepwise1b)
+```
+
+Based on the adjusted R-squared value from the reduced stepwise model, this model is not any better than the model with just SCF%. However, with two variables available, an interaction term can be tested.
+
+```{r Stepwise Interaction Model}
+reduced_interaction <- lm(data = seasons, FUTURE_PTS ~ (`CF%` + `SCF%`)**2)
+summary(reduced_interaction)
+```
+
+From the summary output of the model with the interaction term, none of the terms are significant according to the individual coefficients test which means the interaction model will not be used. Since the additive model with CF% and SCF% did not perform any better than the model with SCF%, the model with SCF% is the best model at this point.
+
+```{r Coefficients of Best Fit Model, echo = FALSE}
+coefficients(model_stepwise1_team_pts$model)
+summary(model_stepwise1_team_pts$model)$r.squared
+```
+
+$$ \widehat{Points_{future{}}} = -68.1 + 3.2 * SCF\% $$
+
+Based on this model, with every one percent increase in SCF%, a teams next season points total will increase by ~3.2.
+
+#### Model with all available variables
+
+Since the best model found with a subset of variables had an adjusted R-squared value of only 0.301, we will attempt to find a better model utilizing all of the available variables.
+
+The statistics that will be used in the second full additive model are:
+
+  - AvAge
+  - W
+  - L
+  - OL
+  - PTS
+  - GF
+  - GA
+  - GD
+  - SOW
+  - SOL
+  - SRS
+  - SOS
+  - TG/G
+  - EVGF
+  - EVGA
+  - PD
+  - SD
+  - PDO
+  - CF%
+  - FF%
+  - xGF
+  - xGA
+  - SCF%
+  - HDF%
+
+The second full additive model will be built with the `lm()` function using the seasons dataset from hockey-reference.com. The individual coefficients test will be used to test the significance of each of the variables.
+
+```{r Second Full Model Multiple Linear Regression for Season Points}
+model_full2_team_pts <- lm(data = seasons,
+                          FUTURE_PTS ~ AvAge + W + L + OL + PTS + GF + GA + GD + SOW + SOL + SRS +
+                            SOS + `TG/G` + EVGF + EVGA + PD + SD + PDO + `CF%` + `FF%` + xGF + xGA +
+                            `SCF%` + `HDF%`)
+summary(model_full2_team_pts)
+```
+
+From the individual coefficients test, the following variables appear to be significant:
+
+  - GF
+  - GA
+  - TG/G
+  - xGF
+
+From here, the stepwise regression procedure will be used to test all the available variables to see if the significant terms from the individual coefficients test are consistent with the stepwise procedure. A p-value entry limit of 0.05 and p-value exit limit of 0.3 will be used for this stepwise model.
+
+```{r Stepwise Regression Procedure for Season Points 2}
+model_stepwise2_team_pts <- ols_step_both_p(model_full2_team_pts, pent = 0.05, prem = 0.3)
+```
+
+From the stepwise regression procedure, the following variables appear to be significant:
+
+  - SCF% 
+  - TG/G 
+  - xGF 
+  - CF%
+
+Although the variables are slightly different between the individual coefficients test and the stepwise regression procedure, the stepwise regression model will be used going forward. One of the reasons for choosing the stepwise regression model is the fact that SCF%, which is a variable that was found significant in the previous model, is found in the stepwise regression model but not the model from the individual t-test.
+
+To ensure that the variables in the stepwise regression model are independent, multicollinearity will be tested using the `vif()` function from the `car` package and the `pairs()` function. The `vif()` function will calculate the variance inflation factor (VIF) and the `pairs()` function will identify multicollinearity visually.
+
+```{r Multicollinearity Assumption Check Stepwise 2}
+vif(model_stepwise2_team_pts$model)
+pairs(~`SCF%` + `TG/G` + xGF + `CF%`, data = seasons)
+```
+
+Based on the values of VIF, SCF% and CF% appear to have moderate levels of multicollinearity, bordering on significant. From the pairs visualization, SCF% and CF% appears to be linearly correlated.
+
+Since CF% is more significant in the parameter estimates from the stepwise output, but SCF% was the first variable chosen in the stepwise regression procedure, both variables will be dropped independently and two models will be tested.
+
+```{r Stepwise Reduced Test for Season Points 2}
+model_stepwise2_reduced_team_pts_a <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `CF%`)
+# Adjusted R-squared of model without SCF%
+summary(model_stepwise2_reduced_team_pts_a)$adj.r.squared
+
+model_stepwise2_reduced_team_pts_b <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `SCF%`)
+# Adjusted R-squared of model without CF%
+summary(model_stepwise2_reduced_team_pts_b)$adj.r.squared
+```
+
+Since the adjusted R squared value is higher in the model without SCF%, this will be the model that is used going forward. As there has been a change to the model, the individual coefficients test will be used to ensure all variables continue to be significant.
+
+```{r Stepwise Reduced for Season Points 2}
+model_stepwise2_reduced_team_pts <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + xGF + `CF%`)
+summary(model_stepwise2_reduced_team_pts)
+```
+
+Since the p-value of xGF is higher than 0.05, it will be removed from the reduced model.
+
+```{r Stepwise Further Reduced for Season Points 2}
+model_stepwise2_reduced_team_pts <- lm(data = seasons, FUTURE_PTS ~ `TG/G` + `CF%`)
+summary(model_stepwise2_reduced_team_pts)
+```
+
+Two variables remain in the best fit model which means we have the opportunity to test an interaction term.
+
+```{r}
+model_stepwise2_interact_team_pts <- lm(data = seasons, FUTURE_PTS ~ (`TG/G` + `CF%`)**2)
+summary(model_stepwise2_interact_team_pts)
+```
+
+Since neither of the interaction terms are significant, the best fit model is as follows:
+
+```{r Coefficients of Best Fit Model 2}
+coefficients(model_stepwise2_reduced_team_pts)
+```
+
+$$ \widehat{Points_{future}} = -181.63 + 12.5 * TG/G + 4.0 * CF\% $$
+
+Based on this model, with every one percent increase in CF%, a teams next season points total will increase by ~4. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~12.5.
+
+In order to ensure that this model is acceptable, a few additional assumptions will be tested:
+
+  - Linearity
+  - Equal variance
+  - Normality
+  - Outlier
+
+The linearity and equal variance assumptions will be tested by plotting the fitted versus the residual values on a scatter plot and visually determining if a trend can be observed.
+
+```{r Linearity Assumption Test, echo = FALSE}
+ggplot(model_stepwise2_reduced_team_pts, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth() +
+  geom_hline(yintercept = 0) 
+```
+
+Since the plot above displays no observable pattern between the residuals and the fitted values of the model, the linearity and equal variance assumptions hold. Additionally, the Breusch-Pagan test can be used to confirm the equal variance assumption quantitatively.
+
+```{r BP test for Equal Variance Assumption}
+bptest(model_stepwise2_reduced_team_pts)
+```
+
+Since the p-value from the Breusch-Pagan test is greater than 0.05, we can confirm that heteroscedasticity is not present.
+
+The normality assumption will be tested using the Shapiro-Wilk test.
+
+```{r Normality Assumption Test}
+shapiro.test(residuals(model_stepwise2_reduced_team_pts))
+```
+
+Since the p-value from the Shapiro-Wilk test is greater than 0.05, we can say that the sample data are significantly normally distributed, thus confirming the normality assumption.
+
+Lastly, the outlier assumption will be tested using the leverage points methodology.
+
+```{r Outlier Assumption Test}
+lev <- hatvalues(model_stepwise2_reduced_team_pts)
+p <- length(coef(model_stepwise2_reduced_team_pts))
+n <- nrow(seasons)
+outlier <- lev[lev > (3 * p / n)]
+outlier
+plot(rownames(seasons), lev, main = "Leverage in Season Points Dataset",
+     xlab="observation",
+     ylab = "Leverage Value")
+abline(h = 3 *p/n, lty = 1)
+```
+
+Since there are two outliers that affect the model, a new model will be tested without these outliers.
+
+```{r}
+final_model_no_outliers <- lm(data = seasons[-c(27, 38),], FUTURE_PTS ~ `TG/G` + `CF%`)
+summary(final_model_no_outliers)
+```
+
+Now that the outliers have been removed and all other assumptions have been tested, the final best fit model becomes:
+
+$$ \widehat{Points_{future}} = -178.8 + 10.6 * TG/G + 4.2 * CF\% $$
+
+Based on this model, with every one percent increase in CF%, a teams next season points total will increase by ~4.2. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~10.6.
+
+# Conclusion
+
+## Conclusion - Logistic Regression
+
+The Best Model from our study is
+
+$$
+\begin{aligned}
+\widehat\pi_{win}&=  \dfrac {e^{0.22 -0.04X_{FA_{avg}} + 0.23X_{GF_{avg}} 
+- 0.22X_{GA_{avg}} 
+- 0.40 X_{xGF_{avg}}
++ 0.42X_{xGA_{avg}} + 0.07 X_{SCF_{avg}}
+- 0.04 X_{SCA_{avg}} + 0.03 X_{Blocks_{avg}} + 0.04X_{PIM_{avg}}
++ 0.10X_{xGF_{avg}}*X_{SCA_{avg}} 
+- 0.01X_{SCF_{avg}}*X_{SCA_{avg}}  }} { 1+ e^{0.22 -0.04X_{FA_{avg}} + 0.23X_{GF_{avg}} 
+- 0.22X_{GA_{avg}} 
+- 0.40 X_{xGF_{avg}}
++ 0.42X_{xGA_{avg}} + 0.07 X_{SCF_{avg}}
+- 0.04 X_{SCA_{avg}} + 0.03 X_{Blocks_{avg}} + 0.04X_{PIM_{avg}}
++ 0.10X_{xGF_{avg}}*X_{SCA_{avg}} 
+- 0.01X_{SCF_{avg}}*X_{SCA_{avg}}}} \\
+\end{aligned}
+$$
+
+### Interpretations of AIC, Residual Deviance, ROC
+
+To recap, AIC, Residual Deviance, AUC, ROC Curve for the final additive model and our final interactive models are:
+
+Final Additive Model:
+
+  - Null deviance: 6650.8 on 4829  degrees of freedom
+  - Residual deviance: 6518.0  on 4820  degrees of freedom
+  - AIC: 6538
+  - AUC: 0.5971
+
+Final Interactive Model:
+
+  - Null deviance: 6650.8  on 4829  degrees of freedom
+  - Residual deviance: 6509.1  on 4818  degrees of freedom
+  - AIC: 6533.1
+  - AUC: 0.5993
+
+For the purposes of picking the best model, we selected the final interactive model because of the higher AUC, lower AIC and lower residual deviance.
+ 
+The residual deviance describes how well our response variables is predicted by the independent variables in our model. The values residual deviance values between both our additive model and interactive model show a decreased value. This indicates that our interactive model increases the significance and precision of predicting the probability of a win over our additive model and is the better model. The Residual Deviance has reduced by 8.9 points with a loss of two degrees of freedom.
+
+The AIC is another value we can utilize to help compare one model to another model.  A model with a smaller AIC number is the model to choose when selecting between two models.  In comparing between the AIC numbers between our additive and interactive model, the AIC value has decreased and also indicates that our interactive model is better than our additive model. The AIC value has decreased by 4.9 points.	
+
+The ROC plots us the Sensitivity of our model against Specificity. In short, we are plotting the probability whether the true values are true and false values as false. The AUC (Area Under Curve) quantitatively tells us this relationship; the higher the AUC value, the better the model predicts the probability of our response variable. Looking at our AUC value, the value has increased by 0.0022, which indicates that our interactive model is a better predictive model.
+
+The ROC chart is given:
+
+```{r}
+plot(perf,col=2,main="ROC CURVE ", xlab="False Positive Rate (1-Specificity)",ylab="True Positive Rate (Sensibility)")
+abline(0,1)
+roc<-roc(nhl.reduced$result_bool,prob)
+auc(roc)
+```
+
+
+### The effects of each independent variable on the model
+
+$\beta_{1}$ for $X_{FA_{avg}}$ means that for every 1 increases for $X_{FA_{avg}}$, we estimate the odds of winning to be multiplied by -0.040508
+
+$\beta_{2}$ for $X_{GF_{avg}}$ means that for every 1 increases for $X_{GF_{avg}}$, we estimate the odds of winning to be multiplied by 0.225015
+
+$\beta_{3}$ for $X_{xGA_{avg}}$ means that for every 1 increases for $X_{xGA_{avg}}$, we estimate the odds of winning to be multiplied by - 0.224650
+
+$\beta_{4}$ for $X_{xGF_{avg}}$ means that for every 1 increases for $X_{xGF_{avg}}$, we estimate the odds of winning to be multiplied by - 0.398329
+
+$\beta_{5}$ for $X_{xGA_{avg}} $ means that for every 1 increases for $X_{xGA_{avg}}$, we estimate the odds of winning to be multiplied by + 0.424882
+
+$\beta_{6}$ for $X_{SCF_{avg}}$ means that for every 1 increases for  $X_{SCF_{avg}}$, we estimate the odds of winning to be multiplied by + 0.074618 
+
+$\beta_{7}$ for $X_{SCA_{avg}}$ means that for every 1 increases for  $X_{SCA_{avg}}$, we estimate the odds of winning to be multiplied by - 0.043757  
+
+$\beta_{8}$ for $X_{Blocks_{avg}}$ means that for every 1 increases for  $X_{Blocks_{avg}}$, we estimate the odds of winning to be multiplied by 0.025562 
+
+$\beta_{9}$ for $X_{PIM_{avg}}$ means that for every 1 increases for  $X_{PIM_{avg}}$, we estimate the odds of winning to be multiplied by 0.036574
+
+$\beta_{10}$ for $X_{xGF_{avg}}*X_{SCA_{avg}}$ means that for every 1 increases for  $X_{xGF_{avg}}*X_{SCA_{avg}}$, we estimate the odds of winning to be multiplied by 0.097357
+
+$\beta_{11}$ for $X_{SCF_{avg}}*X_{SCA_{avg}}$ means that for every 1 increases for  $X_{SCF_{avg}}*X_{SCA_{avg}}$, we estimate the odds of winning to be multiplied by - 0.009528
+
+
+
+```{r, include = FALSE}
+nhl.reduced = nhl.na %>% select(-c(CF_avg:`CF%_avg`, `FF%_avg`:`SF%_avg`, `GF%_avg`, `xGF%_avg`, `SCF%_avg`, HDCF_avg:PDO_avg, shots_avg))
+names(nhl.reduced)
+
+nhl.2018.na = na.omit(nhl.data.2018)
+nhl.2018.reduced = nhl.2018.na %>% select(-c(CF_avg:`CF%_avg`, `FF%_avg`:`SF%_avg`, `GF%_avg`, `xGF%_avg`, `SCF%_avg`, HDCF_avg:PDO_avg, shots_avg))
+names(nhl.2018.reduced)
+
+nhl.predict = predict(nhl.int.3, nhl.2018.reduced, type="response")
+results = data.frame(prediction = nhl.predict, 
+                     result = nhl.2018.reduced$result_bool, 
+                     game_id = nhl.2018.reduced$game_id, 
+                     date = nhl.2018.reduced$date)
+results = results %>% mutate(test = (prediction >= 0.5) == result)
+```
+
+```{r}
+head(results, 4)
+mean(results$test)
+```
+
+
+Now that we have both our equations and deviance, AIC, AUC numbers, we now want to answer two questions that we introduce in the introduction. 
+
+Recapping, the question that we have set out to answer in this report was:
+
+1. Can build a model to predict the outcome of a hockey game that is better than flipping a coin?
+
+Recapping, our model was built built off of 2014-2017 data. In our R-Chunk above, we’ve taken 2018 results into a separate dataframe. To test, we want to run our model against 2018 results, to see if we’ve accurately predicted results of 2018 games against the actual outcome of those 2018 games. In the end, we were correct 57.43% of the time. Success!
+
+## Conclusion - Multiple Linear Regression
+The best fit multiple linear regression model for predicting team’s points totals is as follows:
+
+$$ \widehat{Points_{future}} = -178.8 + 10.6 * TG/G + 4.2 * CF\% $$
+
+This model is the best fit model for a number of reasons:
+
+  - The model does not have any insignificant variables
+  - The model has the highest adjusted R-squared out of the models without insignificant variables
+  - The model includes independent variables that do not provide redundant information
+  - The data used in the model is significantly normal
+  - The linearity assumption holds
+  - There are no significant outliers that impact the model significantly
+  - The error terms of the model have a constant variance
+
+Based on the best fit model, we can say that with every one percent increase in CF%, a teams next season points total will increase by ~4.2. Similarly, with every one unit increase in TG/G, a teams next season points total will increase by ~10.6.
+
+Based on an adjusted R-squared value of 0.3708, this model explains 37% of the variation in a team's points total. Additionally, based on the RMSE value of 11.51, the standard deviation of the unexplained variance in the model is 11.51.
+
+# Discussion
+
+## Discussion - Logistic Regression
+
+In creating our logistic regression model, the first point of interest involved data wrangling. Hockey, once started as a pastime obsession, has slowly evolved to a mathematical study to quantify victory beyond the score between two teams. As such, traditional hockey statistics have now spawned a number of modern statistics and further derivations of those statistics. Shots on Goal begat Shot Attempts. Shot Attempts begat Corsi. Corsi begat Fenwick and so on and so on. The interesting lessons learned from our model really indicated how many variables correlate, to where it was imperative that the model had to be reduced immediately by checking multicollinearity with VIF tests. Alternatively, the lesson learned was that the possibility of creating models based on all hockey stats seems almost limitless. (We will one day, create a hockey stat or model called, “The Thuntida” )  
+
+In some aspects, the results of our model were both expected and unexpected. Our model considered both traditional hockey statistics (e.g. GF_avg, blocks_avg) and modern analytical statistics (e.g. SCF, FA_avg).  This indicated to us that neither category of statistics dominates the other. The unexpected result of our model were the different kinds of statistics that were included and significant to our model. A statistic like penalty minute average was significant in our model, and more significant than a blocked shot average.   
+
+One big lesson learned was that the combination of data wrangling along with the variations statistical modelling method considerations ultimately made predicting hockey wins/losses limitless. Another lesson learned were the range of statistics that we used in creating our model. We considered all statistics and data gathered from the outset of a season. The randomness of the first 10-15 games may have affected our model more than we originally would have thought. In reading other similar studies done, it is not uncommon to use a predictive model against a rolling window of games to predict outcomes, and this is something that we would have liked to try against our model.  
+
+## Discussion - Multiple Linear Regression
+
+The results of the best fit multiple linear regression model are in line with what was expected going into this model building exercise. Although there are a significant number of variables available to predict a team's points totals, it is challenging to predict future results based on past results. In the NHL, there is usually significant change that happens between seasons and to say that one team will perform similarly to how they performed in a previous season, is flawed. With that being said, 37% explained variance is surprisingly high. It would be interesting to use this model to predict the current NHL season to see how the prediction compared to the actual results.
+
+One of the surprising outcomes of the best fit model was the fact that past seasons points totals are not significant in predicting future seasons points total. If a team had 100 points in the previous season, that would not be a good indication that the team would also achieve around 100 points in the next season.
+
+A more interesting and effective model for predicting future seasons points totals would be to incorporate a value of the current roster of players. As discussed previously, the previous season's team is not going to look exactly like the future season's team which is why the best fit model is flawed. Incorporating an aggregation of current player value would help accurately predict the results of the upcoming season.

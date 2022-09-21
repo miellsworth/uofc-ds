@@ -1,0 +1,433 @@
+---
+title: "DATA 602 - Introduction to Statistical Inference Through Interval Estimation"
+output:
+  html_document:
+    df_print: paged
+---
+&copy; Jim Stallard 2019
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(mosaic)
+require(mosaicData)
+# xstudentsurvey = read.csv("Z:\\Data305\\Stat213StudentSurvey.csv")
+# attach(studentsurvey)
+#library(nycflights13)
+#sampleflights = sample(flights, 1000, replace=FALSE)
+```
+
+#Introduction to Statistical Inference
+
+Methods have been previously discussed on how to find the value of the population parameter of interest, through a (i) census or (ii) conducting
+a random sample, with the latter methodology being the process used to *estimate* the value of the population parameter. The resulting random sample produced one of two statistics which were used to estimate the value of the population parameter
+
+$$
+\begin{array}{lccc}
+{\rm Parameter:}  & {\rm Population\:\:Mean}  & {\rm Population\:\:Proportion} & {\rm Population\:\:Variance} \:\:\sigma^{2}\\
+{\rm Statistic:}  & {\rm Sample\:\:Mean}\:\:\overline{X}            & {\rm Sample\:\:Proportion}\:\: \widehat{p}  & {\rm Sample\:\:Variance}\:\:S^{2} \\
+\end{array} 
+$$
+
+These statistics are sometimes referred to as *point estimators* because the computed value of $\overline{X}$ or $\widehat{p}$ will end up being a single-point on the real-number line. 
+</br>
+</br>
+**Illustration:** A common problem in statistics is the estimation of a population mean. Let's look at the population that consists of all post-secondary education studnets enrolled in an undergraduate university program in Canada and, specifically, those students who have applied for student loans to assist them in their completion of their studies. A random sample of $n = 20$ such students was taken, and each was asked to estimate (to the best of their ability) what their student load debt will be by the time they graduate from their program.
+
+```{r echo=TRUE}
+stdebtdata = c(29063, 23025, 31327, 20638, 31760, 26374, 28199, 25151, 16026, 23243, 23799, 18629, 19841, 28883, 24237, 27573, 26746, 31358, 23490, 33806)
+```
+
+
+```{r echo=TRUE}
+densityplot(stdebtdata, xlab="Estimated Debt at Graduation", main="Distribution of Student Debt at Graduation")
+```
+```{r echo=TRUE}
+mean(stdebtdata)
+sd(stdebtdata)
+```
+
+The mean of this sample was computed to be $\overline{X} = 25658.4$. Does this mean that the average student debt of *all* university students in Canada (who are in an undergraduate program) is $25658$? That is, is the population mean $\mu = \$25,658$? What happens if another sample of $n = 20$ students is taken? Will the data be the same? Will the mean of this second sample be computed to be equal to $\overline{X} = 25,658$? 
+
+Our understanding of the Central Limit Theorem answers this question with an ademant **no**! Because the sample mean $\overline{X}$ is a random variable, the value of which will fluctuate from one random sample of 20 to another. 
+
+We *expect* the computed value of the sample mean to be equal to the population mean $(E(\overline{X}) = \mu))$. The standard deviation is $\sigma_{\overline{X}} = \frac{\sigma_{X}}{\sqrt{n}}$. 
+
+In light of this, we have no way of determining whehter the computed value of the sample mean of $\overline{X} = 25,658$ is *close* to, or far away from, the *true value* of the population mean $\mu$. This particularly represents a challenge if we have no idea as to the value of the population standard deviation, $\sigma_{X} = ????$ is. 
+
+## The Bootstrap Method for Estimation of the Population Mean $\mu$
+
+Let's think about the $n = 20$ students that were randomly picked. The population of interest is rather large, over 100,000 students. Imagine that for each of the 20 students sampled, there are *many* exact replicas, and the population is comprised of many, many *exact* replicas of the observed sample. That is, our population would look something like this:
+
+```{r echo=TRUE}
+ntimes = 100  #the population is the sample on a scale of 100
+bootdata = numeric(length(stdebtdata)*ntimes)
+for(i in 1:ntimes)
+{  if (i == 1) bootdata = stdebtdata
+   else bootdata = c(stdebtdata, bootdata)
+}
+dotchart(bootdata, xlab="Student Debt at Graduation", col='blue', main="Population of Values")
+```
+The above visualization then provides us with a representation of all the data in the population. As such, the sample of $n = 20$ is considered to be the population. We then *resample* - sample *with replacement* - from our "population" that is mirrored by the $n = 20$ data points and for each sample of $n = 10$ the sample mean $\overline{X}$ is computed. 
+</br>
+</br>
+This method of generating a distribution of the statistic is called **bootstrapping**, and the statisic we are computing from each resampling of $n = 10$ is our **bootstrap statistic**, in our case the bootstrap statisic is the sample mean/average $\overline{X}$.  
+</br>
+</br>
+**Illustration:** The following visualization resulted from a simulation that involved resampling from a sample of $n = 10$ data points from a population of values with an unknown value of the population mean, or $\mu = ?$. 
+
+```{r echo=TRUE}
+ntimes = 1000  #number of times to resample
+nsize = 10     #sample size
+dvecmeans = numeric(ntimes)  #create a vector to hold 1000 means
+dvecsds = numeric(ntimes)    #create a vector to hold 1000 sds
+origdata = c(102.66,  88.78, 116.96, 104.98,  93.27, 108.57,  83.23, 108.65, 105.63, 101.76) #read in original data which is the sample of 10
+for(i in 1:ntimes) #start the for loop, run 1000 times
+{   datavec = sample(origdata, nsize, replace=TRUE)  #data of nsize, sampling w replacement. 
+    dvecmeans[i] = mean(datavec) #compute the mean of the sample
+	    dvecsds[i] = sd(datavec)   #compute the standard deviation of the sample
+} #close the for loop
+boot1 = data.frame(dvecmeans, dvecsds) #stores the sample mean + sd in a data frame
+head(boot1, 4)
+tail(boot1, 4)
+```
+
+Some visualizations that result from the bootstrapping of the sample of $n = 10$ data points:
+```{r}
+densityplot(dvecmeans, xlab="Dotplot of Bootstrap Statistic (Sample Mean)", gcolor='white', pch=16, col='blue')
+ggplot(boot1, aes(dvecmeans)) +
+  geom_histogram(col='red', fill='blue', binwidth=1) +
+  xlab("Values of Bootstrap Statistic") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistic: Sample Mean (n = 10)")
+ggplot(boot1, aes(dvecmeans)) +
+  geom_density(col='blue') +
+  xlab("Values of Bootstrap Statistic") +
+  ylab("Density") +
+  ggtitle("Distribution of Bootstrap Statistic: Sample Mean (n = 10)")
+```
+Of the 1000 various values of the $\overline{X}$ generation from resampling $n = 10$ data points one-thousand times a distribution of the $\overline{X}$ has been generated, a distribution that is *condition free*. 
+</br>
+</br>
+Let's now compute the $\overline{x}_{2.5}$ and $\overline{x}_{97.5}$, the 2.5th-percentile and the 97.5th-percentile of $\overline{X}$ using the `qdata` command.
+```{r}
+qdata(~dvecmeans, c(0.025, 0.975), data=boot1) #compues the 2.5 and 97.5th percentiles 
+```
+(Note: This can also be done with the `quantile(datavector, p)` command:
+```{r}
+quantile(dvecmeans, c(0.025, 0.975)) #compute two quantiles rather than two separate commands, note means are in a single vectore
+```
+</br>
+Since the sample mean $\overline{X}$ is an unbiased statistic for the average/mean student debt of all students who recently graduated from an undergraduate program in Canada, we say that 95% of all possible unknown values of the population mean $\mu$ are between the 2.5-percentile and the 97.5-percentile of the distribution of the bootstrap statistic $\overline{X}$:
+$$
+\overline{x}_{2.5} = 95.442 \hspace{0.5in} {\rm and} \hspace{0.5in} \overline{x}_{97.5} = 107.162
+$$ 
+</br>
+
+### A Caution with Bootstrap "Plus or Minus" Capture Intervals
+
+From our current knowledge of probability and the Normal probabiliy model with a mean $\mu$ and a standard deviation $\sigma$, we know that *exactly* 95% of "Normal" data falls within 1.96 standard deviations of the true mean $\mu$. That is, 
+
+$$
+P(\mu - 1.96*\sigma \leq X \leq \mu + 1.96*\sigma) = 0.95
+$$
+```{r}
+pnorm(1.96) - pnorm(-1.96) #computes the probability of falling between(+/-) one signma from the mean in a Normal model
+```
+
+Since the distribution of $\overline{X}$ is approximately Normal, we can say that 
+$$
+P(\mu_{\overline{X}} - 1.96*\sigma_{\overline{X}} \leq X \leq \mu_{\overline{X}} + 1.96*\sigma_{\overline{X}}) \approx 0.95
+$$
+So let's compute this interval with the R code below:
+```{r echo=TRUE}
+lb = mean(dvecmeans) - (1.96*sd(dvecmeans))
+ub = mean(dvecmeans) + (1.96*sd(dvecmeans))
+lb
+ub
+```
+
+This interval suggests that 95% of the time, the unknown value of the population mean $\mu$ will fall somewhere between **95.417 and 107.468**.
+</br>
+</br>
+This interval is *different* than the interval created from finding the 2.5 and 97.5 percentiles of the sample mean bootstrap statistic. Which interval should be used? 
+</br>
+</br>
+The interval created by the 1.96 standard deviations away from the expected value of the boostrap statistic, $E(\overline{X}) = \mu_{\overline{X}} = \mu$ presumes the distribution of the bootstrap statistic is *perfectly symmetrical*. Although the distribution of the bootstrap statistic is *close* to perfect symmetry, is it not. 
+</br>
+</br>
+ 
+```{r echo=TRUE}
+lbcount = 0 #sets one counter at zero
+ubcount = 0
+sortdvecmeans = sort(dvecmeans)  #sorts the values of bootstrap stat xbar
+for(i in 1:length(sortdvecmeans)){
+   if (sortdvecmeans[i] <= lb) lbcount = lbcount + 1
+   else 
+     if (sortdvecmeans[i] >= ub) ubcount = ubcount + 1
+}
+perbelowlb = (lbcount/length(sortdvecmeans))
+peraboveub = (ubcount/length(sortdvecmeans))
+perbelowlb
+peraboveub
+```
+
+A simple scan of all the values of the bootstrap statistic $\overline{X}$ finds that 2.4 percent of the values of $\overline{X}$ are less than 95.417 and 2.1% of the values are above the upper bound of 107.468. 
+</br>
+</br>
+
+So the interval of $95.417 \leq \mu \leq 107.468$ is not as an accurate interval that captures the true value of the population mean $\mu$ when compared to the bootstrap interval.  
+</br>
+</br>
+
+Given the slight non-symmetry of the distribution of the bootstrap statistic - that an unequal proportion of bootstrap $\overline{X}$s are below $95.417$ and above $17.468$ - we are *more accurate* with the interval computed from the bootstrap distribution. 
+</br>
+</br>
+
+So, what does this interval derived from the bootstrap distribution,  $95.442\leq \mu \leq 107.162$ represent?  
+</br>
+</br>
+95% **(95.442 to 107.162)** of the time the value of $\overline{X}$ will fall between these two values. Since $E(\overline{X}) = \mu$, then we can say that the *unknown value* of the population mean $\mu$ is somewhere between the lower bound and upper bound computed above. The lower bound and upper bound serve as the bounds of what is called a **confidence interval**. 
+</br>
+</br>
+Moreover, since about 95% of the values of $\overline{X}$ fall between 95.442 and 107.162, we say there is a 95% *level of confidence* that the unknown value of the population mean $\mu$ will be at some point between these lower bound and the upper bounds. 
+
+In summary, we are 95% confident that the unknown value of the population mean is *somewhere* between $96.95$ and $105.447$.  
+
+What would happen if we were to increase the level of confidence to 99%? We would then need to find two points from the distribution of the bootstrap statistic such that $P(\overline{X} \leq x_{0.5}) = 0.005$ and $P(\overline{X} \geq x_{99.5}) = 0.005$. This is completed below:
+```{r}
+qdata(~dvecmeans, c(0.005, 0.995), data=boot1) #compues the 0.5 and 99.5th percentiles 
+```
+OR
+```{r echo=TRUE}
+quantile(dvecmeans, c(0.005, 0.995))
+```
+
+The 99% confidence interval for $\mu$ is: $93.5 \leq \mu \leq 108.715. 
+</br>
+</br>
+
+*How can one generate such a confidence interval using this bootstrapping idea?* The code below will easily enable one to generate a confidence interval for the population mean $\mu$ via bootstrapping. This code is simplier to create and run. Copy and paste this into an R chunk and see what you get. 
+
+```{r echo=TRUE}
+bootstrap_trials = do(1000) * mean(sample(origdata, size=10, replace=TRUE))   # data frame sample with replacement from data, compute the mean, and do this 1000 times
+head(bootstrap_trials, 2)
+ggplot(data=bootstrap_trials, aes(x = mean)) + geom_histogram(fill='blue', col='red', binwidth=2) + xlab("Bootstrap Statistic - Sample Mean")
+favstats(~ mean, data=bootstrap_trials) # compute various summary statistics of the 1000 computed values of the sample mean
+qdata(~mean, c(0.025, 0.975), data=bootstrap_trials) # compute the 2.5 and 97.5 percentiles
+```
+The 95% confidence interval for $\mu$ is: $95.09 \leq \mu \leq 107.200$ (from this particular run of the bootstrap!)
+
+(Note: Rather than using the `sample(origdata, size=10, replace=TRUE)` code the `resample` function can also be used: `resample(origdata, size=10)`
+</br>
+</br>
+
+**Time to Play 1:** Let's return to our student debt data. The data appears below
+```{r echo=TRUE}
+stdebtdata  # data vector containing actual estimates of debt at graduation of n = 20
+length(stdebtdata)
+```
+</br>
+</br>
+Use the R code provided above to create a *90% confidence interval* for $\mu$ - the mean student debt incurred by a post-secondary education student once they have completed their program of studies. In the simulation, use 1000 repitions or 1000 resamples (use 500 as a "bidwidth"). 
+</br>
+</br>
+
+(a) Copy and paste the previously provided R code (using either the for loop version or the `do` version) to generate the distribution of the bootstrap statistic $\overline{X}$. Store the results of your findings in a data frame called **bootstrap_trials2**.
+</br>
+</br>
+**Answer:** 
+```{r}
+bootstrap_trials2 = do(1000) * mean(sample(stdebtdata, size=20, replace=TRUE))   # data frame sample with replacement from data, compute the mean, and do this 1000 times
+head(bootstrap_trials2, 2)
+bootstrap_trials2 %>%
+  ggplot(aes(x = mean)) +
+  geom_histogram(fill='blue',
+                 col='red',
+                 binwidth=2) +
+  xlab("Bootstrap Statistic - Sample Mean")
+```
+
+(b) Use the `favstats` command to compute the various sample statistics of the **mean**-variable of your **bootstrap_trials2** data frame.
+</br>
+</br>
+**Answer:**
+```{r}
+favstats(~ mean, data = bootstrap_trials2) # compute various summary statistics of the 1000 computed values of the sample mean
+```
+
+
+(c) Use either the `qdata` command or the `quantile` command to compute the 90% bootstrap confidence interval for the mean of a population of persons who have graduated from a post-secondary education program with student debt. 
+</br>
+</br>
+**Answer:**
+```{r}
+qdata(~mean, c(0.05, 0.95), data = bootstrap_trials2) # compute the 2.5 and 97.5 percentiles
+```
+This result produces the 95% bootstrap inteval for $\mu$: $23,589.31 \leq \mu \leq 27,695.03$. *NOTE: Your result is going to be slightly different**, with a different lower and upper bound.
+
+(d) Can you infer from these data that the mean student debt of all students at graduation from their program is (i) $\mu = 25000$? (ii) $\mu > 20000$? (iii) $\mu < 26000$? 
+</br>
+</br>
+**Answer:**(i) Yes, since my 95% bootstrap interval for $\mu$ *captures* the value of $\mu = 25000$, I can infer that the mean student debt of all persons who graduates from a post-secondary education program with debt is $25,000. (ii) Yes. (iii) No.
+
+**Time to Play 2:** The following data resulted from sixteen separate water samples being taken at various times over a two-month interval at a location that is one-kilometre downstream from a sewage treatment plant. The data you see are measurements on the amount of dissolved oxygen content. Sewage and industrial pollutants create low dissolved oxygen levels in rivers and lakes, which in turn have a negative affect on plants and marine life. 
+$$
+5.4, 5.4, 5.6, 4.2, 4.7, 5.3, 4.4, 4.9, 5.2, 5.9, 4.7, 4.9, 4.8, 4.9, 5.0, 5.5
+$$
+Read the data into R with 
+```{r echo=TRUE}
+diso2 = c(5.4, 5.4, 5.6, 4.2, 4.7, 5.3, 4.4, 4.9, 5.2, 5.9, 4.7, 4.9, 4.8, 4.9, 5.0, 5.5) # read the data into a data vector called diso2
+length(diso2)
+densityplot(diso2, xlab="Dissolved O2 Content", col='blue', main="Density Plot of Sample of Dissolved O2 Content") # graph the data with a density plot
+```
+then answer the inquiries below, carefully reading through parts (a) through (c) *prior* to starting part (a).
+
+(a) Create a 95% bootstrap interval for $\mu$ - the mean dissolved oxygen content appearing in a sample of river water one-kilometer down stream (mid-river). Interpret the meaning of this interval. Modify existing code that you have employed, tailoring this code to compute the requested interval. 
+</br>
+</br>
+**Answer:** Copy and paste the code below to generate the distribution of the bootstrap statistic $\overline{X}$.
+```{r}
+bootstrap_trials3a = do(1000) * mean(resample(diso2, n = 16))
+bootstrap_trials3a %>%
+  ggplot(aes(x = mean)) +
+  geom_histogram(fill = 'blue', col = 'red', binwidth = 0.02) +
+  xlab("Bootstrap Statistic - Sample Mean") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Mean")
+favstats(~ mean, data = bootstrap_trials3a)
+qdata(~mean, c(0.025, 0.975), data = bootstrap_trials3a)
+```
+From this result, the 95% bootstrap interval for the population mean $\mu$ is: $4.844 \leq \mu \leq 5.269$. (Again,  your result should be slightly different in terms of the lower bound and upper bound...)
+
+(b) Consider the sample median $\widetilde{X}$ as another bootstrap statistic. Compute a 95% bootstrap interval for $\widetilde{\mu}$, the median amount of dissolved oxygen.
+</br>
+</br>
+**Answer:** Modifing the above code to compute the sample median for each bootstrap sample
+```{r}
+bootstrap_trials3b = do(1000) * median(resample(diso2, n = 16))
+head(bootstrap_trials3b, 3)
+bootstrap_trials3b %>%
+  ggplot(aes(x = median)) +
+  geom_histogram(fill = 'blue', col = 'red', binwidth = 0.02) +
+  xlab("Bootstrap Statistic - Sample Median") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Median")
+```
+
+```{r}
+favstats(~ median, data = bootstrap_trials3b)
+qdata(~median, c(0.025, 0.975), data = bootstrap_trials3b)
+```
+The 95% bootstrap inteval for $\widetilde{\mu}$ is: $4.8 \leq \widetilde{\mu} \leq 5.4$
+
+
+(c) Now consider a third bootstrap statisic $S$, the sample standard deviation. Compute a 95% bootstrap interval for $\sigma$. 
+</br>
+</br>
+**Answer:** 
+```{r echo=TRUE}
+bootstrap_trials3c = do(1000) * sd(resample(diso2, n = 16))
+head(bootstrap_trials3c, 3)
+bootstrap_trials3c %>%
+  ggplot(aes(x = sd)) +
+  geom_histogram(fill='blue', col='red', binwidth=0.02) +
+  xlab("Bootstrap Statistic - Sample Standard Deviation") +
+  ylab("Count") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Standard Deviation")
+```
+
+```{r}
+favstats(~sd, data=bootstrap_trials3c)
+qdata(~sd, c(0.025, 0.975), data=bootstrap_trials3c)
+```
+From this result: $0.282 \leq \sigma \leq 0.565$.
+
+-------------------------------
+
+## Bootstrap Confidence Interval for the Population Proportion $\widehat{p}$. 
+
+How can we use this bootstrap method to create a confidence interval for the unknown value of the population proportion $p$? It is very similar to the bootstrap procedure exposed to in the previous section, with one exception: the underlying data collected are *categorical* - with each element/invidual sampled being either a 0 (does not have the attribute) or a 1 (does have the attribute). 
+
+Then we compute the proportion of these data that are 1s, which is the mean of the binary data!
+
+**Illustration:** A survey/random sample of $n = 109$ students taking a first-year statistics course. What proportion of *all* students taking a first-year statistics course have used marijuana in the past six months (prior to legalization? Below are the data, with a "have not used" coded as a "0", and a "have used" coded as a "1":
+
+```{r echo=TRUE}
+userofmari = c(0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0) # creates a vector of 0s and 1s from the studentsuvery data frame
+table(userofmari) #returns the number of 0s and 1s
+nsize = length(userofmari) #set n = 109
+```
+
+```{r}
+bootstrap_trials4 = do(1000) * mean(resample(userofmari, nsize)) #could have used sample(userofmari, nsize, replace=TRUE)
+# head(bootstrap_trials4, 4)
+bootstrap_trials4 %>%
+  ggplot(aes(x = mean)) +
+  geom_histogram(col='blue', fill='red', binwidth=0.01) +
+  xlab("Bootstrap Statistic - Sample Proportion") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Proportion")
+# histogram(~ mean, data=bootstrap_trials4, xlab="Values of Sample Proportion", main="Distribution of Sample Proportion (n=109)", col='green')
+```
+The various statisics of the above distribution are provide below. 
+```{r}
+favstats(~ mean, data = bootstrap_trials4)
+qdata(~mean, c(0.025, 0.975), data = bootstrap_trials4) # find the 2.5 and 97.5 percentiles of the sample proportion
+```
+From the bootstrap distribution of the sample proportion $\widehat{p}$, we can see that 2.5 percent of the values of $\widehat{p}$ are below 0.1376 and 97.5 percent of the values are below 0.2846. Therefore, we are 95% confident that the true value of $p$, the proportion of all students taking first-year statistics who have used marijuana in the past six months is somewhere between 13.76% and 28.46%. Alternatively,
+$$
+0.1376 \leq p \leq 0.2846 
+$$
+
+**Time to Play 3A:** An Ipsos Reid poll taken this past July[^1] found that 49% of Canadians are confident that the health care system in Canada will be able to meet the care needs of senior citizens. Suppose this sample was based on $n = 500$ Canadians. Find a 98% bootstrap interval for $p$, the proportion of *all* Canadians who are confident that the health care system will be able to meet the care needs of the country's senior citizens. In doing so, use *3000* simulations. 
+</br>
+</br>
+Use the code below to create a data vector of 500 values, with 51% are 0s and 49% of which are 1s:
+```{r echo=TRUE}
+senhc = c(rep(0, 0.51*500), rep(1, 0.49*500))  #combines two vectors, one with 255 0s and another with 245 1s.
+# head(senhc, 4)  #looks at the first four data values...all will be 0s...
+```
+</br>
+</br>
+**Answer:** Using the similar code structure in the previous illustration, remembering the change the "userofmari" data to "senhc":
+```{r echo=TRUE}
+bootstrap_trials5 = do(3000) * mean(resample(senhc, n=500))
+# head(bootstrap_trials5, 4)
+bootstrap_trials5 %>% 
+  ggplot(aes(x = mean)) +
+  geom_histogram(col = 'blue', fill = 'red', binwidth = 0.01) +
+  xlab("Bootstrap Statistic - Sample Proportion") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Proportion")
+favstats(~ mean, data = bootstrap_trials5)
+qdata(~mean, c(0.01, 0.99), data = bootstrap_trials5)
+```
+From this result, the 98% bootstrap interval for $p$ is: 
+$$
+0.436 \leq p \leq 0.542
+$$
+
+**Time to Play 3b:** How would your result change if the sample was based on $n = 1500$? Use 0.01 as your "binwidth"..
+</br>
+</br>
+**Answer:**
+```{r echo=TRUE}
+senhc = c(rep(0, 0.51*1500), rep(1, 0.49*1500)) 
+# head(senhc, 4)  #looks at the first four data values...all will be 0s...
+bootstrap_trials6 = do(3000) * mean(resample(senhc, n=1500))
+bootstrap_trials6 %>%
+  ggplot(aes(x = mean)) +
+  geom_histogram(col='blue', fill='red', binwidth=0.01) +
+  xlab("Bootstrap Statistic - Sample Proportion") +
+  ylab("Counts") +
+  ggtitle("Distribution of Bootstrap Statistic - Sample Proportion")
+favstats(~ mean, data = bootstrap_trials6)
+qdata(~mean, c(0.01, 0.99), data = bootstrap_trials6)
+```
+The 98% bootstrap interval is now
+$$
+0.46 \leq p \leq 0.522
+$$
+
+[^1]: https://www.ipsos.com/en-ca/news-polls/Canadian-Medical-Association-Seniors-July-17-2018
+
+[^2]: https://www.ipsos.com/en-ca/news-polls/Global-News-Fed-Vote-July-20-2018

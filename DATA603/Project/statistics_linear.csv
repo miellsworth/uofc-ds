@@ -1,0 +1,30 @@
+﻿Hockey Stat Abbrev.,Hockey Stat. Name,Description,Relation
+AvAge,Average Age,Average Age of the hockey team,Lower age means a youger team
+W ,Wins,Number of Wins for a season,More wins in a season better the team
+L (Losses),Losses,Number of Losses for a season,More losses in a season the worse the team
+OL (Overtime Losses),Overtime Losses,Number of Overtime Losses for a season,More Overtime Losses in a season the worse the team but these losses aren't as bad as regular losses
+PTS (Points),Points per season,The number of points for a team for a season,More points in a season better the team
+GF (Goals For Team A),Goals for Team A,Number of goals a team scores for a season,More goals in a season better the team
+GA (Goals Against Team A,Goals Againist Team A,Number of goals a team lets in for a season,More goals againist in a season better the team
+GD (GF - GA) ,Goal Differential,The difference of goals for a team. The number of goals for minus the number of goals againist,The higher the difference the better the team
+SOW,Shootout wins,Number of wins for a team in the shootout,More SOW means the team is better at the Shootout
+SOL,Shootout Losses,Number of loses for a team in the shootout,More SOL means the team is worse at the Shootout
+SRS,Simple Rating System ,Rating for Goal Differential and Strength of Schedule,Higher SRS means better the team 
+SOS,Strength of Scehdule,Measurement of the opponent in the standings,Lower sos means the opponent are not good 
+TG/G,Total goals = (GF+GA) per game,Total goals = (GF+GA) per game,The higher TG/G means the more goals per game
+EVGF ,Even Strength Goals For,Even Strength Goals For a team per season,Higher EVGF means the team is better at even strength
+EVGA,Even Strength Goals Against,Even Strength Goals Against per season,Lower EVGA means the team is better at even strength
+PD (Penalty Differential),Penalty Minutes For - Penalty Minutes againist per game in a season,The difference of Penalty for - Penalty againist per game in a season,The higher Penalty Differential means the team takes more penalties
+SD (Shot Differential),Shots For - Shots againist per game in a season,Shots For - Shots againist per game in a season,The higher Shots Differential means the team takes more shots than they give up
+PDO ,Shooting % + Save % at Even Strength ,Shooting % + Save % at Even Strength ,Higher pdo means the better the team at Even Strength
+CF%,Corsi For % at 5 on 5," Percentage of any shot attempt (goals, shots on net, misses and blocked shots)",The higher cf% means the team is shotting more than their opponents. 
+"FF% - Percentage of any shot attempt (goals, shots on net, misses)"," Fenwick For % at 5 on 5
+FF / (FF + FA)","Above 50% means the team was controlling the
+puck more often than not with this player on the
+ice in this situation. This doesn't count blocked shots",The higher FF% means the team is shooting more than their opponents. 
+xGF,Expected Goals For,"Expected Goals For' given where shots came from, for and against, while this player was on the ice at even strength.
+It's based on where the shots are coming from, compared to the league-wide shooting percentage for that shot location.",The higher xGF the more goals a team is expected to score for a game
+xGA,Expected Goals Against,"Expected Goals Against' given where shots came from, for and against, while this player was on the ice at even strength.
+It's based on where the shots are coming from, compared to the league-wide shooting percentage for that shot location.",The lower xGA the more goals a team is expected to let in for a game
+SCF%,Percentage Scoring Chances for,Percentage of scoring chances in this team's favor,Higher scf% means a team has more scoring chances
+HDF%,High Danger Scoring Chances For Percentage,Percentage of high-danger scoring chances in this team's favor,Higher HDF% means a team has more scoring chances

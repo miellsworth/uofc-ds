@@ -1,0 +1,890 @@
+---
+title: "DATA 602 - Answers to Review of Probability Theory"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+&copy; Jim Stallard 2019
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+```
+
+# Review of Modules 1 through 5
+
+The purpose of this class is to provide many different examples of computing probabilities using the various principle of probability covered in the Probability Modules posted on D2L. In each instance, you will be given an opportunity to work with others to solve each problem. 
+
+
+
+**Time to Play Exercise 1:** A random experiment consists of tossing a fair die (with sides 1 through 6) and observing the upper-most face. The following events are defined:
+</br>
+$$
+A - \:\: \text{the upper-most face is less than or equal to 3} \\
+B - \:\: \text{the upper-most face is equally divisible by 2}
+$$
+Compute the probabilities below. 
+
+(a) $P(A \cup B)$
+</br>
+</br>
+<font color='blue'>
+**Answer:** Consider the two events/subsets and the outcomes - of which there are 6 in total - which satisfy each event:
+$$
+A = \{1, 2, 3\} \hspace{0.2in} \text{and} \hspace{0.2in} B = \{2, 4, 6\}
+$$
+$A \cup B$ represents the event that the top-side of the die has at most three dots *or* is equally divisible by 2; in other words, one or the other or both. To compute the probability of this event, 
+$$
+\begin{aligned}
+P(A \cup B) = & \frac{n(A \cup B)}{n({\cal S})} \\
+            = & \frac{5}{6} \hspace{0.5in} (A \cup B) = \{1 ,2, 3, 4, 6\} \\
+            = & 0.83333333 \\
+            \approx & 0.8333
+\end{aligned}
+$$
+</font>
+(b) $P(A \cap B)$ 
+</br>
+</br>
+<font color='blue'>
+**Answer:** $A \cap B$ represents the event that the top-side of the die has at most three dots *and* is equally divisible by 2; in other words, both of these events need to be satisfied when the top-side is observed. To compute the probability of this event, 
+$$
+\begin{aligned}
+P(A \cap B) = & \frac{n(A \cap B)}{n({\cal S})} \\
+            = & \frac{1}{6} \hspace{0.5in} (A \cap B) = \{2 \} \\
+            = & 0.166667 \\
+            \approx & 0.1667
+\end{aligned}
+$$
+</font>
+(c) $P(A^{c} \cap B^{c})$
+</br>
+</br>
+<font color='blue'>
+**Answer:** Consider the complement of each of $A$ and $B$:
+$$
+A^{c} = \text{not A} = \{4, 5, 6\} \hspace{0.2in} \text{and} \hspace{0.2in} B^{c} = \text {not B} = \{1, 3, 5\}
+$$
+The intersection of $A^{c}$ and $B^{c}$ is then
+$$
+A^{c} \cap B^{c} = \{5\}
+$$
+and
+$$
+P(A^{c} \cap B^{c}) =  \frac{n(A^{c} \cap B^{c})}{n({\cal S})}  = \frac{1}{6} = 0.1667 \\
+$$
+Alternatively, you could have applied DeMorgan's Law here:
+$$
+\begin{aligned}
+P(A^{c} \cap B^{c}) = & P(A \cup B)^{c} \\
+                  = & 1 - P(A \cup B) \\
+                  = & 1 - \underbrace{0.83333}_{\text{answer from part (a)}} \\
+P(A^{c} \cap B^{c})   = & 0.1667
+\end{aligned}
+$$
+</font>
+
+---------------------------
+
+**Time to Play Exercise 2:** A room consists of five persons. Assume each person was born in a non-leap year (in a year with 365 days). Compute the probability of the following events:
+</br>
+</br>
+
+(a) exactly two have the same birthday.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Let's consider how many possible outcomes exist, that is compute $n({\cal S})$. Assuming no leap-years, each of the five persons can have 365 possible birthdays, or
+$$
+n({\cal S}) = \underbrace{\underline{365}}_{\text{person 1}} * \underbrace{\underline{365}}_{\text{person 2}} * \underbrace{\underline{365}}_{\text{person 3}} * \underbrace{\underline{365}}_{\text{person 4}} * \underbrace{\underline{365}}_{\text{person 5}} = 365^{5} 
+$$
+Within R Studio, this can be computed as
+```{r}
+options(scipen=999) #setting change so computations are not in scientific notation
+numberoutcomes = 365^5  #computes 365 to the power of 5
+numberoutcomes   #returns the result
+```
+Second, compute the number of ways in which two have the same birthday. Let's say for now that person 1 and person 2 have the same birthday. The number of ways in which this can occur is
+$$
+\underbrace{\underline{365}}_{\text{person 1}} * \underbrace{\underline{1}}_{\text{person 2}} * \underbrace{\underline{364}}_{\text{person 3}} * \underbrace{\underline{363}}_{\text{person 4}} * \underbrace{\underline{362}}_{\text{person 5}} = 365*1*364*363*362 
+$$
+In the above case, we set persons 1 and 2 to have the same birthday. But person 2 and 3 can have the same birthday, persons 4 and 2, etc. So, of the five persons, we pick any two to have the same birthday. The number of ways to pick 2 of the 5 to have the same birthday is ${5 \choose 2} = 10$. 
+</br>
+Putting this all together, of the 6,478,348,728,125 possible outcomes, 
+$$
+{5 \choose 2} *  365*1*364*363*362 = 174,586,011,600
+$$
+```{r}
+numbertwosame = choose(5,2)*365*364*363*362  #computes the number of ways this event can occur
+numbertwosame  #returns the computation above
+```
+The probability that exactly two of the five persons have the same birthday is then
+$$
+P(\text{two have the same birthday}) = \frac{17458601160}{6478348728125} = 0.02694915 \approx 0.02695
+$$
+This is computed in R with
+```{r}
+probtwosame = (numbertwosame)/(numberoutcomes)
+probtwosame
+```
+</font>
+
+(b) at least two have the same birthday. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** The event *at least two have the same birthday* means that two can have the same birthday (which we computed the probability of in part (a)), three can have the same birthday, four can have the same birthday, or all five can have the same birthday. 
+</br>
+</br>
+Rather than go through all the different ways, let's consider the complement of the event *at least two have the save birthday*:
+$$
+(\text{at least two have the same birthday})^{c} = (\text{all have different birthdays})
+ $$
+The probability is then computed with the law of complement:
+$$
+\begin{aligned}
+P(\text{at least two have the same birthday}) = & 1 - P(\text{at least two have the same birthday})^{c} \\
+                                              = & 1 - P((\text{all have different birthdays}) \\
+                                              = & 1 - \left(\frac{365}{365} * \frac{364}{365} * \frac{363}{365} * \frac{362}{365} * \frac{361}{365}\right) \\
+                                              = & 1 - \left(\frac{365*364*363*362*361}{365^{5}}\right) \\
+                                              = & 1 - \left(\frac{\frac{365!}{(365- k)!}}{365^{k}} \right)\hspace{0.2in} (\text{where} \:\:k = 5) \\
+                                              = & 1 - 0.972864426 \\
+                                              = & 0.027135573 \\
+                                              \approx & 0.0271
+\end{aligned}
+$$
+</font>
+
+----------------------------
+
+**Time to Play Exercise 3A:** Data collected from delegates attending a one-day national data science conference produced the following percentages: Sixty-percent (60%) of all delegates attended the breakfast forum, seventy-percent (70%) attended the dinner banquet, and forty-percent (40%) attended both. 
+</br>
+</br>
+One of the delegates attending the data science conference was chosen at random. Define the events $BF$ as the delegate attended the breakfast forum and $DB$ as the delegate attended the dinner banquet. Compute the probabilty that this delegate
+
+(a) attended the breakfast forum or the dinner banquet.
+</br>
+</br>
+<font color='blue'>
+**Answer:** There are many possible ways to compute this probability, the method proposed below will incorporate the probability table approach. 
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(BF)         & P(BF^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(DB)        &  0.40 = P(BF \cap DB)               &                      &      0.70    \\[0.5ex]
+\hline
+P(DB^{c})        &                 &                  &           \\[0.5ex]
+\hline
+\text{Column Probabilities} &  0.60                &                     &    1     \\[0.5ex]
+\end{array}
+$$
+The table is now completed below:
+$$
+\begin{array}{l|c|c|r}
+\hline
+                & P(BF)         & P(BF^{c})       &  \text{Row Probabilities}      \\[0.5ex]
+\hline
+P(DB)        &  0.40 = P(BF \cap DB)               &        0.30              &      0.70    \\[0.5ex]
+\hline
+P(DB^{c})    &   0.20                            &          0.10             &   0.30        \\[0.5ex]
+\hline
+\text{Column Probabilities} &  0.60                &       0.40          &    1     \\[0.5ex]
+\end{array}
+$$
+The event attend the breakfast forum or the dinner banquet is represented by $P(BF \cup DB)$, which is computed with
+$$
+\begin{aligned}
+P(BF \cup DB) = & P(BF) + P(DB) - P(BF \cap DB) \hspace{0.5in} (\text{Addition Law}) \\
+              = & 0.60 + 0.70 - 0.40 \\
+              = & 0.90
+\end{aligned}
+$$
+</font>
+
+(b) *only* attended the breakfast forum. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** To only attend the breakfast forum means that $BF \cap DB^{c}$. There are two ways in which $BF$ can occur:
+$$
+\begin{aligned}
+P(BF) = & P(BF \cap DB) + P(BF \cap DB^{c}) \\
+P(BF) - P(BF \cap DB) = & P(BF \cap DB^{c}) \\
+0.60 - 0.40 = & P(BF \cap DB^{c}) \\
+0.20 = & P(BF \cap DB^{c})
+\end{aligned}
+$$
+**OR**, you can simply obtain this probability from the associated intersection of the events $P(BF)$ and $P(DB^{C})$ from the probability table in part (a):
+$$
+P(BF \cap DB^{c}) = 0.20
+$$
+</font>
+
+(c) attended neither the breakfast forum nor the dinner banquet. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** This event means that the delegate attended neither of these two functions, $BF^{C} \cap DB^{c}$. The simplest way to compute this probabilty is to locate the cell that is the intersection of $BF^{C}$ and $DB^{C}$ from which
+$$
+P(BF^{C} \cap DB^{c}) = 0.10
+$$
+Alternatively, one could use DeMorgan's Law:
+$$
+\begin{aligned}
+P(BF^{C} \cap DB^{c}) = & P(BF \cup DB)^{c} \\
+                      = & 1 - P(BF \cup DB) \\
+                      = & 1 - \underbrace{0.90}_{\text{from part (a)}} \\
+                      = & 0.10
+\end{aligned}
+$$
+</font>
+
+(d) did not attend the breakfast forum or did not attend the dinner banquet.
+</br>
+</br>
+<font color='blue'>
+**Answer:** This particular event is represented by  $BF^{C} \cup DB^{c}$. The simplest way to compute this probabilty is use DeMorgan's Law:
+$$
+\begin{aligned}
+P(BF^{C} \cup DB^{c}) = & P(BF \cap DB)^{c} \\
+                      = & 1 - P(BF \cap DB) \\
+                      = & 1 - 0.40 \\
+                      = & 0.60
+\end{aligned}
+$$
+Alternatively, one can use the Addition Law:
+$$
+\begin{aligned}
+P(BF^{c} \cup DB^{c}) = & P(BF^{c}) + P(DB^{c}) - P(BF^{c} \cap DB^{c}) \hspace{0.5in} (\text{Addition Law}) \\
+              = & 0.40 + 0.30 - 0.10 \\
+              = & 0.60
+\end{aligned}
+$$
+</font>
+
+(e) Consider the statement: A delegate attending the breakfast forum and a delegate attending the dinner banquet are mutually exclusive events. Is this statement true or false? 
+</br>
+</br>
+<font color='blue'>
+If these events are mutually exclusive, then $P(BF \cap DB) = 0$. Let's see if this is the case:
+$$
+\begin{aligned}
+P(BF \cap DB) \overbrace{=}^{?} & 0 \\
+P(BF \cap DB) = & 0.40 \hspace{0.5in} (\text{from table}) \\
+P(BF \cap DB) = & 0.40 \\
+P(BF \cap DB) \ne & 0
+\end{aligned}
+$$
+As a result, the events $BF$ and $DB$ are not mutually exclusive events. The occur together with probability 0.40.
+</font>
+</br>
+</br>
+
+------------------------------
+
+**Time to Play Exercise 3B:** Returning to the previous Time to Play Exercise: It turns out that the randomly chosen delegate did attend the dinner banquet - the event $DB$ has occurred. 
+</br>
+</br>
+Compute the probability that this person
+
+(a) did attend the breakfast forum.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this instance, we have some information about the randomly chosen delegate, they did attend the dinner banquet. Given this, we wish to find the chance/probabilty they attended the breakfast forum: $P(BF | DB)$:
+$$
+P(BF | DB) = \frac{P(BF \cap DB)}{P(DB)} = \frac{0.40}{0.70} = \frac{4}{7} = 0.5714286 \approx 0.5714
+$$
+
+</font>
+
+(b) did not attend the breakfast forum. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** 
+$$
+P(BF^{c} | DB) = \frac{P(BF^{c} \cap DB)}{P(DB)} = \frac{0.30}{0.70} = \frac{3}{7} = 0.4285714\approx 0.4286
+$$
+**OR**, 
+$$
+P(BF^{c} | DB) = 1 - P(BF | DB) = 1 - \frac{4}{7} = \frac{3}{7} = 0.4286
+$$
+</font>
+
+(c) If the randomly chosen delegate did not attend the dinner banquet, compute the probability that they did not attend the breakfast forum.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this instance, the given event is $DB^{c}$, and we wish to compute $P(BF^{c} | DB^{c})$
+$$
+P(BF^{c} | DB^{c}) = \frac{P(BF^{c} \cap DB^{c})}{P(DB^{C})} = \frac{0.10}{0.30} = \frac{1}{3} = 0.333333\approx 0.3333
+$$
+</font>
+
+(d) Are the events $BF$ and $DB$ independent events? 
+</br>
+</br>
+<font color='blue'>
+**Answer:** If these events were independent, then $P(BF|DB) = P(BF)$. Using the conditional probability computed in part (a), let's see if this is the case:
+$$
+\begin{aligned}
+P(BF|DB) \overbrace{=}^{?} & P(BF) \\
+0.5714   \ne & 0.60
+\end{aligned}
+$$
+As a result, the events $DB$ and $BF$ are *dependent* events. 
+</font>
+
+</br>
+</br>
+----------------------------
+
+**Time to Play Exercise 4:** A medical test to determine the presence of a certain illness correctly detects the illness in a patient ninety-six percent (96%) of the time, but provides a *false positive* ten-percent of the time. Assume that one-percent (1%) of a population of patients carry this illness. 
+</br>
+
+(a) A person from this population of patients is randomly chosen and tested for the illness. The test produces a positive result. Compute the probability that this particular patient has the illness.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Let's start out by creating a tree diagram which visualizes all possible outcomes:
+
+```{r echo=FALSE}
+library(collapsibleTree)
+illnesstree= data.frame(
+ Illness = c("P(has illness) = 0.01", "P(does not have illness) = 0.99"),
+  TestResult = c(c("P(positive|has illness) = 0.96", "P(positive|does not have illness) = 0.10"), c("P(negative|has illness) = 0.04", "P(negative|does not have illness) = 0.90"))
+)
+collapsibleTree(illnesstree, c("Illness", "TestResult"), width = 800)
+```
+From this tree diagram, we can observe that there are two different ways in which a positive test result can be observed: Endpoint 1 and Endpoint 3. Therefore, the probabilty of the given event, a positive test result, is computed with
+$$
+\begin{aligned}
+P(\text{positive}) = & P(\text{positive} \cap \text{has illness}) + P(\text{positive} \cap \text{has illness}) \\
+                   = & P(\text{positive} | \text{has illness})*P(\text{has illness}) + P(\text{positive} | \text{does not have illness})*P(\text{does not have illness}) \\
+                   = & (0.96*0.01) + (0.10*0.90) \\
+                   = & 0.0096 + 0.09 \\
+                   = & 0.0996 
+\end{aligned}
+$$
+We now turn our attention to computing the $P(\text{has illness}| \text{positive})$:
+$$
+\begin{aligned}
+P(\text{has illness}| \text{positive}) = &\frac{P(\text{has illness} \cap \text{positive})}{P(\text{positive})} \\
+                                      = & \frac{P(\text{positive} \cap \text{has illness})}{P(\text{positive} \cap \text{has illness}) + P(\text{positive} \cap \text{does not have illness})} \\
+                                      = & \frac{(0.96*0.01)}{(0.96*0.01) + (0.10*0.90)} \\
+                                      =& \frac{0.0096}{0.0996} \\
+                                      = & 0.09638
+\end{aligned}
+$$
+</font>
+
+(b) Suppose the test on the person in part (a) produced a negative result. Compute the probability that the person has the illness.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this instance, the given event is a negative test result, so the probability that needs to be computed is
+$$
+\begin{aligned}
+P(\text{has illness}| \text{negative}) = &\frac{P(\text{has illness} \cap \text{negative})}{P(\text{negative})} \\
+                                      = & \frac{P(\text{negative} \cap \text{has illness})}{P(\text{negative} \cap \text{has illness}) + P(\text{negative} \cap \text{does not have illness})} \\
+                                      = & \frac{(0.01*0.04)}{(0.01*0.04) + (0.99*0.90)} \\
+                                      =& \frac{0.0004}{0.0004 + 0.891} \\
+                                      = & \frac{0.0004}{0.8914} \hspace{0.2in} (\text{Notice the term in the denominator is}\:\:1 - P(positive))\\
+                                      = & 0.000448
+\end{aligned}
+$$
+
+</font>
+
+-------------------------------------
+
+**Time to Play Exercise 5:** A person purchases one Lotto Max ticket, then picks seven numbers out of 49 (without replacement) that they believe will be the seven winning number combination. A random variable $X$ is defined to count the how many of this person's numbers match the winning seven numbers of the Lotto Max lottery.
+
+(a) What possible values can $X$ assume? List all possible outcomes for $X$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** The possible values $X$ can assume are 
+$$
+X = 0, 1, 2, 3, 4, 5, 6, \text{or} \:7
+$$
+</font>
+
+(b) Come up with a probability distribution function of $X$, the formula that will enable you to compute $P(X = x)$. When you have done so, create a function in R called `ex5pdf`. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** We can use our learning of various counting methods to come up with a probability distribution function for $X$. Imagine 49 differnt numbered balls in a box, of which seven are of a winning-colour, and 42 are of different, non-winning colour. Within this context, $X$ will represent the number of winning-colour balls *the lottery player has chosen*. For this latter group of balls, there are 7 of which the lottery-playter has to choose $x$ of; the number of ways to do this is ${7 \choose x}$. Of the other group of 42 non-winning colours, the lottery players then chosesn ${42 \choose 7 - x}$ of. The probability distribution function is then
+$$
+P(X = x) = \frac{{7 \choose x}*{42 \choose 7-x}}{{49 \choose 7}} \hspace{0.5in} x = 0, 1, 2, \cdots, 6, 7
+$$
+Now that the probability distribution function has been derived, we create a function called `ex5pdf` within the R-chunk below using the `choose` function.
+```{r}
+ex5pdf = function(x) #the instructions of the function much be enclosed within {}
+{ 
+  (choose(7,x)*choose(42, 7-x))/(choose(49,7))
+}
+```
+</font>
+
+
+(c) Use the `plot` command and the probability distribution function/formula in (b) to visualize the probability distribution of $X$.
+</br>
+</br>
+<font color='blue'>
+**Answer:** The R code below enables us to create a visual of the probability distribution of $X$, with the $x$-axis consisting of values of the random variable $X$, and the $y$-axis the associated $P(X=x)$.
+```{r}
+xvalues = 0:7 #assigns valus 0 thorough 7 to the data vector called xvalues
+plot(xvalues, ex5pdf(xvalues), xlab="Number of Matches", ylab="P(X=x)", main="Probability Distribution of # of Matches", type="h", col='red')
+```
+In addition, the various probabilities associated with $X$ are 
+```{r}
+ex5pdf(xvalues)
+```
+
+Or, if we wish to round each of these probabilities to 5 decimals
+```{r}
+round(ex5pdf(xvalues), digits=5)  #rounds the values of the ex5pdf function to five-decimals
+```
+</font>
+
+(d) In order to win any $, the person must match *at least three* of the seven winning numbers. Compute the probability that this person wins any money from their lottery ticket purchase.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In terms of the random variable, matching at least three is the equivalent to $X \geq 3$. To compute this probability
+$$
+\begin{align}
+P(X \geq 3) = & \sum_{x = 3}^{7}P(X = x) \\
+            = & P(X = 3) + P(X = 4) + \cdots + P(X = 6) + P(X = 7) \\
+            = & 0.04561 + 0.00468 + 0.00021 + 0.00000 + 0.00000 \\
+            = & 0.05049705 \\
+            \approx & 0.0505
+\end{align}
+$$
+To carry out this sum in R, use the `sum` command
+```{r}
+sum(ex5pdf(3:7)) #evaluates the ex5pdf function at 3, 4, 5, 6, and 7, then adds the probabilities
+```
+</font>
+
+(e) How many numbers would you expect this person to match? Compute this value. Attempt to use R Studio in your computation. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this instance, we are asked to compute the mean or expected value of $X$.
+$$
+\begin{align}
+E(X) = & \sum_{X = 0}^{7}xP(X = x) \\
+     = & (0*P(X = 0)) + (1*P(X = 1)) + \cdots + (7*P(X = 7)) \\
+     = & (0*(0.31406)) + (1*(0.42748)) + \cdots + (7*0.0000) \\
+     = & 1
+\end{align}
+$$
+One would expect the lottery player to match one of the seven winning numbers on *any* Lottor Max ticket. This can be computed in R by creating a new function - called `meanex5` - below:
+```{r}
+meanex5 = function(x)
+{
+  x*ex5pdf(x)  ##x*P(X = x)
+}
+```
+Now, evaluate this function at each value of $x$, then take the sum.
+```{r}
+ev = sum(meanex5(xvalues))
+ev
+```
+and
+$$
+E(X) = \mu_{X} = 1
+$$
+</font>
+
+(f) Use R Studio to compute the standard deviation, $\sigma_{X}$ or $SD(X)$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute the standard deviation, we are required to compute the variance of $X$, $Var(X)$.
+$$
+Var(X) = E(X^{2}) - E(X)^{2} = E(X^{2}) - (1)^{2}
+$$
+To compute the $E(X^{2})$, we repeat the expectation compuation carried out in part (e) with one change: square each value of $X$:
+$$
+\begin{align}
+E(X^{2}) = & \sum_{X = 0}^{7}x^{2}P(X = x) \\
+     = & (0^{2}*P(X = 0)) + (1^{2}*P(X = 1)) + \cdots + (7^{2}*P(X = 7)) \\
+     = & (0^{2}*(0.31406)) + (1*(0.42748)) + \cdots + (49*0.0000) \\
+     = & 1.75
+\end{align}
+$$
+This can be computed in R below:
+```{r}
+mom2ex5 = function(x)
+{
+  x^{2}*ex5pdf(x)  #x^{2}P(X = x)
+}
+```
+
+```{r}
+moment2 = sum(mom2ex5(xvalues))
+moment2
+```
+From this, the standard deviation is computed
+$$
+\sigma_{X} = SD(X) = \sqrt{Var(X)} = \sqrt{E(X^{2}) - E(X)^{2}} = \sqrt{1.75 - 1^{2}} = 0.8660 \approx 0.87
+$$
+This can be computed in R below:
+```{r}
+sdx = sqrt(moment2 - ev^{2})
+sdx
+```
+</font>
+
+------------------------------------
+
+**Time to Play Exercise 6:** A recent poll[^1] suggested that approximately 37% of decided Canadian voters would vote for the Conservative Party in the upcoming federal election (Liberal Party 31%, NDP 18%, 5% for Bloc Quebecois, etc.). A random selection of 100 decided Canadian voters is taken. 
+</br>
+</br>
+Consider a random variable $X$ that counts how many, out of the 100, that will vote for their Liberal Party candidate.  
+
+(a) Compute the probability that 30 of the 100 decided voters will vote for their Liberal Party candidate in the next federal election.
+</br>
+</br>
+<font color='blue'>
+**Answer:** The rancom variable $X$ can be modele by the Binomial probability model, where the number of *independent trials* is $n = 100$ and the probability of *each* Canadian voter having the attribute of interest is $p = 0.37$. The probability distribution function is
+$$
+P(X = x) = {100 \choose x}(0.31)^{x}(1 - 0.31)^{100 - x} \hspace{0.5in} x = 0, 1, 2, \cdots, 99, 100
+$$
+In this instance, we compute $P(X = 30)$
+$$
+P(X = 30) = {100 \choose 30}(0.31)^{30}(1 - 0.31)^{100 - 30}  = 0.08476678 \approx 0.0848
+$$
+Alternatively, and highly recommended, emply the `dbinom` function:
+```{r}
+dbinom(30, 100, 0.31) #computes P(X = 30) for n = 100 and p = 0.31
+```
+</font>
+
+(b) Compute the probability that more than 50 of the 100 decided voters will vote for their Liberal Party candidate in the next federal election.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this instance, we need to compute $P(X > 50) = P(X \geq 51)$. 
+$$
+P(X > 50) = P(X \geq 51) = \sum_{X=51}^{100}{100 \choose x}(0.31)^{x}(1 - 0.31)^{100 - x}
+$$
+Let's use R to compute this probabilty, using the `pbinom` function which computes $P(X \leq x)$
+```{r}
+pbinom(50, 100, 0.31) #computes P(X <= 50)
+1 - pbinom(50, 100, 0.31) #computeas P(X > 50) - 1 - P(X <= 50)
+```
+and
+$$
+P(X > 50) = P(X \geq 51) = \sum_{X=51}^{100}{100 \choose x}(0.31)^{x}(1 - 0.31)^{100 - x} = 0.00002
+$$
+</font>
+
+(c) What can be said about the distribution shape of $X$? 
+</br>
+</br>
+<font color='blue'>
+**Answer:** Below, we use both the `dbinom` and `plot` commands to view the distribution shape of $X$.
+```{r}
+plot(0:100, dbinom(0:100, 100, 0.31), xlab="Number of Votes for Liberal Party Candidate",  ylab="P(X = x)", main="Probability Distribution of X", type="h", col='red')
+```
+</font>
+
+(d) How many of the 100 randomly chosen decided voters would you expect to vote for their Liberal Party candidate in the next federal election? Compute this value.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Because we are employing the Binomial probability model here, we can invoke the formula that gives the mean/expected value of a Binomial distribution.
+$$
+\mu_{X} = E(X) = np = 100*0.31 = 31
+$$
+</font>
+
+(e) Compute the standard deviation of the random variable $X$, $\sigma_{X}$ or $SD(X)$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** Similar to part (d), use the variance formula of the Binomial distribution followed by the square root of its value.
+$$
+\sigma_{X} = SD(X) = \sqrt{E(X)(1 - p)} = \sqrt{31(1 - 0.31)} = \sqrt{21.39} = 4.6249 \approx 4.62
+$$
+</font>
+
+[^1]: https://www.ipsos.com/en-ca/news-polls/Federal-Conservatives-Liberals-Locked-in-Holding-Pattern
+
+--------------------------------------
+
+**Time to Play Exercise 7:** A continuous random variable $X$ has the probability *density* function 
+$$
+f(x) = \left(\frac{200}{99}\right)x^{-3} \hspace{0.3in} \text{for}\: \: 1 \leq x \leq 10
+$$
+
+A function called `pdfex7` has been created below.
+```{r}
+pdfex7 = function(x)
+{
+  (200/99)*(1/x^{3})
+}
+```
+The graph of this probability density function is also provided below.
+```{r}
+curve(pdfex7, 1, 10, xlim=c(0,12), ylim=c(0, 2), xlab = "X", ylab="f(x)", main="Probability Distribution of X", type="l", col='red')
+axis(1, at=c(1, 10), labels=c(1,10))
+x.cor = c(1, seq(1, 10, 0.01), 10)
+y.cor = c(0, pdfex7(seq(1, 10, 0.01)), 0)
+polygon(x.cor, y.cor,col='skyblue')
+```
+
+Using the function provided along with the `integrate` command, compute
+
+(a) $P(2 \leq X \leq 3)$
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute $P(2 \leq X \leq 3)$, we need to carry out
+$$
+P(2 \leq X \leq 3) = \int_{2}^{3}\left(\frac{200}{99}\right)x^{-3}dx 
+$$
+This can be done in R with the `integrate` function
+```{r}
+integrate(pdfex7, lower=2, upper=3)$value
+integrate(pdfex7, lower=1, upper=10)$value
+```
+and
+$$
+P(2 \leq X \leq 3) = \int_{2}^{3}\left(\frac{200}{99}\right)x^{-3}dx = 0.1402918 \approx 0.1403
+$$
+</font>
+
+(b) $P(X > 8)$
+</br>
+</br>
+<font color='blue'>
+This probability is computed within R below
+```{r}
+integrate(pdfex7, lower=8, upper=10)$value
+```
+$$
+P(X > 8) = \int_{8}^{10}\left(\frac{200}{99}\right)x^{-3}dx = 0.005681818 \approx 0.0057
+$$
+</font>
+
+(c) $P(X > 4 | X > 3)$
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute this conditional probability, we need to recall that
+$$
+P(X > 4 | X > 3) = \frac{P(X > 4 \cap X > 3)}{P(X > 3)} = \frac{P(X > 4)}{P(X > 3)} = \frac{\int_{4}^{10}\left(\frac{200}{99}\right)x^{-3}dx }{\int_{3}^{10}\left(\frac{200}{99}\right)x^{-3}dx }
+$$
+This computation can be done in R
+```{r}
+(integrate(pdfex7, lower=4, upper=10)$value)/(integrate(pdfex7, lower=3, upper=10)$value) #P(X > 4)/P(X > 3)
+```
+
+and
+$$
+P(X > 4 | X > 3) = \frac{P(X > 4 \cap X > 3)}{P(X > 3)} = \frac{P(X > 4)}{P(X > 3)} = \frac{\int_{4}^{10}\left(\frac{200}{99}\right)x^{-3}dx }{\int_{3}^{10}\left(\frac{200}{99}\right)x^{-3}dx} = 0.5192308 \approx 0.5192
+$$
+</font>
+
+(d) Compute the expected value/mean of $X$, or $E(X) = \mu_{X}$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** The mean/expected value is computed through the evaluation of the expression
+$$
+E(X) = \mu_{X} = \int_{1}^{10}x*\left(\frac{200}{99}\right)x^{-3}dx = \int_{2}^{10}\left(\frac{200}{99}\right)x^{-2}dx
+$$
+This is computed below in R
+```{r}
+ex7ev = function(x)
+{
+  x*pdfex7(x) #create a function x*f(x)
+}
+```
+Now, integrate this function over the support of the random variable $X$.
+```{r}
+evex7 = integrate(ex7ev, lower=1, upper=10)$value
+evex7
+```
+and
+$$
+E(X) = \mu_{X} = \int_{1}^{10}x*\left(\frac{200}{99}\right)x^{-3}dx = \int_{1}^{10}\left(\frac{200}{99}\right)x^{-2}dx = 1.818182 \approx 1.82
+$$
+</font>
+
+(e) Compute the standard deviation of $X$, $\sigma_{X} = SD(X)$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** Similar to part (f) of Time to Play 5, we require the second moment of $X$:
+$$
+E(X^{2}) = \int_{1}^{10}x^{2}*\left(\frac{200}{99}\right)x^{-3}dx
+$$
+This is computed with the R code below.
+```{r}
+ex7secondmoment = function(x)
+{
+  x^{2}*pdfex7(x)  #create a function x^{2}*f(x)
+}
+```
+Now, integrate this function between 1 and 10:
+```{r}
+secmoment = integrate(ex7secondmoment, lower=1, upper=10)$value
+secmoment
+```
+from which
+$$
+E(X^{2}) = \int_{1}^{10}x^{2}*\left(\frac{200}{99}\right)x^{-3}dx = 4.651687
+$$
+The code below computes the standard deviaion
+```{r}
+sdex7 = sqrt(secmoment - evex7^{2})  #SD(X) = sqrt(Var(X))
+sdex7
+```
+This code effectively computes
+$$
+\sigma_{X} = SD(X) = \sqrt{E(X^{2} - E(X)^{2}} = \sqrt{4.651687 - (1.818182^{2})} = 1.16013 \approx 1.16
+$$
+</font>
+
+------------------------------------------------
+
+**Time to Play Exercise 8:** The customer service desk at a large electronics store services, on average, six customers per hour.  
+
+(a) Compute the probabiity that the customer service desk will service more than 5 customers in any given hour.
+</br>
+</br>
+<font color='blue'>
+**Answer:** In this situation, we are counting the number of times a certain event - a customer is being serviced - in a specific time frame (an hour). We can then model this count, let's call it $X$, with the Poisson distribution with an expected value or mean of 6 customers serviced per hour, or $E(X) = \lambda = 6$. The probability distribuiton function is specifically
+$$
+P(X = x) = \frac{\lambda^{x}*e^{-\lambda}}{x!} = \frac{6^{x}*e^{-6}}{x!} \hspace{0.5in} x = 0, 1, 2, \cdots 
+$$
+Here we wish to compute $P(X > 5) = P(X \geq 6)$. The `dpois` command will compute $PX = x)$; the `ppois` command will compute $P(X \leq x)$. Using the latter, 
+```{r}
+1 - ppois(5, 6)  #computes 1 - P(X <= 5)
+```
+From which
+$$
+P(X > 5) = 1 - P(X \leq 5) = 1 - \sum_{x=0}^{5} \frac{6^{x}*e^{-6}}{x!} = 0.5543204 \approx 0.5543
+$$</font>
+
+(b) Consider the random variable $Y$, which measures the amount of time passing between successive persons served at the customer service desk. This random variable can be modeled by th Exponential distribution, with a mean time passing of 
+$$
+\beta = \frac{1}{\lambda} = \frac{1}{6} \:\: \text{of an hour} = 10 \:\: \text{minutes}
+$$
+Therefore the probabilty density function of $Y$ is
+$$
+f(y) = \left(\frac{1}{10}\right)e^{-y/10} \hspace{0.2in} y \geq 0
+$$
+This probability density function is provided below.
+```{r}
+pdfex8 = function(x)
+{
+  (1/10)*exp(-x/10)
+}
+curve(pdfex8, 0, 30, xlab="Minutes Between Successive Customers", ylab="Density", main="Probability Distribution", type="l", col='red')
+```
+Compute the probability that between 5 and 15 minutes pass between successive customers.
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute $P(5 \leq Y \leq 15)$, we integrate the probability density function between 5 and 15:
+$$
+P(5 \leq Y \leq 15) = \int_{5}^{15}\left(\frac{1}{10}\right)e^{-y/10}dy
+$$
+However, rather than creating a function to represent the above probability density function, R has a built in function `pexp` that will compute $P(Y \leq y)$, as long as $Y$ is modeled by the Exponential distribution.
+```{r}
+pexp(15, 1/10) - pexp(5, 1/10) #computes P(Y <= 15) - P(Y <= 5), second argument is 1//mean
+```
+from which
+$$
+P(5 \leq Y \leq 15) = \int_{5}^{15}\left(\frac{1}{10}\right)e^{-y/10}dy = 0.3834005 \approx 0.3834
+$$
+</font>
+
+(c) Compute the probabilty that more than 20 minutes pass between successive customers.
+</br>
+</br>
+<font color='blue'>
+**Answer:** Similar to part (b), we compute $P(Y > 20)$ with the `pexp` command:
+```{r}
+1 - pexp(20, 1/10)  #1 - P(Y<=20)
+```
+and
+$$
+P(Y > 20) = \int_{20}^{\infty}\left(\frac{1}{10}\right)e^{-y/10}dy = 0.1353353 \approx 0.1353
+$$
+</font>
+
+(d) If 15 minutes have passed since the last customer was served, compute the probability that at most 25 minutes will have passed in total until the next customer is served. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** This can be computed two ways. The first approach is 
+$$
+P(Y \leq 25 | Y > 15) = \frac{P(Y \leq 25 \cap Y > 15)}{P(Y > 15)} = \frac{P(15 < Y \leq 25)}{P(Y > 15)} = \frac{\int_{15}^{25}\left(\frac{1}{10}\right)e^{-y/10}dy}{\int_{15}^{\infty}\left(\frac{1}{10}\right)e^{-y/10}dy}
+$$
+This is doable, however, we can use the fact that the Exponential distribution has the **memoryless property** which states
+$$
+P(Y \leq a + b | Y > a) = P(Y \leq b)
+$$
+From the expression
+$$
+P(Y \leq 25 | Y > 15) = P(Y \leq \underbrace{15}_{a} + \underbrace{10}_{b} | Y > \underbrace{15}_{a}) = P(Y \leq 10) = \int_{0}^{10}\left(\frac{1}{10}\right)e^{-y/10}dy
+$$
+This can be computed with
+```{r}
+pexp(10, 1/10)
+```
+and 
+$$
+P(Y \leq 25 | Y > 15) = 0.6321206 \approx 0.6321
+$$
+</font>
+
+(e) The cumulative distribution function of $Y$ is provided below.
+$$
+F(y) = 1 - e^{-y/10} \:\: \text{for} \:\: y \geq 0
+$$
+Compute the (i) 25th percentile $y_{25}$ and the seventy-fifth percentile $y_{75}$. 
+</br>
+</br>
+<font color='blue'>
+**Answer:** To compute the 25th percentile, we set $0.25 = P(Y \leq y_{25})$
+$$
+\begin{aligned}
+0.25 = & P(Y \leq y_{25}) \\
+0.25 = & 1 - e^{-y_{25}/10} \\
+e^{-y_{25}/10} = & 1 - 0.25 \\
+ln(e^{-y_{25}/10}) = & ln(1 - 0.25) \\
+\frac{-y_{25}}{10} = & ln(0.75) \\
+y_{25} = & -10*ln(0.75) \\
+y_{25} = & 2.8768 \:\: \text{minutes}
+\end{aligned}
+$$
+Alternatively, use the `qexp` function in R
+```{r}
+qexp(0.25, 1/10)  #returns the 25th percente for a mean of 10
+```
+
+For part (ii), 
+```{r}
+qexp(0.75, 1/10)
+```
+and the 75th percentile is $y_{75} = 13.86$ minutes. 
+</font>
+
+
+
+
+
+
